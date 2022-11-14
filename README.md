@@ -1,46 +1,84 @@
-# Getting Started with Create React App
+# Frontend - Blackhole v3.0.0
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Este proyecto tiene por objetivo la creación de un sistema de monitoreo telefónico, incluyendo análisis y clasificación de llamadas fijas y mobiles, datos de rastreo GPS, protocolos publicos y privados de red.
 
-## Available Scripts
+## Tecnologías
 
-In the project directory, you can run:
+### Proyectos
 
-### `yarn start`
+- [Typescript](https://www.typescriptlang.org/) JavaScript with syntax for types
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Librerías
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- [ReactJS](https://reactjs.org/) A JavaScript library for building user interfaces
+- [Ant Design](https://ant.design/) A design system for enterprise-level products. Create an efficient and enjoyable work experience.
+- [Headless UI](https://headlessui.com/) Completely unstyled, fully accessible UI components, designed to integrate beautifully with Tailwind CSS.
+- [Heroicons](https://heroicons.com/) Beautiful hand-crafted SVG icons, by the makers of Tailwind CSS
+- [TanStack Table](https://tanstack.com/table/v8) Supercharge your tables or build a datagrid from scratch for TS/JS, React, Vue, Solid & Svelte while retaining 100% control over markup and styles.
+- [Axios](https://axios-http.com/docs/intro) Promise based HTTP client for the browser and node.js
+- [clsx](https://github.com/lukeed/clsx#readme) A tiny (228B) utility for constructing className strings conditionally
+- [date-fns](https://date-fns.org/) Modern JavaScript date utility library
+- [formik](https://formik.org/) Build forms in React, without the tears
+- [lodash](https://lodash.com/) A modern JavaScript utility library delivering modularity, performance & extras.
+- [PostCSS Focus Visible](https://github.com/csstools/postcss-plugins/tree/main/plugins/postcss-focus-visible#readme) -ets you use the :focus-visible pseudo-class in CSS, following the Selectors Level 4 specification
+- [react-dropzone](https://react-dropzone.js.org/) Simple React hook to create a HTML5-compliant drag'n'drop zone for files.
+- [react-icons](https://react-icons.github.io/react-icons/) Include popular icons in your React projects easily with react-icons, which utilizes ES6 imports that allows you to include only the icons that your project is using.
+- [react-intl](https://formatjs.io/docs/react-intl/#the-react-intl-package) Internationalize your web apps on the client & server.
+- [React router](https://v5.reactrouter.com/web/guides/quick-start) Is a collection of navigational components that compose declaratively with your application.
+- [React Toastify](https://github.com/fkhadra/react-toastify#readme) Allows you to add notifications to your app with ease. No more nonsense!
+- [wavesurfer.js](https://wavesurfer-js.org/) Is a customizable audio waveform visualization, built on top of Web Audio API and HTML5 Canvas.
 
-### `yarn test`
+## Librerías de desarrollo
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- [ElectronJS](https://www.electronjs.org/) Build cross-platform desktop apps with JavaScript, HTML, and CSS
+- [electron-builder](https://www.electron.build/) A complete solution to package and build a ready for distribution Electron app for macOS, Windows and Linux with “auto update” support out of the box.
+- [Autoprefixer](https://github.com/postcss/autoprefixer#readme) Is a PostCSS plugin which parses your CSS and adds vendor prefixes
+- [ESLint](https://eslint.org/) Find and fix problems in your JavaScript code
+- [postcss](https://postcss.org/) A tool for transforming CSS with JavaScript
+- [TailwindCSS](https://tailwindcss.com/) A utility-first CSS framework packed with classes like flex, pt-4, text-center and rotate-90 that can be composed to build any design, directly in your markup.
+- [Prettier](https://prettier.io/) An opinionated code formatter
 
-### `yarn build`
+## Requisitos de desarrollo
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- [NodeJS](https://nodejs.org/download/release/latest-v16.x/)  16.18.1
+- [Yarn](https://yarnpkg.com/) 1.22.19
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Iniciar el proyecto
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Para ejecutar el proyecto sigue los siguientes pasos
 
-### `yarn eject`
+Clona el repositorio en tu maquina local:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```bash
+git clone git@github.com:LyticaMx/apervox-frontend-blackhole.git
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Instala las dependencias del  proyecto:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+``` bash
+yarn install
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Configura las variables de entorno:
 
-## Learn More
+```bash
+# Este es un ejemplo, necesitas configurar todas las variables de entorno.
+...
+DEPLOY_PORT=8000
+...
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Inicia el proyecto:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+yarn start
+```
+
+## Variables de entorno
+
+El proyecto cuenta con un archivo de variables de entorno
+**.env**
+
+|Nombre|Tipo|Descripción
+|------|----|-----------|
+|GENERATE_SOURCEMAP|boolean|Generación de los sourcemaps de las gráficas de ant design
