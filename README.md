@@ -79,6 +79,8 @@ yarn start
 El proyecto cuenta con un archivo de variables de entorno
 **.env**
 
-|Nombre|Tipo|Descripción
-|------|----|-----------|
-|GENERATE_SOURCEMAP|boolean|Generación de los sourcemaps de las gráficas de ant design
+|Nombre|Tipo|Valor por defecto|Descripción|
+|------|----|-----------------|-----------|
+|GENERATE_SOURCEMAP|boolean| |Generación de los sourcemaps de las gráficas de ant design
+REACT_APP_TIME_PER_TRANSCRIPTION_PAG|number| 30 |Intervalo de tiempo expresado en segundos en los que se realizarán los cortes para el paginado de la transcripción
+REACT_APP_ITEMS_PER_TRANSCRIPTION_PAGE|number| 9 |Número de elementos a mostrar en el grid de la paginación de la transcripción
