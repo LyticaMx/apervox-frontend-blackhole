@@ -27,6 +27,7 @@ Este proyecto tiene por objetivo la creación de un sistema de monitoreo telefó
 - [React router](https://v5.reactrouter.com/web/guides/quick-start) Is a collection of navigational components that compose declaratively with your application.
 - [React Toastify](https://github.com/fkhadra/react-toastify#readme) Allows you to add notifications to your app with ease. No more nonsense!
 - [wavesurfer.js](https://wavesurfer-js.org/) Is a customizable audio waveform visualization, built on top of Web Audio API and HTML5 Canvas.
+- [CKEditor](https://ckeditor.com/docs/index.html) A powerful WYSIWYG framework delivering a fully customizable editing experience.
 
 ## Librerías de desarrollo
 
