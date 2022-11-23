@@ -6,6 +6,7 @@ import { Segment } from 'types/segment'
 import { State, Country, Location, Speaker } from 'types/speaker'
 import { PinActivity, TimeChartValues } from 'types/statistics'
 import { Dependency, User } from 'types/user'
+import { Evidence } from 'types/evidence'
 
 export const calls: CallVM[] = []
 export const speakers: Speaker[] = []
@@ -22,6 +23,7 @@ export const alertChartValues: TimeChartValues[] = [] // Ready
 export const overusedPhrases: OverusedPhrase[] = [] // Ready
 export const regions: any[] = []
 export const transcription: Segment[] = []
+export const evidences: Evidence[][] = []
 export const callDetail: Detail = {
   assigned_pin: 1,
   date: '10/12/2022',
@@ -289,3 +291,92 @@ for (let index = 0; index < 10; index++) {
     transcription: `Segmento ${index}`
   })
 }
+
+/* Evidences */
+const genEvidences = (): void => {
+  const objectives = [
+    {
+      phone: '1111111111',
+      event: 1
+    },
+    {
+      phone: '2222222222',
+      event: 1
+    },
+    {
+      phone: '3333333333',
+      event: 1
+    },
+    {
+      phone: '4444444444',
+      event: 1
+    }
+  ]
+  const evidenceClassifications = [
+    'No visto',
+    'Trabajando',
+    'Relevante',
+    'No relevante',
+    'Descartado'
+  ]
+  const evidenceTypes = ['audio', 'video', 'image', 'doc', 'navigation', 'data']
+
+  for (let i = 0; i < 3; i++) {
+    evidences[i] = []
+    for (let j = 0; j < 150; j++) {
+      const objectiveRng = Math.floor(Math.random() * 4)
+      const classificationRng = Math.floor(Math.random() * 5)
+      const typeRng = Math.floor(Math.random() * 6)
+
+      evidences[i].push({
+        id: j + 1,
+        objective: objectives[objectiveRng].phone,
+        event: objectives[objectiveRng].event++,
+        // Los as se agregan para cumplir la norma de los tipos union de typescript
+        classification: evidenceClassifications[classificationRng] as
+          | 'No visto'
+          | 'Trabajando'
+          | 'Relevante'
+          | 'No relevante'
+          | 'Descartado',
+        type: evidenceTypes[typeRng] as
+          | 'audio'
+          | 'video'
+          | 'image'
+          | 'doc'
+          | 'navigation'
+          | 'data',
+        workingOn: (objectiveRng * classificationRng * typeRng + j) % 2 === 0
+      })
+    }
+  }
+  const tempIndex = evidences.length
+  evidences[tempIndex] = []
+  for (let i = 0; i < 3; i++) {
+    const objectiveRng = Math.floor(Math.random() * 4)
+    const classificationRng = Math.floor(Math.random() * 5)
+    const typeRng = Math.floor(Math.random() * 6)
+
+    evidences[tempIndex].push({
+      id: i + 1,
+      objective: objectives[objectiveRng].phone,
+      event: objectives[objectiveRng].event++,
+      // Los as se agregan para cumplir la norma de los tipos union de typescript
+      classification: evidenceClassifications[classificationRng] as
+        | 'No visto'
+        | 'Trabajando'
+        | 'Relevante'
+        | 'No relevante'
+        | 'Descartado',
+      type: evidenceTypes[typeRng] as
+        | 'audio'
+        | 'video'
+        | 'image'
+        | 'doc'
+        | 'navigation'
+        | 'data',
+      workingOn: (objectiveRng * classificationRng * typeRng + i) % 2 === 0
+    })
+  }
+}
+genEvidences()
