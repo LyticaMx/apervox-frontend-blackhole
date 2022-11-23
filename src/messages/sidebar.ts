@@ -52,5 +52,9 @@ export const sidebarMessages = defineMessages({
   demoWavesurfer: {
     id: 'sidebar.demo.demoWavesurfer',
     defaultMessage: 'Wavesurfer'
+  },
+  demoDatagrid: {
+    id: 'sidebar.demo.demoDatagrid',
+    defaultMessage: 'Data Grid'
   }
 })

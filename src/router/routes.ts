@@ -12,6 +12,7 @@ import DemoSystem from 'views/Demo/System'
 import DemoCharts from 'views/Demo/Chart'
 import DemoForm from 'views/Demo/Form'
 import DemoWavesurfer from 'views/Demo/Wavesurfer'
+import DemoDatagrid from 'views/Demo/DataGrid'
 
 export interface Route {
   id: string
@@ -52,7 +53,8 @@ export const pathRoute = {
     chart: '/demo-charts',
     form: '/demo-form',
     system: '/demo-system',
-    wavesurfer: '/demo-wavesurfer'
+    wavesurfer: '/demo-wavesurfer',
+    datagrid: '/demo-datagrid'
   }
 }
 
@@ -106,6 +108,17 @@ export const routes: Route[] = [
         modules: [],
         scopes: [],
         component: DemoWavesurfer,
+        layout: BaseLayout,
+        private: false,
+        sidebar: true
+      },
+      {
+        id: 'demo-dataGrid',
+        i18Key: 'demoDatagrid',
+        path: pathRoute.demo.datagrid,
+        modules: [],
+        scopes: [],
+        component: DemoDatagrid,
         layout: BaseLayout,
         private: false,
         sidebar: true
