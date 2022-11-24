@@ -65,6 +65,7 @@ interface Props {
   onCreate?: (region: any) => void
   onClick?: (region: any) => void
   onReady?: () => void
+  onAudioProcess?: (processed: number) => void
 
   /* Children */
   children?: ReactNode
@@ -94,6 +95,7 @@ const WaveSurferPlayer = ({
   onCreate,
   onClick,
   onReady,
+  onAudioProcess,
   children
 }: Props): ReactElement => {
   const wavesurfer = useRef<any>(null)
@@ -173,6 +175,7 @@ const WaveSurferPlayer = ({
 
     wavesurfer.current.on('audioprocess', function (process) {
       setAudioProcess(process)
+      if (onAudioProcess) onAudioProcess(process)
     })
 
     wavesurfer.current.on('finish', function () {

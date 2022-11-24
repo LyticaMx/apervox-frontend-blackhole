@@ -56,5 +56,9 @@ export const sidebarMessages = defineMessages({
   demoDatagrid: {
     id: 'sidebar.demo.demoDatagrid',
     defaultMessage: 'Data Grid'
+  },
+  demoTranscription: {
+    id: 'sidebar.demo.demoTranscription',
+    defaultMessage: 'Transcripción'
   }
 })

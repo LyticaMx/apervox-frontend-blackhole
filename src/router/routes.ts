@@ -13,6 +13,11 @@ import DemoCharts from 'views/Demo/Chart'
 import DemoForm from 'views/Demo/Form'
 import DemoWavesurfer from 'views/Demo/Wavesurfer'
 import DemoDatagrid from 'views/Demo/DataGrid'
+import DemoTranscription from 'views/Demo/Transcription'
+import SignIn from 'views/Auth/SignIn'
+import AuthLayout from 'layout/AuthLayout'
+import SignUp from 'views/Auth/SingUp'
+import SingUpLayout from 'layout/SingUpLayout'
 
 export interface Route {
   id: string
@@ -54,11 +59,32 @@ export const pathRoute = {
     form: '/demo-form',
     system: '/demo-system',
     wavesurfer: '/demo-wavesurfer',
-    datagrid: '/demo-datagrid'
+    datagrid: '/demo-datagrid',
+    transcription: '/demo-transcription'
   }
 }
 
 export const routes: Route[] = [
+  {
+    id: 'sign-in',
+    path: pathRoute.auth.signIn,
+    modules: [],
+    icon: Bars3Icon,
+    scopes: [],
+    component: SignIn,
+    layout: AuthLayout,
+    private: false
+  },
+  {
+    id: 'sign-up',
+    path: pathRoute.auth.signUp,
+    modules: [],
+    icon: Bars3Icon,
+    scopes: [],
+    component: SignUp,
+    layout: SingUpLayout,
+    private: false
+  },
   {
     id: 'home',
     path: pathRoute.home,
@@ -119,6 +145,17 @@ export const routes: Route[] = [
         modules: [],
         scopes: [],
         component: DemoDatagrid,
+        layout: BaseLayout,
+        private: false,
+        sidebar: true
+      },
+      {
+        id: 'demo-trans',
+        i18Key: 'demoTranscription',
+        path: pathRoute.demo.transcription,
+        modules: [],
+        scopes: [],
+        component: DemoTranscription,
         layout: BaseLayout,
         private: false,
         sidebar: true
