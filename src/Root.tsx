@@ -7,6 +7,9 @@ import Navigator from 'router/Navigator'
 import { LanguageProvider } from 'context/Language'
 import { AuthProvider } from 'context/Auth'
 
+// Estilos de react-toastify
+import 'react-toastify/dist/ReactToastify.css'
+
 const contextConfig = { objectDiffs: true, arrayDiffs: false }
 
 const Root = (): ReactElement => {
