@@ -77,7 +77,6 @@ const DataGrid = <DataType,>(props: Props<DataType>): ReactElement => {
   }
 
   const onChange = (page: number): void => {
-    console.log(page)
     pagination.onChange(page)
   }
 
