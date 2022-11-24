@@ -6,5 +6,7 @@ export const config = {
         10
       ) || 10
   },
-  endpoints: {}
+  endpoints: {
+    mainBackendUrl: process.env.REACT_APP_MAIN_BACKEND_URL
+  }
 }
