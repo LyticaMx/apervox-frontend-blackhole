@@ -52,5 +52,9 @@ export const sidebarMessages = defineMessages({
   demoWavesurfer: {
     id: 'sidebar.demo.demoWavesurfer',
     defaultMessage: 'Wavesurfer'
+  },
+  demoTranscription: {
+    id: 'sidebar.demo.demoTranscription',
+    defaultMessage: 'Transcripción'
   }
 })

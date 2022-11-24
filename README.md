@@ -27,6 +27,7 @@ Este proyecto tiene por objetivo la creación de un sistema de monitoreo telefó
 - [React router](https://v5.reactrouter.com/web/guides/quick-start) Is a collection of navigational components that compose declaratively with your application.
 - [React Toastify](https://github.com/fkhadra/react-toastify#readme) Allows you to add notifications to your app with ease. No more nonsense!
 - [wavesurfer.js](https://wavesurfer-js.org/) Is a customizable audio waveform visualization, built on top of Web Audio API and HTML5 Canvas.
+- [CKEditor](https://ckeditor.com/docs/index.html) A powerful WYSIWYG framework delivering a fully customizable editing experience.
 
 ## Librerías de desarrollo
 
@@ -79,6 +80,8 @@ yarn start
 El proyecto cuenta con un archivo de variables de entorno
 **.env**
 
-|Nombre|Tipo|Descripción
-|------|----|-----------|
-|GENERATE_SOURCEMAP|boolean|Generación de los sourcemaps de las gráficas de ant design
+|Nombre|Tipo|Valor por defecto|Descripción|
+|------|----|-----------------|-----------|
+|GENERATE_SOURCEMAP|boolean| |Generación de los sourcemaps de las gráficas de ant design
+REACT_APP_TIME_PER_TRANSCRIPTION_PAG|number| 30 |Intervalo de tiempo expresado en segundos en los que se realizarán los cortes para el paginado de la transcripción
+REACT_APP_ITEMS_PER_TRANSCRIPTION_PAGE|number| 9 |Número de elementos a mostrar en el grid de la paginación de la transcripción

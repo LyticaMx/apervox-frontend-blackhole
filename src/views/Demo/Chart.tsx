@@ -177,7 +177,7 @@ const DemoChart = (): ReactElement => {
       .then((response: any) => response.json())
       .then((json) => setBasicRadar(json))
       .catch((error) => {
-        console.log('fetch data failed', error)
+        console.error('fetch data failed', error)
       })
   }
 
@@ -186,7 +186,7 @@ const DemoChart = (): ReactElement => {
       .then((response: any) => response.json())
       .then((json) => setLinear(json))
       .catch((error) => {
-        console.log('fetch data failed', error)
+        console.error('fetch data failed', error)
       })
   }
 
@@ -197,7 +197,7 @@ const DemoChart = (): ReactElement => {
       .then((response: any) => response.json())
       .then((json) => setPolar(json))
       .catch((error) => {
-        console.log('fetch data failed', error)
+        console.error('fetch data failed', error)
       })
   }
 
@@ -208,7 +208,7 @@ const DemoChart = (): ReactElement => {
       .then((response: any) => response.json())
       .then((json) => setWordCloud(json))
       .catch((error) => {
-        console.log('fetch data failed', error)
+        console.error('fetch data failed', error)
       })
   }
 
