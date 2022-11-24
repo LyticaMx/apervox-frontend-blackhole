@@ -105,7 +105,7 @@ const DemoForm = (): ReactElement => {
         id="prueba"
         name="prueba"
         value="prueba"
-        onChange={console.log}
+        onChange={() => {}}
         label="Prueba"
         description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
       />
@@ -114,7 +114,7 @@ const DemoForm = (): ReactElement => {
         id="prueba"
         name="prueba"
         value="prueba"
-        onChange={console.log}
+        onChange={() => {}}
         label="Prueba"
         description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
       />
@@ -127,11 +127,11 @@ const DemoForm = (): ReactElement => {
       <Divider title="Filter" />
       <Filter
         items={items}
-        onSubmit={console.log}
+        onSubmit={() => {}}
         initialValues={{ radio: 'a' }}
       />
       <Divider title="Drag" />
-      <DragDrop onChange={console.log} accept={{ 'image/*': [] }} />
+      <DragDrop onChange={() => {}} accept={{ 'image/*': [] }} />
     </div>
   )
 }

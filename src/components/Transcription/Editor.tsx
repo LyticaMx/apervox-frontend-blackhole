@@ -1,6 +1,5 @@
 import { ReactElement, useEffect, useRef, useState } from 'react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
-// import { useDidMountEffect } from 'hooks/useDidMountEffect'
 
 interface Props {
   initialData: string
@@ -17,7 +16,6 @@ const Editor = (props: Props): ReactElement => {
   useEffect(() => {
     ClassicEditor.create(editorDiv.current, { initialData })
       .then((editor) => {
-        console.log('editor', editor)
         setEditor(editor)
       })
       .catch((error: Error) => {
