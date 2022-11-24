@@ -5,6 +5,7 @@ import { chunkArray } from 'utils/chunkArray'
 import { getAudioIntervals } from 'utils/getAudioRanges'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
 import Grid from './Grid'
+import { config } from 'providers/config'
 
 interface Audio {
   duration: number
@@ -26,10 +27,8 @@ const Pagination = (props: Props): ReactElement => {
   const [selectedItem, setSelectedItem] = useState<number>(0)
   const [currentPage, setCurrentPage] = useState<number>(0)
 
-  const defaultTime =
-    parseInt(process.env.REACT_APP_TIME_PER_TRANSCRIPTION_PAGE ?? '', 10) || 30
-  const ITEMS_PER_PAGE =
-    parseInt(process.env.REACT_APP_ITEMS_PER_TRANSCRIPTION_PAGE ?? '', 10) || 9
+  const defaultTime = config.appConfig.timePerTranscriptionPage
+  const ITEMS_PER_PAGE = config.appConfig.itemsPerTranscriptionPage
 
   const createIntervals = (): void => {
     const newIntervals = getAudioIntervals(duration)

@@ -1,8 +1,8 @@
+import { config } from 'providers/config'
 import { formatSeconds } from './formatTime'
 
 export const getAudioIntervals = (duration: number): string[] => {
-  const defaultTime =
-    parseInt(process.env.REACT_APP_TIME_PER_TRANSCRIPTION_PAGE ?? '', 10) || 30
+  const defaultTime = config.appConfig.timePerTranscriptionPage
   const numberOfIntervals = Math.floor(duration / defaultTime)
   const extraInterval = duration % defaultTime !== 0
   const ranges: string[] = []
