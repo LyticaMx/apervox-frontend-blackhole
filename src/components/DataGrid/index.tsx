@@ -139,7 +139,11 @@ const DataGrid = <DataType,>(props: Props<DataType>): ReactElement => {
               const row = rows[virtualRow.index]
 
               return (
-                <tr key={row.id} ref={virtualRow.measureRef}>
+                <tr
+                  key={row.id}
+                  ref={virtualRow.measureRef}
+                  className="hover:bg-slate-100 transition-colors duration-300 ease-in-out"
+                >
                   {row.getVisibleCells().map((cell) => (
                     <td
                       key={cell.id}
