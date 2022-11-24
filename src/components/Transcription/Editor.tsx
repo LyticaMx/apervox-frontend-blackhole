@@ -1,5 +1,8 @@
-import { ReactElement, useEffect, useRef, useState } from 'react'
+import React, { ReactElement, useEffect, useRef, useState } from 'react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+import { toast } from 'react-toastify'
+import { useIntl } from 'react-intl'
+import { messages } from './messages'
 
 interface Props {
   initialData: string
@@ -10,6 +13,7 @@ interface Props {
 const Editor = (props: Props): ReactElement => {
   const { initialData = '', currentInterval, saveData } = props
   // CKEditor aún no tiene tipado (véase https://github.com/ckeditor/ckeditor5/issues/504)
+  const { formatMessage } = useIntl()
   const [editor, setEditor] = useState<any>(null)
   const editorDiv = useRef<HTMLDivElement>(null)
 
@@ -19,6 +23,7 @@ const Editor = (props: Props): ReactElement => {
         setEditor(editor)
       })
       .catch((error: Error) => {
+        toast.error(formatMessage(messages.cantCreate))
         console.error('Oops, something went wrong when creating editor')
         console.error(error)
       })
