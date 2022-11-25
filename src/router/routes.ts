@@ -1,11 +1,16 @@
 import { ReactElement } from 'react'
 import { Bars3Icon } from '@heroicons/react/24/outline'
 
-import Home from 'views/Home'
-
 import BaseLayout from 'layout/BaseLayout'
+import AuthLayout from 'layout/AuthLayout'
+import SingUpLayout from 'layout/SingUpLayout'
 import { Layout } from 'types/layout'
 import { sidebarMessages } from 'messages'
+
+import Home from 'views/Home'
+import SignIn from 'views/Auth/SignIn'
+import SignUp from 'views/Auth/SingUp'
+import Roles from 'views/Roles'
 
 /* DEV */
 import DemoSystem from 'views/Demo/System'
@@ -14,10 +19,6 @@ import DemoForm from 'views/Demo/Form'
 import DemoWavesurfer from 'views/Demo/Wavesurfer'
 import DemoDatagrid from 'views/Demo/DataGrid'
 import DemoTranscription from 'views/Demo/Transcription'
-import SignIn from 'views/Auth/SignIn'
-import AuthLayout from 'layout/AuthLayout'
-import SignUp from 'views/Auth/SingUp'
-import SingUpLayout from 'layout/SingUpLayout'
 
 export interface Route {
   id: string
@@ -54,6 +55,7 @@ export const pathRoute = {
   receiverAudio: '/reseiver-audio',
   senderAudio: '/sender-audio',
   controlGroups: '/control-groups',
+  roles: '/roles',
   demo: {
     chart: '/demo-charts',
     form: '/demo-form',
@@ -93,6 +95,18 @@ export const routes: Route[] = [
     icon: Bars3Icon,
     scopes: [],
     component: Home,
+    layout: BaseLayout,
+    private: true,
+    sidebar: true
+  },
+  {
+    id: 'roles',
+    path: pathRoute.roles,
+    i18Key: 'roles',
+    modules: [],
+    icon: Bars3Icon,
+    scopes: [],
+    component: Roles,
     layout: BaseLayout,
     private: true,
     sidebar: true

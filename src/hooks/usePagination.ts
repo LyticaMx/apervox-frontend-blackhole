@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Pagination } from 'components/DataGrid'
+import { Pagination } from 'types/pagination'
 
 interface Props {
   page: number

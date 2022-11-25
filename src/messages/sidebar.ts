@@ -60,5 +60,9 @@ export const sidebarMessages = defineMessages({
   demoTranscription: {
     id: 'sidebar.demo.demoTranscription',
     defaultMessage: 'Transcripción'
+  },
+  roles: {
+    id: 'sidebar.Roles.list',
+    defaultMessage: 'Perfiles'
   }
 })
