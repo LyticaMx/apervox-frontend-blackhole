@@ -12,14 +12,7 @@ import clsx from 'clsx'
 import { config } from 'providers/config'
 import PaginationComponent from './Pagination'
 import { ArrowSmallUpIcon, ArrowSmallDownIcon } from '@heroicons/react/20/solid'
-
-export interface Pagination {
-  currentPage: number
-  currentSize: number
-  totalRecords: number
-  onChange: (page: number) => void
-  onChangeSize: (page: number) => void
-}
+import { Pagination } from 'types/pagination'
 
 interface Props<T> {
   columns: Array<ColumnDef<T>>
@@ -77,14 +70,18 @@ const DataGrid = <DataType,>(props: Props<DataType>): ReactElement => {
   }
 
   const onChange = (page: number): void => {
-    pagination.onChange(page)
+    if (pagination.onChange) pagination.onChange(page)
+  }
+
+  const onSizeChange = (size): void => {
+    if (pagination.onChangeSize) pagination.onChangeSize(size)
   }
 
   return (
     <div className="p-4 rounded-lg shadow-lg shadow-gray-300">
       <div
         ref={tableContainerRef}
-        style={{ height }}
+        style={{ maxHeight: height }}
         className="container overflow-auto"
       >
         <table className="table-auto w-full ">
@@ -134,6 +131,15 @@ const DataGrid = <DataType,>(props: Props<DataType>): ReactElement => {
                 <td style={{ height: `${paddingTop}px` }} />
               </tr>
             )}
+            {virtualRows.length === 0 && (
+              <tr>
+                <td className="flex justify-center items-center h-20 ">
+                  <p className="text-center text-gray-400">
+                    No hay datos para mostrar
+                  </p>
+                </td>
+              </tr>
+            )}
             {virtualRows.map((virtualRow) => {
               const row = rows[virtualRow.index]
 
@@ -172,7 +178,8 @@ const DataGrid = <DataType,>(props: Props<DataType>): ReactElement => {
           currentPage={pagination.currentPage}
           pageSize={pagination.currentSize}
           totalCount={totalItems}
-          onPageSizeChange={pagination.onChangeSize}
+          onPageSizeChange={onSizeChange}
+          pageSizeOptions={pagination.rowsPerPageOptions}
         />
       </div>
     </div>

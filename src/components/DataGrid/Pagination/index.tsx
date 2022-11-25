@@ -1,8 +1,9 @@
 import { ReactElement } from 'react'
 import clsx from 'clsx'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid'
-
 import { usePagination, DOTS } from './hooks/usePagination'
+import { useIntl } from 'react-intl'
+import { messages } from './messages'
 
 interface Props {
   onPageChange: (currentPage: number) => void
@@ -32,10 +33,7 @@ const Pagination = (props: Props): ReactElement | null => {
     siblingCount,
     pageSize
   })
-
-  if (paginationRange.length < 2) {
-    return null
-  }
+  const { formatMessage } = useIntl()
 
   const onNext = (): void => {
     if (currentPage + 1 !== lastPage) {
@@ -60,11 +58,19 @@ const Pagination = (props: Props): ReactElement | null => {
     <div className="flex flex-col items-center justify-center md:flex-row md:justify-between">
       <div>
         <p className="text-sm text-gray-700 mt-1">
-          {`${currentPage * pageSize + 1} a ${
-            totalCount < currentPage * pageSize + pageSize
-              ? totalCount
-              : currentPage * pageSize + pageSize
-          } de ${totalCount} resultados.`}
+          {formatMessage(
+            paginationRange.length === 0
+              ? messages.noResults
+              : messages.totalCount,
+            {
+              from: currentPage * pageSize + 1,
+              to:
+                totalCount < currentPage * pageSize + pageSize
+                  ? totalCount
+                  : currentPage * pageSize + pageSize,
+              of: totalCount
+            }
+          )}
         </p>
       </div>
       <div className="flex my-3 pl-5">
@@ -79,7 +85,7 @@ const Pagination = (props: Props): ReactElement | null => {
               'p-2 border border-gray-300 hover:bg-gray-50 rounded-l-md disabled:text-gray-300 disabled:hover:bg-inherit'
             )}
             onClick={onPrevious}
-            disabled={currentPage === 0}
+            disabled={currentPage === 0 || paginationRange.length === 0}
           >
             <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
           </button>
@@ -113,7 +119,9 @@ const Pagination = (props: Props): ReactElement | null => {
           <button
             className="p-2 border border-gray-300 hover:bg-gray-50 rounded-r-md disabled:text-gray-300 disabled:hover:bg-inherit"
             onClick={onNext}
-            disabled={currentPage + 1 === lastPage}
+            disabled={
+              currentPage + 1 === lastPage || paginationRange.length === 0
+            }
           >
             <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
           </button>
@@ -126,7 +134,7 @@ const Pagination = (props: Props): ReactElement | null => {
           >
             {pageSizeOptions.map((option) => (
               <option selected key={option} value={option}>
-                {`${option} / pág`}
+                {formatMessage(messages.paginationOption, { option })}
               </option>
             ))}
           </select>
