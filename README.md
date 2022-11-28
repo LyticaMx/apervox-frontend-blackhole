@@ -15,6 +15,7 @@ Este proyecto tiene por objetivo la creación de un sistema de monitoreo telefó
 - [Headless UI](https://headlessui.com/) Completely unstyled, fully accessible UI components, designed to integrate beautifully with Tailwind CSS.
 - [Heroicons](https://heroicons.com/) Beautiful hand-crafted SVG icons, by the makers of Tailwind CSS
 - [TanStack Table](https://tanstack.com/table/v8) Supercharge your tables or build a datagrid from scratch for TS/JS, React, Vue, Solid & Svelte while retaining 100% control over markup and styles.
+- [TanStack Virtual](https://tanstack.com/virtual/v3) Virtualize only the visible DOM nodes within massive scrollable elements at 60FPS in TS/JS, React, Vue, Solid & Svelte while retaining 100% control over markup and styles.
 - [Axios](https://axios-http.com/docs/intro) Promise based HTTP client for the browser and node.js
 - [clsx](https://github.com/lukeed/clsx#readme) A tiny (228B) utility for constructing className strings conditionally
 - [date-fns](https://date-fns.org/) Modern JavaScript date utility library
@@ -85,3 +86,5 @@ El proyecto cuenta con un archivo de variables de entorno
 |GENERATE_SOURCEMAP|boolean| |Generación de los sourcemaps de las gráficas de ant design
 REACT_APP_TIME_PER_TRANSCRIPTION_PAG|number| 30 |Intervalo de tiempo expresado en segundos en los que se realizarán los cortes para el paginado de la transcripción
 REACT_APP_ITEMS_PER_TRANSCRIPTION_PAGE|number| 9 |Número de elementos a mostrar en el grid de la paginación de la transcripción
+REACT_APP_VIRTUALIZED_TABLE_OVERSCAN|number|10|Número de elementos que se cargan en los DataGrid de manera extra a los que se estan visualizando, esto para evitar que al hacer scroll existan muchos espacios en blanco
+REACT_APP_MAIN_BACKEND_URL|string|`http://localhost`|URL del API principal

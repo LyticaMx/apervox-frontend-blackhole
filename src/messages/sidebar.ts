@@ -53,8 +53,16 @@ export const sidebarMessages = defineMessages({
     id: 'sidebar.demo.demoWavesurfer',
     defaultMessage: 'Wavesurfer'
   },
+  demoDatagrid: {
+    id: 'sidebar.demo.demoDatagrid',
+    defaultMessage: 'Data Grid'
+  },
   demoTranscription: {
     id: 'sidebar.demo.demoTranscription',
     defaultMessage: 'Transcripción'
+  },
+  roles: {
+    id: 'sidebar.Roles.list',
+    defaultMessage: 'Perfiles'
   }
 })

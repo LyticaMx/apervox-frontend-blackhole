@@ -6,13 +6,15 @@ interface Props {
   style?: 'light' | 'medium' | 'normal' | 'italic' | 'semibold' | 'bold'
   className?: string
   children: ReactNode
+  component?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span' | 'p'
 }
 
 const Typography = ({
   variant = 'body1',
   style = 'normal',
   className,
-  children
+  children,
+  component
 }: Props): ReactElement => {
   const variantClasses = {
     caption: 'text-xs',
@@ -31,12 +33,14 @@ const Typography = ({
     bold: 'font-bold'
   }
 
+  const Component = component ?? 'p'
+
   return (
-    <p
+    <Component
       className={clsx(variantClasses[variant], styleClasses[style], className)}
     >
       {children}
-    </p>
+    </Component>
   )
 }
 

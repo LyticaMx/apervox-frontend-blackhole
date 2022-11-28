@@ -43,7 +43,7 @@ const useApi = ({ endpoint, method, base = 'default' }: Props) => {
         throw { response }
       }
 
-      return response.data.data
+      return response.data
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         const response: AxiosResponse = error.response

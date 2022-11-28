@@ -57,8 +57,6 @@ const SignIn = (): ReactElement => {
     onSubmit: async (values) => {
       const successLogin = await actions?.signIn(values)
 
-      console.log('successLogin', successLogin)
-
       if (successLogin) {
         history.push('/')
       }
