@@ -2,11 +2,14 @@ import DataGrid from 'components/DataGrid'
 import Typography from 'components/Typography'
 import { useRoles } from 'context/Roles'
 import { ReactElement, useEffect } from 'react'
+import { useIntl } from 'react-intl'
 import { useColumns } from './hooks/useColumns'
+import { messages } from './messages'
 
 const Roles = (): ReactElement => {
   const { list, actions, pagination } = useRoles()
   const columns = useColumns()
+  const { formatMessage } = useIntl()
 
   useEffect(() => {
     actions?.getAll()
@@ -15,7 +18,7 @@ const Roles = (): ReactElement => {
   return (
     <div>
       <Typography variant="title" component="h1" className="mb-5">
-        Perfiles
+        {formatMessage(messages.title)}
       </Typography>
       <DataGrid
         columns={columns}
