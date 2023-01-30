@@ -16,5 +16,13 @@ export const signInMessages = defineMessages({
   anAccount: {
     id: 'views.Auth.SignIn.anAccount',
     defaultMessage: 'una cuenta.'
+  },
+  recoverPassword: {
+    id: 'views.Auth.SignIn.recoverPassword',
+    defaultMessage: 'Recuperar contraseña'
+  },
+  signIn: {
+    id: 'views.Auth.SignIn.signIn',
+    defaultMessage: 'Ingresar'
   }
 })

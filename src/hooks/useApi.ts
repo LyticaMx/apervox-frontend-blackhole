@@ -6,9 +6,9 @@ import { useIntl } from 'react-intl'
 import { createInstance, BaseURL } from 'providers/api'
 import { useLoader } from 'context/Loader'
 
-import { apiMessages } from 'messages/api'
+import { apiMessages } from 'globalMessages/api'
 import { GeneralParams, ResponseData } from 'types/api'
-// import { useAuth } from 'context/Auth'
+import { useAuth } from 'context/Auth'
 import { getItem, setItem } from 'utils/persistentStorage'
 
 interface Props {
@@ -38,7 +38,7 @@ const useApi = ({
 }: Props) => {
   const intl = useIntl()
   const { actions: loaderActions } = useLoader()
-  // const { actions: authActions } = useAuth()
+  const { actions: authActions } = useAuth()
   const instance = createInstance({ base })
 
   const handleFetch = async (
@@ -54,9 +54,10 @@ const useApi = ({
         method,
         url,
         headers,
-        /* Revisar como funciona el nuevo param serializer
-        paramsSerializer: (params) =>
-          QueryString.stringify(params, { arrayFormat: 'repeat' }),
+        /*
+        paramsSerializer: (params) => {
+          return QueryString.stringify(params, { arrayFormat: 'repeat' })
+        },
         */
         ...(urlParams
           ? acceptNulls
@@ -92,7 +93,7 @@ const useApi = ({
 
         if (unauthorized) {
           const errorsRegistered = Number(getItem('errorsAuthRegistered')) ?? 0
-          // authActions?.killSession()
+          authActions?.killSession()
           setItem('errorsAuthRegistered', errorsRegistered + 1)
         } else {
           const i18ErrorMessage: ApiMessage =

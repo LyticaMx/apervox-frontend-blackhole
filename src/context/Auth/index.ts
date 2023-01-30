@@ -1,2 +1,2 @@
 export * from './useAtuh'
-export * from './AuthProvider'
+export * from './Provider'

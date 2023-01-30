@@ -1,17 +1,23 @@
-import { ReactElement } from 'react'
+import { ReactElement, useMemo } from 'react'
 import { Histogram, HistogramConfig } from '@ant-design/plots'
+
+import NoData from 'components/NoData'
 
 interface Props {
   data: any[]
   binField?: string
   binWidth?: number
+  onClickElement?: (dataElement: any) => void
 }
 
 const HistogramChart = ({
   data,
   binField = 'value',
-  binWidth = 2
+  binWidth = 2,
+  onClickElement = () => {}
 }: Props): ReactElement => {
+  const hasData = useMemo(() => data.length, [data])
+
   const config: HistogramConfig = {
     data,
     binField,
@@ -28,17 +34,14 @@ const HistogramChart = ({
         autoHide: true,
         autoRotate: false
       }
+    },
+    onReady: (plot) => {
+      plot.on('element:click', ({ data }) => {
+        onClickElement(data.data)
+      })
     }
-    // meta: {
-    //   type: {
-    //     alias: '类别'
-    //   },
-    //   sales: {
-    //     alias: '销售额'
-    //   }
-    // }
   }
-  return <Histogram {...config} />
+  return hasData ? <Histogram {...config} /> : <NoData type="chart" />
 }
 
 export default HistogramChart

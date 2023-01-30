@@ -1,4 +1,4 @@
-import { ReactElement, useCallback } from 'react'
+import { InputHTMLAttributes, ReactElement, useCallback } from 'react'
 import clsx from 'clsx'
 
 import Label from 'components/Label'
@@ -21,6 +21,8 @@ interface Props {
   placeholder?: string
   multiline?: boolean
   rows?: number
+  labelSpacing?: '1' | '2' | '3' | '4' | '5'
+  inputProps?: InputHTMLAttributes<HTMLInputElement>
 }
 
 const TextField = ({
@@ -32,10 +34,12 @@ const TextField = ({
   helperText,
   multiline,
   rows = 5,
+  labelSpacing,
+  inputProps = {},
   ...props
 }: Props): ReactElement => {
   const Component = useCallback(
-    props => {
+    (props) => {
       if (multiline) {
         return (
           <textarea
@@ -46,14 +50,18 @@ const TextField = ({
         )
       }
 
-      return <input {...props} />
+      return <input {...props} {...inputProps} />
     },
     [multiline, rows]
   )
 
   return (
     <div className={className}>
-      {label && <Label id={id}>{label}</Label>}
+      {label && (
+        <Label id={id} labelSpacing={labelSpacing}>
+          {label}
+        </Label>
+      )}
       <Component
         id={id}
         type={type}

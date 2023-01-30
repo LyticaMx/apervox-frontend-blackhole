@@ -1,4 +1,4 @@
-import { Call } from './call'
+import { CallModel } from './call'
 import { Segment } from './segment'
 import { ReceivedMedianVector, TransmitedMedianVector } from './vector'
 
@@ -18,14 +18,13 @@ export interface Receptor {
 export interface ReceivedAudio {
   id: string
   name: string
-  call: Call
+  call: CallModel
   call_id: string
   receptor: Receptor
   receptor_id: string
   duration?: number
   segments: Segment[]
   median_vector?: ReceivedMedianVector
-  // conversation Conversation?
   created_at: string
   updated_at?: string
 }
@@ -33,12 +32,11 @@ export interface ReceivedAudio {
 export interface TransmitedAudio {
   id: string
   name: string
-  call: Call
+  call: CallModel
   call_id: string
   duration?: number
   segments: Segment[]
   median_vector?: TransmitedMedianVector
-  // conversation?: Conversation
   created_at: string
   updated_at?: string
 }

@@ -22,7 +22,7 @@ const Card = ({
       className={clsx(
         className,
         paddingClasses[padding],
-        'w-full h-max border shadow ring-1 ring-black ring-opacity-5 md:rounded'
+        'w-full border shadow ring-1 ring-black ring-opacity-5 md:rounded'
       )}
     >
       {children}

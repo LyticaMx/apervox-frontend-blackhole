@@ -2,7 +2,7 @@ import { ReactElement, useState } from 'react'
 
 import WaveSurfer, { Region } from 'components/Wavesurfer'
 
-import { regions } from 'dummy/data'
+import { regions } from 'dumy/data'
 
 import ChildrenWave from './Wavesurfer/Children'
 import Drawer from 'components/Drawer'

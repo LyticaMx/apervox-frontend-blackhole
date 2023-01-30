@@ -1,5 +1,7 @@
-import { ReactElement } from 'react'
+import { ReactElement, useMemo } from 'react'
 import { Column, ColumnConfig } from '@ant-design/plots'
+
+import NoData from 'components/NoData'
 
 interface Props {
   data: any[]
@@ -7,9 +9,16 @@ interface Props {
     x: string
     y: string
   }
+  onClickElement?: (dataElement: any) => void
 }
 
-const ColumnChart = ({ data, fields }: Props): ReactElement => {
+const ColumnChart = ({
+  data,
+  fields,
+  onClickElement = () => {}
+}: Props): ReactElement => {
+  const hasData = useMemo(() => data.length, [data])
+
   const config: ColumnConfig = {
     data,
     xField: fields.x,
@@ -26,17 +35,15 @@ const ColumnChart = ({ data, fields }: Props): ReactElement => {
         autoHide: true,
         autoRotate: false
       }
+    },
+    onReady: (plot) => {
+      plot.on('element:click', ({ data }) => {
+        onClickElement(data.data)
+      })
     }
-    // meta: {
-    //   type: {
-    //     alias: '类别'
-    //   },
-    //   sales: {
-    //     alias: '销售额'
-    //   }
-    // }
   }
-  return <Column {...config} />
+
+  return hasData ? <Column {...config} /> : <NoData type="chart" />
 }
 
 export default ColumnChart

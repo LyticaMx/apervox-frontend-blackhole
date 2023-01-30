@@ -5,8 +5,21 @@ interface Props {
   className?: string
   type?: 'button' | 'submit' | 'reset'
   size?: 'sm' | 'md' | 'lg'
+  color?:
+    | 'base'
+    | 'red'
+    | 'yellow'
+    | 'orange'
+    | 'green'
+    | 'cyan'
+    | 'sky'
+    | 'blue'
+    | 'indigo'
+    | 'purple'
   variant?: 'text' | 'outlined' | 'contained'
   margin?: 'none' | 'normal' | 'dense'
+  fullwidth?: boolean
+  disabled?: boolean
   children: ReactNode
   onClick?: () => void
 }
@@ -15,8 +28,10 @@ const Button = ({
   className,
   type = 'button',
   size = 'md',
+  color = 'base',
   variant = 'text',
-  margin = 'normal',
+  margin = 'none',
+  fullwidth = false,
   ...props
 }: Props): ReactElement => {
   const marginClasses = {
@@ -31,22 +46,68 @@ const Button = ({
     lg: 'text-base'
   }
 
-  const variantClasses = {
-    text: 'bg-transparent border-none hover:bg-gray-100',
-    outlined: 'bg-transparent border border-gray-200 hover:bg-gray-100',
-    contained: 'border-none bg-gray-200 hover:bg-gray-300'
+  const variantColors = {
+    text: {
+      base: 'text-slate-500 hover:enabled:bg-slate-100 focus:ring-slate-500',
+      red: 'text-red-500 hover:enabled:bg-red-100 focus:ring-red-500',
+      yellow:
+        'text-yellow-500 hover:enabled:bg-yellow-100 focus:ring-yellow-500',
+      orange:
+        'text-orange-500 hover:enabled:bg-orange-100 focus:ring-orange-500',
+      green: 'text-green-500 hover:enabled:bg-green-100 focus:ring-green-500',
+      cyan: 'text-cyan-500 hover:enabled:bg-cyan-100 focus:ring-cyan-500',
+      sky: 'text-sky-500 hover:enabled:bg-sky-100 focus:ring-sky-500',
+      blue: 'text-blue-500 hover:enabled:bg-blue-100 focus:ring-blue-500',
+      indigo:
+        'text-indigo-500 hover:enabled:bg-indigo-100 focus:ring-indigo-500',
+      purple:
+        'text-purple-500 hover:enabled:bg-purple-100 focus:ring-purple-500'
+    },
+    outlined: {
+      base: 'border border-slate-500 text-slate-500 hover:enabled:bg-slate-100 focus:ring-slate-500',
+      red: 'border border-red-500 text-red-500 hover:enabled:bg-red-100 focus:ring-red-500',
+      yellow:
+        'border border-yellow-500 text-yellow-500 hover:enabled:bg-yellow-100 focus:ring-yellow-500',
+      orange:
+        'border border-orange-500 text-orange-500 hover:enabled:bg-orange-100 focus:ring-orange-500',
+      green:
+        'border border-green-500 text-green-500 hover:enabled:bg-green-100 focus:ring-green-500',
+      blue: 'border border-blue-500 text-blue-500 hover:enabled:bg-blue-100 focus:ring-blue-500',
+      indigo:
+        'border border-indigo-500 text-indigo-500 hover:enabled:bg-indigo-100 focus:ring-indigo-500',
+      purple:
+        'border border-purple-500 text-purple-500 hover:enabled:bg-purple-100 focus:ring-purple-500',
+      sky: 'border border-sky-500 text-sky-500 hover:enabled:bg-sky-100 focus:ring-sky-500'
+    },
+    contained: {
+      base: 'bg-slate-500 text-white hover:enabled:bg-slate-600 focus:ring-slate-500',
+      red: 'bg-red-500 text-white hover:enabled:bg-red-600 focus:ring-red-500',
+      yellow:
+        'bg-yellow-500 text-white hover:enabled:bg-yellow-600 focus:ring-yellow-500',
+      orange:
+        'bg-orange-500 text-white hover:enabled:bg-orange-600 focus:ring-orange-500',
+      green:
+        'bg-green-500 text-white hover:enabled:bg-green-600 focus:ring-green-500',
+      cyan: 'bg-cyan-500 text-white hover:enabled:bg-cyan-600 focus:ring-cyan-500',
+      sky: 'bg-sky-500 text-white hover:enabled:bg-sky-600 focus:ring-sky-500',
+      blue: 'bg-blue-500 text-white hover:enabled:bg-blue-600 focus:ring-blue-500',
+      indigo:
+        'bg-indigo-500 text-white hover:enabled:bg-indigo-600 focus:ring-indigo-500',
+      purple:
+        'bg-purple-500 text-white hover:enabled:bg-purple-600 focus:ring-purple-500'
+    }
   }
-
-  const defaultColorText = 'text-gray-500'
 
   return (
     <button
+      type={type}
       className={clsx(
-        className ?? defaultColorText,
+        className,
         sizeClasses[size],
-        variantClasses[variant],
         marginClasses[margin],
-        'flex rounded-md items-cente justify-center px-4 py-2 font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 h-max w-max'
+        variantColors[variant][color],
+        fullwidth ? 'w-full' : 'w-max',
+        'flex rounded-md items-center justify-center px-4 py-2 font-semibold h-max focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-75 disabled:cursor-not-allowed'
       )}
       {...props}
     />

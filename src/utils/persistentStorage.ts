@@ -14,7 +14,7 @@ const getItem = (keyName: string): any => {
 
   if (value === null) return null
 
-  if ((!isEmpty(value) && value.slice(0) === '[') || value.slice(0) === '{') {
+  if ((!isEmpty(value) && value.charAt(0) === '[') || value.charAt(0) === '{') {
     value = JSON.parse(value)
   }
 

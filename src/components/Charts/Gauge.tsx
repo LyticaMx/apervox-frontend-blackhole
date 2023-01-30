@@ -22,7 +22,7 @@ const GaugeChart = ({
   fontSize
 }: Props): ReactElement => {
   const config: GaugeConfig = {
-    percent: Number(`0.${percentage}`),
+    percent: percentage < 100 ? Number(`0.${percentage}`) : 1,
     range: {
       color: `l(0) 0:${rangeColor.from} 1:${rangeColor.to}`
     },

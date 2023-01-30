@@ -1,12 +1,16 @@
-import { ReactElement, ReactNode, useState } from 'react'
+import { ReactElement, ReactNode, useEffect, useState } from 'react'
+import { useIntl } from 'react-intl'
 import { useFormik } from 'formik'
 
 import { Popover } from '@headlessui/react'
 import { Float } from '@headlessui-float/react'
 import { FunnelIcon } from '@heroicons/react/24/outline'
 
+import Divider from 'components/Divider'
+import { actionsMessages, generalMessages } from 'globalMessages'
+
 import Field from './Field'
-// import clsx from 'clsx'
+import Button from 'components/Button'
 
 export type InputType =
   | 'datepicker'
@@ -15,10 +19,12 @@ export type InputType =
   | 'autocomplete'
   | 'checkbox'
   | 'radio'
+  | 'divider'
+  | 'asyncSelect'
 
 type InitialValues = Record<string, any>
 type InputProps = Record<string, any>
-interface Item {
+export interface FilterItem {
   title: string
   description?: string
   type: InputType
@@ -28,32 +34,47 @@ interface Item {
   props?: InputProps
   wrap?: boolean
   cancelItems?: string[]
+  asyncSearch?: {
+    loadOptions: (search: any, loadedOptions: any) => Promise<any>
+    resetPagination: () => void
+  }
 }
 
 interface Props {
-  items: Item[]
+  items: FilterItem[]
   onSubmit: (values: any) => any
   onReset?: () => void
+  onClose?: () => void
   initialValues?: InitialValues
+  values?: Record<string, any>
   children?: ReactNode
   acceptText?: ReactNode
   cancelText?: ReactNode
+  disabledEmpty?: boolean
 }
 
 const Filter = ({
   items,
   onSubmit,
   onReset,
+  onClose,
   initialValues,
+  values,
   children,
-  acceptText = 'Aceptar',
-  cancelText = 'Cancelar'
+  acceptText,
+  cancelText,
+  disabledEmpty = false
 }: Props): ReactElement => {
+  const intl = useIntl()
+
   const [show, setShow] = useState(false)
+
   const toggle = (): void => {
     setShow(!show)
   }
+
   const handleClose = (): void => {
+    if (onClose) onClose()
     setShow(false)
   }
 
@@ -64,6 +85,26 @@ const Filter = ({
       handleClose()
     }
   })
+
+  useEffect(() => {
+    if (show && values) {
+      formik.resetForm({ values: values ?? {} })
+    }
+  }, [show, values])
+
+  useEffect(() => {
+    if (!show) {
+      items.forEach((item) => {
+        if (item.type === 'asyncSelect') {
+          item.asyncSearch?.resetPagination()
+        }
+      })
+    }
+  }, [show])
+
+  const disabled =
+    disabledEmpty &&
+    !Object.values(formik.values).filter((item) => item !== null).length
 
   return (
     <Popover className="relative inline-block">
@@ -84,7 +125,8 @@ const Filter = ({
         <Popover.Button as="div" onClick={toggle}>
           {!children && (
             <button className="inline-flex justify-center items-center rounded-md border border-gray-300 bg-white px-3.5 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none">
-              <span>Filter</span> <FunnelIcon className="w-5 h-5 ml-2" />
+              <span>{intl.formatMessage(generalMessages.filters)}</span>
+              <FunnelIcon className="w-5 h-5 ml-2" />
             </button>
           )}
           {children && children}
@@ -95,38 +137,46 @@ const Filter = ({
         >
           <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
             <div className="px-4 pt-4 flex justify-between">
-              <span>Filters</span>
+              <span>{intl.formatMessage(generalMessages.filters)}</span>
               <button
                 onClick={() => {
-                  formik.resetForm()
+                  formik.resetForm({ values: {} })
                   if (onReset) onReset()
                 }}
                 className="text-sm text-blue-500"
               >
-                Limpiar
+                {intl.formatMessage(actionsMessages.clean)}
               </button>
             </div>
             <form onSubmit={formik.handleSubmit}>
               <div className="relative grid gap-2 bg-white py-4 px-3">
-                {items.map((item, index) => (
-                  <Field field={item} formik={formik} key={index} />
-                ))}
+                {items.map((item, index) =>
+                  item.type === 'divider' ? (
+                    <Divider key={index} margin="none" title={item.name} />
+                  ) : (
+                    <Field field={item} formik={formik} key={index} />
+                  )
+                )}
               </div>
               <div className="flex flex-column sm:flex-row-reverse gap-2 px-3 pb-3">
-                <button
+                <Button
                   type="submit"
-                  className="w-full px-4 py-2 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-md hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+                  disabled={disabled}
+                  color="blue"
+                  variant="contained"
+                  className="inline-block mt-4 flex-1"
                 >
-                  {acceptText}
-                </button>
+                  {acceptText ?? intl.formatMessage(actionsMessages.accept)}
+                </Button>
 
-                <button
+                <Button
                   onClick={handleClose}
                   type="button"
-                  className="inline-block mt-4 text-center text-sm text-blue-500 md:mt-0 md:mx-6 dark:text-blue-400"
+                  color="blue"
+                  className="inline-block mt-4 flex-1"
                 >
-                  {cancelText}
-                </button>
+                  {cancelText ?? intl.formatMessage(actionsMessages.cancel)}
+                </Button>
               </div>
             </form>
           </div>

@@ -1,5 +1,7 @@
+import { ReactElement, useMemo } from 'react'
 import { Radar, RadarConfig } from '@ant-design/plots'
-import { ReactElement } from 'react'
+
+import NoData from 'components/NoData'
 
 interface Fields {
   x: string
@@ -12,8 +14,8 @@ interface Props {
   fields: Fields
   area?: boolean
   score?: {
-    min: number
-    max: number
+    min?: number
+    max?: number
   }
 }
 
@@ -23,6 +25,8 @@ const BasicRadarChart = ({
   area,
   score
 }: Props): ReactElement => {
+  const hasData = useMemo(() => data.length, [data])
+
   const config: RadarConfig = {
     data,
     xField: fields.x,
@@ -64,7 +68,7 @@ const BasicRadarChart = ({
     area: area ? {} : undefined
   }
 
-  return <Radar {...config} />
+  return hasData ? <Radar {...config} /> : <NoData type="chart" />
 }
 
 export default BasicRadarChart

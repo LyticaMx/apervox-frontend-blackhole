@@ -6,7 +6,7 @@ export const messages = defineMessages({
     defaultMessage: 'Drop files to attach, or '
   },
   browse: {
-    id: 'components.DragDrop.label',
+    id: 'components.DragDrop.browse',
     defaultMessage: 'browse'
   }
 })

@@ -33,7 +33,9 @@ const Tooltip = ({
     },
     classNames: {
       ...classNames,
-      panel: 'bg-gray-500 text-white py-1 px-2 rounded-sm text-sm'
+      panel: !classNames?.panel
+        ? 'bg-gray-500 text-white py-1 px-2 rounded-sm text-sm'
+        : ''
     }
   }
 

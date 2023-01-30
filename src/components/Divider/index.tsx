@@ -1,15 +1,44 @@
+import clsx from 'clsx'
 import { ReactElement } from 'react'
 
 interface Props {
-  title: string
+  title?: string
+  margin?: 'normal' | 'none'
+  style?: 'light' | 'medium' | 'normal'
 }
 
-const Divider = ({ title }: Props): ReactElement => {
+const Divider = ({
+  title,
+  margin = 'normal',
+  style = 'normal'
+}: Props): ReactElement => {
+  const borders = {
+    light: 'border-gray-200',
+    medium: 'border-gray-300',
+    normal: 'border-gray-400'
+  }
+  const textcolor = {
+    light: 'text-gray-200',
+    medium: 'text-gray-300',
+    normal: 'text-gray-400'
+  }
+
   return (
-    <div className="relative flex py-5 items-center">
-      <div className="flex-grow border-t border-gray-400"></div>
-      <span className="flex-shrink mx-4 text-gray-400">{title}</span>
-      <div className="flex-grow border-t border-gray-400"></div>
+    <div
+      className={clsx(
+        'relative flex items-center',
+        margin === 'normal' && 'py-5'
+      )}
+    >
+      <div className={clsx('flex-grow border-t', borders[style])}></div>
+      {title && (
+        <>
+          <span className={clsx('flex-shrink mx-4', textcolor[style])}>
+            {title}
+          </span>
+          <div className={clsx('flex-grow border-t ', borders[style])}></div>
+        </>
+      )}
     </div>
   )
 }

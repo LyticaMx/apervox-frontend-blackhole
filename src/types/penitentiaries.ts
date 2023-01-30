@@ -1,4 +1,5 @@
-import { Location, Speaker } from './speaker'
+import { Speaker } from './speaker'
+import { Location } from './location'
 
 export interface Penitentiary {
   id: string
