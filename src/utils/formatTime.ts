@@ -9,3 +9,12 @@ export const formatSeconds = (seconds: number): string => {
 
   return hour === '0' ? `${hour}:${minute}:${second}` : `${minute}:${second}`
 }
+
+export const getDateDiferenceInMinutes = (
+  startDate: Date,
+  endDate: Date
+): number => {
+  const diference = endDate.getTime() - startDate.getTime()
+
+  return diference / 60000
+}
