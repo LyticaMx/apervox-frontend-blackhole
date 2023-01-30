@@ -1,4 +1,4 @@
-import { ReactElement, useRef, useState } from 'react'
+import { ReactElement, useMemo, useRef, useState } from 'react'
 import {
   ColumnDef,
   flexRender,
@@ -13,6 +13,7 @@ import { config } from 'providers/config'
 import PaginationComponent from './Pagination'
 import { ArrowSmallUpIcon, ArrowSmallDownIcon } from '@heroicons/react/20/solid'
 import { Pagination } from 'types/pagination'
+import IndeterminateCheckbox from './IndeterminateCheckbox'
 
 interface Props<T> {
   columns: Array<ColumnDef<T>>
@@ -22,6 +23,7 @@ interface Props<T> {
   totalItems: number
   debug?: boolean
   textAlign?: 'left' | 'center' | 'right'
+  withCheckbox?: boolean
 }
 
 const DataGrid = <DataType,>(props: Props<DataType>): ReactElement => {
@@ -32,14 +34,42 @@ const DataGrid = <DataType,>(props: Props<DataType>): ReactElement => {
     totalItems,
     debug = false,
     textAlign = 'left',
+    withCheckbox = false,
     pagination
   } = props
   const [sorting, setSorting] = useState<SortingState>([])
+  const [rowSelection, setRowSelection] = useState({})
   const tableContainerRef = useRef<HTMLDivElement>(null)
+  const newColumns = useMemo<Array<ColumnDef<DataType>>>(() => {
+    if (!withCheckbox) return columns
+    return [
+      {
+        id: 'checkbox',
+        header: ({ table }) => (
+          <IndeterminateCheckbox
+            checked={table.getIsAllRowsSelected()}
+            indeterminate={table.getIsSomeRowsSelected()}
+            onChange={table.getToggleAllRowsSelectedHandler()}
+          />
+        ),
+        cell: ({ row }) => (
+          <div>
+            <IndeterminateCheckbox
+              checked={row.getIsSelected()}
+              indeterminate={row.getIsSomeSelected()}
+              onChange={row.getToggleSelectedHandler()}
+            />
+          </div>
+        )
+      },
+      ...columns
+    ]
+  }, [columns])
   const table = useReactTable({
     data,
-    columns,
-    state: { sorting },
+    columns: newColumns,
+    state: { sorting, rowSelection },
+    onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -84,7 +114,7 @@ const DataGrid = <DataType,>(props: Props<DataType>): ReactElement => {
         style={{ maxHeight: height }}
         className="container overflow-auto"
       >
-        <table className="table-auto w-full ">
+        <table className="table-auto w-full">
           <thead className="sticky top-0 font-semibold text-gray-400 bg-gray-50 uppercase">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>

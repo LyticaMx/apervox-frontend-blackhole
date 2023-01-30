@@ -26,6 +26,7 @@ const Roles = (): ReactElement => {
         height={450}
         pagination={pagination}
         totalItems={pagination.totalRecords}
+        withCheckbox
       />
     </div>
   )
