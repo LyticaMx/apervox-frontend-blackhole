@@ -39,7 +39,7 @@ const AuthProvider = ({ children }: Props): ReactElement => {
         body: params
       })
 
-      const id = responseDataSignIn.payload.userId
+      const id = responseDataSignIn.data.userId
 
       if (id) {
         const responseDataUSer = await getUserService({
@@ -48,8 +48,8 @@ const AuthProvider = ({ children }: Props): ReactElement => {
 
         const authData: Auth = {
           isLogguedIn: true,
-          token: responseDataSignIn?.payload?.token,
-          user: responseDataUSer?.payload
+          token: responseDataSignIn?.data?.token,
+          user: responseDataUSer?.data
         }
 
         setItem('token', authData.token)
@@ -71,7 +71,7 @@ const AuthProvider = ({ children }: Props): ReactElement => {
         body: params
       })
 
-      if (responseDataSignIn.id) {
+      if (responseDataSignIn.data) {
         return true
       } else {
         return false
