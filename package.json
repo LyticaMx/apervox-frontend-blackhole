@@ -53,7 +53,6 @@
   "scripts": {
     "start": "react-scripts start",
     "start:electron": "electron .",
-    "dev": "yarn start && yarn start:electron",
     "prebuild": "rm -rf ./build",
     "build": "react-scripts build",
     "prebuild:electron": "rm -rf ./dist && yarn build",
