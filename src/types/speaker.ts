@@ -1,5 +1,8 @@
-import { Call } from './call'
+import { CallModel } from './call'
 import { ControlGroup } from './control'
+import { DatesFilterForm } from './datesFilter'
+import { DateFilter, PaginationFilter } from './filters'
+import { Location } from './location'
 import { Penitentiary } from './penitentiaries'
 
 export enum Status {
@@ -13,36 +16,9 @@ export enum Gender {
   MALE,
   FEMALE
 }
-
-export enum CodeCountry {
-  USA,
-  MEX,
-  COL,
-  BRZ
-}
-
-export interface Country {
-  id: string
-  code_country: CodeCountry
-}
-
-export interface State {
-  id: string
-  name: string
-  country: Country
-  country_id: string
-}
-
-export interface Location {
-  id: string
-  name: string
-  state: State
-  state_id: string
-}
-
 export interface Speaker {
   id: string
-  calls: Call[]
+  calls: CallModel[]
   pin: number
   names: string
   fathers_name: string
@@ -85,9 +61,9 @@ export interface ListPin {
 }
 
 export interface Heatmap {
-  count: number
-  day_name: string
-  hours: number
+  value: number
+  y: string
+  x: number
 }
 
 export interface CallByAlerts {
@@ -97,20 +73,51 @@ export interface CallByAlerts {
   duration: number
 }
 
-export interface SpeakersType {
+export interface CallsParams extends DateFilter, Partial<PaginationFilter> {
+  order_by?: string
+  calls?: string
+}
+export interface ListPinsParams extends DateFilter, Partial<PaginationFilter> {
+  calls?: string
+  order_by?: string
+  min_value?: number
+  max_value?: number
+}
+
+export interface State {
   summary: Summary
-  histogramCalls: HistogramCall[]
-  listPins: ListPin[]
+  histogram: HistogramCall[]
+  pins: ListPin[]
   heatmapSpeakers: Heatmap[]
   heatmapAlerts: Heatmap[]
-  callsByAlerts: CallByAlerts[]
-  actions?: {
-    getSummary: (params?: any) => Promise<boolean>
-    getHistogram: (params?: any) => Promise<boolean>
-    getListPins: (params?: any) => Promise<boolean>
-    getHeatmapSpeakers: (params?: any) => Promise<boolean>
-    getHeatmapAlerts: (params?: any) => Promise<boolean>
-    getCallsByAlerts: (params?: any) => Promise<boolean>
-    getAll: (params?: any) => Promise<boolean>
+  calls: CallByAlerts[]
+  pinsPagination: {
+    limit: number
+    page: number
+    totalRecords: number
+    min_value: number
+    max_value: number
   }
+  callsPagination: {
+    limit: number
+    page: number
+    totalRecords: number
+    order_by: string
+    calls: string
+  }
+  dates: DateFilter
+}
+export interface Actions {
+  getSummary: (params?: DateFilter) => Promise<boolean>
+  getHistogram: (params?: DateFilter) => Promise<boolean>
+  getListPins: (params?: ListPinsParams) => Promise<boolean>
+  getHeatmapSpeakers: (params?: DateFilter) => Promise<boolean>
+  getHeatmapAlerts: (params?: DateFilter) => Promise<boolean>
+  getCallsByAlerts: (params?: CallsParams) => Promise<boolean>
+  getAll: (params?: DateFilter) => Promise<boolean>
+  setDates: (params: DatesFilterForm) => void
+}
+
+export interface ContextType extends State {
+  actions?: Actions
 }

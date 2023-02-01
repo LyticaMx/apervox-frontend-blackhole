@@ -1,3 +1,5 @@
+import { FormProfile, Profile } from './profile'
+
 export interface Role {
   id: number
   name: string
@@ -5,16 +7,20 @@ export interface Role {
 }
 
 export interface UserAuth {
-  id: number
-  name: string
   email: string
-  role: Role
+  id: string
+  name: string
+  fathers_name: string
+  mothers_name: string
+  dependency: string
+  activated: boolean
 }
 
 export interface Auth {
   isLogguedIn: boolean
   token: string
-  user: UserAuth
+  rToken: string
+  profile: Profile
 }
 
 export interface SignIn {
@@ -25,8 +31,15 @@ export interface SignIn {
 export interface SignUp {
   email: string
   name: string
-  lastname: string
-  secondLastname: string
+  fathers_name: string
+  mothers_name: string
+}
+
+export interface RestorePassword {
+  password: string
+  confirmPassword: string
+  secureCode: number
+  token: string
 }
 
 export interface AuthContextType {
@@ -34,6 +47,11 @@ export interface AuthContextType {
   actions?: {
     signIn: (params: SignIn) => Promise<boolean>
     signUp: (params: SignUp) => Promise<boolean>
+    forgotPassword: (email: string) => Promise<boolean>
+    restorePassword: (params: RestorePassword) => Promise<boolean>
     signOut: () => Promise<boolean>
+    updateProfile: (profile: FormProfile) => Promise<void>
+    refreshToken: () => Promise<boolean>
+    killSession: (hideNotification?: boolean) => void
   }
 }

@@ -21,7 +21,7 @@ const DragDrop = ({ onChange, ...config }: Props): ReactElement => {
 
   return (
     <div className='max-w-xl'>
-      <label
+      <div
         {...getRootProps()}
         className={clsx(
           'flex justify-center w-full h-32 px-4 transition bg-white border-2  border-dashed rounded-md appearance-none cursor-pointer focus:outline-none',
@@ -41,7 +41,7 @@ const DragDrop = ({ onChange, ...config }: Props): ReactElement => {
           </span>
         </span>
         <input {...getInputProps()} />
-      </label>
+      </div>
     </div>
   )
 }

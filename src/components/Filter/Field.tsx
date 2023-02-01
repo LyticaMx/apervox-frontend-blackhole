@@ -2,11 +2,13 @@ import { ReactElement, ReactNode, useCallback } from 'react'
 import { FormikProps } from 'formik'
 import { Disclosure } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
+import { AsyncPaginate } from 'react-select-async-paginate'
 
 import TextField from 'components/Form/Textfield'
 import Datepicker from 'components/Form/Datepicker'
 import SelectField from 'components/Form/Select'
 import Autocomplete from 'components/Form/Autocomplete'
+import Label from 'components/Label'
 
 interface Props {
   field: any
@@ -58,7 +60,7 @@ const Field = ({ field, formik }: Props): ReactElement => {
 
     if (field.cancelItems) {
       field.cancelItems.forEach((cancelField) => {
-        formik.setFieldValue(cancelField, '')
+        formik.setFieldValue(cancelField, null)
       })
     }
   }
@@ -69,6 +71,7 @@ const Field = ({ field, formik }: Props): ReactElement => {
         <Wrapper wrap={field.wrap ?? true}>
           <TextField
             {...field.props}
+            label={!field.wrap && field.title}
             id={name}
             value={value}
             onChange={(e: any) => handleChange(e.target.value)}
@@ -78,7 +81,12 @@ const Field = ({ field, formik }: Props): ReactElement => {
     case 'datepicker':
       return (
         <Wrapper wrap={field.wrap ?? true}>
-          <Datepicker {...field.props} value={value} onChange={handleChange} />
+          <Datepicker
+            {...field.props}
+            label={!field.wrap && field.title}
+            value={value}
+            onChange={handleChange}
+          />
         </Wrapper>
       )
     case 'select':
@@ -86,9 +94,10 @@ const Field = ({ field, formik }: Props): ReactElement => {
         <Wrapper wrap={field.wrap ?? true}>
           <SelectField
             {...field.props}
+            label={!field.wrap && field.title}
             value={value}
             onChange={handleChange}
-            items={field.items ?? []}
+            items={field.items}
           />
         </Wrapper>
       )
@@ -97,6 +106,7 @@ const Field = ({ field, formik }: Props): ReactElement => {
         <Wrapper wrap={field.wrap ?? true}>
           <Autocomplete
             {...field.props}
+            label={!field.wrap && field.title}
             value={value}
             onChange={handleChange}
             items={field.items ?? []}
@@ -193,6 +203,22 @@ const Field = ({ field, formik }: Props): ReactElement => {
             ))}
           </fieldset>
         </Wrapper>
+      )
+    case 'asyncSelect':
+      return (
+        <div>
+          <Label id={field.name} labelSpacing="1">
+            {field.title}
+          </Label>
+          <AsyncPaginate
+            {...field.props}
+            id={field.name}
+            name={field.name}
+            value={value}
+            onChange={handleChange}
+            loadOptions={field.asyncSearch.loadOptions}
+          />
+        </div>
       )
     default:
       return <></>

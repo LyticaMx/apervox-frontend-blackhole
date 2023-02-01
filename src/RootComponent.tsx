@@ -1,0 +1,48 @@
+import { ReactElement } from 'react'
+import { BrowserRouter } from 'react-router-dom'
+import { ToastContainer } from 'react-toastify'
+
+import Navigator from 'router/Navigator'
+
+import { LoaderProvider } from 'context/Loader/LoaderProvider'
+import { AuthProvider } from 'context/Auth'
+import { LanguageProvider } from 'context/Language'
+import { ContextLogger, appContext } from 'context/ContextLogger'
+
+import { isDev } from 'utils/env'
+
+import 'react-toastify/dist/ReactToastify.css'
+import { SidebarProvider } from 'context/Sidebar'
+import { AppContextProvider } from 'context/AppContextProvider'
+
+const contextConfig = { objectDiffs: true, arrayDiffs: false }
+
+const RootComponent = (): ReactElement => (
+  <>
+    <BrowserRouter>
+      <LanguageProvider>
+        <LoaderProvider>
+          <AuthProvider>
+            <SidebarProvider>
+              <AppContextProvider>
+                <>
+                  <Navigator />
+
+                  {isDev() && (
+                    <ContextLogger
+                      contexts={appContext}
+                      config={contextConfig}
+                    />
+                  )}
+                </>
+              </AppContextProvider>
+            </SidebarProvider>
+          </AuthProvider>
+        </LoaderProvider>
+      </LanguageProvider>
+      <ToastContainer theme="colored" position="bottom-right" />
+    </BrowserRouter>
+  </>
+)
+
+export default RootComponent

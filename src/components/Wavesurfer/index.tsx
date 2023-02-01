@@ -111,10 +111,6 @@ const WaveSurferPlayer = ({
   const isReady = useMemo(() => loadProgress === 100, [loadProgress])
 
   useEffect(() => {
-    console.log('isReady', isReady)
-  }, [isReady])
-
-  useEffect(() => {
     const plugins: any[] = []
 
     if (minimap) {
@@ -338,9 +334,6 @@ const WaveSurferPlayer = ({
 
   const handleUpdateRegion = (region: WavesurferRegion): void => {
     const foundRegion = wavesurfer.current.regions.list[region.id]
-
-    console.log('region', region)
-    console.log('foundRegion', foundRegion)
 
     foundRegion.remove()
     wavesurfer.current.addRegion(region)

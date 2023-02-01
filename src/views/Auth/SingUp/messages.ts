@@ -24,5 +24,11 @@ export const signUpMessages = defineMessages({
     id: 'views.Auth.SignUp.description',
     defaultMessage:
       'De ser aprobada tu solicitud recibirás un correo electrónico con tus accesos.'
+  },
+
+  // Request
+  applicantInformation: {
+    id: 'views.Auth.SignUp.applicantInformation',
+    defaultMessage: 'Información del solicitante'
   }
 })

@@ -1,48 +1,73 @@
-/* This example requires Tailwind CSS v2.0+ */
-import { ReactElement } from 'react'
-import { useLocation } from 'react-router-dom'
+import { ReactElement, useEffect } from 'react'
+import { toast } from 'react-toastify'
+import jwtDecode from 'jwt-decode'
+import { useIdleTimer } from 'react-idle-timer'
+import { useIntl } from 'react-intl'
 
-import VoiceprintLogo from 'assets/Icons/VoiceprintLogo'
-import { routes } from 'router/routes'
-import { Layout } from 'types/layout'
+import { useAuth } from 'context/Auth'
 import Loader from 'components/Loader'
-import Item from './components/Item'
-import SelectLocale from 'components/SelectLocale'
-import UserInfo from './components/UserInfo'
+import Sidebar from 'components/Sidebar'
+
+import { getDateDiferenceInMinutes } from 'utils/formatTime'
+import { Layout } from 'types/layout'
+import { apiMessages } from 'globalMessages'
 
 const BaseLayout = ({ children }: Layout): ReactElement => {
-  const { pathname } = useLocation()
+  const intl = useIntl()
+  const { auth, actions } = useAuth()
+  const { token } = auth
+
+  useEffect(() => {
+    validateSession(null, true)
+  }, [])
+
+  const validateSession = async (
+    _,
+    showTimeSession?: boolean
+  ): Promise<void> => {
+    const session: any = jwtDecode(token) // decode your token here
+    const exp = session.exp
+
+    if (exp) {
+      const diffTime = getDateDiferenceInMinutes(
+        new Date(),
+        new Date(exp * 1000)
+      )
+
+      if (diffTime <= 0) {
+        await actions?.killSession()
+      } else if (diffTime < 10) {
+        const successRefresh = await actions?.refreshToken()
+
+        if (!successRefresh) {
+          actions?.killSession()
+        }
+      }
+    }
+  }
+
+  const onIdle = (): void => {
+    toast.error(intl.formatMessage(apiMessages.sessionExpired))
+    actions?.killSession(true)
+  }
+
+  useIdleTimer({
+    timeout: 1000 * 60 * 15,
+    onIdle,
+    onAction: validateSession
+  })
 
   return (
     <>
-      <div>
-        <div className='hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0'>
-          <div className='flex-1 flex flex-col min-h-0 bg-blue-700'>
-            <div className='flex-1 flex flex-col pt-5 pb-4 overflow-y-auto'>
-              <div className='flex items-center flex-shrink-0 px-4'>
-                <VoiceprintLogo />
-              </div>
-              <nav className='mt-5 flex-1 px-2 space-y-1'>
-                {routes
-                  .filter(route => route.sidebar)
-                  .map(route => (
-                    <Item key={route.id} route={route} pathname={pathname} />
-                  ))}
-              </nav>
-            </div>
-            <div className='flex-shrink-0 flex-column border-t border-blue-800 p-4'>
-              <SelectLocale className='mb-3 bg-blue-600 text-white' />
-              <UserInfo />
-            </div>
-          </div>
-        </div>
-        <div className='md:pl-64 flex flex-col flex-1'>
-          <div className='sticky top-0 z-10 md:hidden pl-1 pt-1 sm:pl-3 sm:pt-3 bg-gray-100'></div>
-          <main className='flex-1'>
-            <div className='py-6'>
-              <div className='max-w-7xl mx-auto px-4 sm:px-6 md:px-8'>
-                <div className='py-4'>
-                  <div className=' border-gray-200 rounded-lg'>{children}</div>
+      <div className="flex h-screen overflow-y-hidden">
+        <Sidebar />
+        <div className="flex flex-col flex-1 overflow-y-auto">
+          <div className="sticky top-0 z-10 md:hidden pl-1 pt-1 sm:pl-3 sm:pt-3 bg-gray-100"></div>
+          <main className="flex-1">
+            <div className="py-6">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+                <div className="py-4">
+                  <div className=" border-gray-200 rounded-lg">{children}</div>
                 </div>
               </div>
             </div>

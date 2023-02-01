@@ -1,10 +1,26 @@
 import clsx from 'clsx'
 import { ReactElement, ReactNode } from 'react'
 
+export type Variant =
+  | 'caption'
+  | 'body2'
+  | 'body1'
+  | 'subtitle'
+  | 'title'
+  | 'header'
+export type Style =
+  | 'light'
+  | 'medium'
+  | 'normal'
+  | 'italic'
+  | 'semibold'
+  | 'bold'
+
 interface Props {
-  variant?: 'caption' | 'body2' | 'body1' | 'subtitle' | 'title' | 'header'
-  style?: 'light' | 'medium' | 'normal' | 'italic' | 'semibold' | 'bold'
+  variant?: Variant
+  style?: Style
   className?: string
+  noWrap?: boolean
   children: ReactNode
 }
 
@@ -12,7 +28,8 @@ const Typography = ({
   variant = 'body1',
   style = 'normal',
   className,
-  children
+  children,
+  noWrap
 }: Props): ReactElement => {
   const variantClasses = {
     caption: 'text-xs',
@@ -33,7 +50,12 @@ const Typography = ({
 
   return (
     <p
-      className={clsx(variantClasses[variant], styleClasses[style], className)}
+      className={clsx(
+        variantClasses[variant],
+        styleClasses[style],
+        className,
+        noWrap && 'truncate'
+      )}
     >
       {children}
     </p>

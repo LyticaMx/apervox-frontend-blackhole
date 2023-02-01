@@ -1,6 +1,7 @@
 import { Fragment, ReactElement, ReactNode } from 'react'
 import { Dialog as HUIDialog, Transition } from '@headlessui/react'
 import clsx from 'clsx'
+import { zIndex } from 'constants/classes'
 
 interface Props {
   title?: string
@@ -17,8 +18,10 @@ interface Props {
     | '5xl'
     | '6xl'
     | '7xl'
+  padding?: 'normal' | 'none'
+  overflow?: 'hidden' | 'visible' | 'auto'
   open: boolean
-  onClose: () => void
+  onClose?: () => void
 }
 
 const Dialog = ({
@@ -26,7 +29,9 @@ const Dialog = ({
   onClose,
   title,
   children,
-  size = 'md'
+  size = 'md',
+  padding = 'normal',
+  overflow = 'hidden'
 }: Props): ReactElement => {
   const sizeClasses = {
     xs: 'max-w-xs',
@@ -42,9 +47,28 @@ const Dialog = ({
     '7xl': 'max-w-7xl'
   }
 
+  const paddingClasses = {
+    none: 'p-0',
+    normal: 'p-6'
+  }
+
+  const overflowClasses = {
+    hidden: 'overflow-hidden',
+    visible: 'overflow-visible',
+    auto: 'overflow-auto'
+  }
+
   return (
     <Transition appear show={open} as={Fragment}>
-      <HUIDialog as="div" className="relative z-10 w-96" onClose={onClose}>
+      <HUIDialog
+        as="div"
+        className="relative w-96"
+        // eslint-disable-next-line no-unneeded-ternary
+        onClose={onClose ? onClose : () => {}}
+        style={{
+          zIndex: zIndex.dialog
+        }}
+      >
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -71,7 +95,9 @@ const Dialog = ({
               <HUIDialog.Panel
                 className={clsx(
                   sizeClasses[size],
-                  'w-full bg-white transform overflow-hidden rounded-2xl p-6 text-left align-middle shadow-xl transition-all'
+                  paddingClasses[padding],
+                  overflowClasses[overflow],
+                  'w-full bg-white transform rounded-2xl text-left align-middle shadow-xl transition-all'
                 )}
               >
                 <HUIDialog.Title

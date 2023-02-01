@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-import { screens } from 'constants/screens'
+import { screens } from 'constants/classes'
 
 type Breakpoint = 'xs' | 'sm' | 'md' | 'lg' | '2xl'
 

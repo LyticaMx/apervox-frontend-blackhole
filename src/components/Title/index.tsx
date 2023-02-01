@@ -1,18 +1,24 @@
 import { ReactElement, ReactNode } from 'react'
 import Typography from 'components/Typography'
 import { textColorClassNames } from 'utils/classes'
+import clsx from 'clsx'
 
 interface Props {
   children: ReactNode
   variant?: 'page' | 'card'
   color?: string
+  className?: string
 }
 const Title = ({
   children,
   variant = 'page',
-  color = 'black'
+  color = 'black',
+  className
 }: Props): ReactElement => {
-  const titleClass = textColorClassNames[color] ?? textColorClassNames.black
+  const titleClass = clsx(
+    textColorClassNames[color] ?? textColorClassNames.black,
+    className
+  )
 
   const Tvariant = variant === 'page' ? 'title' : 'body1'
   const Tstyle = 'semibold'

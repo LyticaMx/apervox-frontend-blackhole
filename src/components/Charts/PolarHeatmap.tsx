@@ -1,6 +1,9 @@
+import { ReactElement, useMemo } from 'react'
 import { Heatmap, HeatmapConfig } from '@ant-design/plots'
-import { ReactElement } from 'react'
+
 import { HEX, RGB, RGBA } from 'types/color'
+
+import NoData from 'components/NoData'
 
 interface Props {
   data: any[]
@@ -10,13 +13,17 @@ interface Props {
     colorField: string
   }
   colors?: Array<RGB | HEX | RGBA>
+  onClickElement?: (dataElement: any) => void
 }
 
 const PolarHeatmapChart = ({
   data,
   fields,
-  colors = ['#BAE7FF', '#1890FF', '#1028ff']
+  colors = ['#BAE7FF', '#1890FF', '#1028ff'],
+  onClickElement = () => {}
 }: Props): ReactElement => {
+  const hasData = useMemo(() => data.length, [data])
+
   const config: HeatmapConfig = {
     data,
     xField: fields.x,
@@ -36,10 +43,6 @@ const PolarHeatmapChart = ({
     meta: {
       time: {
         type: 'cat'
-      },
-      value: {
-        min: 0,
-        max: 1
       }
     },
     xAxis: {
@@ -49,7 +52,7 @@ const PolarHeatmapChart = ({
       label: {
         offset: 12,
         style: {
-          fill: '#666',
+          fill: 'rgb(30 41 59)',
           fontSize: 12,
           textBaseline: 'top'
         }
@@ -63,7 +66,7 @@ const PolarHeatmapChart = ({
       label: {
         offset: 0,
         style: {
-          fill: '#fff',
+          fill: 'rgb(30 41 59)',
           textAlign: 'center',
           shadowBlur: 2,
           shadowColor: 'rgba(0, 0, 0, .45)'
@@ -77,10 +80,15 @@ const PolarHeatmapChart = ({
       {
         type: 'element-active'
       }
-    ]
+    ],
+    onReady: plot => {
+      plot.on('element:click', ({ data }) => {
+        onClickElement(data.data)
+      })
+    }
   }
 
-  return <Heatmap {...config} />
+  return hasData ? <Heatmap {...config} /> : <NoData type="chart" />
 }
 
 export default PolarHeatmapChart

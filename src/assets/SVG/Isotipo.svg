@@ -1,0 +1,41 @@
+<svg width="61" height="44" viewBox="0 0 61 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <mask id="mask0_167_3441" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="18" y="0" width="13" height="22">
+    <rect x="18.7889" width="12.0333" height="21.1111" fill="#D9D9D9" />
+  </mask>
+  <g mask="url(#mask0_167_3441)">
+    <circle cx="20.2667" cy="10.5556" r="10.5556" fill="#FFD0AF" />
+    <circle cx="20.2667" cy="10.5556" r="10.5556" fill="#FFD0AF" />
+    <circle cx="20.2667" cy="10.5556" r="10.5556" fill="#FABE8C" />
+  </g>
+  <mask id="mask1_167_3441" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="21" width="40" height="23">
+    <rect y="43.9111" width="22.8" height="40" transform="rotate(-90 0 43.9111)" fill="#D9D9D9" />
+  </mask>
+  <g mask="url(#mask1_167_3441)">
+    <circle cx="20" cy="41.1112" r="20" transform="rotate(-90 20 41.1112)" fill="#38BDF8" />
+  </g>
+  <mask id="mask2_167_3441" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="18" y="21" width="22" height="23">
+    <rect x="18.7889" y="43.9111" width="22.8" height="21.1111" transform="rotate(-90 18.7889 43.9111)"
+      fill="#D9D9D9" />
+  </mask>
+  <g mask="url(#mask2_167_3441)">
+    <circle cx="20" cy="41.1112" r="20" transform="rotate(-90 20 41.1112)" fill="#0EA5E9" />
+  </g>
+  <circle cx="18.7888" cy="10.5556" r="10.5556" fill="#FFD0AF" />
+  <circle cx="18.7888" cy="10.5556" r="10.5556" fill="#FFD0AF" />
+  <circle cx="18.7888" cy="10.5556" r="10.5556" fill="#FFD0AF" />
+  <path
+    d="M45.9077 8.69372C46.6954 9.66522 47.7982 12.2541 45.9077 14.8378M48.4284 6.56693C49.2161 7.53843 52.997 11.3719 48.2708 17.2796M50.8702 4.12506C51.6579 5.09656 57.8808 11.9233 50.7127 19.564"
+    stroke="#8B5CF6" stroke-linecap="round" />
+  <path
+    d="M40.2363 7.82724V3.41612C40.21 3.02227 40.4883 2.20307 41.8117 2.07704C43.135 1.951 44.8837 2.02452 45.5926 2.07704"
+    stroke="#5EEAD4" stroke-linecap="round" stroke-linejoin="bevel" />
+  <path
+    d="M54.1802 2.00164L58.5913 2.00164C58.9852 1.97539 59.8044 2.25371 59.9304 3.57704C60.0564 4.90038 59.9829 6.64907 59.9304 7.35799"
+    stroke="#5EEAD4" stroke-linecap="round" />
+  <path
+    d="M45.8198 21.5333H41.4087C41.0148 21.5595 40.1956 21.2812 40.0696 19.9579C39.9436 18.6345 40.0171 16.8858 40.0696 16.1769"
+    stroke="#5EEAD4" stroke-linecap="round" />
+  <path
+    d="M59.7674 15.7902V20.2013C59.7937 20.5952 59.5153 21.4144 58.192 21.5404C56.8687 21.6664 55.12 21.5929 54.411 21.5404"
+    stroke="#5EEAD4" stroke-linecap="round" />
+</svg>

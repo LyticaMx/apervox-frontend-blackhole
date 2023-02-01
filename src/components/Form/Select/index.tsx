@@ -24,6 +24,7 @@ interface Props {
   clearable: boolean
   error?: boolean
   helperText?: string
+  disabled?: boolean
 }
 
 const defaultProps: Props = {
@@ -45,7 +46,8 @@ const SelectField = ({
   onChange,
   clearable,
   error,
-  helperText
+  helperText,
+  disabled
 }: Props): ReactElement => {
   const itemSelected = useMemo(() => {
     if (!value) return undefined
@@ -62,6 +64,7 @@ const SelectField = ({
     <Listbox
       value={itemSelected}
       onChange={(item) => onChange(item[valueField])}
+      disabled={disabled}
     >
       <Float
         as="div"

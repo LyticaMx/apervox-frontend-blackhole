@@ -2,12 +2,15 @@ import { ReactElement } from 'react'
 import { Liquid, LiquidConfig } from '@ant-design/plots'
 
 interface Props {
-  percentage: number
+  percentage: string
+  height?: number
 }
 
-const LiquidChart = ({ percentage }: Props): ReactElement => {
+const LiquidChart = ({ percentage, height }: Props): ReactElement => {
+  const absolutePercentage = percentage.replace('.', '')
   const config: LiquidConfig = {
-    percent: Number(`0.${percentage}`),
+    height,
+    percent: Number(`0.${absolutePercentage}`),
     outline: {
       border: 4,
       distance: 8

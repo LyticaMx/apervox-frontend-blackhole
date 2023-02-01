@@ -1,10 +1,12 @@
+import { ReactElement, useMemo } from 'react'
 import {
   RadialTreeGraph,
   RadialGraphConfig,
   CardItem
 } from '@ant-design/graphs'
-import { ReactElement } from 'react'
+
 import { HEX } from 'types/color'
+import NoData from 'components/NoData'
 
 interface Data {
   id: string
@@ -21,6 +23,8 @@ const RadialTreeChart = ({
   data,
   themeColor = '#73B3D1'
 }: Props): ReactElement => {
+  const hasData = useMemo(() => Object.keys(data).length, [data])
+
   const config: RadialGraphConfig = {
     data,
     nodeCfg: {
@@ -69,21 +73,15 @@ const RadialTreeChart = ({
     behaviors: ['drag-canvas', 'zoom-canvas', 'drag-node']
   }
 
-  return (
-    <div
-      id="dom"
-      style={{
-        background: '#0E1155',
-        height: '400px'
-      }}
-    >
-      <RadialTreeGraph
-        data={data}
-        nodeCfg={config.nodeCfg}
-        edgeCfg={config.edgeCfg}
-        behaviors={config.behaviors}
-      />
-    </div>
+  return hasData ? (
+    <RadialTreeGraph
+      data={data}
+      nodeCfg={config.nodeCfg}
+      edgeCfg={config.edgeCfg}
+      behaviors={config.behaviors}
+    />
+  ) : (
+    <NoData type="chart" />
   )
 }
 

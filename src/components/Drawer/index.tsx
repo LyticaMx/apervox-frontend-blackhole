@@ -2,6 +2,7 @@ import clsx from 'clsx'
 import { ReactElement, ReactNode, useEffect, useRef, useMemo } from 'react'
 import { createPortal } from 'react-dom'
 import { XMarkIcon } from '@heroicons/react/24/outline'
+import { zIndex } from 'constants/classes'
 
 type Placement = 'left' | 'right' | 'bottom' | 'top'
 type Placements = Record<Placement, string>
@@ -88,13 +89,16 @@ const Drawer = ({
       <div
         key="drawer-backdrop"
         className={clsx(
-          'fixed overflow-hidden z-50 bg-gray-900 bg-opacity-25 inset-0 transition-all duration-500',
+          'fixed overflow-hidden bg-gray-900 bg-opacity-25 inset-0 transition-all duration-500',
           {
             'bg-opacity-25': open,
             'invisible bg-opacity-0': !open
           }
         )}
         onClick={onClose}
+        style={{
+          zIndex: zIndex.drawer
+        }}
       />,
       <div
         key="drawer"

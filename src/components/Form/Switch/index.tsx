@@ -8,12 +8,14 @@ interface Props {
   onChange?: (value: boolean) => void
   size?: 'sm' | 'md' | 'lg'
   color?: string
+  stopPropagation?: boolean
 }
 const Switchs = ({
   size = 'md',
   color = 'gray',
   value,
-  onChange
+  onChange,
+  stopPropagation = false
 }: Props): ReactElement => {
   const colorClass =
     backgroudColorClassNames[color] ?? backgroudColorClassNames.gray
@@ -33,6 +35,9 @@ const Switchs = ({
       <SwitchHL
         checked={value}
         onChange={onChange}
+        onClick={(e) => {
+          if (stopPropagation) e.stopPropagation()
+        }}
         className={clsx(
           'inline-flex items-center justify-center rounded-full transition delay-300 p-1 relative',
           {

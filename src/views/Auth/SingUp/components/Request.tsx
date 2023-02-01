@@ -4,9 +4,10 @@ import { useIntl } from 'react-intl'
 
 import Button from 'components/Button'
 
-import { actionsMessages, formMessages } from 'messages'
+import { actionsMessages, formMessages } from 'globalMessages'
 
 import { FormValues } from '../index'
+import { signUpMessages } from '../messages'
 
 interface Props {
   formik: FormikProps<FormValues>
@@ -21,7 +22,7 @@ const Request = ({ formik }: Props): ReactElement => {
         <div>
           <div>
             <h3 className="text-lg font-medium leading-6 text-gray-900">
-              Información del solicitante
+              {intl.formatMessage(signUpMessages.applicantInformation)}
             </h3>
           </div>
           <div className="mt-5 border-t border-gray-200">
@@ -39,7 +40,7 @@ const Request = ({ formik }: Props): ReactElement => {
                   {intl.formatMessage(formMessages.lastname)}
                 </dt>
                 <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                  {formik.values.lastname}
+                  {formik.values.fathers_name}
                 </dd>
               </div>
               <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5">
@@ -47,7 +48,7 @@ const Request = ({ formik }: Props): ReactElement => {
                   {intl.formatMessage(formMessages.secondLastname)}
                 </dt>
                 <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                  {formik.values.secondLastname}
+                  {formik.values.mothers_name}
                 </dd>
               </div>
               <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5">
@@ -67,7 +68,9 @@ const Request = ({ formik }: Props): ReactElement => {
           <Button
             type="submit"
             variant="contained"
-            className="w-full bg-blue-600 text-white hover:text-slate-100 hover:bg-blue-500"
+            className="w-full"
+            color="sky"
+            fullwidth
           >
             <span>{intl.formatMessage(actionsMessages.requestAccess)}</span>
           </Button>

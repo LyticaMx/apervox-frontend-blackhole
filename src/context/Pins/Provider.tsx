@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useMemo, ReactNode, ReactElement } from 'react'
-import useApi from 'hooks/useApi'
+import useApi, { useService } from 'hooks/useApi'
 import { PinsContext, initialState } from './context'
 import { Pin, Chunk } from 'types/pin'
+import { ResponseData } from 'types/api'
 
 interface Props {
   children: ReactNode
@@ -14,32 +14,84 @@ const PinsProvider = ({ children }: Props): ReactElement => {
     initialState.listOfChunks
   )
 
+  const chunksService = useService('chunks')
+
   const getPinsService = useApi({
     endpoint: 'pins',
     method: 'get'
   })
 
-  const getPinChunksService = useApi({
-    endpoint: 'chunks',
-    method: 'get'
+  const assignPinService = useApi({
+    endpoint: 'speaker',
+    method: 'put'
   })
 
-  /* GET */
+  const getPins = async (filters): Promise<ResponseData> => {
+    try {
+      const res: any = await getPinsService({ urlParams: filters })
 
-  const getPins = async (): Promise<boolean> => {
-    const responseDataPin = await getPinsService()
-
-    console.log('responseDataLogin', responseDataPin)
-
-    return true
+      setListOfPins(res.data)
+      return res
+    } catch (error) {
+      return false as any
+    }
   }
 
-  const getChunks = async (): Promise<boolean> => {
-    const responseDataPinChunk = await getPinChunksService()
+  const getChunks = async (filters): Promise<ResponseData> => {
+    try {
+      const res: any = await chunksService.get({ urlParams: filters })
+      setListOfChunks(res.data)
 
-    console.log('responseDataPinChunk', responseDataPinChunk)
+      return res
+    } catch (error) {
+      return false as any
+    }
+  }
 
-    return true
+  const createChunk = async (): Promise<boolean> => {
+    try {
+      const res: any = await chunksService.post()
+
+      if (!res.error) {
+        return true
+      }
+      return false
+    } catch (error) {
+      return false
+    }
+  }
+
+  const linkPin = async (pin: string, speaker: string): Promise<boolean> => {
+    try {
+      const res: any = await assignPinService({
+        queryString: speaker,
+        body: { pin_id: pin }
+      })
+
+      if (res.data) {
+        return true
+      }
+
+      return false
+    } catch (error) {
+      return false
+    }
+  }
+
+  const deactivatePin = async (speaker: string): Promise<boolean> => {
+    try {
+      const res: any = await assignPinService({
+        queryString: speaker,
+        body: { is_active: false }
+      })
+
+      if (res.data) {
+        return true
+      }
+      return false
+    } catch (error) {
+      return false
+    }
   }
 
   const contextValue = useMemo(
@@ -48,7 +100,10 @@ const PinsProvider = ({ children }: Props): ReactElement => {
       listOfChunks,
       actions: {
         getPins,
-        getChunks
+        getChunks,
+        createChunk,
+        linkPin,
+        deactivatePin
       }
     }),
     [listOfPins, listOfChunks]

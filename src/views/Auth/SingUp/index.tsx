@@ -13,23 +13,21 @@ import PersonalData from './components/PersonalData'
 import Request from './components/Request'
 import SubmitMessaje from './components/SubmitMessaje'
 
-import { actionsMessages, formMessages } from 'messages'
+import { actionsMessages, formMessages } from 'globalMessages'
 import { signUpMessages } from './messages'
 
 export interface FormValues {
   email: string
   name: string
-  lastname: string
-  secondLastname: string
-  password: string
+  fathers_name: string
+  mothers_name: string
 }
 
 interface FormErrors {
   email?: string
   name?: string
-  lastname?: string
-  secondLastname?: string
-  password?: string
+  fathers_name?: string
+  mothers_name?: string
 }
 
 const SignUp = (): ReactElement => {
@@ -54,19 +52,15 @@ const SignUp = (): ReactElement => {
       errors.email = intl.formatMessage(formMessages.required)
     }
 
-    if (!values.password) {
-      errors.password = intl.formatMessage(formMessages.required)
-    }
-
     if (currentStep === 'personal-data') {
       if (!values.name) {
         errors.name = intl.formatMessage(formMessages.required)
       }
-      if (!values.lastname) {
-        errors.lastname = intl.formatMessage(formMessages.required)
+      if (!values.fathers_name) {
+        errors.fathers_name = intl.formatMessage(formMessages.required)
       }
-      if (!values.secondLastname) {
-        errors.secondLastname = intl.formatMessage(formMessages.required)
+      if (!values.mothers_name) {
+        errors.mothers_name = intl.formatMessage(formMessages.required)
       }
     }
     return errors
@@ -76,9 +70,8 @@ const SignUp = (): ReactElement => {
     initialValues: {
       email: '',
       name: '',
-      lastname: '',
-      secondLastname: '',
-      password: ''
+      fathers_name: '',
+      mothers_name: ''
     },
     validate,
     onSubmit: async (values) => {

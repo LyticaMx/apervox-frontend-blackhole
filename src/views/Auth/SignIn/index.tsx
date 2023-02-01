@@ -12,7 +12,7 @@ import { useAuth } from 'context/Auth'
 import TextLogo from 'assets/Icons/VoiceprintLogo'
 
 import { pathRoute } from 'router/routes'
-import { formMessages } from 'messages'
+import { formMessages } from 'globalMessages'
 import { signInMessages } from './mesages'
 
 interface FormValues {
@@ -56,8 +56,6 @@ const SignIn = (): ReactElement => {
     validate,
     onSubmit: async (values) => {
       const successLogin = await actions?.signIn(values)
-
-      console.log('successLogin', successLogin)
 
       if (successLogin) {
         history.push('/')
@@ -106,31 +104,46 @@ const SignIn = (): ReactElement => {
               : ''
           }
         />
-        <TextField
-          label={intl.formatMessage(formMessages.password)}
-          id="password"
-          name="password"
-          type="password"
-          autoComplete="current-password"
-          value={formik.values.password}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={Boolean(formik.errors.password && formik.touched.password)}
-          helperText={
-            formik.errors.password && formik.touched.password
-              ? formik.errors.password
-              : ''
-          }
-        />
+        <div className="flex flex-col items-end">
+          <TextField
+            className="w-full"
+            label={intl.formatMessage(formMessages.password)}
+            id="password"
+            name="password"
+            type="password"
+            autoComplete="current-password"
+            value={formik.values.password}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={Boolean(formik.errors.password && formik.touched.password)}
+            helperText={
+              formik.errors.password && formik.touched.password
+                ? formik.errors.password
+                : ''
+            }
+          />
+          <Button
+            onClick={() => history.push(pathRoute.auth.forgotPassword)}
+            className="hover:bg-transparent hover:text-slate-700 focus:ring-0"
+          >
+            {intl.formatMessage(signInMessages.recoverPassword)}
+          </Button>
+          {/* <Typography
+            variant="body2"
+            className="text-right text-slate-500 mt-2"
+          >
+          </Typography> */}
+        </div>
         <div>
           <Button
             type="submit"
             variant="contained"
-            className="w-full bg-blue-600 text-white hover:text-slate-100 hover:bg-blue-500"
+            className="w-full"
+            color="sky"
+            fullwidth
           >
-            <span>
-              Ingresar <span aria-hidden="true">&rarr;</span>
-            </span>
+            {intl.formatMessage(signInMessages.signIn)}{' '}
+            <span aria-hidden="true">&rarr;</span>
           </Button>
         </div>
       </form>
