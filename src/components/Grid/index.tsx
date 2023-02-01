@@ -1,14 +1,15 @@
 import clsx from 'clsx'
 import { ReactElement, ReactNode, useMemo } from 'react'
 
-type Spacing = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
-type Columns = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12
+export type Spacing = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
+export type Columns = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12
 
 interface Props {
   children?: ReactNode
   item?: boolean
   spacing?: Spacing
   cols?: Columns
+  xs?: Columns
   sm?: Columns
   md?: Columns
   lg?: Columns
@@ -21,6 +22,7 @@ const Grid = ({
   item,
   spacing = 0,
   cols,
+  xs,
   sm,
   md,
   lg,
@@ -29,13 +31,13 @@ const Grid = ({
 }: Props): ReactElement => {
   const sizeClass = useMemo(() => {
     return clsx(
-      cols && `col-span-${cols}`,
+      (!!cols || !!xs) && `col-span-${cols ?? xs}`,
       sm && `sm:col-span-${sm}`,
       md && `md:col-span-${md}`,
       lg && `lg:col-span-${lg}`,
       xl && `xl:col-span-${xl}`
     )
-  }, [sm, md, lg, xl, cols])
+  }, [xs, sm, md, lg, xl, cols])
 
   const gridClass = useMemo(() => {
     if (item) return ''

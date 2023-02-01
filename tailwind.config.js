@@ -35,5 +35,16 @@ module.exports = {
       }
     }
   },
-  plugins: [require('@tailwindcss/forms')]
+  plugins: [require('@tailwindcss/forms')],
+  safelist: [
+    'text-2xl',
+    'text-3xl',
+    {
+      pattern: /gap-(1|2|3|4|5|6|7|8|9|10)/
+    },
+    {
+      pattern: /col-span-(1|2|3|4|5|6|7|8|9|10|11|12)/,
+      variants: ['sm', 'md', 'lg', 'xl']
+    }
+  ]
 }
