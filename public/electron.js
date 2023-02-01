@@ -10,14 +10,15 @@ function createWindow () {
     minWidth: 768,
     height: 768,
     fullscreen: false,
-    skipTaskbar: false
+    skipTaskbar: false,
+    titleBarStyle: 'hidden' // opcion para windows
   })
 
-  mainWindow.setMenuBarVisibility(false)
+  mainWindow.setMenuBarVisibility(isDev)
 
   mainWindow.loadURL(
     isDev
-      ? 'http://localhost:3001'
+      ? 'http://localhost:3000'
       : `file://${path.join(__dirname, './index.html')}`
   )
 
@@ -57,7 +58,7 @@ app.on('window-all-closed', () => {
 })
 
 app.on('activate', () => {
-  if (mainWindow === null) {
+  if (BrowserWindow.getAllWindows().length === 0) {
     createWindow()
   }
 })

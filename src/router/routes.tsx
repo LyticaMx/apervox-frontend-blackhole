@@ -41,6 +41,7 @@ import { sidebarMessages } from 'globalMessages'
 import DemoSystem from 'views/Demo/System'
 import DemoCharts from 'views/Demo/Chart'
 import DemoForm from 'views/Demo/Form'
+import DemoAutoForm from 'views/Demo/AutoForm'
 import DemoWavesurfer from 'views/Demo/Wavesurfer'
 import BondingNetwork from 'views/BondingNetwork'
 
@@ -95,6 +96,7 @@ export const pathRoute = {
   demo: {
     chart: '/demo-charts',
     form: '/demo-form',
+    autoform: '/demo-autoform',
     system: '/demo-system',
     wavesurfer: '/demo-wavesurfer'
   }
@@ -345,6 +347,17 @@ export const routes: Route[] = [
         modules: [],
         scopes: [],
         component: DemoForm,
+        layout: BaseLayout,
+        private: true,
+        sidebar: true
+      },
+      {
+        id: 'demo-autoform',
+        i18Key: 'demoAutoForm',
+        path: pathRoute.demo.autoform,
+        modules: [],
+        scopes: [],
+        component: DemoAutoForm,
         layout: BaseLayout,
         private: true,
         sidebar: true

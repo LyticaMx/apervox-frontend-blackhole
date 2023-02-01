@@ -81,6 +81,10 @@ export const sidebarMessages = defineMessages({
     id: 'sidebar.demo.form',
     defaultMessage: 'Form'
   },
+  demoAutoForm: {
+    id: 'sidebar.demo.AutoForm',
+    defaultMessage: 'AutoForm'
+  },
   demoWavesurfer: {
     id: 'sidebar.demo.demoWavesurfer',
     defaultMessage: 'Wavesurfer'
