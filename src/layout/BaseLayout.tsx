@@ -6,11 +6,12 @@ import { useIntl } from 'react-intl'
 
 import { useAuth } from 'context/Auth'
 import Loader from 'components/Loader'
-import Sidebar from 'components/Sidebar'
+import Sidebar from 'components/Layout/Sidebar'
 
 import { getDateDiferenceInMinutes } from 'utils/formatTime'
 import { Layout } from 'types/layout'
 import { apiMessages } from 'globalMessages'
+import Navbar from 'components/Layout/Navbar'
 
 const BaseLayout = ({ children }: Layout): ReactElement => {
   const intl = useIntl()
@@ -59,15 +60,15 @@ const BaseLayout = ({ children }: Layout): ReactElement => {
 
   return (
     <>
-      <div className="flex h-screen overflow-y-hidden">
+      <div className="h-screen overflow-y-hidden relative">
+        <Navbar />
         <Sidebar />
-        <div className="flex flex-col flex-1 overflow-y-auto">
-          <div className="sticky top-0 z-10 md:hidden pl-1 pt-1 sm:pl-3 sm:pt-3 bg-gray-100"></div>
-          <main className="flex-1">
+        <div className="absolute inset-0 ml-14 mt-11 flex flex-col flex-1 overflow-y-auto">
+          <main className="flex-1 bg-background">
             <div className="py-6">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
                 <div className="py-4">
-                  <div className=" border-gray-200 rounded-lg">{children}</div>
+                  <div className="rounded-lg">{children}</div>
                 </div>
               </div>
             </div>

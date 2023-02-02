@@ -1,16 +1,19 @@
 import { ElementType, ReactElement, ReactNode, useState } from 'react'
 import Popover from 'components/Popover'
 import { Placement } from '@floating-ui/dom'
+import { FloatProps } from '@headlessui-float/react'
 
 interface Props {
   children: ReactNode
   content: ReactNode
   as?: ElementType
+  floatProps?: Omit<FloatProps, 'children'>
   placement?: Placement
   className?: string
   classNames?: {
     button?: string
     panel?: string
+    arrow?: string
   }
 }
 
@@ -20,22 +23,22 @@ const Tooltip = ({
   as = 'div',
   placement,
   className,
-  classNames
+  classNames,
+  floatProps
 }: Props): ReactElement => {
   const [show, setShow] = useState(false)
 
   const props = {
     className,
     floatProps: {
-      placement,
       offset: 2,
+      ...floatProps,
+      placement,
       show
     },
     classNames: {
-      ...classNames,
-      panel: !classNames?.panel
-        ? 'bg-gray-500 text-white py-1 px-2 rounded-sm text-sm'
-        : ''
+      panel: 'bg-gray-500 text-white py-1 px-2 rounded-sm text-sm',
+      ...classNames
     }
   }
 

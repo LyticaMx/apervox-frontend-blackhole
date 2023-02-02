@@ -20,6 +20,11 @@ module.exports = {
       '9xl': ['8rem', { lineHeight: '1' }]
     },
     extend: {
+      colors: {
+        primary: '#4646FD',
+        secondary: '#152743',
+        background: '#FDFDFD'
+      },
       borderRadius: {
         '4xl': '2rem'
       },
