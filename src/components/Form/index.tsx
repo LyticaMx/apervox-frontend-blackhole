@@ -24,8 +24,10 @@ interface Props<T> {
   mainSpacing?: Spacing
   renderSubmitButton?: boolean
   submitButtonLabel?: string
+  submitButtonPosition?: 'left' | 'center' | 'right'
   submitButtonProps?: SubmitButtonProps
   formikRef?: MutableRefObject<FormikContextType<T> | undefined>
+  className?: string
 }
 
 const Form = <DataType extends FormikValues = FormikValues>(
@@ -38,8 +40,10 @@ const Form = <DataType extends FormikValues = FormikValues>(
     withSections,
     renderSubmitButton = true,
     submitButtonLabel,
+    submitButtonPosition,
     submitButtonProps = {},
-    formikRef
+    formikRef,
+    className
   } = props
   const { formatMessage } = useIntl()
   const formik = useFormik<DataType>(formikConfig)
@@ -63,8 +67,24 @@ const Form = <DataType extends FormikValues = FormikValues>(
     if (formikRef) formikRef.current = formik
   }, [formik])
 
+  const buttonPosition = useMemo(() => {
+    switch (submitButtonPosition) {
+      case 'center':
+        return 'justify-center'
+      case 'right':
+        return 'justify-end'
+      case 'left':
+      default:
+        return 'justify-start'
+    }
+  }, [submitButtonPosition])
+
   return (
-    <form onSubmit={formik.handleSubmit} onReset={formik.handleReset}>
+    <form
+      onSubmit={formik.handleSubmit}
+      onReset={formik.handleReset}
+      className={className}
+    >
       {formattedSections.map(({ name, title, description, spacing }, index) => (
         <div key={`${index}-${name}`} className={clsx(index !== 0 && 'mt-4')}>
           {title && (
@@ -95,15 +115,17 @@ const Form = <DataType extends FormikValues = FormikValues>(
         </div>
       ))}
 
-      {renderSubmitButton && (
-        <Button
-          {...submitButtonProps}
-          type="submit"
-          className={clsx('mt-2', submitButtonProps.className)}
-        >
-          {submitButtonLabel ?? formatMessage(actionsMessages.send)}
-        </Button>
-      )}
+      <div className={clsx('flex items-center', buttonPosition)}>
+        {renderSubmitButton && (
+          <Button
+            {...submitButtonProps}
+            type="submit"
+            className={clsx('mt-2', submitButtonProps.className)}
+          >
+            {submitButtonLabel ?? formatMessage(actionsMessages.send)}
+          </Button>
+        )}
+      </div>
     </form>
   )
 }

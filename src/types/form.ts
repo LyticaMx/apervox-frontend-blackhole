@@ -10,7 +10,6 @@ export interface TextFieldProps {
   label?: string
   type?: string
   className?: string
-
   autoComplete?: string
   required?: boolean
   placeholder?: string
@@ -18,6 +17,22 @@ export interface TextFieldProps {
   rows?: number
   labelSpacing?: '1' | '2' | '3' | '4' | '5'
   inputProps?: InputHTMLAttributes<HTMLInputElement>
+  labelClassname?: string
+}
+
+export interface PasswordFieldProps {
+  id: string
+  label?: string
+  className?: string
+  autoComplete?: string
+  required?: boolean
+  error?: boolean
+  helperText?: string
+  placeholder?: string
+  rows?: number
+  labelSpacing?: '1' | '2' | '3' | '4' | '5'
+  inputProps?: InputHTMLAttributes<HTMLInputElement>
+  labelClassname?: string
 }
 
 export interface CheckboxProps {
@@ -119,6 +134,10 @@ export declare type FieldTypes =
   | {
       readonly type: 'text'
       options: TextFieldProps
+    }
+  | {
+      readonly type: 'password'
+      options: PasswordFieldProps
     }
   | {
       readonly type: 'checkbox'

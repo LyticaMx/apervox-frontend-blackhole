@@ -23,6 +23,7 @@ interface Props {
   rows?: number
   labelSpacing?: '1' | '2' | '3' | '4' | '5'
   inputProps?: InputHTMLAttributes<HTMLInputElement>
+  labelClassname?: string
 }
 
 const TextField = ({
@@ -35,6 +36,7 @@ const TextField = ({
   multiline,
   rows = 5,
   labelSpacing,
+  labelClassname,
   inputProps = {},
   ...props
 }: Props): ReactElement => {
@@ -58,7 +60,11 @@ const TextField = ({
   return (
     <div className={className}>
       {label && (
-        <Label id={id} labelSpacing={labelSpacing}>
+        <Label
+          id={id}
+          labelSpacing={labelSpacing}
+          labelClassname={labelClassname}
+        >
           {label}
         </Label>
       )}
