@@ -3,7 +3,7 @@ import { SidebarContextType } from 'types/sidebar'
 
 export const initialState: SidebarContextType = {
   open: true,
-  mode: 'extended'
+  mode: 'mini'
 }
 
 export const SidebarContext: Context<SidebarContextType> =

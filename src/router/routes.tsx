@@ -1,12 +1,12 @@
 import { ReactElement } from 'react'
 
-import { Bars3Icon } from '@heroicons/react/24/outline'
 import {
   PhoneIcon,
   UserGroupIcon,
   Cog6ToothIcon,
-  BeakerIcon
-} from '@heroicons/react/20/solid'
+  BeakerIcon,
+  Bars3Icon
+} from '@heroicons/react/24/outline'
 import { PersonTargetIcon, AlertPlusIcon, DocIcon, AuditIcon } from 'assets/SVG'
 
 import SignIn from 'views/Auth/SignIn'
@@ -365,6 +365,6 @@ export const routes: Route[] = [
     component: DemoSystem,
     layout: BaseLayout,
     private: true,
-    sidebar: true
+    sidebar: false
   }
 ]
