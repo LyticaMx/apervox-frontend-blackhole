@@ -40,7 +40,7 @@ const SignIn = (): ReactElement => {
       })
 
       if (successLogin) {
-        history.push('/')
+        history.push('/tablero-de-hablantes')
       }
     },
     validationSchema
