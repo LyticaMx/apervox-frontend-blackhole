@@ -2,6 +2,10 @@ import { defineMessages } from 'react-intl'
 
 export const formMessages = defineMessages({
   /* Labels */
+  username: {
+    id: 'global.form.username',
+    defaultMessage: 'Usuario'
+  },
   email: {
     id: 'global.form.email',
     defaultMessage: 'Correo electrónico'

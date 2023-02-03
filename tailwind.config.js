@@ -1,4 +1,5 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
+const plugin = require('tailwindcss/plugin')
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -29,18 +30,39 @@ module.exports = {
         '4xl': '2rem'
       },
       fontFamily: {
-        sans: ['Inter', ...defaultTheme.fontFamily.sans],
+        sans: ['Marlow', ...defaultTheme.fontFamily.sans],
         display: ['Lexend', ...defaultTheme.fontFamily.sans]
       },
       maxWidth: {
         '2xl': '40rem'
       },
       backgroundImage: {
-        blue: "url('/src/images/auth2.jpeg')"
+        blackhole: "url('./assets/Images/bg_bh.png')"
+      },
+      keyframes: {
+        fadeIn: {
+          '0%, 100%': { opacity: ' 0' },
+          '50%': { opacity: '1' }
+        }
+      },
+      animation: {
+        fadeIn: 'fadeIn 2s cubic-bezier(0.39, 0.575, 0.565, 1) both'
       }
     }
   },
-  plugins: [require('@tailwindcss/forms')],
+  plugins: [
+    require('@tailwindcss/forms'),
+    plugin(({ matchUtilities, theme }) => {
+      matchUtilities(
+        {
+          'animation-delay': (value) => ({ 'animation-delay': value })
+        },
+        {
+          values: theme('transitionDelay')
+        }
+      )
+    })
+  ],
   safelist: [
     'text-2xl',
     'text-3xl',

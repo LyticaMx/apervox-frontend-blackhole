@@ -350,5 +350,14 @@ export const generalMessages = defineMessages({
   female: {
     id: 'global.general.female',
     defaultMessage: 'Femenino'
+  },
+  /* Mensajes agregados en BH2 */
+  understand: {
+    id: 'global.general.understand',
+    defaultMessage: 'Entendido'
+  },
+  welcome: {
+    id: 'global.general.welcome',
+    defaultMessage: '¡Bienvenido!'
   }
 })

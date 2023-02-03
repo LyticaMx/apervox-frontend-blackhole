@@ -10,7 +10,6 @@ import {
 import { PersonTargetIcon, AlertPlusIcon, DocIcon, AuditIcon } from 'assets/SVG'
 
 import SignIn from 'views/Auth/SignIn'
-import SignUp from 'views/Auth/SingUp'
 import Speakers from 'views/Speakers'
 import Pins from 'views/Pins'
 import Calls from 'views/Calls'
@@ -19,7 +18,6 @@ import ControlGroups from 'views/ControlGroups'
 import Directory from 'views/Directory'
 import Users from 'views/Users'
 import Dependencies from 'views/Dependencies'
-import ForgotPassword from 'views/Auth/ForgotPassword'
 import RestorePassword from 'views/Auth/RestorePassword'
 import Alerts from 'views/Alerts'
 import Cases from 'views/Cases'
@@ -28,10 +26,9 @@ import Audit from 'views/Audit'
 import Comparisons from 'views/Comparisons'
 import OneToMany from 'views/Comparisons/OneToMany'
 import ReceiverToReceiver from 'views/Comparisons/ReceiverToReceiver'
+import Presentation from 'views/Presentation'
 
-import AuthLayout from 'layout/AuthLayout'
 import BaseLayout from 'layout/BaseLayout'
-import SingUpLayout from 'layout/SingUpLayout'
 import FullScreenLayout from 'layout/FullScreenLayout'
 
 import { Layout } from 'types/layout'
@@ -68,9 +65,7 @@ export const pathRoute = {
   },
   auth: {
     signIn: '/inicio-de-sesion',
-    signUp: '/registro',
-    forgotPassword: '/contraseña-olvidada',
-    restorePassword: '/restablecer-contraseña/:token'
+    restorePassword: '/restablecer-contraseña'
   },
   pins: '/pins',
   speakers: {
@@ -104,27 +99,19 @@ export const pathRoute = {
 
 export const routes: Route[] = [
   {
+    id: 'presentation',
+    path: pathRoute.home,
+    modules: [],
+    scopes: [],
+    component: Presentation,
+    layout: FullScreenLayout
+  },
+  {
     id: 'sign-in',
     path: pathRoute.auth.signIn,
     modules: [],
     scopes: [],
     component: SignIn,
-    layout: AuthLayout
-  },
-  {
-    id: 'sign-up',
-    path: pathRoute.auth.signUp,
-    modules: [],
-    scopes: [],
-    component: SignUp,
-    layout: SingUpLayout
-  },
-  {
-    id: 'recover-password',
-    path: pathRoute.auth.forgotPassword,
-    modules: [],
-    scopes: [],
-    component: ForgotPassword,
     layout: FullScreenLayout
   },
   {

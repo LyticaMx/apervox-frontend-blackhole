@@ -6,6 +6,7 @@ import Checkbox from './Checkbox'
 import Datepicker from './Datepicker'
 import Daterangepicker from './Daterangepicker'
 import DragDrop from './DragDrop'
+import PasswordField from './PasswordField'
 import Radio from './Radio'
 import SelectField from './Select'
 import Selectmultiple from './Selectmultiple'
@@ -27,6 +28,22 @@ export const fieldMapper = <T,>({
     case 'text':
       return (
         <TextField
+          {...field.options}
+          name={name}
+          value={formik.values[name]}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={!!formik.errors[name] && !!formik.touched[name]}
+          helperText={
+            !!formik.errors[name] && !!formik.touched[name]
+              ? formik.errors[name]
+              : ''
+          }
+        />
+      )
+    case 'password':
+      return (
+        <PasswordField
           {...field.options}
           name={name}
           value={formik.values[name]}

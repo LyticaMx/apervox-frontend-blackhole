@@ -1,28 +1,37 @@
 import { defineMessages } from 'react-intl'
 
 export const signInMessages = defineMessages({
-  signInToAccount: {
-    id: 'views.Auth.SignIn.signInToAccount',
-    defaultMessage: 'Ingresa a tu cuenta'
+  description: {
+    id: 'views.Auth.SignIn',
+    defaultMessage:
+      'Ingresa los datos de acceso para ingresar a la plataforma Black Hole.'
   },
-  dontHaveAnAccount: {
-    id: 'views.Auth.SignIn.dontHaveAnAccount',
-    defaultMessage: '¿No tienes una cuenta?'
+  userPlaceholder: {
+    id: 'views.Auth.SignIn.userPlaceholder',
+    defaultMessage: 'Ej. afernandez'
   },
-  request: {
-    id: 'views.Auth.SignIn.request',
-    defaultMessage: 'Solicita'
+  passwordPlaceholder: {
+    id: 'views.Auth.SignIn.passwordPlaceholder',
+    defaultMessage: 'Ej. Gy43@g32VFINmfGT1'
   },
-  anAccount: {
-    id: 'views.Auth.SignIn.anAccount',
-    defaultMessage: 'una cuenta.'
+  forgotPassword: {
+    id: 'views.Auth.SignIn.forgotPassword',
+    defaultMessage: 'Olvidé mi contraseña'
   },
-  recoverPassword: {
-    id: 'views.Auth.SignIn.recoverPassword',
+  logIn: {
+    id: 'views.Auth.SignIn.logIn',
+    defaultMessage: 'Iniciar sesión'
+  }
+})
+
+export const forgotPasswordMessages = defineMessages({
+  title: {
+    id: 'views.Auth.ForgotPasswordDialog.title',
     defaultMessage: 'Recuperar contraseña'
   },
-  signIn: {
-    id: 'views.Auth.SignIn.signIn',
-    defaultMessage: 'Ingresar'
+  description: {
+    id: 'views.Auth.ForgotPasswordDialog.description',
+    defaultMessage:
+      'Para recuperar tu contraseña es necesario contactar a un administrador.'
   }
 })

@@ -1,1 +1,3 @@
-export const Images = {}
+import Producto from './producto.png'
+
+export const Images = { Producto }

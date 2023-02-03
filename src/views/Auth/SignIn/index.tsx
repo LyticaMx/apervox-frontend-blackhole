@@ -1,152 +1,106 @@
-import { ReactElement } from 'react'
+import { ReactElement, useMemo, useState } from 'react'
 import { useIntl } from 'react-intl'
-import { useFormik } from 'formik'
+import { FormikConfig } from 'formik'
 import { useHistory } from 'react-router-dom'
-
-import TextField from 'components/Form/Textfield'
-import Button from 'components/Button'
-import Link from 'components/Link'
-
 import { useAuth } from 'context/Auth'
-
-import TextLogo from 'assets/Icons/VoiceprintLogo'
-
-import { pathRoute } from 'router/routes'
-import { formMessages } from 'globalMessages'
 import { signInMessages } from './mesages'
+import { formMessages } from 'globalMessages'
+import { Images } from 'assets/Images'
+import Typography from 'components/Typography'
+import * as yup from 'yup'
+import { Field } from 'types/form'
+import Form from 'components/Form'
+import ForgotPasswordDialog from './components/ForgotPasswordDialog'
 
 interface FormValues {
-  email: string
+  user: string
   password: string
 }
 
-interface FormErrors {
-  email?: string
-  password?: string
-}
-
 const SignIn = (): ReactElement => {
-  const intl = useIntl()
+  const [openDialog, setOpenDialog] = useState<boolean>(false)
+  const { formatMessage } = useIntl()
   const history = useHistory()
   const { actions } = useAuth()
 
-  const validate = (values: FormValues): FormErrors => {
-    const errors: FormErrors = {}
-
-    if (!values.email) {
-      errors.email = intl.formatMessage(formMessages.required)
-    }
-
-    if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-      errors.email = intl.formatMessage(formMessages.invalidEmail)
-    }
-
-    if (!values.password) {
-      errors.password = intl.formatMessage(formMessages.required)
-    }
-
-    return errors
-  }
-
-  const formik = useFormik({
-    initialValues: {
-      email: '',
-      password: ''
-    },
-    validate,
-    onSubmit: async (values) => {
-      const successLogin = await actions?.signIn(values)
-
-      if (successLogin) {
-        history.push('/')
-      }
-    }
+  const validationSchema = yup.object({
+    user: yup.string().email().required(formatMessage(formMessages.required)),
+    password: yup.string().required(formatMessage(formMessages.required))
   })
 
+  const config: FormikConfig<FormValues> = {
+    initialValues: {
+      user: '',
+      password: ''
+    },
+    onSubmit: async (values) => {
+      const successLogin = await actions?.signIn({
+        email: values.user,
+        password: values.password
+      })
+
+      if (successLogin) {
+        history.push('/tablero-de-hablantes')
+      }
+    },
+    validationSchema
+  }
+
+  const fields: Field[] = useMemo<Field[]>(
+    () => [
+      {
+        type: 'text',
+        name: 'user',
+        options: {
+          id: 'user',
+          label: formatMessage(formMessages.username),
+          placeholder: formatMessage(signInMessages.userPlaceholder),
+          labelClassname: 'text-white'
+        }
+      },
+      {
+        type: 'password',
+        name: 'password',
+        options: {
+          id: 'password',
+          label: formatMessage(formMessages.password),
+          placeholder: formatMessage(signInMessages.passwordPlaceholder),
+          labelClassname: 'text-white'
+        }
+      }
+    ],
+    []
+  )
+
   return (
-    <div>
-      <div className="flex flex-col">
-        <TextLogo />
-        <div className="mt-20">
-          <h2 className="text-lg font-semibold text-gray-900">
-            {intl.formatMessage(signInMessages.signInToAccount)}
-          </h2>
-          <p className="mt-2 text-sm text-gray-700">
-            {intl.formatMessage(signInMessages.dontHaveAnAccount)}
-            <span className="px-1">
-              <Link to={pathRoute.auth.signUp}>
-                {intl.formatMessage(signInMessages.request)}
-              </Link>
-            </span>
-            {intl.formatMessage(signInMessages.anAccount)}
-          </p>
+    <div className="bg-blackhole w-screen h-screen bg-no-repeat bg-center bg-cover overflow-hidden relative before:absolute before:top-0 before:left-0 before:right-0 before:bottom-0 before:bg-[#131B28] before:bg-opacity-[85%] flex items-center justify-center">
+      <ForgotPasswordDialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+      />
+      <div className="flex items-center justify-center flex-col z-[1] w-96">
+        <img src={Images.Producto} alt="producto" />
+        <Typography className="text-white my-4">
+          {formatMessage(signInMessages.description)}
+        </Typography>
+        <Form
+          fields={fields}
+          formikConfig={config}
+          className="w-full"
+          submitButtonLabel={formatMessage(signInMessages.logIn)}
+          submitButtonPosition="right"
+          submitButtonProps={{
+            variant: 'contained',
+            className: 'mt-4',
+            color: 'indigo'
+          }}
+        />
+        <div className="mt-8">
+          <button className="text-white" onClick={() => setOpenDialog(true)}>
+            {formatMessage(signInMessages.forgotPassword)}
+          </button>
         </div>
       </div>
-      <form
-        onSubmit={formik.handleSubmit}
-        style={{ width: '100%' }}
-        action="#"
-        className="mt-10 grid grid-cols-1 gap-y-8"
-      >
-        <TextField
-          label={intl.formatMessage(formMessages.email)}
-          id="email"
-          name="email"
-          type="email"
-          autoComplete="email"
-          value={formik.values.email}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={Boolean(formik.errors.email && formik.touched.email)}
-          helperText={
-            formik.errors.email && formik.touched.email
-              ? formik.errors.email
-              : ''
-          }
-        />
-        <div className="flex flex-col items-end">
-          <TextField
-            className="w-full"
-            label={intl.formatMessage(formMessages.password)}
-            id="password"
-            name="password"
-            type="password"
-            autoComplete="current-password"
-            value={formik.values.password}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={Boolean(formik.errors.password && formik.touched.password)}
-            helperText={
-              formik.errors.password && formik.touched.password
-                ? formik.errors.password
-                : ''
-            }
-          />
-          <Button
-            onClick={() => history.push(pathRoute.auth.forgotPassword)}
-            className="hover:bg-transparent hover:text-slate-700 focus:ring-0"
-          >
-            {intl.formatMessage(signInMessages.recoverPassword)}
-          </Button>
-          {/* <Typography
-            variant="body2"
-            className="text-right text-slate-500 mt-2"
-          >
-          </Typography> */}
-        </div>
-        <div>
-          <Button
-            type="submit"
-            variant="contained"
-            className="w-full"
-            color="sky"
-            fullwidth
-          >
-            {intl.formatMessage(signInMessages.signIn)}{' '}
-            <span aria-hidden="true">&rarr;</span>
-          </Button>
-        </div>
-      </form>
     </div>
   )
 }
