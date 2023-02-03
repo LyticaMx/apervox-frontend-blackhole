@@ -1,14 +1,15 @@
 import { defineMessages } from 'react-intl'
 
 export const messages = defineMessages({
-  title: {
-    id: 'views.Auth.RestorePassword.title',
-    defaultMessage: 'Restablecer contraseña'
-  },
-  subtitle: {
-    id: 'views.Auth.RestorePassword.subtitle',
+  firstTime: {
+    id: 'views.Auth.RestorePassword.firstTime',
     defaultMessage:
-      'Ingresa tus nuevas credenciales y el código de seguridad que recibiste a tu correo.'
+      'Parece que es la primera vez que inicias sesión en Black Hole, por seguridad debes cambiar la contraseña temporal asignada.'
+  },
+
+  oldPassword: {
+    id: 'views.Auth.RestorePassword.oldPassword',
+    defaultMessage: 'Contraseña actual'
   },
   newPassword: {
     id: 'views.Auth.RestorePassword.newPassword',
@@ -16,27 +17,14 @@ export const messages = defineMessages({
   },
   confirmPassword: {
     id: 'views.Auth.RestorePassword.confirmPassword',
-    defaultMessage: 'Confirmar contraseña'
+    defaultMessage: 'Confirmar nueva contraseña'
   },
-  secureCode: {
-    id: 'views.Auth.RestorePassword.secureCode',
-    defaultMessage: 'Código de seguridad'
+  passwordPlaceholder: {
+    id: 'views.Auth.RestorePassword.passwordPlaceholder',
+    defaultMessage: 'Ej. Gy43@g32VFINmfGT1'
   },
-  passwordDontMatch: {
-    id: 'views.Auth.RestorePassword.passwordDontMatch',
-    defaultMessage: 'Las contraseñas no coinciden'
-  },
-  successfulProcess: {
-    id: 'views.Auth.RestorePassword.successfulProcess',
-    defaultMessage: 'Proceso exitoso'
-  },
-  goToLogin: {
-    id: 'views.Auth.RestorePassword.goToLogin',
-    defaultMessage:
-      'Ve al inicio de sesión para acceder nuevamente a la plataforma'
-  },
-  goBackToLogin: {
-    id: 'views.Auth.RestorePassword.goBackToLogin',
-    defaultMessage: 'Volver al inicio de sesión'
+  changePassword: {
+    id: 'views.Auth.RestorePassword.changePassword',
+    defaultMessage: 'Cambiar contraseña'
   }
 })

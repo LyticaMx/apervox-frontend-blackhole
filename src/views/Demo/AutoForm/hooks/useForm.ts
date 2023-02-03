@@ -71,10 +71,9 @@ export const useForm = (): FormProps => {
     },
     {
       name: 'password',
-      type: 'text',
+      type: 'password',
       options: {
         id: 'password',
-        type: 'password',
         label: 'Contraseña'
       },
       breakpoints: {
