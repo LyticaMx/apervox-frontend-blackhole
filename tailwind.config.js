@@ -24,7 +24,9 @@ module.exports = {
       colors: {
         primary: '#4646FD',
         secondary: '#152743',
-        background: '#FDFDFD'
+        background: '#FDFDFD',
+        // buscar un mejor nombre
+        'secondary-gray': '#AAAAAA'
       },
       borderRadius: {
         '4xl': '2rem'

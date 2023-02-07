@@ -16,6 +16,7 @@ interface Props {
     | 'blue'
     | 'indigo'
     | 'purple'
+    | 'primary'
   variant?: 'text' | 'outlined' | 'contained'
   margin?: 'none' | 'normal' | 'dense'
   fullwidth?: boolean
@@ -75,6 +76,8 @@ const Button = ({
       blue: 'border border-blue-500 text-blue-500 hover:enabled:bg-blue-100 focus:ring-blue-500',
       indigo:
         'border border-indigo-500 text-indigo-500 hover:enabled:bg-indigo-100 focus:ring-indigo-500',
+      primary:
+        'border border-primary text-primary hover:enabled:bg-indigo-100 focus:rign-indigo-500',
       purple:
         'border border-purple-500 text-purple-500 hover:enabled:bg-purple-100 focus:ring-purple-500',
       sky: 'border border-sky-500 text-sky-500 hover:enabled:bg-sky-100 focus:ring-sky-500'
@@ -93,6 +96,8 @@ const Button = ({
       blue: 'bg-blue-500 text-white hover:enabled:bg-blue-600 focus:ring-blue-500',
       indigo:
         'bg-indigo-500 text-white hover:enabled:bg-indigo-600 focus:ring-indigo-500',
+      primary:
+        'bg-primary text-white hover:enabled-indigo-600 focus:ring-primary',
       purple:
         'bg-purple-500 text-white hover:enabled:bg-purple-600 focus:ring-purple-500'
     }

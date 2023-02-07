@@ -204,6 +204,7 @@ export interface SubmitButtonProps {
     | 'blue'
     | 'indigo'
     | 'purple'
+    | 'primary'
   variant?: 'text' | 'outlined' | 'contained'
   margin?: 'none' | 'normal' | 'dense'
   fullwidth?: boolean

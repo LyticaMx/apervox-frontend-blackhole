@@ -11,6 +11,7 @@ import * as yup from 'yup'
 import { Field } from 'types/form'
 import Form from 'components/Form'
 import ForgotPasswordDialog from './components/ForgotPasswordDialog'
+import CountdownRing from 'components/CountdownRing'
 
 interface FormValues {
   user: string
@@ -19,6 +20,7 @@ interface FormValues {
 
 const SignIn = (): ReactElement => {
   const [openDialog, setOpenDialog] = useState<boolean>(false)
+  const [lockLogin, setLockLogin] = useState<boolean>(false)
   const { formatMessage } = useIntl()
   const history = useHistory()
   const { actions } = useAuth()
@@ -41,6 +43,8 @@ const SignIn = (): ReactElement => {
 
       if (successLogin) {
         history.push('/tablero-de-hablantes')
+      } else {
+        setLockLogin(true)
       }
     },
     validationSchema
@@ -78,6 +82,18 @@ const SignIn = (): ReactElement => {
         open={openDialog}
         onClose={() => setOpenDialog(false)}
       />
+      {lockLogin && (
+        <div className="absolute left-4 top-4 flex items-center">
+          <CountdownRing
+            time={300}
+            onFinish={() => setLockLogin(false)}
+            fullTime={false}
+          />
+          <Typography className="md:ml-3 text-white">
+            {formatMessage(signInMessages.timeToWaitForLogin)}
+          </Typography>
+        </div>
+      )}
       <div className="flex items-center justify-center flex-col z-[1] w-96">
         <img src={Images.Producto} alt="producto" />
         <Typography className="text-white my-4">
@@ -92,7 +108,8 @@ const SignIn = (): ReactElement => {
           submitButtonProps={{
             variant: 'contained',
             className: 'mt-4',
-            color: 'indigo'
+            color: 'primary',
+            disabled: lockLogin
           }}
         />
         <div className="mt-8">

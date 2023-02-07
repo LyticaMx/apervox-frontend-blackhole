@@ -28,7 +28,7 @@ const ForgotPasswordDialog = (props: Props): ReactElement => {
         </Typography>
         <Button
           onClick={onClose}
-          color="indigo"
+          color="primary"
           variant="contained"
           className="mt-4"
         >

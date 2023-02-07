@@ -1,3 +1,5 @@
+/* importar la fuente de otra manera (esto sólo sirve con conexión a internet)  */
+@import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -35,4 +37,10 @@ body {
   border-radius: 8px;
   border: 2px solid rgb(241, 245, 259);
   background-color: rgba(148, 163, 184, 0.3);
+}
+
+/* Estilos de los react toast */
+.toast-top-icon .Toastify__toast-icon{
+  align-self: flex-start;
+  margin-top: 3px;
 }

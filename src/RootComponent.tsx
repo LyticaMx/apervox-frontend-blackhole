@@ -40,7 +40,7 @@ const RootComponent = (): ReactElement => (
           </AuthProvider>
         </LoaderProvider>
       </LanguageProvider>
-      <ToastContainer theme="colored" position="bottom-right" />
+      <ToastContainer theme="light" position="top-right" limit={5} />
     </BrowserRouter>
   </>
 )
