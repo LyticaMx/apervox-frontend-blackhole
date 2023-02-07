@@ -1,8 +1,8 @@
 import {
-  CheckCircleIcon,
   ExclamationCircleIcon,
   ExclamationTriangleIcon,
   InformationCircleIcon,
+  ShieldCheckIcon,
   XCircleIcon
 } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
@@ -40,7 +40,7 @@ const useToast = (): ReturnType => {
       case 'Success':
         return {
           className: 'text-green-500',
-          icon: CheckCircleIcon,
+          icon: ShieldCheckIcon,
           progressClassName: '!bg-green-600'
         }
       case 'Info':
