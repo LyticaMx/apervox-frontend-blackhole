@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import axios, { AxiosRequestHeaders, AxiosResponse } from 'axios'
-import { toast } from 'react-toastify'
 import { useIntl } from 'react-intl'
 
 import { createInstance, BaseURL } from 'providers/api'
@@ -10,6 +9,7 @@ import { apiMessages } from 'globalMessages/api'
 import { GeneralParams, ResponseData } from 'types/api'
 import { useAuth } from 'context/Auth'
 import { getItem, setItem } from 'utils/persistentStorage'
+import useToast from './useToast'
 
 interface Props {
   endpoint: string
@@ -40,6 +40,7 @@ const useApi = ({
   const { actions: loaderActions } = useLoader()
   const { actions: authActions } = useAuth()
   const instance = createInstance({ base })
+  const { launchToast } = useToast()
 
   const handleFetch = async (
     { body, queryString, urlParams }: Fetch = {},
@@ -80,7 +81,10 @@ const useApi = ({
       const notContent = response.status === 204
 
       if (notContent && getItem('availableNotification')) {
-        toast.warning(intl.formatMessage(apiMessages.noContent))
+        launchToast({
+          title: intl.formatMessage(apiMessages.noContent),
+          type: 'Warning'
+        })
       }
 
       return response.data
@@ -101,7 +105,10 @@ const useApi = ({
               ? response.data.i18key
               : 'unexpected'
           setTimeout(() => {
-            toast.error(intl.formatMessage(apiMessages[i18ErrorMessage]))
+            launchToast({
+              title: intl.formatMessage(apiMessages[i18ErrorMessage]),
+              type: 'Danger'
+            })
           }, 500)
         }
 

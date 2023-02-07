@@ -36,3 +36,9 @@ body {
   border: 2px solid rgb(241, 245, 259);
   background-color: rgba(148, 163, 184, 0.3);
 }
+
+/* Estilos de los react toast */
+.toast-top-icon .Toastify__toast-icon{
+  align-self: flex-start;
+  margin-top: 3px;
+}
