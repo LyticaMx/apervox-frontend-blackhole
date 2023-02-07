@@ -21,6 +21,10 @@ export const signInMessages = defineMessages({
   logIn: {
     id: 'views.Auth.SignIn.logIn',
     defaultMessage: 'Iniciar sesión'
+  },
+  timeToWaitForLogin: {
+    id: 'views.Auth.SignIn.timeToWaitForLogin',
+    defaultMessage: 'Para volver a iniciar sesión'
   }
 })
 
