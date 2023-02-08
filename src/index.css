@@ -1,7 +1,4 @@
-/* importar la fuente de otra manera (esto sólo sirve con conexión a internet)  */
-@import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&display=swap');
-@import url('assets/Fonts/Barlow');
-
+@import url('./assets/Fonts/Barlow/index.css');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
