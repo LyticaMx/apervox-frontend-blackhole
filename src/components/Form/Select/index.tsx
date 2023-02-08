@@ -25,6 +25,7 @@ interface Props {
   error?: boolean
   helperText?: string
   disabled?: boolean
+  className?: string
 }
 
 const defaultProps: Props = {
@@ -47,7 +48,8 @@ const SelectField = ({
   clearable,
   error,
   helperText,
-  disabled
+  disabled,
+  className
 }: Props): ReactElement => {
   const itemSelected = useMemo(() => {
     if (!value) return undefined
@@ -80,9 +82,14 @@ const SelectField = ({
             <Listbox.Label className={labelFormClasses}>{label}</Listbox.Label>
           )}
           <Listbox.Button
-            className={clsx('min-h-[2.625rem] relative', formClasses, {
-              'border-red-500 border-2': error
-            })}
+            className={clsx(
+              'min-h-[2.625rem] relative',
+              formClasses,
+              className,
+              {
+                'border-red-500 border-2': error
+              }
+            )}
           >
             {itemSelected && (
               <span className="block truncate text-left">
@@ -111,7 +118,7 @@ const SelectField = ({
             <label className="text-xs text-red-500">{helperText}</label>
           )}
         </div>
-        <Listbox.Options className="w-full overflow-y-scroll max-h-52 bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden focus:outline-none">
+        <Listbox.Options className="overflow-y-scroll max-h-52 w-auto bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden focus:outline-none">
           {items.map((item, index) => (
             <Listbox.Option
               key={index}

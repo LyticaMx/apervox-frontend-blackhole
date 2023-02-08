@@ -1,46 +1,51 @@
 /* importar la fuente de otra manera (esto sólo sirve con conexión a internet)  */
 @import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&display=swap');
+@import url('assets/Fonts/Barlow');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-body {
-  width: 100vw;
-  height: 100vh;
-  margin: 0;
-  overflow-x: hidden;
+@layer base {
+  body {
+    @apply text-secondary;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    overflow-x: hidden;
+  }
 }
 
-.accordion-item[aria-expanded='true']{
+.accordion-item[aria-expanded='true'] {
   border-right: 2px solid;
   border-color: rgb(14, 164, 233);
 }
 
-.accordion-item[aria-expanded='true']::before{
+.accordion-item[aria-expanded='true']::before {
   width: 100%;
 }
 
-.sidebar-scroll{
+.sidebar-scroll {
   -webkit-appearance: none;
   appearance: none;
 }
 
-.sidebar-scroll::-webkit-scrollbar{
+.sidebar-scroll::-webkit-scrollbar {
   width: 11px;
 }
 
-.sidebar-scroll::-webkit-scrollbar-track{
+.sidebar-scroll::-webkit-scrollbar-track {
   border-radius: 8px;
 }
 
-.sidebar-scroll::-webkit-scrollbar-thumb{
+.sidebar-scroll::-webkit-scrollbar-thumb {
   border-radius: 8px;
   border: 2px solid rgb(241, 245, 259);
   background-color: rgba(148, 163, 184, 0.3);
 }
 
 /* Estilos de los react toast */
-.toast-top-icon .Toastify__toast-icon{
+.toast-top-icon .Toastify__toast-icon {
   align-self: flex-start;
   margin-top: 3px;
 }

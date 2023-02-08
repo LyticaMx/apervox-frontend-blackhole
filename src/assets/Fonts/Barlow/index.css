@@ -1,0 +1,22 @@
+/* vietnamese */
+@font-face {
+  font-family: 'Barlow';
+  src: url(./Barlow-Black.ttf) format('ttf'),
+    url(./Barlow-BlackItalic.ttf) format('ttf'),
+    url(./Barlow-Bold.ttf) format('ttf'),
+    url(./Barlow-BoldItalic.ttf) format('ttf'),
+    url(./Barlow-ExtraBold.ttf) format('ttf'),
+    url(./Barlow-ExtraBoldItalic.ttf) format('ttf'),
+    url(./Barlow-ExtraLight.ttf) format('ttf'),
+    url(./Barlow-ExtraLightItalic.ttf) format('ttf'),
+    url(./Barlow-Italic.ttf) format('ttf'),
+    url(./Barlow-Light.ttf) format('ttf'),
+    url(./Barlow-LightItalic.ttf) format('ttf'),
+    url(./Barlow-Medium.ttf) format('ttf'),
+    url(./Barlow-MediumItalic.ttf) format('ttf'),
+    url(./Barlow-Regular.ttf) format('ttf'),
+    url(./Barlow-SemiBold.ttf) format('ttf'),
+    url(./Barlow-SemiBoldItalic.ttf) format('ttf'),
+    url(./Barlow-Thin.ttf) format('ttf'),
+    url(./Barlow-ThinItalic.ttf) format('ttf');
+}

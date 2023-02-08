@@ -39,6 +39,7 @@ const DateView = ({
     return new Date(now.getFullYear(), now.getMonth(), now.getDate())
   }, [])
 
+  const size = 'w-7 h-7'
   const getDate = (date: number): Date =>
     new Date(headerDate.getFullYear(), headerDate.getMonth(), date)
 
@@ -141,8 +142,8 @@ const DateView = ({
   }
 
   return (
-    <div className='flex flex-col px-6 pt-5 pb-6 border-b border-gray-100'>
-      <div className='flex items-center justify-between'>
+    <div className="flex flex-col px-6 pt-5 pb-6 ">
+      <div className="flex items-center justify-between">
         <button
           className={clsx(
             'flex items-center justify-center p-2 rounded-xl hover:bg-gray-50',
@@ -152,16 +153,16 @@ const DateView = ({
             if (onDecrement) onDecrement()
           }}
         >
-          <svg className='w-6 h-6 text-gray-900 stroke-current' fill='none'>
+          <svg className="w-6 h-6 text-gray-900 stroke-current" fill="none">
             <path
-              d='M13.25 8.75L9.75 12l3.5 3.25'
-              strokeWidth='1.5'
-              strokeLinecap='round'
-              strokeLinejoin='round'
+              d="M13.25 8.75L9.75 12l3.5 3.25"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
         </button>
-        <div className='text-sm font-semibold'>
+        <div className="text-sm font-semibold">
           {format(headerDate, 'MMMM')}
         </div>
         <button
@@ -173,21 +174,24 @@ const DateView = ({
             if (onIncrement) onIncrement()
           }}
         >
-          <svg className='w-6 h-6 text-gray-900 stroke-current' fill='none'>
+          <svg className="w-6 h-6 text-gray-900 stroke-current" fill="none">
             <path
-              d='M10.75 8.75l3.5 3.25-3.5 3.25'
-              strokeWidth='1.5'
-              strokeLinecap='round'
-              strokeLinejoin='round'
+              d="M10.75 8.75l3.5 3.25-3.5 3.25"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
         </button>
       </div>
-      <div className='grid grid-cols-7 text-xs text-center text-gray-900'>
+      <div className="grid grid-cols-7 text-xs text-center text-gray-900">
         {DAYS.map((day, i) => (
           <span
             key={i}
-            className='flex items-center justify-center w-10 h-10 font-semibold rounded-lg'
+            className={clsx(
+              size,
+              'flex items-center justify-center font-semibold rounded-lg'
+            )}
           >
             {day}
           </span>
@@ -196,7 +200,10 @@ const DateView = ({
         {daysBlank.map((_, i) => (
           <span
             key={i}
-            className='flex items-center justify-center w-10 h-10 text-blue-600 rounded-none rounded-tl-lg bg-gray-50'
+            className={clsx(
+              size,
+              'flex items-center justify-center rounded-md bg-gray-50'
+            )}
           />
         ))}
 
@@ -205,7 +212,8 @@ const DateView = ({
             <div
               onClick={() => handleChange(d)}
               className={clsx(
-                'flex items-center justify-center w-10 h-10 rounded-lg',
+                size,
+                'flex items-center justify-center rounded-lg',
                 dayClasses(d)
               )}
             >
