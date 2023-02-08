@@ -15,6 +15,8 @@ import { generalMessages } from 'globalMessages'
 import { pathRoute } from 'router/routes'
 
 import { activityPanelMessages } from '../messages'
+import { ColumnDef } from '@tanstack/react-table'
+import { CallModel } from 'types/call'
 
 const ActivityPanel = (): ReactElement => {
   const intl = useIntl()
@@ -24,7 +26,7 @@ const ActivityPanel = (): ReactElement => {
   const { alertPercentage, callAlertChart, historyOfCall, listOfCall } =
     speakerDashboard
 
-  const columns = useMemo(
+  const columns = useMemo<Array<ColumnDef<CallModel>>>(
     () => [
       {
         header: intl.formatMessage(generalMessages.date),
@@ -39,7 +41,7 @@ const ActivityPanel = (): ReactElement => {
         accessorKey: 'reception_number'
       },
       {
-        header: (
+        header: () => (
           <Typography
             className="whitespace-nowrap"
             style="semibold"
@@ -52,7 +54,7 @@ const ActivityPanel = (): ReactElement => {
       },
       {
         header: ' ',
-        cell: (
+        cell: () => (
           <button
             className="text-blue-500 font-bold"
             onClick={() => history.push(pathRoute.calls.detail)}

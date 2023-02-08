@@ -40,6 +40,7 @@ export interface CallModel {
 export interface CallVM extends CallModel {
   hour?: string
   pin?: number
+  alert?: boolean // Se agrega como opciona debido a que falta en la tabla y tira error
 }
 
 /* Detail of call view */

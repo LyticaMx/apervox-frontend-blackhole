@@ -37,7 +37,7 @@ const ArchivedCasesTab = (props: Props): ReactElement => {
             header: formatMessage(formMessages.name),
             accessorKey: 'name',
             cell: ({ getValue }) => (
-              <span className="text-orange-400">{getValue()}</span>
+              <span className="text-orange-400">{getValue<string>()}</span>
             )
           },
           {

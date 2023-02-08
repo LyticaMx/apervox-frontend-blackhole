@@ -1,5 +1,6 @@
 import { ReactElement, useEffect, useState } from 'react'
 import {
+  ColumnDef,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -25,27 +26,29 @@ export interface ManualSorting {
   onSortingChange: (sort: SortingState) => void
 }
 
-interface Props {
-  data: any[]
-  columns: any[]
+interface Props<T> {
+  data: T[]
+  columns: Array<ColumnDef<T>>
   manualPagination?: ManualPagination
   paginationStyle?: 'mini' | 'extended'
   pageSize?: number
   onRowClicked?: (row: any, event: any) => void
   className?: string
   manualSorting?: ManualSorting
+  maxHeight?: number
 }
 
-const Table = ({
+const Table = <DataType,>({
   data,
   columns,
   manualPagination,
   // paginationStyle: paginationType = 'mini',
   pageSize = 10,
+  maxHeight = 500,
   onRowClicked,
   className,
   manualSorting
-}: Props): ReactElement => {
+}: Props<DataType>): ReactElement => {
   const [sortingState, setSortingState] = useState<SortingState>([])
   const table = useReactTable({
     data,

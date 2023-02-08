@@ -19,11 +19,12 @@ import WaveSurferPlayer from 'components/Wavesurfer'
 
 import { generalMessages, actionsMessages } from 'globalMessages'
 import { messages } from './messages'
-import { ListOfCallFilter, PinsParams } from 'types/call'
+import { CallVM, ListOfCallFilter, PinsParams } from 'types/call'
 import RangeFilterContext from 'components/RangeFilterContext'
 import { useDatesFilter } from 'context/DatesFilter'
 import Title from 'components/Title'
 import useAudio from './hooks/useAudio'
+import { ColumnDef } from '@tanstack/react-table'
 
 const Calls = (): ReactElement => {
   const history = useHistory()
@@ -60,7 +61,7 @@ const Calls = (): ReactElement => {
     await actions?.getListOfPins(filters)
   }
 
-  const columns = useMemo(
+  const columns = useMemo<Array<ColumnDef<CallVM>>>(
     () => [
       {
         header: '  ',
@@ -100,7 +101,7 @@ const Calls = (): ReactElement => {
         accessorKey: 'reception_number'
       },
       {
-        header: (
+        header: () => (
           <Typography
             className="whitespace-nowrap"
             style="semibold"
