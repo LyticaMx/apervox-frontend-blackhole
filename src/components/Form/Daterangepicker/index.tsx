@@ -1,9 +1,8 @@
-import { ReactElement, useState, useMemo, useEffect, useRef } from 'react'
+import { ReactElement, useState, useMemo, useEffect } from 'react'
 import { Popover } from '@headlessui/react'
 import { Float } from '@headlessui-float/react'
 import { addMonths, subMonths, isDate, isBefore, format } from 'date-fns'
 import { CalendarDaysIcon, XMarkIcon } from '@heroicons/react/20/solid'
-import { useOnClickOutside } from 'usehooks-ts'
 
 import { labelFormClasses } from 'utils/classes'
 import clsx from 'clsx'
@@ -47,7 +46,6 @@ const Daterangepicker = ({
   shadow,
   ...props
 }: Props): ReactElement => {
-  const ref = useRef(null)
   const [DATE, setDate] = useState(new Date())
   const [dates, setDates] = useState<[Date?, Date?]>([])
   const [show, setShow] = useState(false)
@@ -55,10 +53,6 @@ const Daterangepicker = ({
     setShow(!show)
   }
   const [hours, setHours] = useState<boolean>(false)
-  const handleClickOutside = (): void => {
-    // setShow(false)
-  }
-  useOnClickOutside(ref, handleClickOutside)
 
   const handleChange = (date: Date): void => {
     if (!isDate(dates[0])) {
@@ -124,7 +118,7 @@ const Daterangepicker = ({
               {label}
             </label>
           )}
-          <div className="relative" ref={ref}>
+          <div className="relative">
             <div className="absolute top-0 left-0 px-3 py-2">
               {iconPosition === 'left' && (
                 <CalendarDaysIcon
