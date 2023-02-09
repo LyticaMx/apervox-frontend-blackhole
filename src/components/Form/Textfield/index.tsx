@@ -3,7 +3,7 @@ import clsx from 'clsx'
 
 import Label from 'components/Label'
 
-import { formClasses } from 'utils/classes'
+// import { formClasses } from 'utils/classes'
 
 interface Props {
   id?: string
@@ -72,7 +72,7 @@ const TextField = ({
         id={id}
         type={type}
         {...props}
-        className={clsx(formClasses, {
+        className={clsx('text-field', {
           'border-red-500 border-2': error
         })}
       />

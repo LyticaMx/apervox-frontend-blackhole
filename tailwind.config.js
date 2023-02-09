@@ -32,20 +32,20 @@ module.exports = {
           light: colors.neutral[400],
           dark: colors.neutral[400]
         }
-        // base: {
-        //   DEFAULT: colors.yellow[800]
-        // }
       },
-      backgroundColor: {
+      colors: {
+        'secondary-gray': '#AAAAAA',
         background: {
           DEFAULT: colors.neutral[50],
           light: colors.neutral[50],
           dark: colors.gray[900],
           secondary: colors.neutral[100]
-        }
-      },
-      colors: {
-        'secondary-gray': '#AAAAAA',
+        },
+        muted: {
+          DEFAULT: colors.neutral[400],
+          light: colors.neutral[400],
+          dark: colors.neutral[400]
+        },
         primary: {
           ...colors.indigo,
           DEFAULT: colors.indigo[500],

@@ -21,22 +21,13 @@ export type InputType =
   | 'divider'
   | 'asyncSelect'
 
-type InitialValues = Record<string, any>
-type InputProps = Record<string, any>
+interface Values {
+  search: string
+  fields: string[]
+}
 export interface FilterItem {
-  title: string
-  description?: string
-  type: InputType
+  label: string
   name: string
-  items?: any[]
-  options?: any[]
-  props?: InputProps
-  wrap?: boolean
-  cancelItems?: string[]
-  asyncSearch?: {
-    loadOptions: (search: any, loadedOptions: any) => Promise<any>
-    resetPagination: () => void
-  }
 }
 
 interface Props {
@@ -44,8 +35,8 @@ interface Props {
   onSubmit?: (values: any) => any
   onReset?: () => void
   onClose?: () => void
-  initialValues?: InitialValues
-  values?: Record<string, any>
+  initialValues?: Values
+  values?: Values
   children?: ReactNode
   acceptText?: ReactNode
   cancelText?: ReactNode
@@ -65,7 +56,6 @@ const FilterByField = ({
   disabledEmpty = false
 }: Props): ReactElement => {
   const intl = useIntl()
-
   const [show, setShow] = useState(false)
 
   const toggle = (): void => {
@@ -78,7 +68,11 @@ const FilterByField = ({
   }
 
   const formik = useFormik({
-    initialValues: initialValues ?? {},
+    initialValues: {
+      search: '',
+      fields: [],
+      ...initialValues
+    },
     onSubmit: (values) => {
       if (onSubmit) {
         onSubmit(values)
@@ -89,21 +83,15 @@ const FilterByField = ({
     }
   })
 
-  useEffect(() => {
-    if (show && values) {
-      formik.resetForm({ values: values ?? {} })
-    }
-  }, [show, values])
+  const total = values?.fields.length ?? 0
 
   useEffect(() => {
-    if (!show) {
-      items.forEach((item) => {
-        if (item.type === 'asyncSelect') {
-          item.asyncSearch?.resetPagination()
-        }
+    if (show && values) {
+      formik.resetForm({
+        values: values ?? { search: '', fields: [] }
       })
     }
-  }, [show])
+  }, [show, values])
 
   const disabled =
     disabledEmpty &&
@@ -126,11 +114,11 @@ const FilterByField = ({
         leaveTo="opacity-0 -translate-y-1"
       >
         <Popover.Button
-          className="flex gap-2 p-2 py-1.5 items-center shadow-blackhole-md rounded-lg"
+          className="gap-2 btn shadow-blackhole-md p-1.5"
           onClick={toggle}
         >
-          <span className="px-2 py-0.5 rounded-md block text-primary text-sm bg-gray-100">
-            0
+          <span className="px-2 py-0.5 rounded-md block text-primary text-sm bg-gray-100 min-w-[30px]">
+            {total}
           </span>
           <AdjustmentsVerticalIcon className="w-5 h-5 text-gray-500" />
         </Popover.Button>
@@ -144,7 +132,7 @@ const FilterByField = ({
               <div className="flex gap-2 items-center">
                 <button
                   onClick={() => {
-                    formik.resetForm({ values: {} })
+                    formik.resetForm({ values: { search: '', fields: [] } })
                     if (onReset) onReset()
                   }}
                   className="text-sm text-blue-500"
@@ -152,20 +140,40 @@ const FilterByField = ({
                   {intl.formatMessage(actionsMessages.clean)}
                 </button>
                 <div className="border border-gray-400 rounded-lg h-3"></div>
-                <button disabled={disabled} className="text-sm text-blue-500">
+                <button
+                  disabled={disabled}
+                  className="text-sm text-blue-500"
+                  onClick={() => formik.handleSubmit()}
+                >
                   {acceptText ?? intl.formatMessage(actionsMessages.accept)}
                 </button>
               </div>
             </div>
 
             <div className="p-4">
-              <TextField />
+              <form>
+                <TextField
+                  id="search"
+                  name="search"
+                  onChange={formik.handleChange}
+                  value={formik.values.search}
+                />
 
-              <p className="mt-3 mb-2">Campos</p>
-              <div className="flex flex-col gap-1">
-                <Checkbox label="Numero de usuarios" />
-                <Checkbox label="Usuario" />
-              </div>
+                <p className="mt-3 mb-2">Campos</p>
+                <div className="flex flex-col gap-1">
+                  {items.map((item, index) => (
+                    <Checkbox
+                      label={item.label}
+                      key={index}
+                      name="fields"
+                      id={`fields-${item.name}`}
+                      onChange={formik.handleChange}
+                      value={item.name}
+                      checked={formik.values.fields.includes(item.name)}
+                    />
+                  ))}
+                </div>
+              </form>
             </div>
           </div>
         </Popover.Panel>

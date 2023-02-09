@@ -1,7 +1,15 @@
 @import url('./assets/Fonts/Barlow/index.css');
+@import url('./assets/css/components.css');
+
+/* @import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities'; */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* $codeBackground: theme('colors'); */
 
 @layer base {
   body {
@@ -10,6 +18,14 @@
     height: 100vh;
     margin: 0;
     overflow-x: hidden;
+  }
+}
+
+@layer components {
+  .text-field {
+    @apply block w-full appearance-none rounded-md sm:text-sm;
+    @apply border border-background-secondary bg-white px-3 py-2 text-gray-900 placeholder-gray-400;
+    @apply focus:border-primary focus:bg-white focus:outline-none;
   }
 }
 
@@ -45,4 +61,12 @@
 .toast-top-icon .Toastify__toast-icon {
   align-self: flex-start;
   margin-top: 3px;
+}
+
+::-webkit-scrollbar {
+  @apply h-1 w-1 bg-gray-100 dark:bg-gray-900;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 hover:bg-gray-400 dark:border-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600;
 }

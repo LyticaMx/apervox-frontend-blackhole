@@ -5,7 +5,7 @@ import { addMonths, subMonths, isDate, isBefore, format } from 'date-fns'
 import { CalendarDaysIcon, XMarkIcon } from '@heroicons/react/20/solid'
 import { useOnClickOutside } from 'usehooks-ts'
 
-import { formClasses, labelFormClasses } from 'utils/classes'
+import { labelFormClasses } from 'utils/classes'
 import clsx from 'clsx'
 import Menu from './Menu'
 import DateView from './Date'
@@ -28,6 +28,7 @@ interface Props {
   maxDate?: string
   menu?: boolean
   iconPosition?: 'left' | 'right'
+  shadow?: boolean
 }
 
 const Daterangepicker = ({
@@ -43,6 +44,7 @@ const Daterangepicker = ({
   maxDate,
   menu,
   iconPosition = 'left',
+  shadow,
   ...props
 }: Props): ReactElement => {
   const ref = useRef(null)
@@ -135,11 +137,12 @@ const Daterangepicker = ({
               id={id}
               type="text"
               readOnly
-              className={clsx('cursor-pointer', formClasses, {
+              className={clsx('cursor-pointer', 'text-field', {
                 'pr-20': clearable && iconPosition === 'right',
                 'pr-10': clearable && iconPosition === 'left',
                 'pl-10': iconPosition === 'left',
-                'border-red-500 border-2': error
+                'border-red-500 border-2': error,
+                'shadow-blackhole-md': shadow
               })}
               {...props}
               value={inputValue}
