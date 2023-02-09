@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useMemo, useState } from 'react'
+import { ReactElement, useEffect, useMemo, useRef, useState } from 'react'
 import { Cog8ToothIcon } from '@heroicons/react/24/outline'
 import { Popover } from '@headlessui/react'
 import { Float } from '@headlessui-float/react'
@@ -36,7 +36,7 @@ const TableConfiguration = <DataType,>(
     [table]
   )
 
-  const [initialValues, setInitialValues] = useState<VisibilityState>(
+  const initialValuesRef = useRef<VisibilityState>(
     columnsCanBeHidden.reduce((carry, column) => {
       carry[column.id] = column.getIsVisible()
       return carry
@@ -44,7 +44,7 @@ const TableConfiguration = <DataType,>(
   )
 
   const formik = useFormik({
-    initialValues,
+    initialValues: initialValuesRef.current,
     enableReinitialize: true,
     onSubmit: (values) => {
       onChangeColumnVisibility(
@@ -68,20 +68,20 @@ const TableConfiguration = <DataType,>(
   useEffect(() => {
     if (
       openTableConfiguration &&
-      JSON.stringify(initialValues) !== JSON.stringify(formik.values)
+      JSON.stringify(initialValuesRef.current) !== JSON.stringify(formik.values)
     ) {
+      // Hayar condición para que no se repita este reduce
       const newInitialValues = columnsCanBeHidden.reduce((carry, column) => {
         carry[column.id] = column.getIsVisible()
         return carry
       }, {})
 
-      setInitialValues((old) => {
-        if (JSON.stringify(old) !== JSON.stringify(newInitialValues)) {
-          return newInitialValues
-        }
-        return old
-      })
-      formik.resetForm()
+      if (
+        JSON.stringify(initialValuesRef.current) !==
+        JSON.stringify(newInitialValues)
+      ) {
+        formik.resetForm({ values: newInitialValues })
+      }
     }
   }, [openTableConfiguration])
 
@@ -128,15 +128,10 @@ const TableConfiguration = <DataType,>(
                   className="text-primary mr-2 flex-none"
                   onClick={() => {
                     onChangeColumnVisibility({})
-                    setInitialValues((values) =>
-                      Object.keys(values).reduce((carry, key) => {
-                        carry[key] = true
-                        return carry
-                      }, {})
-                    )
+                    formik.resetForm({ values: initialValuesRef.current })
                     setOpenTableConfiguration(false)
                   }}
-                  type="reset"
+                  type="button"
                 >
                   {formatMessage(actionsMessages.clean)}
                 </button>
