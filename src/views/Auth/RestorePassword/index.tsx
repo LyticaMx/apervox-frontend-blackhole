@@ -65,8 +65,17 @@ const RestorePassword = (): ReactElement => {
   return (
     <div className="bg-blackhole w-screen h-screen bg-no-repeat bg-center bg-cover overflow-hidden relative before:absolute before:top-0 before:left-0 before:right-0 before:bottom-0 before:bg-[#131B28] before:bg-opacity-[85%] flex items-center justify-center">
       <Grid className="z-[1]">
-        <Grid item cols={12} md={5} className="flex items-center">
-          <img src={Images.RestorePassword} alt="password" />
+        <Grid
+          item
+          cols={12}
+          md={5}
+          className="flex items-center justify-center p-4"
+        >
+          <img
+            src={Images.RestorePassword}
+            alt="password"
+            className="max-w-[75%] min-w-[300px]"
+          />
         </Grid>
         <Grid
           item
