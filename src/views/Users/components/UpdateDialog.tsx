@@ -9,7 +9,7 @@ import { useFormatMessage } from 'hooks/useIntl'
 
 import { updateMessages } from '../messages'
 import Divider from 'components/Divider'
-import Switchs from 'components/Form/Switch'
+import Switch from 'components/Form/Switch'
 import Typography from 'components/Typography'
 import Checkbox from 'components/Form/Checkbox'
 import { Role, User } from 'types/user'
@@ -83,11 +83,11 @@ const UpdateUserDialog = ({
         <form className="space-y-5" onSubmit={formik.handleSubmit}>
           <div className="flex justify-between gap-5">
             <div className="flex gap-2">
-              <Switchs
+              <Switch
                 size="sm"
                 color="blue"
                 value={formik.values.block}
-                onChange={value => {
+                onChange={(value) => {
                   formik.setFieldValue('block', value)
                 }}
               />

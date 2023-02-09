@@ -1,0 +1,56 @@
+.btn {
+  @apply inline-flex rounded-md items-center justify-center px-4 py-2 font-semibold;
+  @apply focus:outline-none;
+  @apply disabled:opacity-75 disabled:cursor-not-allowed;
+  @apply w-max;
+  min-width: 3rem;
+}
+
+.btn.sm { @apply px-3 py-1 text-xs; }
+.btn.md { @apply px-4 py-2 text-sm; }
+.btn.lg { @apply px-4 py-2 text-base; }
+
+.btn.outlined { @apply border; }
+
+/* TEXT */
+.btn.text.primary { @apply text-primary hover:enabled:bg-primary-100 }
+.btn.text.secondary { @apply text-secondary hover:enabled:bg-secondary-100 }
+.btn.text.base { @apply text-slate-500 hover:enabled:bg-slate-100 }
+.btn.text.red { @apply text-red-500 hover:enabled:bg-red-100 }
+.btn.text.yellow { @apply text-yellow-500 hover:enabled:bg-yellow-100 }
+.btn.text.orange { @apply text-orange-500 hover:enabled:bg-orange-100 }
+.btn.text.green { @apply text-green-500 hover:enabled:bg-green-100 }
+.btn.text.cyan { @apply text-cyan-500 hover:enabled:bg-cyan-100 }
+.btn.text.sky { @apply text-sky-500 hover:enabled:bg-sky-100 }
+.btn.text.blue { @apply text-blue-500 hover:enabled:bg-blue-100 }
+.btn.text.indigo { @apply text-indigo-500 hover:enabled:bg-indigo-100 }
+.btn.text.purple { @apply text-purple-500 hover:enabled:bg-purple-100 }
+
+/* OUTLINED */
+.btn.outlined.primary { @apply border-primary text-primary hover:enabled:bg-primary-100 }
+.btn.outlined.secondary { @apply border-secondary text-secondary hover:enabled:bg-secondary-100 }
+.btn.outlined.base { @apply border-slate-500 text-slate-500 hover:enabled:bg-slate-100 }
+.btn.outlined.red { @apply border-red-500 text-red-500 hover:enabled:bg-red-100 }
+.btn.outlined.yellow { @apply border-yellow-500 text-yellow-500 hover:enabled:bg-yellow-100 }
+.btn.outlined.orange { @apply border-orange-500 text-orange-500 hover:enabled:bg-orange-100 }
+.btn.outlined.green { @apply border-green-500 text-green-500 hover:enabled:bg-green-100 }
+.btn.outlined.cyan { @apply border-cyan-500 text-cyan-500 hover:enabled:bg-cyan-100 }
+.btn.outlined.sky { @apply border-sky-500 text-sky-500 hover:enabled:bg-sky-100 }
+.btn.outlined.blue { @apply border-blue-500 text-blue-500 hover:enabled:bg-blue-100 }
+.btn.outlined.indigo { @apply border-indigo-500 text-indigo-500 hover:enabled:bg-indigo-100 }
+.btn.outlined.purple { @apply border-purple-500 text-purple-500 hover:enabled:bg-purple-100 }
+
+/* Contained */
+.btn.contained.primary { @apply bg-primary text-white hover:enabled:bg-primary }
+.btn.contained.secondary { @apply bg-secondary text-white hover:enabled:bg-secondary }
+.btn.contained.base { @apply bg-slate-500 text-white hover:enabled:bg-slate-500 }
+.btn.contained.red { @apply bg-red-500 text-white hover:enabled:bg-red-500 }
+.btn.contained.yellow { @apply bg-yellow-500 text-white hover:enabled:bg-yellow-500 }
+.btn.contained.orange { @apply bg-orange-500 text-white hover:enabled:bg-orange-500 }
+.btn.contained.green { @apply bg-green-500 text-white hover:enabled:bg-green-500 }
+.btn.contained.cyan { @apply bg-cyan-500 text-white hover:enabled:bg-cyan-500 }
+.btn.contained.sky { @apply bg-sky-500 text-white hover:enabled:bg-sky-500 }
+.btn.contained.blue { @apply bg-blue-500 text-white hover:enabled:bg-blue-500 }
+.btn.contained.indigo { @apply bg-indigo-500 text-white hover:enabled:bg-indigo-500 }
+.btn.contained.purple { @apply bg-purple-500 text-white hover:enabled:bg-purple-500 }
+.btn.contained.primary { @apply bg-primary-500 text-white hover:enabled:bg-primary-500 }
