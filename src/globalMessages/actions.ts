@@ -127,5 +127,9 @@ export const actionsMessages = defineMessages({
   update: {
     id: 'global.actions.update',
     defaultMessage: 'Actualizar'
+  },
+  apply: {
+    id: 'global.actions.apply',
+    defaultMessage: 'Aplicar'
   }
 })

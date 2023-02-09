@@ -6,3 +6,10 @@ export const messages = defineMessages({
     defaultMessage: '{from} a {to} de {of} resultados.'
   }
 })
+
+export const tableConfigurationMessages = defineMessages({
+  title: {
+    id: 'components.Table.TableConfiguration.title',
+    defaultMessage: 'Configuración de tabla'
+  }
+})

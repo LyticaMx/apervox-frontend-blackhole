@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useCallback, useEffect, useMemo, useState } from 'react'
 import {
   ColumnDef,
   flexRender,
@@ -6,14 +6,19 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  RowSelectionState,
   SortingState,
-  useReactTable
+  useReactTable,
+  VisibilityState
 } from '@tanstack/react-table'
 
 import Pagination from './Pagination'
 import clsx from 'clsx'
 import NoData from 'components/NoData'
 import { ArrowDownIcon, ArrowUpIcon } from '@heroicons/react/20/solid'
+import IndeterminateCheckbox from './IndeterminateCheckbox'
+import Typography from 'components/Typography'
+import TableConfiguration from './TableConfiguration'
 
 export interface ManualPagination {
   currentPage: number
@@ -36,6 +41,7 @@ interface Props<T> {
   className?: string
   manualSorting?: ManualSorting
   maxHeight?: number
+  withCheckbox?: boolean
 }
 
 const Table = <DataType,>({
@@ -45,27 +51,60 @@ const Table = <DataType,>({
   // paginationStyle: paginationType = 'mini',
   pageSize = 10,
   maxHeight = 500,
+  withCheckbox = false,
   onRowClicked,
   className,
   manualSorting
 }: Props<DataType>): ReactElement => {
   const [sortingState, setSortingState] = useState<SortingState>([])
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+
+  const enhancedColumns = useMemo<Array<ColumnDef<DataType>>>(() => {
+    if (!withCheckbox) return columns
+    const newColumns: Array<ColumnDef<DataType>> = [
+      {
+        id: 'checkbox',
+        enableSorting: false,
+        enableHiding: false,
+        header: ({ table }) => (
+          <IndeterminateCheckbox
+            checked={table.getIsAllRowsSelected()}
+            indeterminate={table.getIsSomeRowsSelected()}
+            onChange={table.getToggleAllRowsSelectedHandler()}
+          />
+        ),
+        cell: ({ row }) => (
+          <div>
+            <IndeterminateCheckbox
+              checked={row.getIsSelected()}
+              indeterminate={row.getIsSomeSelected()}
+              onChange={row.getToggleSelectedHandler()}
+            />
+          </div>
+        )
+      }
+    ]
+    return newColumns.concat(columns)
+  }, [columns, withCheckbox])
   const table = useReactTable({
     data,
-    columns,
+    columns: enhancedColumns,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    debugTable: true,
+    debugTable: true, // para obtener los logs de la tabla
     manualPagination: Boolean(manualPagination),
     initialState: {
       pagination: { pageSize, pageIndex: 0 }
     },
-    state: { sorting: manualSorting?.sorting },
+    state: { sorting: manualSorting?.sorting, rowSelection, columnVisibility },
     manualSorting: true,
     enableSorting: !!manualSorting,
     getSortedRowModel: getSortedRowModel(),
-    onSortingChange: setSortingState
+    onSortingChange: setSortingState,
+    onRowSelectionChange: setRowSelection,
+    onColumnVisibilityChange: setColumnVisibility
   })
 
   const onChange = (page: number): void => {
@@ -104,6 +143,17 @@ const Table = <DataType,>({
     }
   }
 
+  const onChangeColumnVisibility = useCallback(
+    (newColumnVisibility: VisibilityState): void => {
+      if (
+        JSON.stringify(columnVisibility) !== JSON.stringify(newColumnVisibility)
+      ) {
+        setColumnVisibility(newColumnVisibility)
+      }
+    },
+    [columnVisibility]
+  )
+
   useEffect(
     () => {
       if (
@@ -126,9 +176,21 @@ const Table = <DataType,>({
     }
   }, [JSON.stringify(manualSorting?.sorting)])
 
+  useEffect(() => {
+    if (!withCheckbox) return
+    if (Object.keys(rowSelection).length > 0) setRowSelection({})
+  }, [manualPagination?.currentPage, table.getState().pagination.pageIndex])
+
   return (
     <div className={clsx(className, 'flex flex-col')}>
       <div className="shadow ring-1 ring-black ring-opacity-5 md:rounded-t-lg overflow-x-auto overflow-y-hidden">
+        <div className="h-[30px] flex center justify-between px-6 py-2">
+          <Typography>Elementos seleccionados</Typography>
+          <TableConfiguration
+            table={table}
+            onChangeColumnVisibility={onChangeColumnVisibility}
+          />
+        </div>
         {table.getRowModel().rows.length ? (
           <table className="min-w-full divide-y divide-gray-300">
             <thead className="bg-gray-50">
@@ -153,7 +215,8 @@ const Table = <DataType,>({
                               header.getContext()
                             )}
                             {header.column.columnDef.header !== ' ' &&
-                            header.column.columnDef.header !== ''
+                            header.column.columnDef.header !== '' &&
+                            header.column.columnDef.enableSorting !== false
                               ? getOrderIcon(
                                   header.column.getIsSorted() as string
                                 )

@@ -158,6 +158,7 @@ const Alerts = (): ReactElement => {
                   onSortingChange: async (sort) =>
                     await fetchCallAlerts({ sort })
                 }}
+                withCheckbox
               />
             </div>
           </>
