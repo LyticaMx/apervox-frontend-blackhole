@@ -1,4 +1,11 @@
-import { ReactElement, useCallback, useEffect, useMemo, useState } from 'react'
+import {
+  ReactElement,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react'
 import {
   ColumnDef,
   flexRender,
@@ -19,6 +26,7 @@ import { ArrowDownIcon, ArrowUpIcon } from '@heroicons/react/20/solid'
 import IndeterminateCheckbox from './IndeterminateCheckbox'
 import Typography from 'components/Typography'
 import TableConfiguration from './TableConfiguration'
+import { useVirtual } from 'react-virtual'
 
 export interface ManualPagination {
   currentPage: number
@@ -50,7 +58,7 @@ const Table = <DataType,>({
   manualPagination,
   // paginationStyle: paginationType = 'mini',
   pageSize = 10,
-  maxHeight = 500,
+  maxHeight = 800,
   withCheckbox = false,
   onRowClicked,
   className,
@@ -59,6 +67,7 @@ const Table = <DataType,>({
   const [sortingState, setSortingState] = useState<SortingState>([])
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  const tableContainerRef = useRef<HTMLDivElement>(null)
 
   const enhancedColumns = useMemo<Array<ColumnDef<DataType>>>(() => {
     if (!withCheckbox) return columns
@@ -106,6 +115,23 @@ const Table = <DataType,>({
     onRowSelectionChange: setRowSelection,
     onColumnVisibilityChange: setColumnVisibility
   })
+
+  const { rows } = table.getRowModel()
+
+  const rowVirtualizer = useVirtual({
+    parentRef: tableContainerRef,
+    size: rows.length,
+    overscan: parseInt(process.env.REACT_APP_TABLE_OVERSCAN ?? '10')
+  })
+
+  const { virtualItems: virtualRows, totalSize } = rowVirtualizer
+
+  const paddingTop = virtualRows.length > 0 ? virtualRows?.[0]?.start || 0 : 0
+
+  const paddingBottom =
+    virtualRows.length > 0
+      ? totalSize - (virtualRows?.[virtualRows.length - 1]?.end || 0)
+      : 0
 
   const onChange = (page: number): void => {
     if (manualPagination) {
@@ -191,79 +217,99 @@ const Table = <DataType,>({
             onChangeColumnVisibility={onChangeColumnVisibility}
           />
         </div>
-        {table.getRowModel().rows.length ? (
-          <table className="min-w-full divide-y divide-gray-300">
-            <thead className="bg-gray-50">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <th
-                        className="py-3.5 px-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                        key={header.id}
-                        colSpan={header.colSpan}
-                      >
-                        {header.isPlaceholder ? null : (
-                          <div
-                            onClick={header.column.getToggleSortingHandler()}
-                            className={clsx(
-                              manualSorting && 'cursor-pointer flex select-none'
-                            )}
-                          >
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                            {header.column.columnDef.header !== ' ' &&
-                            header.column.columnDef.header !== '' &&
-                            header.column.columnDef.enableSorting !== false
-                              ? getOrderIcon(
-                                  header.column.getIsSorted() as string
-                                )
-                              : ''}
-                          </div>
-                        )}
-                      </th>
-                    )
-                  })}
-                </tr>
-              ))}
-            </thead>
-            <tbody className="divide-y divide-gray-200 bg-white">
-              {table.getRowModel().rows.map((row) => {
-                return (
-                  <tr
-                    key={row.id}
-                    className={clsx(
-                      onRowClicked && 'cursor-pointer hover:bg-slate-100'
-                    )}
-                    onClick={(event: any) => {
-                      if (onRowClicked) {
-                        onRowClicked(row.original, event)
-                      }
-                    }}
-                  >
-                    {row.getVisibleCells().map((cell) => {
+        <div
+          ref={tableContainerRef}
+          style={{ maxHeight }}
+          className="overflow-auto"
+        >
+          {table.getRowModel().rows.length ? (
+            <table className="min-w-full divide-y divide-gray-300">
+              <thead className="bg-gray-50 sticky top-0">
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <tr key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => {
                       return (
-                        <td
-                          key={cell.id}
-                          className="whitespace-nowrap py-4 px-3 text-sm font-medium text-gray-900 sm:pl-6"
+                        <th
+                          className="py-3.5 px-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                          key={header.id}
+                          colSpan={header.colSpan}
                         >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
+                          {header.isPlaceholder ? null : (
+                            <div
+                              onClick={header.column.getToggleSortingHandler()}
+                              className={clsx(
+                                manualSorting &&
+                                  'cursor-pointer flex select-none'
+                              )}
+                            >
+                              {flexRender(
+                                header.column.columnDef.header,
+                                header.getContext()
+                              )}
+                              {header.column.columnDef.header !== ' ' &&
+                              header.column.columnDef.header !== '' &&
+                              header.column.columnDef.enableSorting !== false
+                                ? getOrderIcon(
+                                    header.column.getIsSorted() as string
+                                  )
+                                : ''}
+                            </div>
                           )}
-                        </td>
+                        </th>
                       )
                     })}
                   </tr>
-                )
-              })}
-            </tbody>
-          </table>
-        ) : (
-          <NoData />
-        )}
+                ))}
+              </thead>
+              <tbody className="divide-y divide-gray-200 bg-white">
+                {paddingTop > 0 && (
+                  <tr>
+                    <td style={{ height: `${paddingTop}px` }} />
+                  </tr>
+                )}
+                {virtualRows.map((virtualRow) => {
+                  const row = rows[virtualRow.index]
+
+                  return (
+                    <tr
+                      key={row.id}
+                      ref={virtualRow.measureRef}
+                      className={clsx(
+                        onRowClicked && 'cursor-pointer hover:bg-slate-100'
+                      )}
+                      onClick={(event: any) => {
+                        if (onRowClicked) {
+                          onRowClicked(row.original, event)
+                        }
+                      }}
+                    >
+                      {row.getVisibleCells().map((cell) => {
+                        return (
+                          <td
+                            key={cell.id}
+                            className="whitespace-nowrap py-4 px-3 text-sm font-medium text-gray-900 sm:pl-6"
+                          >
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </td>
+                        )
+                      })}
+                    </tr>
+                  )
+                })}
+                {paddingBottom > 0 && (
+                  <tr>
+                    <td style={{ height: `${paddingBottom}px` }} />
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          ) : (
+            <NoData />
+          )}
+        </div>
       </div>
       {/* {paginationType && ( */}
       <Pagination
