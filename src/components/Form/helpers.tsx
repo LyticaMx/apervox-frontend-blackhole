@@ -10,7 +10,7 @@ import PasswordField from './PasswordField'
 import Radio from './Radio'
 import SelectField from './Select'
 import Selectmultiple from './Selectmultiple'
-import Switchs from './Switch'
+import Switch from './Switch'
 import TextField from './Textfield'
 
 interface Params<T> {
@@ -172,7 +172,7 @@ export const fieldMapper = <T,>({
 
     case 'switch':
       return (
-        <Switchs
+        <Switch
           {...field.options}
           value={formik.values[name]}
           onChange={(val) => formik.setFieldValue(name, val)}

@@ -5,6 +5,10 @@ export const sidebarMessages = defineMessages({
     id: 'sidebar.dashboard',
     defaultMessage: 'Tablero'
   },
+  roles: {
+    id: 'sidebar.roles',
+    defaultMessage: 'Roles de usuario'
+  },
   admin: {
     id: 'sidebar.admin',
     defaultMessage: 'Administración'

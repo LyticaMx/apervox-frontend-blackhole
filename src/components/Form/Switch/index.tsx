@@ -10,7 +10,7 @@ interface Props {
   color?: string
   stopPropagation?: boolean
 }
-const Switchs = ({
+const Switch = ({
   size = 'md',
   color = 'gray',
   value,
@@ -31,35 +31,33 @@ const Switchs = ({
   }
 
   return (
-    <div>
-      <SwitchHL
-        checked={value}
-        onChange={onChange}
-        onClick={(e) => {
-          if (stopPropagation) e.stopPropagation()
-        }}
+    <SwitchHL
+      checked={value}
+      onChange={onChange}
+      onClick={(e) => {
+        if (stopPropagation) e.stopPropagation()
+      }}
+      className={clsx(
+        'inline-flex items-center justify-center rounded-full transition delay-300 p-1 relative',
+        {
+          [colorClass]: value,
+          'bg-gray-200': !value
+        },
+        sizeClasses[size]
+      )}
+    >
+      <span
         className={clsx(
-          'inline-flex items-center justify-center rounded-full transition delay-300 p-1 relative',
+          'absolute inline-block transform rounded-full bg-white transition delay-300',
           {
-            [colorClass]: value,
-            'bg-gray-200': !value
+            'translate-x-1/2': value,
+            '-translate-x-1/2': !value
           },
-          sizeClasses[size]
+          toggleSizeClasses[size]
         )}
-      >
-        <span
-          className={clsx(
-            'absolute inline-block transform rounded-full bg-white transition delay-300',
-            {
-              'translate-x-1/2': value,
-              '-translate-x-1/2': !value
-            },
-            toggleSizeClasses[size]
-          )}
-        />
-      </SwitchHL>
-    </div>
+      />
+    </SwitchHL>
   )
 }
 
-export default Switchs
+export default Switch

@@ -5,7 +5,8 @@ import {
   UserGroupIcon,
   Cog6ToothIcon,
   BeakerIcon,
-  Bars3Icon
+  Bars3Icon,
+  IdentificationIcon
 } from '@heroicons/react/24/outline'
 import { PersonTargetIcon, AlertPlusIcon, DocIcon, AuditIcon } from 'assets/SVG'
 
@@ -27,6 +28,7 @@ import Comparisons from 'views/Comparisons'
 import OneToMany from 'views/Comparisons/OneToMany'
 import ReceiverToReceiver from 'views/Comparisons/ReceiverToReceiver'
 import Presentation from 'views/Presentation'
+import Roles from 'views/Roles'
 
 import BaseLayout from 'layout/BaseLayout'
 import FullScreenLayout from 'layout/FullScreenLayout'
@@ -68,6 +70,7 @@ export const pathRoute = {
     restorePassword: '/restablecer-contraseña'
   },
   pins: '/pins',
+  roles: '/roles',
   speakers: {
     dashboard: '/tablero-de-hablantes',
     directory: '/directorio-de-hablantes'
@@ -200,6 +203,18 @@ export const routes: Route[] = [
     modules: [],
     scopes: [],
     component: Alerts,
+    layout: BaseLayout,
+    private: true,
+    sidebar: true
+  },
+  {
+    id: 'roles',
+    path: pathRoute.roles,
+    icon: IdentificationIcon,
+    i18Key: 'roles',
+    modules: [],
+    scopes: [],
+    component: Roles,
     layout: BaseLayout,
     private: true,
     sidebar: true

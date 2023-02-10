@@ -1,4 +1,5 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
+const colors = require('tailwindcss/colors')
 const plugin = require('tailwindcss/plugin')
 
 /** @type {import('tailwindcss').Config} */
@@ -21,18 +22,57 @@ module.exports = {
       '9xl': ['8rem', { lineHeight: '1' }]
     },
     extend: {
+      boxShadow: {
+        'blackhole-md':
+          '0 1px 6px 1px rgb(0 0 0 / 0.1), 0 0 4px -2px rgb(0 0 0 / 0.1)'
+      },
+      textColor: {
+        muted: {
+          DEFAULT: colors.neutral[400],
+          light: colors.neutral[400],
+          dark: colors.neutral[400]
+        }
+      },
       colors: {
-        primary: '#4646FD',
-        secondary: '#152743',
-        background: '#FDFDFD',
-        // buscar un mejor nombre
-        'secondary-gray': '#AAAAAA'
+        'secondary-gray': '#AAAAAA',
+        background: {
+          DEFAULT: colors.neutral[50],
+          light: colors.neutral[50],
+          dark: colors.gray[900],
+          secondary: colors.neutral[100]
+        },
+        muted: {
+          DEFAULT: colors.neutral[400],
+          light: colors.neutral[400],
+          dark: colors.neutral[400]
+        },
+        primary: {
+          ...colors.indigo,
+          DEFAULT: colors.indigo[500],
+          light: {
+            ...colors.indigo,
+            DEFAULT: colors.indigo[500]
+          },
+          dark: colors.white
+        },
+        secondary: {
+          ...colors.slate,
+          DEFAULT: colors.slate[800],
+          light: {
+            ...colors.slate,
+            DEFAULT: colors.slate[800]
+          },
+          dark: {
+            ...colors.indigo,
+            DEFAULT: colors.indigo[500]
+          }
+        }
       },
       borderRadius: {
         '4xl': '2rem'
       },
       fontFamily: {
-        sans: ['Marlow', ...defaultTheme.fontFamily.sans],
+        sans: ['Barlow', ...defaultTheme.fontFamily.sans],
         display: ['Lexend', ...defaultTheme.fontFamily.sans]
       },
       maxWidth: {
