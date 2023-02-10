@@ -5,7 +5,7 @@ import { actionsMessages, formMessages, generalMessages } from 'globalMessages'
 import { ReactElement, useState } from 'react'
 import { useIntl } from 'react-intl'
 import { PaginationParams } from 'types/api'
-import { Case } from 'types/case'
+import { Case, Pin, User } from 'types/case'
 import { casesMessages } from '../messages'
 import EditCaseDialog from './EditCaseDialog'
 
@@ -43,12 +43,12 @@ const ActiveCasesTab = (props: Props): ReactElement => {
           {
             header: formatMessage(generalMessages.users),
             accessorKey: 'users',
-            cell: ({ getValue }) => getValue().length
+            cell: ({ getValue }) => getValue<User[]>().length
           },
           {
             header: 'PINs',
             accessorKey: 'pins',
-            cell: ({ getValue }) => getValue().length
+            cell: ({ getValue }) => getValue<Pin[]>().length
           },
           {
             header: formatMessage(generalMessages.creator),

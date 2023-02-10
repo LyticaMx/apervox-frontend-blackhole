@@ -13,6 +13,7 @@ export enum Types {
   SET_ALERTS_PAGINATION = 'alerts/setAlertsPagination',
   SET_CALL_ALERTS = 'alerts/setCallAlerts',
   SET_CALL_ALERTS_PAGINATION = 'alerts/setCallAlertsPagination',
+  SET_CALL_ALERTS_LIMIT = 'alerts/setCallAlertsLimit',
   SET_ALERT_TIME_SERIES = 'alerts/setAlertTimeSeries',
   SET_CURRENT_ALERT = 'alerts/setCurrentAlert',
   SET_GLOBAL_FILTERS = 'alerts/setGlobalFilters'
@@ -26,6 +27,9 @@ export const actions = {
   setCallAlerts: createAction<Types, CallAlert[]>(Types.SET_CALL_ALERTS),
   setCallAlertsPagination: createAction<Types, CallsPagination>(
     Types.SET_CALL_ALERTS_PAGINATION
+  ),
+  setCallAlertsLimit: createAction<Types, CallsPagination>(
+    Types.SET_CALL_ALERTS_LIMIT
   ),
   setAlertTimeSeries: createAction<Types, TimeChartValues[]>(
     Types.SET_ALERT_TIME_SERIES

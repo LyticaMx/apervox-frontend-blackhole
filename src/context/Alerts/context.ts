@@ -12,6 +12,7 @@ export const initialState: AlertContextState = {
   listOfCallsAlerts: [],
   callsPagination: {
     limit: 10,
+    limitOptions: [10, 25, 50, 100],
     page: 1,
     sort: [],
     totalRecords: 0

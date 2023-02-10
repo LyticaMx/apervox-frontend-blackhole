@@ -3,13 +3,10 @@ import { Fragment, ReactElement, useMemo } from 'react'
 import { Listbox } from '@headlessui/react'
 import { Float } from '@headlessui-float/react'
 
-import {
-  CheckIcon,
-  ChevronUpDownIcon,
-  XMarkIcon
-} from '@heroicons/react/20/solid'
+import { CheckIcon, XMarkIcon } from '@heroicons/react/20/solid'
 import { formClasses, labelFormClasses } from 'utils/classes'
 import clsx from 'clsx'
+import { ChevronDownIcon } from '@heroicons/react/24/outline'
 
 type Item = Record<string, any>
 
@@ -25,6 +22,7 @@ interface Props {
   error?: boolean
   helperText?: string
   disabled?: boolean
+  size?: 'sm' | 'md'
   className?: string
 }
 
@@ -49,8 +47,27 @@ const SelectField = ({
   error,
   helperText,
   disabled,
+  size = 'md',
   className
 }: Props): ReactElement => {
+  const sizeClasses = useMemo(
+    () => ({
+      sm: {
+        options: 'p-1',
+        optionsLabel: 'text-xs',
+        icon: 'h-3 w-3',
+        button: '!p-1 !text-xs !min-h-fit'
+      },
+      md: {
+        options: 'py-2 pr-10 pl-4',
+        icon: 'h-5 w-5',
+        button: '',
+        optionsLabel: ''
+      }
+    }),
+    []
+  )
+
   const itemSelected = useMemo(() => {
     if (!value) return undefined
 
@@ -85,10 +102,11 @@ const SelectField = ({
             className={clsx(
               'min-h-[2.625rem] relative',
               formClasses,
-              className,
               {
                 'border-red-500 border-2': error
-              }
+              },
+              sizeClasses[size].button,
+              className
             )}
           >
             {itemSelected && (
@@ -105,11 +123,11 @@ const SelectField = ({
               {itemSelected && clearable && (
                 <XMarkIcon
                   onClick={handleClear}
-                  className="h-5 w-5 text-gray-400 cursor-pointer"
+                  className={`${sizeClasses[size].icon} text-gray-400 cursor-pointer`}
                 />
               )}
-              <ChevronUpDownIcon
-                className="h-5 w-5 text-gray-400 pointer-events-none"
+              <ChevronDownIcon
+                className={`${sizeClasses[size].icon} text-gray-400 pointer-events-none`}
                 aria-hidden="true"
               />
             </span>
@@ -123,9 +141,9 @@ const SelectField = ({
             <Listbox.Option
               key={index}
               className={({ active }) =>
-                `relative cursor-default select-none py-2 pr-10 pl-4 ${
-                  active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'
-                }`
+                `relative cursor-default select-none ${
+                  sizeClasses[size].options
+                } ${active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'}`
               }
               value={item}
             >
@@ -134,11 +152,11 @@ const SelectField = ({
                   <span
                     className={`block truncate ${
                       selected ? 'font-medium' : 'font-normal'
-                    }`}
+                    } ${sizeClasses[size].optionsLabel}`}
                   >
                     {item[textField]}
                   </span>
-                  {selected ? (
+                  {selected && size !== 'sm' ? (
                     <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-blue-600">
                       <CheckIcon className="h-5 w-5" aria-hidden="true" />
                     </span>

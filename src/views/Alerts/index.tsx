@@ -12,15 +12,17 @@ import { useCallAlertTable } from './hooks/useCallAlertTable'
 import { alertMessages } from './messages'
 import { generalMessages } from 'globalMessages'
 import NoData from 'components/NoData'
-import { BellSlashIcon } from '@heroicons/react/24/outline'
+import { BellSlashIcon, TrashIcon } from '@heroicons/react/24/outline'
 import { PaginationParams } from 'types/api'
 import { CallAlertSearchParams } from 'types/alert'
 import RangeFilterContext from 'components/RangeFilterContext'
 import { useDatesFilter } from 'context/DatesFilter'
+import { useLanguage } from 'context/Language'
 
 const Alerts = (): ReactElement => {
   const [open, setOpen] = useState<boolean>(false)
   const { formatMessage } = useIntl()
+  const { actions: langActions, localeI18n } = useLanguage()
   const {
     charts,
     listOfAlerts,
@@ -131,6 +133,13 @@ const Alerts = (): ReactElement => {
         />
       </div>
       <div className="mt-6 shadow ring-1 ring-black ring-opacity-5 md:rounded p-3">
+        <button
+          onClick={() =>
+            langActions?.changeLocale(localeI18n === 'en' ? 'es' : 'en')
+          }
+        >
+          Cambiar idioma
+        </button>
         {currentAlert.id !== '' ? (
           <>
             <div className="flex items-center justify-between">
@@ -158,6 +167,23 @@ const Alerts = (): ReactElement => {
                   onSortingChange: async (sort) =>
                     await fetchCallAlerts({ sort })
                 }}
+                withCheckbox
+                manualLimit={{
+                  options: callsPagination.limitOptions ?? [10],
+                  onChangeLimit: async (newPage, newLimit) => {
+                    await fetchCallAlerts({
+                      page: newPage + 1,
+                      limit: newLimit
+                    })
+                  }
+                }}
+                actionsForSelectedItems={[
+                  {
+                    name: 'Eliminar',
+                    action: (items) => alert(JSON.stringify(items, null, 2)),
+                    Icon: TrashIcon
+                  }
+                ]}
               />
             </div>
           </>

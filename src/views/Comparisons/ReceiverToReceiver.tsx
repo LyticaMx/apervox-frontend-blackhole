@@ -204,7 +204,8 @@ const ReceiverToReceiver = (): ReactElement => {
                 {
                   header: formatMessage(generalMessages.similarity),
                   accessorKey: 'similarity',
-                  cell: ({ getValue }) => `${(getValue() * 100).toFixed(2)}%`
+                  cell: ({ getValue }) =>
+                    `${(getValue<number>() * 100).toFixed(2)}%`
                 },
                 {
                   header: formatMessage(generalMessages.category),
