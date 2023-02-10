@@ -254,7 +254,7 @@ const Table = <DataType,>({
           <div className="flex items-center">
             <div className="mr-4 last:mr-0">
               {selectedItems === 'none' || !actionsForSelectedItems ? (
-                <button className="transition-colors text-secondary-gray hover:text-secondary">
+                <button className="transition-colors text-secondary-gray hover:text-primary">
                   <ArrowDownOnSquareIcon className="w-5 h-5" />
                 </button>
               ) : (
@@ -269,7 +269,7 @@ const Table = <DataType,>({
                     }
                     key={`${item.name}-${index}`}
                     disabled={item.disabled}
-                    className=" transition-colors text-secondary-gray hover:text-secondary  mr-2"
+                    className=" transition-colors text-secondary-gray hover:text-primary  mr-2"
                   >
                     <item.Icon className="w-4 h-4" />
                   </button>
