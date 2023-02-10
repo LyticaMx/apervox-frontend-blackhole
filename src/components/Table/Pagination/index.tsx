@@ -40,8 +40,7 @@ const Pagination = ({
     options: [10, 25, 50],
     onChangeLimit: (current, limit) => {}
   }
-}: // paginationType
-Props): ReactElement | null => {
+}: Props): ReactElement | null => {
   const { formatMessage } = useIntl()
   const paginationRange = usePagination({
     currentPage: currentPage + 1,
