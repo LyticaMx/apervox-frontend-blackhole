@@ -159,6 +159,16 @@ const Alerts = (): ReactElement => {
                     await fetchCallAlerts({ sort })
                 }}
                 withCheckbox
+                limit={{
+                  current: callsPagination.limit,
+                  options: callsPagination.limitOptions ?? [10],
+                  onChangeLimit: async (newPage, newLimit) => {
+                    await fetchCallAlerts({
+                      page: newPage + 1,
+                      limit: newLimit
+                    })
+                  }
+                }}
               />
             </div>
           </>

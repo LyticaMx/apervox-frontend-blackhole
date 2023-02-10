@@ -19,7 +19,7 @@ import {
   VisibilityState
 } from '@tanstack/react-table'
 
-import Pagination from './Pagination'
+import Pagination, { PaginationLimit } from './Pagination'
 import clsx from 'clsx'
 import NoData from 'components/NoData'
 import { ArrowDownIcon, ArrowUpIcon } from '@heroicons/react/20/solid'
@@ -50,6 +50,7 @@ interface Props<T> {
   manualSorting?: ManualSorting
   maxHeight?: number
   withCheckbox?: boolean
+  limit?: PaginationLimit
 }
 
 const Table = <DataType,>({
@@ -62,7 +63,8 @@ const Table = <DataType,>({
   withCheckbox = false,
   onRowClicked,
   className,
-  manualSorting
+  manualSorting,
+  limit
 }: Props<DataType>): ReactElement => {
   const [sortingState, setSortingState] = useState<SortingState>([])
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
@@ -323,6 +325,7 @@ const Table = <DataType,>({
         totalCount={
           manualPagination ? manualPagination.totalRecords : data.length
         }
+        limit={limit}
         // paginationType={paginationType}
       />
       {/* )} */}
