@@ -1,5 +1,7 @@
 import {
+  FunctionComponent,
   ReactElement,
+  SVGProps,
   useCallback,
   useEffect,
   useMemo,
@@ -27,6 +29,18 @@ import IndeterminateCheckbox from './IndeterminateCheckbox'
 import Typography from 'components/Typography'
 import TableConfiguration from './TableConfiguration'
 import { useVirtual } from 'react-virtual'
+import { useIntl } from 'react-intl'
+import { messages } from './messages'
+import { ArrowDownOnSquareIcon } from '@heroicons/react/24/outline'
+
+export interface ActionForSelectedItems<T> {
+  name: string
+  Icon: FunctionComponent<SVGProps<SVGSVGElement> & { title?: string }>
+  action:
+    | ((items: T[]) => Promise<void> | Promise<boolean>)
+    | ((items: T[]) => void)
+  disabled?: boolean
+}
 
 export interface ManualPagination {
   currentPage: number
@@ -50,7 +64,8 @@ interface Props<T> {
   manualSorting?: ManualSorting
   maxHeight?: number
   withCheckbox?: boolean
-  limit?: PaginationLimit
+  manualLimit?: PaginationLimit
+  actionsForSelectedItems?: Array<ActionForSelectedItems<T>>
 }
 
 const Table = <DataType,>({
@@ -64,12 +79,15 @@ const Table = <DataType,>({
   onRowClicked,
   className,
   manualSorting,
-  limit
+  manualLimit,
+  actionsForSelectedItems
 }: Props<DataType>): ReactElement => {
   const [sortingState, setSortingState] = useState<SortingState>([])
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const tableContainerRef = useRef<HTMLDivElement>(null)
+
+  const { formatMessage } = useIntl()
 
   const enhancedColumns = useMemo<Array<ColumnDef<DataType>>>(() => {
     if (!withCheckbox) return columns
@@ -98,6 +116,7 @@ const Table = <DataType,>({
     ]
     return newColumns.concat(columns)
   }, [columns, withCheckbox])
+
   const table = useReactTable({
     data,
     columns: enhancedColumns,
@@ -182,6 +201,19 @@ const Table = <DataType,>({
     [columnVisibility]
   )
 
+  const selectedKeys = useMemo<number[]>(
+    () => Object.keys(rowSelection).map((item) => +item),
+    [JSON.stringify(rowSelection)]
+  )
+
+  const selectedItems = useMemo<string>(() => {
+    const value = selectedKeys.length
+    if (value === 0) return 'none'
+    else if (value === 1) return 'one'
+    else if (value === data.length) return 'all'
+    return `${value}`
+  }, [JSON.stringify(selectedKeys)])
+
   useEffect(
     () => {
       if (
@@ -212,12 +244,43 @@ const Table = <DataType,>({
   return (
     <div className={clsx(className, 'flex flex-col')}>
       <div className="shadow ring-1 ring-black ring-opacity-5 md:rounded-t-lg overflow-x-auto overflow-y-hidden">
-        <div className="h-[30px] flex center justify-between px-6 py-2">
-          <Typography>Elementos seleccionados</Typography>
-          <TableConfiguration
-            table={table}
-            onChangeColumnVisibility={onChangeColumnVisibility}
-          />
+        <div className="h-[45px] flex center justify-between px-6 py-2">
+          <Typography>
+            {selectedItems !== 'none' &&
+              formatMessage(messages.selectedElements, {
+                selectedItems
+              })}
+          </Typography>
+          <div className="flex items-center">
+            <div className="mr-4 last:mr-0">
+              {selectedItems === 'none' || !actionsForSelectedItems ? (
+                <button className="transition-colors text-secondary-gray hover:text-secondary">
+                  <ArrowDownOnSquareIcon className="w-5 h-5" />
+                </button>
+              ) : (
+                actionsForSelectedItems.map((item, index) => (
+                  <button
+                    onClick={async () =>
+                      await item.action(
+                        data.filter((datum, index) =>
+                          selectedKeys.includes(index)
+                        )
+                      )
+                    }
+                    key={`${item.name}-${index}`}
+                    disabled={item.disabled}
+                    className=" transition-colors text-secondary-gray hover:text-secondary  mr-2"
+                  >
+                    <item.Icon className="w-4 h-4" />
+                  </button>
+                ))
+              )}
+            </div>
+            <TableConfiguration
+              table={table}
+              onChangeColumnVisibility={onChangeColumnVisibility}
+            />
+          </div>
         </div>
         <div
           ref={tableContainerRef}
@@ -325,7 +388,7 @@ const Table = <DataType,>({
         totalCount={
           manualPagination ? manualPagination.totalRecords : data.length
         }
-        limit={limit}
+        manualLimit={manualLimit}
         // paginationType={paginationType}
       />
       {/* )} */}

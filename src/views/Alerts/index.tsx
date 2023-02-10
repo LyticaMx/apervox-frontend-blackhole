@@ -12,7 +12,7 @@ import { useCallAlertTable } from './hooks/useCallAlertTable'
 import { alertMessages } from './messages'
 import { generalMessages } from 'globalMessages'
 import NoData from 'components/NoData'
-import { BellSlashIcon } from '@heroicons/react/24/outline'
+import { BellSlashIcon, TrashIcon } from '@heroicons/react/24/outline'
 import { PaginationParams } from 'types/api'
 import { CallAlertSearchParams } from 'types/alert'
 import RangeFilterContext from 'components/RangeFilterContext'
@@ -159,8 +159,7 @@ const Alerts = (): ReactElement => {
                     await fetchCallAlerts({ sort })
                 }}
                 withCheckbox
-                limit={{
-                  current: callsPagination.limit,
+                manualLimit={{
                   options: callsPagination.limitOptions ?? [10],
                   onChangeLimit: async (newPage, newLimit) => {
                     await fetchCallAlerts({
@@ -169,6 +168,13 @@ const Alerts = (): ReactElement => {
                     })
                   }
                 }}
+                actionsForSelectedItems={[
+                  {
+                    name: 'Eliminar',
+                    action: (items) => alert(JSON.stringify(items, null, 2)),
+                    Icon: TrashIcon
+                  }
+                ]}
               />
             </div>
           </>

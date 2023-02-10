@@ -12,22 +12,21 @@ import Typography from 'components/Typography'
 import SelectField from 'components/Form/Select'
 // TODO se comenta el cuantos elementos se encontraron
 import { useIntl } from 'react-intl'
-import { messages } from '../messages'
+import { paginationMessages } from '../messages'
 import { NonEmptyArray } from 'types/utils'
 
 export interface PaginationLimit {
   options: NonEmptyArray<number>
-  current: number
   onChangeLimit: (currentPage: number, limit: number) => void
 }
 interface Props {
   onPageChange: (currentPage: number) => void
   totalCount: number
   siblingCount?: number
-  currentPage: number // Encontrar una manera de utilizar este o limit en caso contrario para la división
+  currentPage: number
   pageSize: number
   className?: string
-  limit?: PaginationLimit
+  manualLimit?: PaginationLimit
 
   // paginationType: 'mini' | 'extended'
 }
@@ -39,9 +38,8 @@ const Pagination = ({
   currentPage,
   pageSize,
   className,
-  limit = {
-    options: [10],
-    current: 10,
+  manualLimit = {
+    options: [10, 25, 50],
     onChangeLimit: (current, limit) => {}
   }
 }: // paginationType
@@ -75,8 +73,8 @@ Props): ReactElement | null => {
   }
 
   const onChangeLimit = (newLimit: number): void => {
-    if (limit.current !== newLimit) {
-      limit.onChangeLimit(0, newLimit)
+    if (pageSize !== newLimit) {
+      manualLimit.onChangeLimit(0, newLimit)
     }
   }
 
@@ -84,11 +82,11 @@ Props): ReactElement | null => {
 
   const limitOptions = useMemo(
     () =>
-      limit.options.map((limit) => ({
+      manualLimit.options.map((limit) => ({
         text: `${limit}`,
         value: limit
       })),
-    [limit.options]
+    [manualLimit?.options]
   )
 
   return (
@@ -165,12 +163,12 @@ Props): ReactElement | null => {
       )}
 
       <Typography variant="caption" className="ml-5">
-        {formatMessage(messages.rowsPerPage)}
+        {formatMessage(paginationMessages.rowsPerPage)}
       </Typography>
       <div className="w-14 ml-4">
         <SelectField
           items={limitOptions}
-          value={limit.current}
+          value={pageSize}
           size="sm"
           onChange={onChangeLimit}
         />
