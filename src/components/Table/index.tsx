@@ -31,7 +31,6 @@ import TableConfiguration from './TableConfiguration'
 import { useVirtual } from 'react-virtual'
 import { useIntl } from 'react-intl'
 import { messages } from './messages'
-import { ArrowDownOnSquareIcon } from '@heroicons/react/24/outline'
 
 export interface ActionForSelectedItems<T> {
   name: string
@@ -253,28 +252,24 @@ const Table = <DataType,>({
           </Typography>
           <div className="flex items-center">
             <div className="mr-4 last:mr-0">
-              {selectedItems === 'none' || !actionsForSelectedItems ? (
-                <button className="transition-colors text-secondary-gray hover:text-primary">
-                  <ArrowDownOnSquareIcon className="w-5 h-5" />
-                </button>
-              ) : (
-                actionsForSelectedItems.map((item, index) => (
-                  <button
-                    onClick={async () =>
-                      await item.action(
-                        data.filter((datum, index) =>
-                          selectedKeys.includes(index)
+              {selectedItems !== 'none' && actionsForSelectedItems
+                ? actionsForSelectedItems.map((item, index) => (
+                    <button
+                      onClick={async () =>
+                        await item.action(
+                          data.filter((datum, index) =>
+                            selectedKeys.includes(index)
+                          )
                         )
-                      )
-                    }
-                    key={`${item.name}-${index}`}
-                    disabled={item.disabled}
-                    className=" transition-colors text-secondary-gray hover:text-primary  mr-2"
-                  >
-                    <item.Icon className="w-4 h-4" />
-                  </button>
-                ))
-              )}
+                      }
+                      key={`${item.name}-${index}`}
+                      disabled={item.disabled}
+                      className=" transition-colors text-secondary-gray hover:text-primary  mr-2"
+                    >
+                      <item.Icon className="w-4 h-4" />
+                    </button>
+                  ))
+                : null}
             </div>
             <TableConfiguration
               table={table}
@@ -376,7 +371,6 @@ const Table = <DataType,>({
           )}
         </div>
       </div>
-      {/* {paginationType && ( */}
       <Pagination
         onPageChange={onChange}
         currentPage={
@@ -389,9 +383,7 @@ const Table = <DataType,>({
           manualPagination ? manualPagination.totalRecords : data.length
         }
         manualLimit={manualLimit}
-        // paginationType={paginationType}
       />
-      {/* )} */}
     </div>
   )
 }
