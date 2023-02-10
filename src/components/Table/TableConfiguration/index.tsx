@@ -9,6 +9,7 @@ import { useFormik } from 'formik'
 import { useIntl } from 'react-intl'
 import { tableConfigurationMessages } from '../messages'
 import { actionsMessages, generalMessages } from 'globalMessages'
+import { useLanguage } from 'context/Language'
 
 interface Props<T> {
   table: Table<T>
@@ -21,6 +22,7 @@ const TableConfiguration = <DataType,>(
   const { table, onChangeColumnVisibility } = props
   const [openTableConfiguration, setOpenTableConfiguration] =
     useState<boolean>(false)
+  const { localeI18n } = useLanguage()
   const { formatMessage } = useIntl()
 
   const columnsCanBeHidden = useMemo(
@@ -33,7 +35,7 @@ const TableConfiguration = <DataType,>(
             column.columnDef.header !== ' ' &&
             column.columnDef.header !== ''
         ),
-    [table]
+    [table, localeI18n]
   )
 
   const initialValuesRef = useRef<VisibilityState>(

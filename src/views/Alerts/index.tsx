@@ -17,10 +17,12 @@ import { PaginationParams } from 'types/api'
 import { CallAlertSearchParams } from 'types/alert'
 import RangeFilterContext from 'components/RangeFilterContext'
 import { useDatesFilter } from 'context/DatesFilter'
+import { useLanguage } from 'context/Language'
 
 const Alerts = (): ReactElement => {
   const [open, setOpen] = useState<boolean>(false)
   const { formatMessage } = useIntl()
+  const { actions: langActions, localeI18n } = useLanguage()
   const {
     charts,
     listOfAlerts,
@@ -131,6 +133,13 @@ const Alerts = (): ReactElement => {
         />
       </div>
       <div className="mt-6 shadow ring-1 ring-black ring-opacity-5 md:rounded p-3">
+        <button
+          onClick={() =>
+            langActions?.changeLocale(localeI18n === 'en' ? 'es' : 'en')
+          }
+        >
+          Cambiar idioma
+        </button>
         {currentAlert.id !== '' ? (
           <>
             <div className="flex items-center justify-between">
