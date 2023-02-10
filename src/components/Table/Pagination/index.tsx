@@ -27,8 +27,6 @@ interface Props {
   pageSize: number
   className?: string
   manualLimit?: PaginationLimit
-
-  // paginationType: 'mini' | 'extended'
 }
 
 const Pagination = ({
@@ -139,12 +137,6 @@ Props): ReactElement | null => {
               </button>
             )
           })}
-          {/* {paginationType === 'extended' ? (
-        ) : (
-          <div className="py-2 px-4 border border-gray-300 flex justify-center items-center">
-            {currentPage + 1}
-          </div>
-        )} */}
           <button
             className="p-1 hover:text-primary hover:font-semibold disabled:text-secondary-gray disabled:hover:bg-inherit disabled:"
             onClick={onNext}
