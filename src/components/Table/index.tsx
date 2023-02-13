@@ -20,7 +20,6 @@ import {
   useReactTable,
   VisibilityState
 } from '@tanstack/react-table'
-
 import Pagination, { PaginationLimit } from './Pagination'
 import clsx from 'clsx'
 import NoData from 'components/NoData'
@@ -28,6 +27,7 @@ import { ArrowDownIcon, ArrowUpIcon } from '@heroicons/react/20/solid'
 import IndeterminateCheckbox from './IndeterminateCheckbox'
 import Typography from 'components/Typography'
 import TableConfiguration from './TableConfiguration'
+import StaticFilter from './StaticFilter'
 import { useVirtual } from 'react-virtual'
 import { useIntl } from 'react-intl'
 import { messages } from './messages'
@@ -168,7 +168,7 @@ const Table = <DataType,>({
       case 'asc':
         return (
           <span className="flex">
-            <ArrowUpIcon className="w-4 ml-1" />
+            <ArrowUpIcon className="w-4 ml-1 text-primary-500" />
             <ArrowDownIcon className="w-4 text-gray-300" />
           </span>
         )
@@ -176,7 +176,7 @@ const Table = <DataType,>({
         return (
           <span className="flex">
             <ArrowUpIcon className="w-4 ml-1 text-gray-300" />
-            <ArrowDownIcon className="w-4" />
+            <ArrowDownIcon className="w-4 text-primary-500" />
           </span>
         )
       default:
@@ -299,7 +299,7 @@ const Table = <DataType,>({
                               onClick={header.column.getToggleSortingHandler()}
                               className={clsx(
                                 manualSorting &&
-                                  'cursor-pointer flex select-none'
+                                  'cursor-pointer flex select-none items-center'
                               )}
                             >
                               {flexRender(
@@ -313,6 +313,22 @@ const Table = <DataType,>({
                                     header.column.getIsSorted() as string
                                   )
                                 : ''}
+                              {header.column.columnDef.meta?.staticFilters ? (
+                                <StaticFilter
+                                  onChange={
+                                    header.column.columnDef.meta.staticFilters
+                                      .onChange
+                                  }
+                                  options={
+                                    header.column.columnDef.meta.staticFilters
+                                      .options
+                                  }
+                                  optionsTitle={
+                                    header.column.columnDef.meta.staticFilters
+                                      .optionsName
+                                  }
+                                />
+                              ) : null}
                             </div>
                           )}
                         </th>
