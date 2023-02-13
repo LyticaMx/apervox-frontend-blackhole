@@ -45,7 +45,7 @@ const RestorePassword = (): ReactElement => {
       name: 'newPassword',
       options: {
         id: 'newPassword',
-        label: formatMessage(messages.oldPassword),
+        label: formatMessage(messages.newPassword),
         placeholder: formatMessage(messages.passwordPlaceholder),
         labelClassname: 'text-white'
       }
@@ -55,7 +55,7 @@ const RestorePassword = (): ReactElement => {
       name: 'confirmPassword',
       options: {
         id: 'confirmPassword',
-        label: formatMessage(messages.oldPassword),
+        label: formatMessage(messages.confirmPassword),
         placeholder: formatMessage(messages.passwordPlaceholder),
         labelClassname: 'text-white'
       }
@@ -74,14 +74,14 @@ const RestorePassword = (): ReactElement => {
           <img
             src={Images.RestorePassword}
             alt="password"
-            className="max-w-[75%] min-w-[300px]"
+            className="max-w-[65%] min-w-[300px]"
           />
         </Grid>
         <Grid
           item
           cols={12}
           md={7}
-          className="bg-[#152743] h-[90vh] text-white flex items-center justify-center"
+          className="bg-[#00000032] h-[90vh] text-white flex items-center justify-center"
         >
           <div className="w-1/2">
             <img src={Images.Producto} alt="bh_logo" />
