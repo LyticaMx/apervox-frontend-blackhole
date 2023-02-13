@@ -10,6 +10,7 @@ import { useIntl } from 'react-intl'
 import { tableConfigurationMessages } from '../messages'
 import { actionsMessages, generalMessages } from 'globalMessages'
 import { useLanguage } from 'context/Language'
+import Tooltip from 'components/Tooltip'
 
 interface Props<T> {
   table: Table<T>
@@ -103,14 +104,27 @@ const TableConfiguration = <DataType,>(
         leaveFrom="opacity-100 translate-y-0"
         leaveTo="opacity-0 -translate-y-1"
       >
-        <Popover.Button
-          as="div"
-          onClick={() => setOpenTableConfiguration((old) => !old)}
-        >
-          <button className="text-primary">
-            <Cog8ToothIcon className="h-4 w-4" />
-          </button>
-        </Popover.Button>
+        <Popover.Group>
+          <Tooltip
+            content={formatMessage(actionsMessages.configureTable)}
+            floatProps={{ offset: 10, arrow: true }}
+            classNames={{
+              panel:
+                'bg-secondary text-white py-1 px-2 rounded-md text-sm whitespace-nowrap',
+              arrow: 'absolute bg-white w-2 h-2 rounded-full bg-secondary'
+            }}
+            placement="top"
+          >
+            <Popover.Button
+              as="div"
+              onClick={() => setOpenTableConfiguration((old) => !old)}
+            >
+              <button className="text-primary">
+                <Cog8ToothIcon className="h-4 w-4" />
+              </button>
+            </Popover.Button>
+          </Tooltip>
+        </Popover.Group>
         <Popover.Panel
           static
           className="bg-white border-gray-200 rounded-md shadow-lg focus:outline-none z-10 max-w-sm"
