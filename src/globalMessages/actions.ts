@@ -131,5 +131,9 @@ export const actionsMessages = defineMessages({
   apply: {
     id: 'global.actions.apply',
     defaultMessage: 'Aplicar'
+  },
+  export: {
+    id: 'global.actions.export',
+    defaultMessage: 'Exportar'
   }
 })

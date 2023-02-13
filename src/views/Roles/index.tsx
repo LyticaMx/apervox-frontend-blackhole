@@ -15,7 +15,11 @@ const Roles = (): ReactElement => {
           <Title>ROLES DE USUARIO</Title>
           <p>04 ROLES EXISTENTES EN EL SISTEMA</p>
         </div>
-        <ViewFilter fields={items} />
+        <ViewFilter
+          fields={items}
+          action={{ label: 'Crear rol de usuario' }}
+          download={(document) => alert(document)}
+        />
       </div>
     </div>
   )
