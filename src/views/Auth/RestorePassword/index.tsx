@@ -1,6 +1,7 @@
 import { Images } from 'assets/Images'
 import Form from 'components/Form'
 import Grid from 'components/Grid'
+import WindowControl from 'components/Layout/WindowControl'
 import Typography from 'components/Typography'
 import { FormikConfig } from 'formik'
 import { generalMessages } from 'globalMessages'
@@ -64,6 +65,7 @@ const RestorePassword = (): ReactElement => {
 
   return (
     <div className="bg-blackhole w-screen h-screen bg-no-repeat bg-center bg-cover overflow-hidden relative before:absolute before:top-0 before:left-0 before:right-0 before:bottom-0 before:bg-[#131B28] before:bg-opacity-[85%] flex items-center justify-center">
+      <WindowControl className="absolute top-0 right-0 py-2" />
       <Grid className="z-[1]">
         <Grid
           item

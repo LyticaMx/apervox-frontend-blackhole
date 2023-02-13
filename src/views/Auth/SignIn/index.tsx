@@ -12,6 +12,7 @@ import { Field } from 'types/form'
 import Form from 'components/Form'
 import ForgotPasswordDialog from './components/ForgotPasswordDialog'
 import CountdownRing from 'components/CountdownRing'
+import WindowControl from 'components/Layout/WindowControl'
 
 interface FormValues {
   user: string
@@ -78,6 +79,7 @@ const SignIn = (): ReactElement => {
 
   return (
     <div className="bg-blackhole w-screen h-screen bg-no-repeat bg-center bg-cover overflow-hidden relative before:absolute before:top-0 before:left-0 before:right-0 before:bottom-0 before:bg-[#131B28] before:bg-opacity-[85%] flex items-center justify-center">
+      <WindowControl className="absolute top-0 right-0 py-2" />
       <ForgotPasswordDialog
         open={openDialog}
         onClose={() => setOpenDialog(false)}
