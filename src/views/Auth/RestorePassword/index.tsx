@@ -1,6 +1,7 @@
 import { Images } from 'assets/Images'
 import Form from 'components/Form'
 import Grid from 'components/Grid'
+import WindowControl from 'components/Layout/WindowControl'
 import Typography from 'components/Typography'
 import { FormikConfig } from 'formik'
 import { generalMessages } from 'globalMessages'
@@ -45,7 +46,7 @@ const RestorePassword = (): ReactElement => {
       name: 'newPassword',
       options: {
         id: 'newPassword',
-        label: formatMessage(messages.oldPassword),
+        label: formatMessage(messages.newPassword),
         placeholder: formatMessage(messages.passwordPlaceholder),
         labelClassname: 'text-white'
       }
@@ -55,7 +56,7 @@ const RestorePassword = (): ReactElement => {
       name: 'confirmPassword',
       options: {
         id: 'confirmPassword',
-        label: formatMessage(messages.oldPassword),
+        label: formatMessage(messages.confirmPassword),
         placeholder: formatMessage(messages.passwordPlaceholder),
         labelClassname: 'text-white'
       }
@@ -64,6 +65,7 @@ const RestorePassword = (): ReactElement => {
 
   return (
     <div className="bg-blackhole w-screen h-screen bg-no-repeat bg-center bg-cover overflow-hidden relative before:absolute before:top-0 before:left-0 before:right-0 before:bottom-0 before:bg-[#131B28] before:bg-opacity-[85%] flex items-center justify-center">
+      <WindowControl className="absolute top-0 right-0 py-2" />
       <Grid className="z-[1]">
         <Grid
           item
@@ -74,14 +76,14 @@ const RestorePassword = (): ReactElement => {
           <img
             src={Images.RestorePassword}
             alt="password"
-            className="max-w-[75%] min-w-[300px]"
+            className="max-w-[65%] min-w-[300px]"
           />
         </Grid>
         <Grid
           item
           cols={12}
           md={7}
-          className="bg-[#152743] h-[90vh] text-white flex items-center justify-center"
+          className="bg-[#00000032] h-[90vh] text-white flex items-center justify-center"
         >
           <div className="w-1/2">
             <img src={Images.Producto} alt="bh_logo" />

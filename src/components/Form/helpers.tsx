@@ -128,7 +128,11 @@ export const fieldMapper = <T,>({
           <Checkbox
             {...field.options}
             name={name}
-            value={formik.values[name]}
+            checked={
+              Array.isArray(formik.values[name])
+                ? formik.values[name].includes(field.options.value)
+                : formik.values[name]
+            }
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
           />

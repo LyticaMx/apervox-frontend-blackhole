@@ -2,6 +2,7 @@ const electron = require('electron')
 const { app, BrowserWindow } = electron
 const path = require('path')
 const isDev = require('electron-is-dev')
+const { ipcMain } = require('electron')
 let mainWindow
 
 function createWindow () {
@@ -11,7 +12,11 @@ function createWindow () {
     height: 768,
     fullscreen: false,
     skipTaskbar: false,
-    titleBarStyle: 'hidden' // opcion para windows
+    titleBarStyle: 'hidden', // opcion para windows
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false
+    }
   })
 
   mainWindow.setMenuBarVisibility(isDev)
@@ -47,6 +52,13 @@ function createWindow () {
       mainWindow.webContents.openDevTools()
     })
   }
+
+  ipcMain.addListener('minimize-window', () => mainWindow.minimize())
+  ipcMain.addListener('maximize-window', () => {
+    if (!mainWindow.isMaximized()) mainWindow.maximize()
+    else mainWindow.unmaximize()
+  })
+  ipcMain.addListener('close-window', () => mainWindow.close())
 }
 
 app.on('ready', createWindow)

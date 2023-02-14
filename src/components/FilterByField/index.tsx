@@ -120,7 +120,7 @@ const FilterByField = ({
           <span className="px-2 py-0.5 rounded-md block text-primary text-sm bg-gray-100 min-w-[30px]">
             {total}
           </span>
-          <AdjustmentsVerticalIcon className="w-5 h-5 text-gray-500" />
+          <AdjustmentsVerticalIcon className="w-5 h-5 text-secondary-gray" />
         </Popover.Button>
         <Popover.Panel
           static
