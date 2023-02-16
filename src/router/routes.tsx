@@ -29,6 +29,7 @@ import OneToMany from 'views/Comparisons/OneToMany'
 import ReceiverToReceiver from 'views/Comparisons/ReceiverToReceiver'
 import Presentation from 'views/Presentation'
 import Roles from 'views/Roles'
+import UserAccount from 'views/Auth/UserAccount'
 
 import BaseLayout from 'layout/BaseLayout'
 import FullScreenLayout from 'layout/FullScreenLayout'
@@ -67,7 +68,8 @@ export const pathRoute = {
   },
   auth: {
     signIn: '/inicio-de-sesion',
-    restorePassword: '/restablecer-contraseña'
+    restorePassword: '/restablecer-contraseña',
+    userAccount: '/mi-cuenta'
   },
   pins: '/pins',
   roles: '/roles',
@@ -124,6 +126,14 @@ export const routes: Route[] = [
     scopes: [],
     component: RestorePassword,
     layout: FullScreenLayout
+  },
+  {
+    id: 'mi-cuenta',
+    path: pathRoute.auth.userAccount,
+    modules: [],
+    scopes: [],
+    component: UserAccount,
+    layout: BaseLayout
   },
   {
     id: 'profile',

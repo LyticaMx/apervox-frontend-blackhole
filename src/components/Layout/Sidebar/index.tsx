@@ -1,5 +1,5 @@
 import { ReactElement } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { routes } from 'router/routes'
 import Item from './components/Item'
 import { SignalIcon, UserCircleIcon } from '@heroicons/react/24/outline'
@@ -9,6 +9,7 @@ import { useSidebar } from 'context/Sidebar'
 const Sidebar = (): ReactElement => {
   const { pathname } = useLocation()
   const { open } = useSidebar()
+  const history = useHistory()
 
   return (
     <aside
@@ -20,7 +21,7 @@ const Sidebar = (): ReactElement => {
     >
       <nav className="flex flex-col flex-1 space-y-2 items-center">
         <a
-          href="#"
+          onClick={() => history.push('/mi-cuenta')}
           className="p-1 text-white focus:outline-nones transition-colors duration-200 rounded-lg bg-primary"
         >
           <UserCircleIcon className="h-5 w-5" />

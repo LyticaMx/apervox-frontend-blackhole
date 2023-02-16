@@ -87,5 +87,9 @@ export const formMessages = defineMessages({
   hourFormat: {
     id: 'global.form.hourFormat',
     defaultMessage: 'El valor debe estar en formato HH:mm:ss'
+  },
+  passwordsNotMatches: {
+    id: 'global.form.passwordsNotMatches',
+    defaultMessage: 'Las contraseñas no coinciden'
   }
 })
