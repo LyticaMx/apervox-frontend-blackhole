@@ -63,7 +63,7 @@ const Checkbox = ({
         id={id}
         disabled={disabled}
         {...props}
-        className="rounded border-gray-300 text-blue-600 transition disabled:cursor-not-allowed disabled:opacity-75"
+        className="rounded border-gray-300 text-primary transition disabled:cursor-not-allowed disabled:opacity-75"
       />
       <div
         className={clsx(

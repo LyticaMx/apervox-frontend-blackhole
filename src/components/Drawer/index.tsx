@@ -11,6 +11,7 @@ interface Props {
   children?: ReactNode
   placement?: Placement
   title?: ReactNode
+  className?: string
   onClose?: () => void
 }
 
@@ -30,6 +31,7 @@ const Drawer = ({
   children,
   title,
   placement = 'left',
+  className,
   onClose = () => {}
 }: Props): ReactElement => {
   const bodyRef = useRef(document.querySelector('body'))
@@ -103,6 +105,7 @@ const Drawer = ({
       <div
         key="drawer"
         className={clsx(
+          className,
           'fixed z-50 p-4 overflow-y-auto bg-white transition-all',
           placements[placement],
           classOpen
@@ -110,20 +113,24 @@ const Drawer = ({
         tabIndex={-1}
         aria-labelledby="drawer-bottom-label"
       >
-        <header className="flex">
-          {title && renderTitle()}
-          <button
-            type="button"
-            onClick={() => {
-              onClose()
-            }}
-            className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 inline-flex items-center ml-auto"
-          >
-            <span className="sr-only">Close menu</span>
-            <XMarkIcon className="h-5 w-5" />
-          </button>
-        </header>
-        {children}
+        <div className="h-full flex flex-col">
+          <header className="flex">
+            {title && renderTitle()}
+            <button
+              type="button"
+              onClick={() => {
+                onClose()
+              }}
+              className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 inline-flex items-center ml-auto"
+            >
+              <span className="sr-only">Close menu</span>
+              <XMarkIcon className="h-5 w-5" />
+            </button>
+          </header>
+          <div className="overflow-y-auto min-h-0 flex-1 basis-auto">
+            {children}
+          </div>
+        </div>
       </div>
     ],
     portalRootRef.current

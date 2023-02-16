@@ -4,7 +4,7 @@ import { ChevronUpIcon } from '@heroicons/react/20/solid'
 import clsx from 'clsx'
 
 interface Props {
-  title: string
+  title: ReactNode
   icon?: (props: ComponentProps<'svg'>) => JSX.Element
   children: ReactNode
   defaultOpen?: boolean
@@ -38,7 +38,7 @@ const Accordion = ({
           >
             <div className="flex">
               {Icon && <Icon className={classNames?.icon} />}
-              <p className="pl-3.5">{title}</p>
+              <p className={clsx({ 'pl-3.5': !!Icon })}>{title}</p>
             </div>
             <ChevronUpIcon
               className={clsx(
