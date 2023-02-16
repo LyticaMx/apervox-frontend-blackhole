@@ -70,3 +70,13 @@
 ::-webkit-scrollbar-thumb {
   @apply bg-gray-300 hover:bg-gray-400;
 }
+
+.user-account-change-password-form input,
+.user-account-data-form input {
+  @apply bg-white;
+}
+
+.user-account-change-password-form label,
+.user-account-data-form label {
+  @apply mb-3;
+}

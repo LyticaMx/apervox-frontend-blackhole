@@ -6,15 +6,25 @@ import React, { ReactElement } from 'react'
 interface Props {
   label: string
   className?: string
+  labelColorClassName?: string
+  roundedClassName?: string
   removeAction?: () => void
 }
 
-const Tag = ({ label, className, removeAction }: Props): ReactElement => {
+const Tag = ({
+  label,
+  className,
+  labelColorClassName = 'text-gray-500',
+  roundedClassName = 'rounded-full',
+  removeAction
+}: Props): ReactElement => {
   return (
     <div
       className={clsx(
-        'flex items-center py-2 px-4 rounded-full text-sm text-gray-500 bg-gray-100 h-max w-max',
-        className
+        className,
+        labelColorClassName,
+        roundedClassName,
+        'flex items-center py-2 px-4 text-sm h-max w-max bg-gray-100'
       )}
     >
       <Typography noWrap>{label}</Typography>
