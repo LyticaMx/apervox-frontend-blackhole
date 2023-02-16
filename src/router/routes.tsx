@@ -29,10 +29,12 @@ import OneToMany from 'views/Comparisons/OneToMany'
 import ReceiverToReceiver from 'views/Comparisons/ReceiverToReceiver'
 import Presentation from 'views/Presentation'
 import Roles from 'views/Roles'
+import BondingNetwork from 'views/BondingNetwork'
+import FailedLoginAttemps from 'views/Audit/FailedLoginAttemps'
+import BlockedUsers from 'views/Audit/BlockedUsers'
 
 import BaseLayout from 'layout/BaseLayout'
 import FullScreenLayout from 'layout/FullScreenLayout'
-
 import { Layout } from 'types/layout'
 import { sidebarMessages } from 'globalMessages'
 
@@ -42,7 +44,6 @@ import DemoCharts from 'views/Demo/Chart'
 import DemoForm from 'views/Demo/Form'
 import DemoAutoForm from 'views/Demo/AutoForm'
 import DemoWavesurfer from 'views/Demo/Wavesurfer'
-import BondingNetwork from 'views/BondingNetwork'
 
 export interface Route {
   id: string
@@ -90,7 +91,11 @@ export const pathRoute = {
   alerts: '/alertas',
   cases: '/casos',
   bondingNetwork: '/redes-de-vinculacion',
-  audit: '/auditoria',
+  audit: {
+    general: '/auditoria',
+    failedLoginAttemps: '/auditoria/inicios-de-sesion-fallidos',
+    blockedUsers: '/auditoria/usuarios-bloqueados'
+  },
   demo: {
     chart: '/demo-charts',
     form: '/demo-form',
@@ -245,10 +250,29 @@ export const routes: Route[] = [
   },
   {
     id: 'audit',
-    path: pathRoute.audit,
+    path: pathRoute.audit.general,
     icon: AuditIcon,
     i18Key: 'audit',
-    modules: [],
+    modules: [
+      {
+        id: 'audit-failed-login-attemps',
+        component: FailedLoginAttemps,
+        layout: BaseLayout,
+        modules: [],
+        scopes: [],
+        path: pathRoute.audit.failedLoginAttemps,
+        private: true
+      },
+      {
+        id: 'audit-blocked-users',
+        component: BlockedUsers,
+        layout: BaseLayout,
+        modules: [],
+        scopes: [],
+        path: pathRoute.audit.blockedUsers,
+        private: true
+      }
+    ],
     scopes: [],
     component: Audit,
     layout: BaseLayout,

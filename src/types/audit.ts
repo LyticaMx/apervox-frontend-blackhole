@@ -1,4 +1,3 @@
-import { PaginationParams } from './api'
 import { DatesFilterForm } from './datesFilter'
 import { DateFilter, PaginationFilter } from './filters'
 
