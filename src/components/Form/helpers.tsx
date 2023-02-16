@@ -1,5 +1,6 @@
 import clsx from 'clsx'
 import { FormikContextType } from 'formik'
+import { ReactNode } from 'react'
 import { Field } from 'types/form'
 import Autocomplete from './Autocomplete'
 import Checkbox from './Checkbox'
@@ -18,10 +19,7 @@ interface Params<T> {
   formik: FormikContextType<T>
 }
 
-export const fieldMapper = <T,>({
-  field,
-  formik
-}: Params<T>): JSX.Element | null => {
+export const fieldMapper = <T,>({ field, formik }: Params<T>): ReactNode => {
   const { name } = field
 
   switch (field.type) {
@@ -128,7 +126,11 @@ export const fieldMapper = <T,>({
           <Checkbox
             {...field.options}
             name={name}
-            value={formik.values[name]}
+            checked={
+              Array.isArray(formik.values[name])
+                ? formik.values[name].includes(field.options.value)
+                : formik.values[name]
+            }
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
           />
@@ -178,6 +180,8 @@ export const fieldMapper = <T,>({
           onChange={(val) => formik.setFieldValue(name, val)}
         />
       )
+    case 'custom':
+      return field.children
     default:
       return null
   }

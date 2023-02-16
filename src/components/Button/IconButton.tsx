@@ -20,6 +20,7 @@ interface Props {
   disabled?: boolean
   children: ReactNode
   onClick?: () => void
+  tabIndex?: number
 }
 
 const IconButton = ({

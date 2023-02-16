@@ -1,6 +1,6 @@
 import { Columns, Spacing } from 'components/Grid'
 import { Style, Variant } from 'components/Typography'
-import { InputHTMLAttributes, ReactElement } from 'react'
+import { InputHTMLAttributes, ReactElement, ReactNode } from 'react'
 import { DropzoneOptions } from 'react-dropzone'
 
 type Item = Record<string, any>
@@ -174,6 +174,10 @@ export declare type FieldTypes =
   | {
       readonly type: 'switch'
       options: SwitchProps
+    }
+  | {
+      readonly type: 'custom'
+      children: ReactNode
     }
 
 interface Breakpoints {

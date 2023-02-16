@@ -1,14 +1,11 @@
 import { ReactElement, useMemo } from 'react'
 
-import {
-  XMarkIcon,
-  MinusIcon,
-  ArrowRightOnRectangleIcon
-} from '@heroicons/react/20/solid'
-import { StopIcon, Cog6ToothIcon } from '@heroicons/react/24/outline'
+import { ArrowRightOnRectangleIcon } from '@heroicons/react/20/solid'
+import { Cog6ToothIcon } from '@heroicons/react/24/outline'
 import Notifications from '../Notifications'
 import logo from 'assets/Images/logo_horizontal.svg'
 import { useAuth } from 'context/Auth'
+import WindowControl from '../WindowControl'
 
 const Navbar = (): ReactElement => {
   const { auth, actions } = useAuth()
@@ -50,15 +47,7 @@ const Navbar = (): ReactElement => {
               >
                 <ArrowRightOnRectangleIcon className="w-4 h-4 text-white" />
               </button>
-              <button className="hidden mx-2 text-gray-600 transition-colors duration-300 transform lg:block dark:text-gray-200 hover:text-gray-700 dark:hover:text-gray-400 focus:text-gray-700 dark:focus:text-gray-400 focus:outline-none">
-                <MinusIcon className="w-4 h-4 text-white" />
-              </button>
-              <button className="hidden mx-2 text-gray-600 transition-colors duration-300 transform lg:block dark:text-gray-200 hover:text-gray-700 dark:hover:text-gray-400 focus:text-gray-700 dark:focus:text-gray-400 focus:outline-none">
-                <StopIcon className="w-4 h-4 text-white" />
-              </button>
-              <button className="hidden mx-2 text-gray-600 transition-colors duration-300 transform lg:block dark:text-gray-200 hover:text-gray-700 dark:hover:text-gray-400 focus:text-gray-700 dark:focus:text-gray-400 focus:outline-none">
-                <XMarkIcon className="w-5 h-5 text-white" />
-              </button>
+              <WindowControl />
             </div>
           </div>
         </div>

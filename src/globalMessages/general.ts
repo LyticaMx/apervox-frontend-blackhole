@@ -359,5 +359,9 @@ export const generalMessages = defineMessages({
   welcome: {
     id: 'global.general.welcome',
     defaultMessage: '¡Bienvenido!'
+  },
+  columns: {
+    id: 'global.general.columns',
+    defaultMessage: 'Columnas'
   }
 })

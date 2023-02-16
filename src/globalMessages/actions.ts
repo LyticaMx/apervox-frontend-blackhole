@@ -127,5 +127,17 @@ export const actionsMessages = defineMessages({
   update: {
     id: 'global.actions.update',
     defaultMessage: 'Actualizar'
+  },
+  apply: {
+    id: 'global.actions.apply',
+    defaultMessage: 'Aplicar'
+  },
+  export: {
+    id: 'global.actions.export',
+    defaultMessage: 'Exportar'
+  },
+  configureTable: {
+    id: 'global.actions.configureTable',
+    defaultMessage: 'Configurar tabla'
   }
 })

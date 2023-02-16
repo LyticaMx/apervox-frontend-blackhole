@@ -52,6 +52,7 @@ const PasswordField = ({
       <div className="relative">
         <div className="absolute right-0 flex items-center pl-3">
           <IconButton
+            tabIndex={-1}
             onClick={() => setToggleView((old) => !old)}
             color="indigo"
           >
