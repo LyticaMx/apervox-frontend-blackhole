@@ -54,3 +54,12 @@
 .btn.contained.indigo { @apply bg-indigo-500 text-white hover:enabled:bg-indigo-500 }
 .btn.contained.purple { @apply bg-purple-500 text-white hover:enabled:bg-purple-500 }
 .btn.contained.primary { @apply bg-primary-500 text-white hover:enabled:bg-primary-500 }
+
+.card {
+  @apply w-full border border-background-secondary bg-white rounded-md overflow-hidden
+  
+}
+
+.card.shadow {
+  @apply shadow-blackhole-md shadow-gray-200
+}

@@ -23,7 +23,8 @@ export const textColorClassNames = {
   sky: 'text-sky-500',
   cyan: 'text-cyan-500',
   pink: 'text-pink-500',
-  emerald: 'text-emerald-500'
+  emerald: 'text-emerald-500',
+  primary: 'text-primary'
 }
 export const backgroudColorClassNames = {
   gray: 'bg-gray-500',
@@ -45,5 +46,6 @@ export const backgroudColorClassNames = {
   sky: 'bg-sky-500',
   cyan: 'bg-cyan-500',
   pink: 'bg-pink-500',
-  emerald: 'bg-emerald-500'
+  emerald: 'bg-emerald-500',
+  primary: 'bg-primary'
 }
