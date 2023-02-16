@@ -132,6 +132,14 @@ export const actionsMessages = defineMessages({
     id: 'global.actions.apply',
     defaultMessage: 'Aplicar'
   },
+  disable: {
+    id: 'global.actions.disable',
+    defaultMessage: 'Deshabilitar'
+  },
+  enable: {
+    id: 'global.actions.enable',
+    defaultMessage: 'Habilitar'
+  },
   export: {
     id: 'global.actions.export',
     defaultMessage: 'Exportar'

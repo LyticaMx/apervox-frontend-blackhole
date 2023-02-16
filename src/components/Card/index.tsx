@@ -20,9 +20,9 @@ const Card = ({
   return (
     <div
       className={clsx(
-        className,
+        'card',
         paddingClasses[padding],
-        'w-full border shadow ring-1 ring-black ring-opacity-5 md:rounded'
+        className
       )}
     >
       {children}

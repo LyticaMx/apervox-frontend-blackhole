@@ -170,7 +170,7 @@ const Alerts = (): ReactElement => {
                 withCheckbox
                 manualLimit={{
                   options: callsPagination.limitOptions ?? [10],
-                  onChangeLimit: async (newPage, newLimit) => {
+                  onChangeLimit: async (newPage: number, newLimit) => {
                     await fetchCallAlerts({
                       page: newPage + 1,
                       limit: newLimit

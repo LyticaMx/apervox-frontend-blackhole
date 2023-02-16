@@ -364,6 +364,10 @@ export const generalMessages = defineMessages({
     id: 'global.general.columns',
     defaultMessage: 'Columnas'
   },
+  history: {
+    id: 'global.general.history',
+    defaultMessage: 'Historial'
+  },
   description: {
     id: 'global.general.description',
     defaultMessage: 'Descripción'

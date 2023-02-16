@@ -18,6 +18,7 @@ interface Props {
   children?: ReactNode
   placement?: Placement
   title?: ReactNode
+  className?: string
   onClose?: () => void
   CloseIcon?: (props: ComponentProps<'svg'>) => JSX.Element
   withoutBackdrop?: boolean
@@ -39,6 +40,7 @@ const Drawer = ({
   children,
   title,
   placement = 'left',
+  className,
   CloseIcon = XCircleIcon,
   withoutBackdrop = false,
   onClose = () => {}
@@ -113,28 +115,34 @@ const Drawer = ({
       <div
         key="drawer"
         className={clsx(
+          'fixed z-50 p-4 overflow-y-auto bg-white transition-all',
           'fixed z-50 p-4 overflow-y-auto bg-background-secondary transition-all outline-none',
           !withoutBackdrop && 'shadow-lg shadow-gray-600',
           placements[placement],
-          classOpen
+          classOpen,
+          className
         )}
         tabIndex={-1}
         aria-labelledby="drawer-bottom-label"
       >
-        <header className="flex">
-          {title && renderTitle()}
-          <button
-            type="button"
-            onClick={() => {
-              onClose()
-            }}
-            className="text-secondary-gray bg-transparent hover:text-primary rounded-lg text-sm inline-flex items-center ml-auto h-5"
-          >
-            <span className="sr-only">Close menu</span>
-            <CloseIcon className="h-5 w-5" />
-          </button>
-        </header>
-        {children}
+        <div className="h-full flex flex-col">
+          <header className="flex">
+            {title && renderTitle()}
+            <button
+              type="button"
+              onClick={() => {
+                onClose()
+              }}
+              className="text-secondary-gray bg-transparent hover:text-primary rounded-lg text-sm inline-flex items-center ml-auto h-5"
+            >
+              <span className="sr-only">Close menu</span>
+              <CloseIcon className="h-5 w-5" />
+            </button>
+          </header>
+          <div className="overflow-y-auto min-h-0 flex-1 basis-auto">
+            {children}
+          </div>
+        </div>
       </div>
     ],
     portalRootRef.current
