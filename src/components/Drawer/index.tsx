@@ -113,7 +113,8 @@ const Drawer = ({
       <div
         key="drawer"
         className={clsx(
-          'fixed z-50 p-4 overflow-y-auto bg-background-secondary transition-all outline-none shadow-lg shadow-gray-600',
+          'fixed z-50 p-4 overflow-y-auto bg-background-secondary transition-all outline-none',
+          !withoutBackdrop && 'shadow-lg shadow-gray-600',
           placements[placement],
           classOpen
         )}
