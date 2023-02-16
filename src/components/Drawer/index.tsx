@@ -1,7 +1,14 @@
 import clsx from 'clsx'
-import { ReactElement, ReactNode, useEffect, useRef, useMemo } from 'react'
+import {
+  ComponentProps,
+  ReactElement,
+  ReactNode,
+  useEffect,
+  useRef,
+  useMemo
+} from 'react'
 import { createPortal } from 'react-dom'
-import { XMarkIcon } from '@heroicons/react/24/outline'
+import { XCircleIcon } from '@heroicons/react/24/outline'
 import { zIndex } from 'constants/classes'
 
 type Placement = 'left' | 'right' | 'bottom' | 'top'
@@ -12,6 +19,8 @@ interface Props {
   placement?: Placement
   title?: ReactNode
   onClose?: () => void
+  CloseIcon?: (props: ComponentProps<'svg'>) => JSX.Element
+  withoutBackdrop?: boolean
 }
 
 const createPortalRoot = (): HTMLDivElement => {
@@ -30,6 +39,8 @@ const Drawer = ({
   children,
   title,
   placement = 'left',
+  CloseIcon = XCircleIcon,
+  withoutBackdrop = false,
   onClose = () => {}
 }: Props): ReactElement => {
   const bodyRef = useRef(document.querySelector('body'))
@@ -88,13 +99,12 @@ const Drawer = ({
     [
       <div
         key="drawer-backdrop"
-        className={clsx(
-          'fixed overflow-hidden bg-gray-900 bg-opacity-25 inset-0 transition-all duration-500',
-          {
-            'bg-opacity-25': open,
-            'invisible bg-opacity-0': !open
-          }
-        )}
+        className={clsx({
+          'fixed overflow-hidden bg-gray-900 bg-opacity-25 inset-0 transition-all duration-500':
+            !withoutBackdrop,
+          'bg-opacity-25': open && !withoutBackdrop,
+          'invisible bg-opacity-0': !open && !withoutBackdrop
+        })}
         onClick={onClose}
         style={{
           zIndex: zIndex.drawer
@@ -103,7 +113,7 @@ const Drawer = ({
       <div
         key="drawer"
         className={clsx(
-          'fixed z-50 p-4 overflow-y-auto bg-white transition-all',
+          'fixed z-50 p-4 overflow-y-auto bg-background-secondary transition-all outline-none shadow-lg shadow-gray-600',
           placements[placement],
           classOpen
         )}
@@ -117,10 +127,10 @@ const Drawer = ({
             onClick={() => {
               onClose()
             }}
-            className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 inline-flex items-center ml-auto"
+            className="text-secondary-gray bg-transparent hover:text-primary rounded-lg text-sm inline-flex items-center ml-auto h-5"
           >
             <span className="sr-only">Close menu</span>
-            <XMarkIcon className="h-5 w-5" />
+            <CloseIcon className="h-5 w-5" />
           </button>
         </header>
         {children}

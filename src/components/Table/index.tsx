@@ -58,7 +58,7 @@ interface Props<T> {
   manualPagination?: ManualPagination
   paginationStyle?: 'mini' | 'extended'
   pageSize?: number
-  onRowClicked?: (row: any, event: any) => void
+  onRowClicked?: (row: T, event: any) => void
   className?: string
   manualSorting?: ManualSorting
   maxHeight?: number
@@ -243,7 +243,7 @@ const Table = <DataType,>({
   return (
     <div className={clsx(className, 'flex flex-col')}>
       <div className="shadow ring-1 ring-black ring-opacity-5 md:rounded-t-lg overflow-x-auto overflow-y-hidden">
-        <div className="h-[45px] flex center justify-between px-6 py-2">
+        <div className="h-[45px] flex center justify-between px-6 py-2 bg-gray-50">
           <Typography>
             {selectedItems !== 'none' &&
               formatMessage(messages.selectedElements, {
@@ -280,7 +280,7 @@ const Table = <DataType,>({
         <div
           ref={tableContainerRef}
           style={{ maxHeight }}
-          className="overflow-auto"
+          className="overflow-auto transition-[max-height] duration-300"
         >
           {table.getRowModel().rows.length ? (
             <table className="min-w-full divide-y divide-gray-300">
@@ -298,7 +298,8 @@ const Table = <DataType,>({
                             <div
                               onClick={header.column.getToggleSortingHandler()}
                               className={clsx(
-                                manualSorting &&
+                                (!!manualSorting ||
+                                  !!header.column.columnDef.meta) &&
                                   'cursor-pointer flex select-none items-center'
                               )}
                             >

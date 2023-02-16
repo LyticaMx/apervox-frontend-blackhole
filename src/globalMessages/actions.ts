@@ -139,5 +139,9 @@ export const actionsMessages = defineMessages({
   configureTable: {
     id: 'global.actions.configureTable',
     defaultMessage: 'Configurar tabla'
+  },
+  goBack: {
+    id: 'global.actions.goBack',
+    defaultMessage: 'Regresar'
   }
 })

@@ -228,7 +228,7 @@
   "views.Audit.helperText": "To facilitate your choice you can filter by user and date range",
   "views.Audit.selectUserAndDate": "User and date selection",
   "views.Audit.subtitle": "Certify the actions of the use and management of {bold}",
-  "views.Audit.title": "Users audit",
+  "views.Audit.title": "Audit",
   "views.Auth.ForgotPassword.ConfirmationCard.checkYourMail": "Check your email to continue the process",
   "views.Auth.ForgotPassword.ConfirmationCard.goToLogin": "Go back to log in",
   "views.Auth.ForgotPassword.ConfirmationCard.successfullSend": "Successful shipment",
