@@ -412,20 +412,20 @@ export const generalMessages = defineMessages({
     id: 'global.general.activeStatus',
     defaultMessage: 'Vigente'
   },
-  urgentPriority: {
-    id: 'global.general.urgentPriority',
+  urgent: {
+    id: 'global.general.urgent',
     defaultMessage: 'Urgente'
   },
-  highPriority: {
-    id: 'global.general.highPriority',
+  high: {
+    id: 'global.general.high',
     defaultMessage: 'Alta'
   },
-  normalPriority: {
-    id: 'global.general.normalPriority',
+  normal: {
+    id: 'global.general.normal',
     defaultMessage: 'Media'
   },
-  lowPriority: {
-    id: 'global.general.lowPriority',
+  low: {
+    id: 'global.general.low',
     defaultMessage: 'Baja'
   }
 })

@@ -67,26 +67,26 @@ const TiDrawer = (props: Props): ReactElement => {
         </Typography>
         <div className="flex gap-2">
           <Radio
-            label={formatMessage(generalMessages.urgentPriority)}
+            label={formatMessage(generalMessages.urgent)}
             value="Urgente"
             checked
             disabled
             name="priority"
           />
           <Radio
-            label={formatMessage(generalMessages.highPriority)}
+            label={formatMessage(generalMessages.high)}
             value="Alta"
             disabled
             name="priority"
           />
           <Radio
-            label={formatMessage(generalMessages.normalPriority)}
+            label={formatMessage(generalMessages.normal)}
             value="Media"
             disabled
             name="priority"
           />
           <Radio
-            label={formatMessage(generalMessages.lowPriority)}
+            label={formatMessage(generalMessages.low)}
             value="Baja"
             disabled
             name="priority"
