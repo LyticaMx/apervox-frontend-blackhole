@@ -4,7 +4,7 @@ export const formMessages = defineMessages({
   /* Labels */
   username: {
     id: 'global.form.username',
-    defaultMessage: 'Usuario'
+    defaultMessage: 'Nombre de usuario'
   },
   email: {
     id: 'global.form.email',
@@ -29,6 +29,10 @@ export const formMessages = defineMessages({
   secondLastname: {
     id: 'global.form.secondLastname',
     defaultMessage: 'Apellido materno'
+  },
+  surnames: {
+    id: 'global.form.surnames',
+    defaultMessage: 'Apellidos'
   },
   startDate: {
     id: 'global.form.startDate',
@@ -57,6 +61,14 @@ export const formMessages = defineMessages({
   female: {
     id: 'global.form.female',
     defaultMessage: 'Femenino'
+  },
+  extension: {
+    id: 'global.form.extension',
+    defaultMessage: 'Extensión'
+  },
+  position: {
+    id: 'global.form.position',
+    defaultMessage: 'Posición'
   },
 
   /* Errors */

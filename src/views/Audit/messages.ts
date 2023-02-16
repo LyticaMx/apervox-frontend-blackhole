@@ -1,50 +1,120 @@
 import { defineMessages } from 'react-intl'
 
-export const auditMessages = defineMessages({
+export const messages = defineMessages({
   title: {
     id: 'views.Audit.title',
-    defaultMessage: 'Auditoría de usuarios'
+    defaultMessage: 'Auditoría'
   },
-  subtitle: {
-    id: 'views.Audit.subtitle',
-    defaultMessage: 'Certificar las acciones del uso y manejo de {bold}'
+  auditedModule: {
+    id: 'views.Audit.auditedModule',
+    defaultMessage: 'Módulo auditado'
   },
-  actionDetails: {
-    id: 'views.Audit.actionDetails',
-    defaultMessage: 'Detalles de las acciones'
+  loginFailedAttemps: {
+    id: 'views.Audit.loginFailedAttemps',
+    defaultMessage: 'Intentos fallidos de inicio de sesión {attemps}'
   },
-  selectUserAndDate: {
-    id: 'views.Audit.selectUserAndDate',
-    defaultMessage: 'Selección de usuario y fecha'
+  blockedUsers: {
+    id: 'views.Audit.blockedUsers',
+    defaultMessage: 'Usuarios bloqueados en el sistema {users}'
   },
-  helperText: {
-    id: 'views.Audit.helperText',
-    defaultMessage:
-      'Para facilitar tu elección puedes filtrar por usuario y rango de fechas'
+  /* Revisar que tan comunes son estos nombres */
+  rolesAndPermissions: {
+    id: 'views.Audit.rolesAndPermissions',
+    defaultMessage: 'Roles y permisos'
   },
-  actionsOf: {
-    id: 'views.Audit.actionsOf',
-    defaultMessage: '{actions} acciones de {of}'
+  usersControl: {
+    id: 'views.Audit.rolesAndPermissions',
+    defaultMessage: 'Control de usuarios'
   },
-  fromDate: {
-    id: 'views.Audit.actionsOf.fromDate',
-    defaultMessage: ' y fecha a partir de {date}'
+  workgroups: {
+    id: 'views.Audit.workgroups',
+    defaultMessage: 'Grupos de trabajo'
   },
-  fromDates: {
-    id: 'views.Audit.actionsOf.fromDates',
-    defaultMessage: ' y fecha del {from} al {to}'
+  acquisitionMedium: {
+    id: 'views.Audit.acquisitionMedium',
+    defaultMessage: 'Medios de adquisición'
   },
-  useFilters: {
-    id: 'views.Audit.actionsOf.useFilters',
-    defaultMessage:
-      'Utiliza los filtros y consulta para poder visualizar el detalle de las acciones'
+  created: {
+    id: 'views.Audit.UserDrawer.created',
+    defaultMessage: 'Creado: {date}'
+  }
+})
+
+export const auditDrawerMessages = defineMessages({
+  auditedMovement: {
+    id: 'views.Audit.AuditDrawer.auditedMovement',
+    defaultMessage: 'Movimiento auditado - detalle'
+  }
+})
+
+export const userDrawerMessages = defineMessages({
+  userData: {
+    id: 'views.Audit.UserDrawer.userData',
+    defaultMessage: 'Datos del usuario'
   },
-  selectPlaceholder: {
-    id: 'views.Audit.actionsOf.selectPlaceholder',
-    defaultMessage: 'Seleccione un usuario'
+  userHistory: {
+    id: 'views.Audit.UserDrawer.userHistory',
+    defaultMessage: 'Historial de movimientos del usuario'
+  }
+})
+
+export const groupDrawerMessages = defineMessages({
+  groupData: {
+    id: 'views.Audit.GroupDrawer.groupData',
+    defaultMessage: 'Datos del grupo'
   },
-  withoutParams: {
-    id: 'views.Audit.actionsOf.withoutParams',
-    defaultMessage: 'Sin parámetros'
+  selectedGroupData: {
+    id: 'views.Audit.GroupDrawer.selectedGroupData',
+    defaultMessage: 'Datos del grupo de trabajo seleccionado'
+  },
+  workgroupName: {
+    id: 'views.Audit.GroupDrawer.workgroupName',
+    defaultMessage: 'Nombre del grupo de trabajo'
+  },
+  groupHistory: {
+    id: 'views.Audit.GroupDrawer.groupHistory',
+    defaultMessage: 'Historial de movimientos del grupo'
+  }
+})
+
+export const lineDrawerMessages = defineMessages({
+  lineData: {
+    id: 'views.Audit.LineDrawer.lineData',
+    defaultMessage: 'Datos de línea'
+  },
+  selectedLineData: {
+    id: 'views.Audit.LineDrawer.selectedLineData',
+    defaultMessage: 'Datos actuales de la línea seleccionada'
+  },
+  lineHistory: {
+    id: 'views.Audit.LineDrawer.lineHistory',
+    defaultMessage: 'Historial de movimientos de la línea'
+  }
+})
+
+export const tiDrawerMessages = defineMessages({
+  tiData: {
+    id: 'views.Audit.TiDrawer.tiData',
+    defaultMessage: 'Datos de la técnica'
+  },
+  selectedTiData: {
+    id: 'views.Audit.TiDrawer.selectedTiData',
+    defaultMessage: 'Datos actuales de la técnica seleccionada'
+  },
+  linesInFollow: {
+    id: 'views.Audit.TiDrawer.linesInFollow',
+    defaultMessage: 'Datos de las líneas en seguimiento'
+  },
+  lineNumber: {
+    id: 'views.Audit.TiDrawer.lineNumber',
+    defaultMessage: 'Número de línea'
+  },
+  selectedTiStatus: {
+    id: 'views.Audit.TiDrawer.selectedTiStatus',
+    defaultMessage: 'Estado de la técnica seleccionada'
+  },
+  selectedTiHistory: {
+    id: 'views.Audit.TiDrawer.selectedTiHistory',
+    defaultMessage: 'Historial de movimientos de la técnica'
   }
 })

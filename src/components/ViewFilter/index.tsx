@@ -30,6 +30,8 @@ const ViewFilter = (props: Props): ReactElement => {
   const handleClickAction = (): void => {
     if (props.action?.onClick) props.action.onClick()
   }
+
+  // Revisar si es conveniente que se llame cada vez que entra la persona a la vista
   useEffect(() => {
     if (props.onChange) props.onChange({ dateRange, filterByField })
   }, [dateRange, filterByField])

@@ -228,7 +228,7 @@
   "views.Audit.helperText": "Para facilitar tu elección puedes filtrar por usuario y rango de fechas",
   "views.Audit.selectUserAndDate": "Selección de usuario y fecha",
   "views.Audit.subtitle": "Certificar las acciones del uso y manejo de {bold}",
-  "views.Audit.title": "Auditoría de usuarios",
+  "views.Audit.title": "Auditoría",
   "views.Auth.ForgotPassword.ConfirmationCard.checkYourMail": "Revisa tu correo para continuar el proceso",
   "views.Auth.ForgotPassword.ConfirmationCard.goToLogin": "Volver al inicio de sesión",
   "views.Auth.ForgotPassword.ConfirmationCard.successfullSend": "Envío exitoso",
