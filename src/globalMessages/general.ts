@@ -367,5 +367,69 @@ export const generalMessages = defineMessages({
   history: {
     id: 'global.general.history',
     defaultMessage: 'Historial'
+  },
+  description: {
+    id: 'global.general.description',
+    defaultMessage: 'Descripción'
+  },
+  statistics: {
+    id: 'global.general.statistics',
+    defaultMessage: 'Estadísticas'
+  },
+  groups: {
+    id: 'global.general.groups',
+    defaultMessage: 'Grupos'
+  },
+  userRol: {
+    id: 'global.general.userRol',
+    defaultMessage: 'Rol de usuario'
+  },
+  line: {
+    id: 'global.general.line',
+    defaultMessage: 'Línea'
+  },
+  medium: {
+    id: 'global.general.medium',
+    defaultMessage: 'Medio'
+  },
+  tiName: {
+    id: 'global.general.tiName',
+    defaultMessage: 'Nombre de la técnica'
+  },
+  shift: {
+    id: 'global.general.shift',
+    defaultMessage: 'Turno'
+  },
+  cut: {
+    id: 'global.general.cut',
+    defaultMessage: 'Corte'
+  },
+  priority: {
+    id: 'global.general.priority',
+    defaultMessage: 'Prioridad'
+  },
+  follow: {
+    id: 'global.general.follow',
+    defaultMessage: 'Seguimiento'
+  },
+  activeStatus: {
+    id: 'global.general.activeStatus',
+    defaultMessage: 'Vigente'
+  },
+  urgent: {
+    id: 'global.general.urgent',
+    defaultMessage: 'Urgente'
+  },
+  high: {
+    id: 'global.general.high',
+    defaultMessage: 'Alta'
+  },
+  normal: {
+    id: 'global.general.normal',
+    defaultMessage: 'Media'
+  },
+  low: {
+    id: 'global.general.low',
+    defaultMessage: 'Baja'
   }
 })

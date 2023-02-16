@@ -1,8 +1,9 @@
 import Button from 'components/Button'
+import DownloadDialog from 'components/DownloadDialog'
 import FilterByField from 'components/FilterByField'
 import Daterangepicker from 'components/Form/Daterangepicker'
-import SearchField from 'components/Form/SearchField'
 import { ReactElement, useEffect, useState } from 'react'
+import { DocumentType } from 'types/utils'
 
 interface Field {
   label: string
@@ -11,20 +12,29 @@ interface Field {
 
 interface Props {
   fields: Field[]
-  onCahnge?: (values: any) => void
-  onAction?: () => void
+  onChange?: (values: any) => void
+  action?: {
+    label: string
+    onClick?: () => void
+    disabled?: boolean
+  }
+  download?:
+    | ((documentType: DocumentType) => void)
+    | ((documentType: DocumentType) => Promise<void>)
+    | ((documentType: DocumentType) => Promise<boolean>)
 }
 const ViewFilter = (props: Props): ReactElement => {
   const [dateRange, setDateRange] = useState<[Date?, Date?]>([])
   const [filterByField, setFilterByField] = useState({ search: '', fields: [] })
-  const [search, setSearch] = useState('')
 
   const handleClickAction = (): void => {
-    if (props.onAction) props.onAction()
+    if (props.action?.onClick) props.action.onClick()
   }
+
+  // Revisar si es conveniente que se llame cada vez que entra la persona a la vista
   useEffect(() => {
-    if (props.onCahnge) props.onCahnge({ dateRange, filterByField, search })
-  }, [dateRange, filterByField, search])
+    if (props.onChange) props.onChange({ dateRange, filterByField })
+  }, [dateRange, filterByField])
 
   return (
     <div className="flex gap-2 items-center">
@@ -34,14 +44,17 @@ const ViewFilter = (props: Props): ReactElement => {
         values={filterByField}
         onSubmit={setFilterByField}
       />
-      <SearchField
-        shadow
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
-      <Button variant="contained" color="primary" onClick={handleClickAction}>
-        Crear role de usuario
-      </Button>
+      {props.download && <DownloadDialog onExport={props.download} />}
+      {props.action && (
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleClickAction}
+          disabled={props.action.disabled}
+        >
+          {props.action.label}
+        </Button>
+      )}
     </div>
   )
 }

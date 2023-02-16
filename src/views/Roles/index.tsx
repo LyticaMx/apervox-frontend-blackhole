@@ -26,7 +26,11 @@ const Roles = (): ReactElement => {
           <Title className="uppercase">{getMessage('title')}</Title>
           <p className="uppercase">04 {getMessage('subtitle')}</p>
         </div>
-        <ViewFilter fields={items} onAction={toggleOpen} />
+        <ViewFilter
+          fields={items}
+          action={{ label: getMessage('button'), onClick: toggleOpen }}
+          download={(document) => alert(document)}
+        />
       </div>
 
       <div className="grid gap-4 mt-8 xl:mt-12 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

@@ -25,7 +25,20 @@ const useCallAlertTable = (): returnType => {
     { header: 'PIN', accessorKey: 'pin' },
     {
       header: formatMessage(generalMessages.receiver),
-      accessorKey: 'receiver'
+      accessorKey: 'receiver',
+      meta: {
+        staticFilters: {
+          optionsName: 'Valores X',
+          options: [
+            { name: 'Prueba 1', value: 'test 1' },
+            { name: 'Prueba 2', value: 'test 2' },
+            { name: 'Prueba 3', value: 'test 3' }
+          ],
+          onChange: (selected) => {
+            alert(JSON.stringify(selected, null, 2))
+          }
+        }
+      }
     },
     {
       header: formatMessage(generalMessages.duration),

@@ -20,7 +20,6 @@ import {
   useReactTable,
   VisibilityState
 } from '@tanstack/react-table'
-
 import Pagination, { PaginationLimit } from './Pagination'
 import clsx from 'clsx'
 import NoData from 'components/NoData'
@@ -28,10 +27,10 @@ import { ArrowDownIcon, ArrowUpIcon } from '@heroicons/react/20/solid'
 import IndeterminateCheckbox from './IndeterminateCheckbox'
 import Typography from 'components/Typography'
 import TableConfiguration from './TableConfiguration'
+import StaticFilter from './StaticFilter'
 import { useVirtual } from 'react-virtual'
 import { useIntl } from 'react-intl'
 import { messages } from './messages'
-import { ArrowDownOnSquareIcon } from '@heroicons/react/24/outline'
 
 export interface ActionForSelectedItems<T> {
   name: string
@@ -59,7 +58,7 @@ interface Props<T> {
   manualPagination?: ManualPagination
   paginationStyle?: 'mini' | 'extended'
   pageSize?: number
-  onRowClicked?: (row: any, event: any) => void
+  onRowClicked?: (row: T, event: any) => void
   className?: string
   manualSorting?: ManualSorting
   maxHeight?: number
@@ -169,7 +168,7 @@ const Table = <DataType,>({
       case 'asc':
         return (
           <span className="flex">
-            <ArrowUpIcon className="w-4 ml-1" />
+            <ArrowUpIcon className="w-4 ml-1 text-primary-500" />
             <ArrowDownIcon className="w-4 text-gray-300" />
           </span>
         )
@@ -177,7 +176,7 @@ const Table = <DataType,>({
         return (
           <span className="flex">
             <ArrowUpIcon className="w-4 ml-1 text-gray-300" />
-            <ArrowDownIcon className="w-4" />
+            <ArrowDownIcon className="w-4 text-primary-500" />
           </span>
         )
       default:
@@ -244,7 +243,7 @@ const Table = <DataType,>({
   return (
     <div className={clsx(className, 'flex flex-col')}>
       <div className="shadow ring-1 ring-black ring-opacity-5 md:rounded-t-lg overflow-x-auto overflow-y-hidden">
-        <div className="h-[45px] flex center justify-between px-6 py-2">
+        <div className="h-[45px] flex center justify-between px-6 py-2 bg-gray-50">
           <Typography>
             {selectedItems !== 'none' &&
               formatMessage(messages.selectedElements, {
@@ -253,28 +252,24 @@ const Table = <DataType,>({
           </Typography>
           <div className="flex items-center">
             <div className="mr-4 last:mr-0">
-              {selectedItems === 'none' || !actionsForSelectedItems ? (
-                <button className="transition-colors text-secondary-gray hover:text-primary">
-                  <ArrowDownOnSquareIcon className="w-5 h-5" />
-                </button>
-              ) : (
-                actionsForSelectedItems.map((item, index) => (
-                  <button
-                    onClick={async () =>
-                      await item.action(
-                        data.filter((datum, index) =>
-                          selectedKeys.includes(index)
+              {selectedItems !== 'none' && actionsForSelectedItems
+                ? actionsForSelectedItems.map((item, index) => (
+                    <button
+                      onClick={async () =>
+                        await item.action(
+                          data.filter((datum, index) =>
+                            selectedKeys.includes(index)
+                          )
                         )
-                      )
-                    }
-                    key={`${item.name}-${index}`}
-                    disabled={item.disabled}
-                    className=" transition-colors text-secondary-gray hover:text-primary  mr-2"
-                  >
-                    <item.Icon className="w-4 h-4" />
-                  </button>
-                ))
-              )}
+                      }
+                      key={`${item.name}-${index}`}
+                      disabled={item.disabled}
+                      className=" transition-colors text-secondary-gray hover:text-primary  mr-2"
+                    >
+                      <item.Icon className="w-4 h-4" />
+                    </button>
+                  ))
+                : null}
             </div>
             <TableConfiguration
               table={table}
@@ -285,7 +280,7 @@ const Table = <DataType,>({
         <div
           ref={tableContainerRef}
           style={{ maxHeight }}
-          className="overflow-auto"
+          className="overflow-auto transition-[max-height] duration-300"
         >
           {table.getRowModel().rows.length ? (
             <table className="min-w-full divide-y divide-gray-300">
@@ -303,8 +298,9 @@ const Table = <DataType,>({
                             <div
                               onClick={header.column.getToggleSortingHandler()}
                               className={clsx(
-                                manualSorting &&
-                                  'cursor-pointer flex select-none'
+                                (!!manualSorting ||
+                                  !!header.column.columnDef.meta) &&
+                                  'cursor-pointer flex select-none items-center'
                               )}
                             >
                               {flexRender(
@@ -318,6 +314,22 @@ const Table = <DataType,>({
                                     header.column.getIsSorted() as string
                                   )
                                 : ''}
+                              {header.column.columnDef.meta?.staticFilters ? (
+                                <StaticFilter
+                                  onChange={
+                                    header.column.columnDef.meta.staticFilters
+                                      .onChange
+                                  }
+                                  options={
+                                    header.column.columnDef.meta.staticFilters
+                                      .options
+                                  }
+                                  optionsTitle={
+                                    header.column.columnDef.meta.staticFilters
+                                      .optionsName
+                                  }
+                                />
+                              ) : null}
                             </div>
                           )}
                         </th>
@@ -376,7 +388,6 @@ const Table = <DataType,>({
           )}
         </div>
       </div>
-      {/* {paginationType && ( */}
       <Pagination
         onPageChange={onChange}
         currentPage={
@@ -389,9 +400,7 @@ const Table = <DataType,>({
           manualPagination ? manualPagination.totalRecords : data.length
         }
         manualLimit={manualLimit}
-        // paginationType={paginationType}
       />
-      {/* )} */}
     </div>
   )
 }
