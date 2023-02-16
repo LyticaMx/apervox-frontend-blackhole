@@ -30,7 +30,7 @@ const mockGroups = [
   },
   {
     id: 'g2',
-    name: 'Grupo 2'
+    name: 'Grupo 2 medio'
   },
   {
     id: 'g3',
@@ -94,15 +94,30 @@ const UserInfo = (): ReactElement => {
       breakpoints: { xs: 12, md: 6 }
     },
     {
+      type: 'custom',
       name: 'groups',
-      type: 'select-multiple',
-      options: {
-        label: formatMessage(userInfoMessages.groups),
-        items: mockGroups,
-        textField: 'name',
-        valueField: 'id',
-        noFoundText: 'Not found'
-      },
+      children: (
+        <>
+          <label
+            className="mb-1 block text-sm font-medium text-gray-700"
+            data-headlessui-state=""
+          >
+            {formatMessage(userInfoMessages.groups)}
+          </label>
+
+          <div className="flex flex-wrap space-x-2">
+            {mockGroups.map((group) => (
+              <Tag
+                key={group.id}
+                label={group.name}
+                className="text-sm py-0.5 px-3 bg-blue-50 mt-1 ml-2"
+                labelColorClassName=""
+                roundedClassName="rounded-sm"
+              />
+            ))}
+          </div>
+        </>
+      ),
       breakpoints: { xs: 12, md: 6 }
     },
     {
@@ -188,47 +203,6 @@ const UserInfo = (): ReactElement => {
                 className: 'mt-6 mb-2'
               }}
               className="user-account-data-form"
-            />
-
-            <Tag label="test" className="mb-4" />
-
-            <Tag
-              label="test"
-              className="text-sm py-0.5 px-3 bg-blue-50 mb-4"
-              labelColorClassName=""
-              roundedClassName="rounded-sm"
-            />
-
-            <Tag
-              label="test"
-              className="text-sm py-0.5 px-3 mb-4"
-              labelColorClassName="text-primary"
-              roundedClassName="rounded-full"
-            />
-
-            <Tag label="test" className="mb-4" removeAction={() => {}} />
-
-            <Tag
-              label="test"
-              className="text-sm py-0.5 px-3 bg-blue-50 mb-4"
-              labelColorClassName=""
-              roundedClassName="rounded-sm"
-              removeAction={() => {}}
-            />
-
-            <Tag
-              label="test"
-              className="text-sm py-0.5 px-3 mb-4"
-              labelColorClassName="text-primary"
-              roundedClassName="rounded-full"
-              removeAction={() => {}}
-            />
-
-            <Tag
-              label="test"
-              className="text-sm py-0.5 px-3 mb-4"
-              removeAction={() => {}}
-              labelColorClassName=""
             />
           </Card>
         </Grid>
