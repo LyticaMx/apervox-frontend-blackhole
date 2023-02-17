@@ -12,6 +12,7 @@ import { getDateDiferenceInMinutes } from 'utils/formatTime'
 import { Layout } from 'types/layout'
 import { apiMessages } from 'globalMessages'
 import Navbar from 'components/Layout/Navbar'
+import ContextDrawer from 'components/Drawer/ContextDrawer'
 
 const BaseLayout = ({ children }: Layout): ReactElement => {
   const intl = useIntl()
@@ -75,6 +76,7 @@ const BaseLayout = ({ children }: Layout): ReactElement => {
           </main>
         </div>
       </div>
+      <ContextDrawer />
       <Loader />
     </>
   )

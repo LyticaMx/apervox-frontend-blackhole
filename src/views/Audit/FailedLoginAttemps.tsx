@@ -8,11 +8,11 @@ import { ReactElement, useState } from 'react'
 import { useIntl } from 'react-intl'
 import { Link } from 'react-router-dom'
 import { pathRoute } from 'router/routes'
-import { User } from '.'
 import { messages } from './messages'
 import UserDrawer from './components/UserDrawer'
 import { SortingState } from '@tanstack/react-table'
 import GoBackButton from './components/GoBackButton'
+import { useDrawer } from 'context/Drawer'
 
 interface FailedLoginAttempsAudit {
   id: string
@@ -24,7 +24,7 @@ interface FailedLoginAttempsAudit {
 
 const FailedLoginAttemps = (): ReactElement => {
   const { formatMessage } = useIntl()
-  const [selectedUser, setSelectedUser] = useState<User | null>(null)
+  const { actions } = useDrawer()
   const [sortingState, setSortingState] = useState<SortingState>([])
 
   const columns = useTableColumns<FailedLoginAttempsAudit>(() => [
@@ -41,18 +41,24 @@ const FailedLoginAttemps = (): ReactElement => {
           className="text-primary hover:underline"
           onClick={(e) => {
             e.stopPropagation()
-            setSelectedUser({
-              name: 'Pruebas',
-              surnames: 'Uno',
-              email: 'test@test.com',
-              createdBy: 'SuperAdmin',
-              createdOn: new Date('2023-02-14T18:58:02.626Z'),
-              extension: '150',
-              groups: 'Auditoria, Grupo 4',
-              id: '002',
-              position: 'General',
-              username: 'PUno',
-              userRol: 'Administrador'
+            actions?.handleOpenDrawer({
+              body: (
+                <UserDrawer
+                  user={{
+                    name: 'Pruebas',
+                    surnames: 'Uno',
+                    email: 'test@test.com',
+                    createdBy: 'SuperAdmin',
+                    createdOn: new Date('2023-02-14T18:58:02.626Z'),
+                    extension: '150',
+                    groups: 'Auditoria, Grupo 4',
+                    id: '002',
+                    position: 'General',
+                    username: 'PUno',
+                    userRol: 'Administrador'
+                  }}
+                />
+              )
             })
           }}
         >
@@ -82,11 +88,6 @@ const FailedLoginAttemps = (): ReactElement => {
 
   return (
     <div>
-      <UserDrawer
-        user={selectedUser}
-        onClose={() => setSelectedUser(null)}
-        withBackdrop
-      />
       <GoBackButton route={pathRoute.audit.general} />
       <div className="flex items-center justify-between">
         <Typography
