@@ -2,47 +2,32 @@ import {
   CheckIcon,
   DocumentMagnifyingGlassIcon
 } from '@heroicons/react/24/outline'
-import Drawer from 'components/Drawer'
 import Typography from 'components/Typography'
 import { generalMessages } from 'globalMessages'
-import { ReactElement } from 'react'
+import { ReactElement, useEffect } from 'react'
 import { useIntl } from 'react-intl'
 import { Target } from '..'
 import { lineDrawerMessages } from '../messages'
 
 interface Props {
   lineId: string | null
-  onClose: () => void
   handleFilter?: (target: Target) => void
-  withBackdrop?: boolean
 }
 
 const LineDrawer = (props: Props): ReactElement => {
-  const {
-    lineId,
-    onClose,
-    handleFilter = () => {},
-    withBackdrop = false
-  } = props
+  const { lineId, handleFilter = () => {} } = props
   const { formatMessage } = useIntl()
 
+  useEffect(() => {
+    console.log(lineId)
+  }, [lineId])
+
   return (
-    <Drawer
-      withoutBackdrop={!withBackdrop}
-      placement="right"
-      open={!!lineId}
-      onClose={onClose}
-      title={
-        <span className="text-secondary text-lg uppercase font-extrabold">
-          {formatMessage(lineDrawerMessages.lineData)}
-        </span>
-      }
-    >
-      <div className="w-96">
-        <Typography variant="subtitle">
-          {formatMessage(lineDrawerMessages.selectedLineData)}
-        </Typography>
-      </div>
+    <div className="w-96">
+      <Typography variant="subtitle">
+        {formatMessage(lineDrawerMessages.selectedLineData)}
+      </Typography>
+
       <Typography variant="body1" className="italic mt-3">
         {formatMessage(generalMessages.line)}
       </Typography>
@@ -73,7 +58,7 @@ const LineDrawer = (props: Props): ReactElement => {
           </p>
         </button>
       )}
-    </Drawer>
+    </div>
   )
 }
 
