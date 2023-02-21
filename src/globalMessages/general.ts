@@ -431,5 +431,41 @@ export const generalMessages = defineMessages({
   low: {
     id: 'global.general.low',
     defaultMessage: 'Baja'
+  },
+  hangsup: {
+    id: 'global.general.hangsup',
+    defaultMessage: 'Colgadas'
+  },
+  verification: {
+    id: 'global.general.verification',
+    defaultMessage: 'Verificación'
+  },
+  techniques: {
+    id: 'global.general.techniques',
+    defaultMessage: 'Técnicas'
+  },
+  technique: {
+    id: 'global.general.technique',
+    defaultMessage: 'Técnica'
+  },
+  trash: {
+    id: 'global.general.trash',
+    defaultMessage: 'Basura'
+  },
+  aim: {
+    id: 'global.general.aim',
+    defaultMessage: 'Objetivo'
+  },
+  target: {
+    id: 'global.general.target',
+    defaultMessage: 'Objetivo'
+  },
+  origin: {
+    id: 'global.general.origin',
+    defaultMessage: 'Origen'
+  },
+  clasification: {
+    id: 'global.general.clasification',
+    defaultMessage: 'Clasificación'
   }
 })
