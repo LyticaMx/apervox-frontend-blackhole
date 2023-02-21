@@ -22,6 +22,7 @@ interface Props {
   className?: string
   noWrap?: boolean
   children: ReactNode
+  onClick?: () => void
 }
 
 const Typography = ({
@@ -29,6 +30,7 @@ const Typography = ({
   style = 'normal',
   className,
   children,
+  onClick,
   noWrap
 }: Props): ReactElement => {
   const variantClasses = {
@@ -51,11 +53,16 @@ const Typography = ({
   return (
     <p
       className={clsx(
+        'select-none',
         variantClasses[variant],
         styleClasses[style],
         className,
-        noWrap && 'truncate'
+        {
+          truncate: noWrap,
+          'cursor-pointer': !!onClick
+        }
       )}
+      onClick={onClick}
     >
       {children}
     </p>
