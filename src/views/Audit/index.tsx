@@ -2,23 +2,33 @@ import { SortingState } from '@tanstack/react-table'
 import Table from 'components/Table'
 import Typography from 'components/Typography'
 import ViewFilter from 'components/ViewFilter'
+import { useDrawer } from 'context/Drawer'
 import { format } from 'date-fns'
 import { generalMessages } from 'globalMessages'
 import useTableColumns from 'hooks/useTableColumns'
-import { ReactElement, useState } from 'react'
+import { ReactElement, useCallback, useState } from 'react'
 import { useIntl } from 'react-intl'
 import { Link } from 'react-router-dom'
 import { pathRoute } from 'router/routes'
+import { SimpleDrawerConfig } from 'types/drawer'
 import AuditDrawer from './components/AuditDrawer'
 import GroupDrawer from './components/GroupDrawer'
 import LineDrawer from './components/LineDrawer'
 import SpecificMovementsHistory from './components/SpecificMovementsHistory'
 import TiDrawer from './components/TiDrawer'
 import UserDrawer from './components/UserDrawer'
-import { messages } from './messages'
+import {
+  auditDrawerMessages,
+  groupDrawerMessages,
+  lineDrawerMessages,
+  messages,
+  tiDrawerMessages
+} from './messages'
+
+type TargetTypes = 'user' | 'group' | 'rol' | 'line' | 'ti' | null
 
 export interface Target {
-  type: 'user' | 'group' | 'rol' | 'line' | 'ti' | null
+  type: TargetTypes
   id: string
   name: string
 }
@@ -47,14 +57,102 @@ export interface User {
 
 const Audit = (): ReactElement => {
   const { formatMessage } = useIntl()
+  const { actions } = useDrawer()
   const [sortingState, setSortingState] = useState<SortingState>([])
-  const [selectedRegister, setSelectedRegister] =
-    useState<AuditInterface | null>(null)
   const [selectedTarget, setSelectedTarget] = useState<Target | null>(null)
-  const [selectedUser, setSelectedUser] = useState<User | null>(null)
-  const [selectedGroup, setSelectedGroup] = useState<string>('')
-  const [selectedLine, setSelectedLine] = useState<string>('')
-  const [selectedTi, setSelectedTi] = useState<string>('')
+
+  const handleOpenAction = useCallback(
+    (row: AuditInterface) => {
+      actions?.handleOpenDrawer({
+        title: (
+          <span className="text-secondary text-lg uppercase font-extrabold">
+            {formatMessage(auditDrawerMessages.auditedMovement)}
+          </span>
+        ),
+        body: (
+          <AuditDrawer
+            action="Cambio de nombre"
+            moduleName="Roles y permisos"
+            date={row.date}
+            change="Editó el rol de usuario (Auditoria) cambiando su nombre por (Auditor)"
+            user={row.user}
+          />
+        ),
+        config: {
+          withoutBackdrop: true
+        }
+      })
+    },
+    [actions?.handleOpenDrawer]
+  )
+
+  const handleMoreData = useCallback((type: TargetTypes) => {
+    const drawerConfig: SimpleDrawerConfig = {
+      body: null,
+      config: {
+        withoutBackdrop: true
+      }
+    }
+
+    switch (type) {
+      case 'group':
+        drawerConfig.title = (
+          <span className="text-secondary text-lg uppercase font-extrabold">
+            {formatMessage(groupDrawerMessages.groupData)}
+          </span>
+        )
+        drawerConfig.body = (
+          <GroupDrawer groupId="002" handleFilter={setSelectedTarget} />
+        )
+        break
+      case 'line':
+        drawerConfig.title = (
+          <span className="text-secondary text-lg uppercase font-extrabold">
+            {formatMessage(lineDrawerMessages.lineData)}
+          </span>
+        )
+        drawerConfig.body = (
+          <LineDrawer lineId="003" handleFilter={setSelectedTarget} />
+        )
+        break
+      case 'ti':
+        drawerConfig.title = (
+          <span className="text-secondary text-lg uppercase font-extrabold">
+            {formatMessage(tiDrawerMessages.tiData)}
+          </span>
+        )
+        drawerConfig.body = (
+          <TiDrawer tiId="004" handleFilter={setSelectedTarget} />
+        )
+        break
+      case 'user':
+        drawerConfig.body = (
+          <UserDrawer
+            user={{
+              name: 'Pruebas',
+              surnames: 'Uno',
+              email: 'test@test.com',
+              createdBy: 'SuperAdmin',
+              createdOn: new Date('2023-02-14T18:58:02.626Z'),
+              extension: '150',
+              groups: 'Auditoria, Grupo 4',
+              id: '002',
+              position: 'General',
+              username: 'PUno',
+              userRol: 'Administrador'
+            }}
+            selectUser={setSelectedTarget}
+          />
+        )
+
+        break
+      default:
+        break
+    }
+    if (drawerConfig.body) {
+      actions?.handleOpenDrawer(drawerConfig)
+    }
+  }, [])
 
   const columns = useTableColumns<AuditInterface>(() => [
     {
@@ -69,18 +167,28 @@ const Audit = (): ReactElement => {
           className="text-primary hover:underline"
           onClick={(e) => {
             e.stopPropagation()
-            setSelectedUser({
-              name: 'Pruebas',
-              surnames: 'Uno',
-              email: 'test@test.com',
-              createdBy: 'SuperAdmin',
-              createdOn: new Date('2023-02-14T18:58:02.626Z'),
-              extension: '150',
-              groups: 'Auditoria, Grupo 4',
-              id: '002',
-              position: 'General',
-              username: 'PUno',
-              userRol: 'Administrador'
+            actions?.handleOpenDrawer({
+              body: (
+                <UserDrawer
+                  user={{
+                    name: 'Pruebas',
+                    surnames: 'Uno',
+                    email: 'test@test.com',
+                    createdBy: 'SuperAdmin',
+                    createdOn: new Date('2023-02-14T18:58:02.626Z'),
+                    extension: '150',
+                    groups: 'Auditoria, Grupo 4',
+                    id: '002',
+                    position: 'General',
+                    username: 'PUno',
+                    userRol: 'Administrador'
+                  }}
+                  selectUser={setSelectedTarget}
+                />
+              ),
+              config: {
+                withoutBackdrop: true
+              }
             })
           }}
         >
@@ -98,35 +206,7 @@ const Audit = (): ReactElement => {
             <button
               onClick={(e) => {
                 e.stopPropagation()
-                switch (row.original.target.type) {
-                  case 'group':
-                    setSelectedGroup('002')
-                    break
-                  case 'line':
-                    setSelectedLine('003')
-                    break
-                  case 'ti':
-                    setSelectedTi('004')
-                    break
-                  case 'user':
-                    setSelectedUser({
-                      name: 'Pruebas',
-                      surnames: 'Uno',
-                      email: 'test@test.com',
-                      createdBy: 'SuperAdmin',
-                      createdOn: new Date('2023-02-14T18:58:02.626Z'),
-                      extension: '150',
-                      groups: 'Auditoria, Grupo 4',
-                      id: '002',
-                      position: 'General',
-                      username: 'PUno',
-                      userRol: 'Administrador'
-                    })
-                    break
-                  default:
-                    break
-                }
-                // setSelectedTarget(row.original.target ?? null)
+                handleMoreData(row.original.target.type)
               }}
               className="ml-2 text-primary hover:underline"
             >
@@ -182,35 +262,6 @@ const Audit = (): ReactElement => {
 
   return (
     <div>
-      <UserDrawer
-        user={selectedUser}
-        onClose={() => setSelectedUser(null)}
-        selectUser={setSelectedTarget}
-      />
-      <GroupDrawer
-        groupId={selectedGroup}
-        onClose={() => setSelectedGroup('')}
-        handleFilter={setSelectedTarget}
-      />
-      <LineDrawer
-        lineId={selectedLine}
-        onClose={() => setSelectedLine('')}
-        handleFilter={setSelectedTarget}
-      />
-      <TiDrawer
-        onClose={() => setSelectedTi('')}
-        tiId={selectedTi}
-        handleFilter={setSelectedTarget}
-      />
-      <AuditDrawer
-        open={!!selectedRegister}
-        onClose={() => setSelectedRegister(null)}
-        action="Cambio de nombre"
-        moduleName="Roles y permisos"
-        date={selectedRegister?.date}
-        change="Editó el rol de usuario (Auditoria) cambiando su nombre por (Auditor)"
-        user={selectedRegister?.user ?? ''}
-      />
       <div className="flex items-center justify-between">
         <Typography
           variant="title"
@@ -328,7 +379,7 @@ const Audit = (): ReactElement => {
             onSortingChange: setSortingState,
             sorting: sortingState
           }}
-          onRowClicked={(row) => setSelectedRegister(row)}
+          onRowClicked={handleOpenAction}
           maxHeight={!selectedTarget ? 500 : 225}
         />
       </div>
@@ -336,8 +387,15 @@ const Audit = (): ReactElement => {
         specificFilter={selectedTarget}
         handleClose={() => setSelectedTarget(null)}
         totalMovements={3}
-        handleSelectMovement={setSelectedRegister}
-        handleSelectUser={(user) => setSelectedUser(user)}
+        handleSelectMovement={handleOpenAction}
+        handleSelectUser={(user) =>
+          actions?.handleOpenDrawer({
+            body: <UserDrawer user={user} selectUser={setSelectedTarget} />,
+            config: {
+              withoutBackdrop: true
+            }
+          })
+        }
       />
     </div>
   )
