@@ -33,6 +33,7 @@ import UserAccount from 'views/Auth/UserAccount'
 import BondingNetwork from 'views/BondingNetwork'
 import FailedLoginAttemps from 'views/Audit/FailedLoginAttemps'
 import BlockedUsers from 'views/Audit/BlockedUsers'
+import GeneralConfig from 'views/Config'
 
 import BaseLayout from 'layout/BaseLayout'
 import FullScreenLayout from 'layout/FullScreenLayout'
@@ -45,6 +46,8 @@ import DemoCharts from 'views/Demo/Chart'
 import DemoForm from 'views/Demo/Form'
 import DemoAutoForm from 'views/Demo/AutoForm'
 import DemoWavesurfer from 'views/Demo/Wavesurfer'
+import Media from 'views/Config/Media'
+import Telecom from 'views/Config/Telecom'
 
 export interface Route {
   id: string
@@ -86,6 +89,11 @@ export const pathRoute = {
     oneToOne: '/comparison-one',
     oneToMany: '/comparison-many',
     receiverToReceiver: '/comparison-r'
+  },
+  config: {
+    general: '/configuracion',
+    media: '/configuracion/medios',
+    telecom: '/configuracion/telecom'
   },
   receiverAudio: '/reseiver-audio',
   senderAudio: '/sender-audio',
@@ -257,6 +265,36 @@ export const routes: Route[] = [
     layout: BaseLayout,
     private: true,
     sidebar: true
+  },
+  {
+    id: 'config',
+    path: pathRoute.config.general,
+    i18Key: 'config',
+    modules: [
+      {
+        id: 'config-media',
+        component: Media,
+        layout: BaseLayout,
+        modules: [],
+        scopes: [],
+        path: pathRoute.config.media,
+        private: true
+      },
+      {
+        id: 'config-media',
+        component: Telecom,
+        layout: BaseLayout,
+        modules: [],
+        scopes: [],
+        path: pathRoute.config.telecom,
+        private: true
+      }
+    ],
+    scopes: [],
+    layout: BaseLayout,
+    component: GeneralConfig,
+    private: true,
+    sidebar: false
   },
   {
     id: 'audit',

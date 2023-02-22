@@ -431,5 +431,33 @@ export const generalMessages = defineMessages({
   low: {
     id: 'global.general.low',
     defaultMessage: 'Baja'
+  },
+  language: {
+    id: 'global.general.language',
+    defaultMessage: 'Idioma'
+  },
+  spanish: {
+    id: 'global.general.spanish',
+    defaultMessage: 'Español'
+  },
+  english: {
+    id: 'global.general.spanish',
+    defaultMessage: 'Inglés'
+  },
+  inactivity: {
+    id: 'global.general.inactivity',
+    defaultMessage: 'Inactividad'
+  },
+  labels: {
+    id: 'global.general.labels',
+    defaultMessage: 'Rótulos'
+  },
+  letterhead: {
+    id: 'global.general.letterhead',
+    defaultMessage: 'Membrete'
+  },
+  audioEvidence: {
+    id: 'global.general.audioEvidence',
+    defaultMessage: 'Evidencia de audio'
   }
 })

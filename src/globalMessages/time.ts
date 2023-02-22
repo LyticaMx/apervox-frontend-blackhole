@@ -20,5 +20,9 @@ export const timeMessages = defineMessages({
   last72Hours: {
     id: 'global.time.last72Hours',
     defaultMessage: 'Ultimas 72 horas'
+  },
+  minute: {
+    id: 'global.time.minute',
+    defaultMessage: 'Minuto'
   }
 })
