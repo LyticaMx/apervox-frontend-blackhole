@@ -10,8 +10,8 @@ import {
 import { createPortal } from 'react-dom'
 import { XCircleIcon } from '@heroicons/react/24/outline'
 import { zIndex } from 'constants/classes'
+import { Placement } from 'types/drawer'
 
-type Placement = 'left' | 'right' | 'bottom' | 'top'
 type Placements = Record<Placement, string>
 interface Props {
   open?: boolean

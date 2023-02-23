@@ -151,5 +151,9 @@ export const actionsMessages = defineMessages({
   goBack: {
     id: 'global.actions.goBack',
     defaultMessage: 'Regresar'
+  },
+  clickHere: {
+    id: 'global.actions.clickHere',
+    defaultMessage: 'Click aqui'
   }
 })

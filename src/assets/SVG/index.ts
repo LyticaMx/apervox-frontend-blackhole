@@ -5,6 +5,8 @@ import { ReactComponent as DocIcon } from './DocIcon.svg'
 import { ReactComponent as AuditIcon } from './AuditIcon.svg'
 import { ReactComponent as SearchUser } from './SearchUser.svg'
 import { ReactComponent as Welcome } from './welcome.svg'
+import { ReactComponent as MexicoFlag } from './flag_esp.svg'
+import { ReactComponent as UsaFlag } from './flag_eng.svg'
 
 export {
   AlertPlusIcon,
@@ -13,5 +15,7 @@ export {
   DocIcon,
   AuditIcon,
   SearchUser,
-  Welcome
+  Welcome,
+  MexicoFlag,
+  UsaFlag
 }

@@ -65,6 +65,10 @@ interface Props<T> {
   withCheckbox?: boolean
   manualLimit?: PaginationLimit
   actionsForSelectedItems?: Array<ActionForSelectedItems<T>>
+  rowConfig?: {
+    paddingSize?: 'sm' | 'md'
+    className?: string
+  }
 }
 
 const Table = <DataType,>({
@@ -79,7 +83,8 @@ const Table = <DataType,>({
   className,
   manualSorting,
   manualLimit,
-  actionsForSelectedItems
+  actionsForSelectedItems,
+  rowConfig
 }: Props<DataType>): ReactElement => {
   const [sortingState, setSortingState] = useState<SortingState>([])
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
@@ -87,6 +92,14 @@ const Table = <DataType,>({
   const tableContainerRef = useRef<HTMLDivElement>(null)
 
   const { formatMessage } = useIntl()
+
+  const rowPadding = useMemo(
+    () => ({
+      sm: 'py-2 px-1.5',
+      md: 'py-4 px-3'
+    }),
+    []
+  )
 
   const enhancedColumns = useMemo<Array<ColumnDef<DataType>>>(() => {
     if (!withCheckbox) return columns
@@ -290,7 +303,7 @@ const Table = <DataType,>({
                     {headerGroup.headers.map((header) => {
                       return (
                         <th
-                          className="py-3.5 px-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                          className="py-3.5 px-3 text-left text-sm font-semibold text-gray-900 whitespace-nowrap uppercase"
                           key={header.id}
                           colSpan={header.colSpan}
                         >
@@ -364,7 +377,11 @@ const Table = <DataType,>({
                         return (
                           <td
                             key={cell.id}
-                            className="whitespace-nowrap py-4 px-3 text-sm font-medium text-gray-900 sm:pl-6"
+                            className={clsx(
+                              'whitespace-nowrap py-4 px-3 text-sm font-medium text-gray-900',
+                              rowPadding[rowConfig?.paddingSize ?? 'md'],
+                              rowConfig?.className
+                            )}
                           >
                             {flexRender(
                               cell.column.columnDef.cell,

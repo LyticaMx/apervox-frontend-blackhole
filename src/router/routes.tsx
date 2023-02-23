@@ -7,7 +7,8 @@ import {
   BeakerIcon,
   Bars3Icon,
   IdentificationIcon,
-  UsersIcon
+  UsersIcon,
+  ComputerDesktopIcon
 } from '@heroicons/react/24/outline'
 
 import { PersonTargetIcon, AlertPlusIcon, DocIcon, AuditIcon } from 'assets/SVG'
@@ -36,6 +37,11 @@ import BondingNetwork from 'views/BondingNetwork'
 import FailedLoginAttemps from 'views/Audit/FailedLoginAttemps'
 import BlockedUsers from 'views/Audit/BlockedUsers'
 import UsersAdmin from 'views/UsersAdmin'
+import GeneralConfig from 'views/Config'
+import Monitoring from 'views/Monitoring'
+import Media from 'views/Config/Media'
+import Telecom from 'views/Config/Telecom'
+import CallsHistory from 'views/CallsHistory'
 
 import BaseLayout from 'layout/BaseLayout'
 import FullScreenLayout from 'layout/FullScreenLayout'
@@ -90,6 +96,11 @@ export const pathRoute = {
     oneToMany: '/comparison-many',
     receiverToReceiver: '/comparison-r'
   },
+  config: {
+    general: '/configuracion',
+    media: '/configuracion/medios',
+    telecom: '/configuracion/telecom'
+  },
   receiverAudio: '/reseiver-audio',
   senderAudio: '/sender-audio',
   controlGroups: '/grupos-de-control',
@@ -102,6 +113,10 @@ export const pathRoute = {
     blockedUsers: '/auditoria/usuarios-bloqueados'
   },
   users: '/usuarios',
+  monitoring: {
+    base: '/monitoreo',
+    history: '/monitoreo/historial'
+  },
   demo: {
     chart: '/demo-charts',
     form: '/demo-form',
@@ -270,6 +285,60 @@ export const routes: Route[] = [
     modules: [],
     scopes: [],
     component: BondingNetwork,
+    layout: BaseLayout,
+    private: true,
+    sidebar: true
+  },
+  {
+    id: 'config',
+    path: pathRoute.config.general,
+    i18Key: 'config',
+    modules: [
+      {
+        id: 'config-media',
+        component: Media,
+        layout: BaseLayout,
+        modules: [],
+        scopes: [],
+        path: pathRoute.config.media,
+        private: true
+      },
+      {
+        id: 'config-media',
+        component: Telecom,
+        layout: BaseLayout,
+        modules: [],
+        scopes: [],
+        path: pathRoute.config.telecom,
+        private: true
+      }
+    ],
+    scopes: [],
+    layout: BaseLayout,
+    component: GeneralConfig,
+    private: true,
+    sidebar: false
+  },
+  {
+    id: 'callsHistory',
+    path: pathRoute.monitoring.history,
+    icon: ComputerDesktopIcon,
+    i18Key: 'monitoring',
+    modules: [],
+    scopes: [],
+    component: CallsHistory,
+    layout: BaseLayout,
+    private: true,
+    sidebar: false
+  },
+  {
+    id: 'monitoring',
+    path: pathRoute.monitoring.base,
+    icon: ComputerDesktopIcon,
+    i18Key: 'monitoring',
+    modules: [],
+    scopes: [],
+    component: Monitoring,
     layout: BaseLayout,
     private: true,
     sidebar: true

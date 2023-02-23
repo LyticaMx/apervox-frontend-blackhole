@@ -114,6 +114,7 @@ export interface SelectProps {
   valueField: string
   clearable: boolean
   disabled?: boolean
+  optionsContainerClassname?: string
 }
 
 export interface SelectMultipleProps {
@@ -178,7 +179,7 @@ export declare type FieldTypes =
     }
   | {
       readonly type: 'custom'
-      children: ReactNode
+      children: ReactNode | React.FC<any>
     }
 
 interface Breakpoints {

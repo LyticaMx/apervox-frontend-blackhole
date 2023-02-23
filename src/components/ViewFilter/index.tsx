@@ -2,7 +2,7 @@ import Button from 'components/Button'
 import DownloadDialog from 'components/DownloadDialog'
 import FilterByField from 'components/FilterByField'
 import Daterangepicker from 'components/Form/Daterangepicker'
-import { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, ReactNode, useEffect, useState } from 'react'
 import { DocumentType } from 'types/utils'
 
 interface Field {
@@ -10,14 +10,16 @@ interface Field {
   name: string
 }
 
+interface ActionButton {
+  label: string
+  onClick?: () => void
+  disabled?: boolean
+}
+
 interface Props {
   fields: Field[]
   onChange?: (values: any) => void
-  action?: {
-    label: string
-    onClick?: () => void
-    disabled?: boolean
-  }
+  action?: ActionButton | ActionButton[]
   download?:
     | ((documentType: DocumentType) => void)
     | ((documentType: DocumentType) => Promise<void>)
@@ -27,14 +29,41 @@ const ViewFilter = (props: Props): ReactElement => {
   const [dateRange, setDateRange] = useState<[Date?, Date?]>([])
   const [filterByField, setFilterByField] = useState({ search: '', fields: [] })
 
-  const handleClickAction = (): void => {
-    if (props.action?.onClick) props.action.onClick()
-  }
-
   // Revisar si es conveniente que se llame cada vez que entra la persona a la vista
   useEffect(() => {
     if (props.onChange) props.onChange({ dateRange, filterByField })
   }, [dateRange, filterByField])
+
+  const renderActions = (): ReactNode => {
+    if (!props.action) return null
+    if (Array.isArray(props.action)) {
+      return (
+        <div className="flex gap-2">
+          {props.action.map((item, index) => (
+            <Button
+              key={`${item.label}-${index}`}
+              variant="contained"
+              color="primary"
+              onClick={item.onClick}
+              disabled={item.disabled}
+            >
+              {item.label}
+            </Button>
+          ))}
+        </div>
+      )
+    }
+    return (
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={props.action.onClick}
+        disabled={props.action.disabled}
+      >
+        {props.action.label}
+      </Button>
+    )
+  }
 
   return (
     <div className="flex gap-2 items-center">
@@ -45,16 +74,7 @@ const ViewFilter = (props: Props): ReactElement => {
         onSubmit={setFilterByField}
       />
       {props.download && <DownloadDialog onExport={props.download} />}
-      {props.action && (
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleClickAction}
-          disabled={props.action.disabled}
-        >
-          {props.action.label}
-        </Button>
-      )}
+      {props.action && renderActions()}
     </div>
   )
 }

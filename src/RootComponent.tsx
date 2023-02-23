@@ -5,6 +5,7 @@ import { ToastContainer } from 'react-toastify'
 import Navigator from 'router/Navigator'
 
 import { LoaderProvider } from 'context/Loader/LoaderProvider'
+import DrawerProvider from 'context/Drawer/Provider'
 import { AuthProvider } from 'context/Auth'
 import { LanguageProvider } from 'context/Language'
 import { ContextLogger, appContext } from 'context/ContextLogger'
@@ -24,18 +25,20 @@ const RootComponent = (): ReactElement => (
         <LoaderProvider>
           <AuthProvider>
             <SidebarProvider>
-              <AppContextProvider>
-                <>
-                  <Navigator />
+              <DrawerProvider>
+                <AppContextProvider>
+                  <>
+                    <Navigator />
 
-                  {isDev() && (
-                    <ContextLogger
-                      contexts={appContext}
-                      config={contextConfig}
-                    />
-                  )}
-                </>
-              </AppContextProvider>
+                    {isDev() && (
+                      <ContextLogger
+                        contexts={appContext}
+                        config={contextConfig}
+                      />
+                    )}
+                  </>
+                </AppContextProvider>
+              </DrawerProvider>
             </SidebarProvider>
           </AuthProvider>
         </LoaderProvider>
