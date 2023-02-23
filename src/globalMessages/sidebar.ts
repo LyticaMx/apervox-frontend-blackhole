@@ -100,5 +100,9 @@ export const sidebarMessages = defineMessages({
   directory: {
     id: 'sidebar.demo.directory',
     defaultMessage: 'Directorio'
+  },
+  monitoring: {
+    id: 'sidebar.monitoring',
+    defaultMessage: 'Monitoreo'
   }
 })

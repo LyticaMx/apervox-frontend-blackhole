@@ -303,7 +303,7 @@ const Table = <DataType,>({
                     {headerGroup.headers.map((header) => {
                       return (
                         <th
-                          className="py-3.5 px-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                          className="py-3.5 px-3 text-left text-sm font-semibold text-gray-900 whitespace-nowrap uppercase"
                           key={header.id}
                           colSpan={header.colSpan}
                         >
@@ -378,7 +378,7 @@ const Table = <DataType,>({
                           <td
                             key={cell.id}
                             className={clsx(
-                              'whitespace-nowrap py-4 px-3 text-sm font-medium text-gray-900 sm:pl-6',
+                              'whitespace-nowrap py-4 px-3 text-sm font-medium text-gray-900',
                               rowPadding[rowConfig?.paddingSize ?? 'md'],
                               rowConfig?.className
                             )}

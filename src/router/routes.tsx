@@ -6,7 +6,8 @@ import {
   Cog6ToothIcon,
   BeakerIcon,
   Bars3Icon,
-  IdentificationIcon
+  IdentificationIcon,
+  ComputerDesktopIcon
 } from '@heroicons/react/24/outline'
 import { PersonTargetIcon, AlertPlusIcon, DocIcon, AuditIcon } from 'assets/SVG'
 
@@ -34,6 +35,10 @@ import BondingNetwork from 'views/BondingNetwork'
 import FailedLoginAttemps from 'views/Audit/FailedLoginAttemps'
 import BlockedUsers from 'views/Audit/BlockedUsers'
 import GeneralConfig from 'views/Config'
+import Monitoring from 'views/Monitoring'
+import Media from 'views/Config/Media'
+import Telecom from 'views/Config/Telecom'
+import CallsHistory from 'views/CallsHistory'
 
 import BaseLayout from 'layout/BaseLayout'
 import FullScreenLayout from 'layout/FullScreenLayout'
@@ -46,8 +51,6 @@ import DemoCharts from 'views/Demo/Chart'
 import DemoForm from 'views/Demo/Form'
 import DemoAutoForm from 'views/Demo/AutoForm'
 import DemoWavesurfer from 'views/Demo/Wavesurfer'
-import Media from 'views/Config/Media'
-import Telecom from 'views/Config/Telecom'
 
 export interface Route {
   id: string
@@ -105,6 +108,10 @@ export const pathRoute = {
     general: '/auditoria',
     failedLoginAttemps: '/auditoria/inicios-de-sesion-fallidos',
     blockedUsers: '/auditoria/usuarios-bloqueados'
+  },
+  monitoring: {
+    base: '/monitoreo',
+    history: '/monitoreo/historial'
   },
   demo: {
     chart: '/demo-charts',
@@ -295,6 +302,30 @@ export const routes: Route[] = [
     component: GeneralConfig,
     private: true,
     sidebar: false
+  },
+  {
+    id: 'callsHistory',
+    path: pathRoute.monitoring.history,
+    icon: ComputerDesktopIcon,
+    i18Key: 'monitoring',
+    modules: [],
+    scopes: [],
+    component: CallsHistory,
+    layout: BaseLayout,
+    private: true,
+    sidebar: false
+  },
+  {
+    id: 'monitoring',
+    path: pathRoute.monitoring.base,
+    icon: ComputerDesktopIcon,
+    i18Key: 'monitoring',
+    modules: [],
+    scopes: [],
+    component: Monitoring,
+    layout: BaseLayout,
+    private: true,
+    sidebar: true
   },
   {
     id: 'audit',
