@@ -201,6 +201,10 @@ export const generalMessages = defineMessages({
     id: 'global.general.banneds',
     defaultMessage: 'Bloqueados'
   },
+  banned: {
+    id: 'global.general.banned',
+    defaultMessage: 'Bloqueado'
+  },
   username: {
     id: 'global.general.username',
     defaultMessage: 'Nombre de usuario'
@@ -233,9 +237,17 @@ export const generalMessages = defineMessages({
     id: 'global.general.actives',
     defaultMessage: 'Activos'
   },
+  active: {
+    id: 'global.general.active',
+    defaultMessage: 'Activo'
+  },
   inactives: {
     id: 'global.general.inactives',
     defaultMessage: 'Inactivos'
+  },
+  inactive: {
+    id: 'global.general.inactive',
+    defaultMessage: 'Inactivo'
   },
   archiveds: {
     id: 'global.general.archiveds',
@@ -431,5 +443,25 @@ export const generalMessages = defineMessages({
   low: {
     id: 'global.general.low',
     defaultMessage: 'Baja'
+  },
+  createdBy: {
+    id: 'global.general.createdBy',
+    defaultMessage: 'Creado por'
+  },
+  registeredBy: {
+    id: 'global.general.registeredBy',
+    defaultMessage: 'Registrado por'
+  },
+  session: {
+    id: 'global.general.session',
+    defaultMessage: 'Sesión'
+  },
+  logguedIn: {
+    id: 'global.general.logguedIn',
+    defaultMessage: 'Logueado'
+  },
+  notLogguedIn: {
+    id: 'global.general.notLogguedIn',
+    defaultMessage: 'No logueado'
   }
 })

@@ -6,8 +6,10 @@ import {
   Cog6ToothIcon,
   BeakerIcon,
   Bars3Icon,
-  IdentificationIcon
+  IdentificationIcon,
+  UsersIcon
 } from '@heroicons/react/24/outline'
+
 import { PersonTargetIcon, AlertPlusIcon, DocIcon, AuditIcon } from 'assets/SVG'
 
 import SignIn from 'views/Auth/SignIn'
@@ -33,6 +35,7 @@ import UserAccount from 'views/Auth/UserAccount'
 import BondingNetwork from 'views/BondingNetwork'
 import FailedLoginAttemps from 'views/Audit/FailedLoginAttemps'
 import BlockedUsers from 'views/Audit/BlockedUsers'
+import UsersAdmin from 'views/UsersAdmin'
 
 import BaseLayout from 'layout/BaseLayout'
 import FullScreenLayout from 'layout/FullScreenLayout'
@@ -98,6 +101,7 @@ export const pathRoute = {
     failedLoginAttemps: '/auditoria/inicios-de-sesion-fallidos',
     blockedUsers: '/auditoria/usuarios-bloqueados'
   },
+  users: '/usuarios',
   demo: {
     chart: '/demo-charts',
     form: '/demo-form',
@@ -194,6 +198,18 @@ export const routes: Route[] = [
     icon: PhoneIcon,
     scopes: [],
     component: Calls,
+    layout: BaseLayout,
+    private: true,
+    sidebar: true
+  },
+  {
+    id: 'users',
+    path: pathRoute.users,
+    icon: UsersIcon,
+    i18Key: 'users',
+    modules: [],
+    scopes: [],
+    component: UsersAdmin,
     layout: BaseLayout,
     private: true,
     sidebar: true

@@ -330,6 +330,7 @@ const Audit = (): ReactElement => {
           }}
           onRowClicked={(row) => setSelectedRegister(row)}
           maxHeight={!selectedTarget ? 500 : 225}
+          withCheckbox
         />
       </div>
       <SpecificMovementsHistory
