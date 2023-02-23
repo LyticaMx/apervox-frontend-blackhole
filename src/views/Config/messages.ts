@@ -94,6 +94,14 @@ export const messages = defineMessages({
     id: 'views.Config.itemsSelected',
     defaultMessage:
       '{selected, plural, one {1 elemento seleccionado} other {{selected} elementos seleccionados}}'
+  },
+  mediaAndDevices: {
+    id: 'views.Config.mediaAndDevices',
+    defaultMessage: 'Medios y compañias'
+  },
+  telecomStations: {
+    id: 'views.Config.telecomStations',
+    defaultMessage: 'Estaciones de telecomunicaciones'
   }
 })
 
