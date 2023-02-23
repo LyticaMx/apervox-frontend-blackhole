@@ -128,6 +128,7 @@ export interface SwitchProps {
   size?: 'sm' | 'md' | 'lg'
   color?: string
   stopPropagation?: boolean
+  label?: string
 }
 
 export declare type FieldTypes =
