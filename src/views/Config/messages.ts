@@ -327,3 +327,67 @@ export const mediaMessages = defineMessages({
     defaultMessage: 'Datos actuales del equipo seleccionado.'
   }
 })
+
+export const telecomMessages = defineMessages({
+  title: {
+    id: 'views.Config.Telecom.title',
+    defaultMessage: 'Georeferencias estaciones telecomunicaciones'
+  },
+  actualTelecomStations: {
+    id: 'views.Config.Telecom.actualTelecomStations',
+    defaultMessage: '{total} estaciones telecom existentes en la plataforma'
+  },
+  downloadFormat: {
+    id: 'views.Config.Telecom.downloadFormat',
+    defaultMessage: 'Descargar formato geo'
+  },
+  addGeoreference: {
+    id: 'views.Config.Telecom.addGeoreference',
+    defaultMessage: 'Agregar georeferencia'
+  },
+  // no tengo referencia de si se traduce
+  cellId: {
+    id: 'views.Config.Telecom.cellId',
+    defaultMessage: 'Cell Id'
+  },
+  geoPlaceholder: {
+    id: 'views.Config.Telecom.geoPlaceholder',
+    defaultMessage: 'Ej. 1112223334'
+  },
+  massiveLoad: {
+    id: 'views.Config.Telecom.massiveLoad',
+    defaultMessage: 'Carga masiva de georeferencias'
+  },
+  uploadFile: {
+    id: 'views.Config.Telecom.uploadFile',
+    defaultMessage:
+      'Haz {clickHere} para seleccionar el logotipo que deaseas cargar.'
+  },
+  addGeoSubtitle: {
+    id: 'views.Config.Telecom.addGeoSubtitle',
+    defaultMessage:
+      'Completa los siguientes campos para agregar una georeferencia de una estación de telecomunicaciones.'
+  },
+  geoData: {
+    id: 'views.Config.Telecom.geoData',
+    defaultMessage: 'Datos de la georeferencia'
+  },
+  actualGeoData: {
+    id: 'views.Config.Telecom.actualGeoData',
+    defaultMessage: 'Datos actuales de la georeferencia seleccionada'
+  },
+  deleteGeo: {
+    id: 'views.Config.Media.mediaCaption',
+    defaultMessage: 'Eliminar Georeferencia'
+  },
+  deleteQuestion: {
+    id: 'views.Config.Media.deleteQuestion',
+    defaultMessage:
+      '¿Estás seguro de querer eliminar la(s) georeferencia(s) seleccionada(s)?'
+  },
+  deleteConfirmation: {
+    id: 'views.Config.Media.deleteConfirmation',
+    defaultMessage:
+      'Ingresa tu contraseña para validar la eliminación de la(s) georeferencia(s) seleccionada(s)'
+  }
+})

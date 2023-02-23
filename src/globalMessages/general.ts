@@ -504,5 +504,13 @@ export const generalMessages = defineMessages({
   clasification: {
     id: 'global.general.clasification',
     defaultMessage: 'Clasificación'
+  },
+  latitude: {
+    id: 'global.general.latitude',
+    defaultMessage: 'Latitud'
+  },
+  longitude: {
+    id: 'global.general.longitude',
+    defaultMessage: 'Longitud'
   }
 })

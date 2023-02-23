@@ -249,7 +249,7 @@ const Media = (): ReactElement => {
           </Typography>
           <Typography
             variant="subtitle"
-            className="text-secondary uppercase font-[600]"
+            className="text-secondary uppercase font-semibold"
           >
             {formatMessage(mediaMessages.counters, {
               media: '04',
