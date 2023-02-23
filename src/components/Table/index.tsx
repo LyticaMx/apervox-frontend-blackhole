@@ -368,6 +368,7 @@ const Table = <DataType,>({
                         onRowClicked && 'cursor-pointer hover:bg-slate-100'
                       )}
                       onClick={(event: any) => {
+                        event.stopPropagation()
                         if (onRowClicked) {
                           onRowClicked(row.original, event)
                         }

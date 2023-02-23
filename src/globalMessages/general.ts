@@ -544,5 +544,9 @@ export const generalMessages = defineMessages({
   longitude: {
     id: 'global.general.longitude',
     defaultMessage: 'Longitud'
+  },
+  main: {
+    id: 'global.general.main', // Configuración principal / general
+    defaultMessage: 'General'
   }
 })
