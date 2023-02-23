@@ -19,7 +19,7 @@ interface Props<T> {
 
 const TableConfiguration = <DataType,>(
   props: Props<DataType>
-): ReactElement => {
+): ReactElement | null => {
   const { table, onChangeColumnVisibility } = props
   const [openTableConfiguration, setOpenTableConfiguration] =
     useState<boolean>(false)
@@ -87,6 +87,8 @@ const TableConfiguration = <DataType,>(
       }
     }
   }, [openTableConfiguration])
+
+  if (columnsCanBeHidden.length === 0) return null
 
   return (
     <Popover>

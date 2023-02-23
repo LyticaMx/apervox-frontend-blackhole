@@ -432,6 +432,43 @@ export const generalMessages = defineMessages({
     id: 'global.general.low',
     defaultMessage: 'Baja'
   },
+  language: {
+    id: 'global.general.language',
+    defaultMessage: 'Idioma'
+  },
+  spanish: {
+    id: 'global.general.spanish',
+    defaultMessage: 'Español'
+  },
+  english: {
+    id: 'global.general.spanish',
+    defaultMessage: 'Inglés'
+  },
+  inactivity: {
+    id: 'global.general.inactivity',
+    defaultMessage: 'Inactividad'
+  },
+  labels: {
+    id: 'global.general.labels',
+    defaultMessage: 'Rótulos'
+  },
+  letterhead: {
+    id: 'global.general.letterhead',
+    defaultMessage: 'Membrete'
+  },
+  audioEvidence: {
+    id: 'global.general.audioEvidence',
+    defaultMessage: 'Evidencia de audio'
+  },
+  // Medio (de entrada) cambia en inglés
+  media: {
+    id: 'global.general.media',
+    defaultMessage: 'Medio'
+  },
+  device: {
+    id: 'global.general.device',
+    defaultMessage: 'Equipo'
+  },
   hangsup: {
     id: 'global.general.hangsup',
     defaultMessage: 'Colgadas'
@@ -467,5 +504,13 @@ export const generalMessages = defineMessages({
   clasification: {
     id: 'global.general.clasification',
     defaultMessage: 'Clasificación'
+  },
+  latitude: {
+    id: 'global.general.latitude',
+    defaultMessage: 'Latitud'
+  },
+  longitude: {
+    id: 'global.general.longitude',
+    defaultMessage: 'Longitud'
   }
 })

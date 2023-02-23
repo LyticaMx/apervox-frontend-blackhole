@@ -93,7 +93,11 @@ const Form = <DataType extends FormikValues = FormikValues>(
             </Typography>
           )}
           {description && (
-            <Typography variant="body2" className="text-gray-400">
+            <Typography
+              variant="body2"
+              className="text-gray-400"
+              {...description}
+            >
               {description.text}
             </Typography>
           )}

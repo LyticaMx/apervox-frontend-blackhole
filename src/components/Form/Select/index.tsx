@@ -24,6 +24,7 @@ interface Props {
   disabled?: boolean
   size?: 'sm' | 'md'
   className?: string
+  optionsContainerClassname?: string
 }
 
 const defaultProps: Props = {
@@ -48,7 +49,8 @@ const SelectField = ({
   helperText,
   disabled,
   size = 'md',
-  className
+  className,
+  optionsContainerClassname
 }: Props): ReactElement => {
   const sizeClasses = useMemo(
     () => ({
@@ -136,7 +138,12 @@ const SelectField = ({
             <label className="text-xs text-red-500">{helperText}</label>
           )}
         </div>
-        <Listbox.Options className="overflow-y-scroll max-h-52 w-auto bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden focus:outline-none">
+        <Listbox.Options
+          className={clsx(
+            'overflow-y-scroll max-h-52 w-auto bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden focus:outline-none',
+            optionsContainerClassname
+          )}
+        >
           {items.map((item, index) => (
             <Listbox.Option
               key={index}
