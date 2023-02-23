@@ -9,10 +9,22 @@ import Divider from 'components/Divider'
 import Switch from 'components/Form/Switch'
 import TextField from 'components/Form/Textfield'
 import SelectPaginate from './SelectPaginate'
+import MultiChip from 'components/Form/Selectmultiple/MultiChip'
+
+const initialChipItems = [
+  { value: '1', text: 'This ir my value 1' },
+  { value: '2', text: 'This ir my value 2' },
+  { value: '3', text: 'This ir my value 3' },
+  { value: '4', text: 'This ir my value 4' },
+  { value: '5', text: 'This ir my value 5' }
+]
 
 const DemoForm = (): ReactElement => {
   const [dates, setDates] = useState<[Date?, Date?]>([])
   const [enable, setEnable] = useState(false)
+
+  const [multiChipItems, setMultiChipItems] = useState(initialChipItems)
+  const [chipSelected, setChipSelected] = useState([])
 
   const items = [
     {
@@ -135,6 +147,19 @@ const DemoForm = (): ReactElement => {
       <DragDrop onChange={console.log} accept={{ 'image/*': [] }} />
       <Divider title="Select paginate" />
       <SelectPaginate />
+      <Divider title="Multi Chip Select" />
+      <MultiChip
+        label="Chip selector"
+        selected={chipSelected}
+        onChange={setChipSelected}
+        onNewOption={(newOption: string) =>
+          setMultiChipItems((prev) => [
+            ...prev,
+            { value: newOption, text: newOption }
+          ])
+        }
+        items={multiChipItems}
+      />
     </div>
   )
 }
