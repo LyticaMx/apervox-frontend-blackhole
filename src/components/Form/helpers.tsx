@@ -181,6 +181,15 @@ export const fieldMapper = <T,>({ field, formik }: Params<T>): ReactNode => {
         />
       )
     case 'custom':
+      if (typeof field.children === 'function') {
+        return (
+          <field.children
+            values={formik.values}
+            errors={formik.errors}
+            touched={formik.touched}
+          />
+        )
+      }
       return field.children
     default:
       return null

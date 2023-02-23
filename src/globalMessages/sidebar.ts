@@ -65,6 +65,10 @@ export const sidebarMessages = defineMessages({
     id: 'sidebar.bondingNetwork',
     defaultMessage: 'Redes de vinculación'
   },
+  config: {
+    id: 'sidebar.config',
+    defaultMessage: 'Configuración'
+  },
   audit: {
     id: 'sidebar.audit',
     defaultMessage: 'Auditoría'
