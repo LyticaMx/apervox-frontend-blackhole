@@ -219,3 +219,111 @@ export const letterheadAdministrationMessages = defineMessages({
       'Ingresa tu contraseña para validar la eliminación de(los) membrete(s) seleccionado(s).'
   }
 })
+
+export const mediaMessages = defineMessages({
+  title: {
+    id: 'views.Config.Media.title',
+    defaultMessage: 'Medios y compañias para medios de adquisición'
+  },
+  counters: {
+    id: 'views.Config.Media.counters',
+    defaultMessage:
+      '{media} medios, {devices} equipos y {carriers} compañias existentes en el sistema'
+  },
+  carrierCaption: {
+    id: 'views.Config.Media.carrierCaption',
+    defaultMessage: 'Compañia / Operador de telefonía'
+  },
+  deviceCaption: {
+    id: 'views.Config.Media.deviceCaption',
+    defaultMessage: 'Equipo - {device}'
+  },
+  deleteMedia: {
+    id: 'views.Config.Media.mediaCaption',
+    defaultMessage: 'Eliminar Medio'
+  },
+  deleteQuestion: {
+    id: 'views.Config.Media.deleteQuestion',
+    defaultMessage:
+      '¿Estás seguro de querer eliminar el(los) medio(s) seleccionado(s)?'
+  },
+  deleteConfirmation: {
+    id: 'views.Config.Media.deleteConfirmation',
+    defaultMessage:
+      'Ingresa tu contraseña para validar la eliminación de(los) medio(s) seleccionado(s)'
+  },
+  createCarrier: {
+    id: 'views.Config.Media.createCarrier',
+    defaultMessage: 'Agregar compañia telefónica'
+  },
+  createCarrierSubtitle: {
+    id: 'views.Config.Media.createCarrierSubtitle',
+    defaultMessage:
+      'Completa los siguientes campos para agregar una compañía de telefonía que se utilizará en el módulo medios de adquisición'
+  },
+  carrierName: {
+    id: 'views.Config.Media.carrierName',
+    defaultMessage: 'Nombre de la compañia u operador telefónico'
+  },
+  carrierNamePlaceholder: {
+    id: 'views.Config.Media.carrierNamePlaceholder',
+    defaultMessage: 'Ej. Compañia X'
+  },
+  carrierData: {
+    id: 'views.Config.Media.carrierData',
+    defaultMessage: 'Datos de la compañia'
+  },
+  actualCarrierData: {
+    id: 'views.Config.Media.actualCarrierData',
+    defaultMessage: 'Datos actuales de la compañia seleccionada'
+  },
+  mediaName: {
+    id: 'views.Config.Media.mediaName',
+    defaultMessage: 'Nombre del medio'
+  },
+  mediaNamePlaceholder: {
+    id: 'views.Config.Media.mediaNamePlaceholder',
+    defaultMessage: 'Ej. FXS'
+  },
+  deviceName: {
+    id: 'views.Config.Media.deviceName',
+    defaultMessage: 'Nombre del equipo'
+  },
+  deviceNamePlaceholder: {
+    id: 'views.Config.Media.deviceNamePlaceholder',
+    defaultMessage: 'Ej. marca y modelo'
+  },
+  addMedia: {
+    id: 'views.Config.Media.addMedia',
+    defaultMessage: 'Agregar medio'
+  },
+  addMediaOrDevice: {
+    id: 'views.Config.Media.addMediaOrDevice',
+    defaultMessage: 'Agregar medio o equipo'
+  },
+  completeToAddMediaOrDevice: {
+    id: 'views.Config.Media.completeToAddMediaOrDevice',
+    defaultMessage:
+      'Completa los siguientes campos para agregar un {type, select, media {medio} other {equipo}} al sistema'
+  },
+  selectMediaOrDevice: {
+    id: 'views.Config.Media.selectMediaorDevice',
+    defaultMessage: 'Selecciona si quieres agregar un medio o un equipo.'
+  },
+  mediaData: {
+    id: 'views.Config.Media.mediaData',
+    defaultMessage: 'Datos del medio'
+  },
+  actualMediaData: {
+    id: 'views.Config.Media.actualMediaData',
+    defaultMessage: 'Datos actuales del medio seleccionado.'
+  },
+  deviceData: {
+    id: 'views.Config.Media.deviceData',
+    defaultMessage: 'Datos del equipo'
+  },
+  actualDeviceData: {
+    id: 'views.Config.Media.actualDeviceData',
+    defaultMessage: 'Datos actuales del equipo seleccionado.'
+  }
+})

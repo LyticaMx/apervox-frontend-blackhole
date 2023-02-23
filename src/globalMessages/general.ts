@@ -459,5 +459,14 @@ export const generalMessages = defineMessages({
   audioEvidence: {
     id: 'global.general.audioEvidence',
     defaultMessage: 'Evidencia de audio'
+  },
+  // Medio pero de entrada (cambia en inglés)
+  media: {
+    id: 'global.general.media',
+    defaultMessage: 'Medio'
+  },
+  device: {
+    id: 'global.general.device',
+    defaultMessage: 'Equipo'
   }
 })
