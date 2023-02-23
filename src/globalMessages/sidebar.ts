@@ -100,5 +100,9 @@ export const sidebarMessages = defineMessages({
   monitoring: {
     id: 'sidebar.monitoring',
     defaultMessage: 'Monitoreo'
+  },
+  acquisition: {
+    id: 'sidebar.acquisition',
+    defaultMessage: 'Medios de adquisición'
   }
 })

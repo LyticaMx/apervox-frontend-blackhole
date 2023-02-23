@@ -36,6 +36,7 @@ import FailedLoginAttemps from 'views/Audit/FailedLoginAttemps'
 import BlockedUsers from 'views/Audit/BlockedUsers'
 import Monitoring from 'views/Monitoring'
 import CallsHistory from 'views/CallsHistory'
+import Acquisition from 'views/Acquisition'
 
 import BaseLayout from 'layout/BaseLayout'
 import FullScreenLayout from 'layout/FullScreenLayout'
@@ -48,6 +49,7 @@ import DemoCharts from 'views/Demo/Chart'
 import DemoForm from 'views/Demo/Form'
 import DemoAutoForm from 'views/Demo/AutoForm'
 import DemoWavesurfer from 'views/Demo/Wavesurfer'
+import { WifiIcon } from '@heroicons/react/24/solid'
 
 export interface Route {
   id: string
@@ -105,6 +107,7 @@ export const pathRoute = {
     base: '/monitoreo',
     history: '/monitoreo/historial'
   },
+  acquisition: '/medios-adquisicion',
   demo: {
     chart: '/demo-charts',
     form: '/demo-form',
@@ -285,6 +288,18 @@ export const routes: Route[] = [
     modules: [],
     scopes: [],
     component: Monitoring,
+    layout: BaseLayout,
+    private: true,
+    sidebar: true
+  },
+  {
+    id: 'acquisition',
+    path: pathRoute.acquisition,
+    icon: WifiIcon,
+    i18Key: 'acquisition',
+    modules: [],
+    scopes: [],
+    component: Acquisition,
     layout: BaseLayout,
     private: true,
     sidebar: true
