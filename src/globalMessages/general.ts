@@ -282,6 +282,10 @@ export const generalMessages = defineMessages({
     id: 'global.general.createdOn',
     defaultMessage: 'Creado: {date}'
   },
+  updatedAt: {
+    id: 'global.general.updatedAt',
+    defaultMessage: 'Modificado: {date}'
+  },
   source: {
     id: 'global.general.source',
     defaultMessage: 'Fuente'
@@ -516,5 +520,9 @@ export const generalMessages = defineMessages({
   main: {
     id: 'global.general.main', // Configuración principal / general
     defaultMessage: 'General'
+  },
+  registeredBy: {
+    id: 'global.general.registeredBy',
+    defaultMessage: 'Registrado por'
   }
 })

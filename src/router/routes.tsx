@@ -39,6 +39,7 @@ import Monitoring from 'views/Monitoring'
 import Media from 'views/Config/Media'
 import Telecom from 'views/Config/Telecom'
 import CallsHistory from 'views/CallsHistory'
+import WorkGroups from 'views/WorkGroups'
 
 import BaseLayout from 'layout/BaseLayout'
 import FullScreenLayout from 'layout/FullScreenLayout'
@@ -101,6 +102,7 @@ export const pathRoute = {
   receiverAudio: '/reseiver-audio',
   senderAudio: '/sender-audio',
   controlGroups: '/grupos-de-control',
+  workGroups: '/grupos-de-trabajo',
   alerts: '/alertas',
   cases: '/casos',
   bondingNetwork: '/redes-de-vinculacion',
@@ -221,6 +223,18 @@ export const routes: Route[] = [
     modules: [],
     scopes: [],
     component: ControlGroups,
+    layout: BaseLayout,
+    private: true,
+    sidebar: true
+  },
+  {
+    id: 'work-groups',
+    path: pathRoute.workGroups,
+    icon: UserGroupIcon,
+    i18Key: 'workGroups',
+    modules: [],
+    scopes: [],
+    component: WorkGroups,
     layout: BaseLayout,
     private: true,
     sidebar: true

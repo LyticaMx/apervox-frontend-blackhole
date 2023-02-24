@@ -104,5 +104,9 @@ export const sidebarMessages = defineMessages({
   monitoring: {
     id: 'sidebar.monitoring',
     defaultMessage: 'Monitoreo'
+  },
+  workGroups: {
+    id: 'sidebar.workGroups',
+    defaultMessage: 'Grupos de trabajo'
   }
 })
