@@ -384,17 +384,9 @@ export const generalMessages = defineMessages({
     id: 'global.general.userRol',
     defaultMessage: 'Rol de usuario'
   },
-  line: {
-    id: 'global.general.line',
-    defaultMessage: 'Línea'
-  },
   medium: {
     id: 'global.general.medium',
     defaultMessage: 'Medio'
-  },
-  tiName: {
-    id: 'global.general.tiName',
-    defaultMessage: 'Nombre de la técnica'
   },
   shift: {
     id: 'global.general.shift',
@@ -411,10 +403,6 @@ export const generalMessages = defineMessages({
   follow: {
     id: 'global.general.follow',
     defaultMessage: 'Seguimiento'
-  },
-  activeStatus: {
-    id: 'global.general.activeStatus',
-    defaultMessage: 'Vigente'
   },
   urgent: {
     id: 'global.general.urgent',
@@ -456,50 +444,17 @@ export const generalMessages = defineMessages({
     id: 'global.general.letterhead',
     defaultMessage: 'Membrete'
   },
-  audioEvidence: {
-    id: 'global.general.audioEvidence',
-    defaultMessage: 'Evidencia de audio'
-  },
-  // Medio (de entrada) cambia en inglés
-  media: {
-    id: 'global.general.media',
-    defaultMessage: 'Medio'
-  },
   device: {
     id: 'global.general.device',
     defaultMessage: 'Equipo'
-  },
-  hangsup: {
-    id: 'global.general.hangsup',
-    defaultMessage: 'Colgadas'
   },
   verification: {
     id: 'global.general.verification',
     defaultMessage: 'Verificación'
   },
-  techniques: {
-    id: 'global.general.techniques',
-    defaultMessage: 'Técnicas'
-  },
-  technique: {
-    id: 'global.general.technique',
-    defaultMessage: 'Técnica'
-  },
   trash: {
     id: 'global.general.trash',
     defaultMessage: 'Basura'
-  },
-  aim: {
-    id: 'global.general.aim',
-    defaultMessage: 'Objetivo'
-  },
-  target: {
-    id: 'global.general.target',
-    defaultMessage: 'Objetivo'
-  },
-  origin: {
-    id: 'global.general.origin',
-    defaultMessage: 'Origen'
   },
   clasification: {
     id: 'global.general.clasification',
@@ -512,9 +467,5 @@ export const generalMessages = defineMessages({
   longitude: {
     id: 'global.general.longitude',
     defaultMessage: 'Longitud'
-  },
-  main: {
-    id: 'global.general.main', // Configuración principal / general
-    defaultMessage: 'General'
   }
 })
