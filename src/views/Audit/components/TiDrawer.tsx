@@ -4,7 +4,7 @@ import {
 } from '@heroicons/react/24/outline'
 import Radio from 'components/Form/Radio'
 import Typography from 'components/Typography'
-import { generalMessages } from 'globalMessages'
+import { generalMessages, platformMessages } from 'globalMessages'
 import { ReactElement, useEffect } from 'react'
 import { useIntl } from 'react-intl'
 import { Target } from '..'
@@ -29,7 +29,7 @@ const TiDrawer = (props: Props): ReactElement => {
         {formatMessage(tiDrawerMessages.selectedTiData)}
       </Typography>
       <Typography variant="body2" className="italic mt-3">
-        {formatMessage(generalMessages.tiName)}
+        {formatMessage(platformMessages.tiName)}
       </Typography>
       <Typography variant="body2" className="mt-1 ml-2">
         T.I.90/2023-2
@@ -100,7 +100,7 @@ const TiDrawer = (props: Props): ReactElement => {
                 {formatMessage(tiDrawerMessages.lineNumber)}
               </th>
               <th className="font-normal px-2">
-                {formatMessage(generalMessages.line)}
+                {formatMessage(platformMessages.phoneLine)}
               </th>
             </tr>
           </thead>
@@ -128,7 +128,7 @@ const TiDrawer = (props: Props): ReactElement => {
       <Typography variant="body2" className="mt-1 ml-2 flex items-center">
         <CheckIcon className="w-5 h-5 text-primary" />
         <span className="ml-2">
-          {formatMessage(generalMessages.activeStatus)}
+          {formatMessage(platformMessages.activeStatus)}
         </span>
       </Typography>
       {handleFilter && (

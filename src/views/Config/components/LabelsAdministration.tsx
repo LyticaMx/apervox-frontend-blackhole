@@ -8,7 +8,7 @@ import Grid from 'components/Grid'
 import Typography from 'components/Typography'
 import Checkbox from 'components/Form/Checkbox'
 import { useIntl } from 'react-intl'
-import { generalMessages } from 'globalMessages'
+import { generalMessages, platformMessages } from 'globalMessages'
 import { labelsAdministrationMessages, messages } from '../messages'
 import Button from 'components/Button'
 import IndeterminateCheckbox from 'components/Table/IndeterminateCheckbox'
@@ -144,7 +144,7 @@ const LabelsAdministration = (): ReactElement => {
         fields={[
           {
             name: 'audio',
-            label: formatMessage(generalMessages.audioEvidence)
+            label: formatMessage(platformMessages.audioEvidence)
           }
         ]}
       />

@@ -2,7 +2,12 @@ import clsx from 'clsx'
 import Form from 'components/Form'
 import Typography from 'components/Typography'
 import { FormikConfig } from 'formik'
-import { actionsMessages, formMessages, generalMessages } from 'globalMessages'
+import {
+  actionsMessages,
+  formMessages,
+  generalMessages,
+  platformMessages
+} from 'globalMessages'
 import { ReactElement, useMemo, useState } from 'react'
 import { useIntl } from 'react-intl'
 import { Field } from 'types/form'
@@ -102,7 +107,7 @@ const MediaDrawer = (props: Props): ReactElement => {
           )}
           onClick={() => setFormType('media')}
         >
-          {formatMessage(generalMessages.media)}
+          {formatMessage(platformMessages.inputMedium)}
         </button>
         <button
           className={clsx(
