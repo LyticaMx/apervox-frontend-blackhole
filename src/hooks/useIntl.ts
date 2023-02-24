@@ -21,21 +21,22 @@ export const useFormatMessage = (
   const intl = hookUseIntl()
 
   return (key: string, options?: any): string => {
-    if (key in messages) return intl.formatMessage(messages[key], options)
+    switch (true) {
+      case key in messages:
+        return intl.formatMessage(messages[key], options)
+      case key in globalMessages.platformMessages:
+        return intl.formatMessage(globalMessages.platformMessages[key], options)
+      case key in globalMessages.actionsMessages:
+        return intl.formatMessage(globalMessages.actionsMessages[key], options)
+      case key in globalMessages.formMessages:
+        return intl.formatMessage(globalMessages.formMessages[key], options)
+      case key in globalMessages.generalMessages:
+        return intl.formatMessage(globalMessages.generalMessages[key], options)
+      case key in globalMessages.timeMessages:
+        return intl.formatMessage(globalMessages.timeMessages[key], options)
 
-    if (key in globalMessages.actionsMessages) {
-      return intl.formatMessage(globalMessages.actionsMessages[key], options)
+      default:
+        return ''
     }
-    if (key in globalMessages.formMessages) {
-      return intl.formatMessage(globalMessages.formMessages[key], options)
-    }
-    if (key in globalMessages.generalMessages) {
-      return intl.formatMessage(globalMessages.generalMessages[key], options)
-    }
-    if (key in globalMessages.timeMessages) {
-      return intl.formatMessage(globalMessages.timeMessages[key], options)
-    }
-
-    return ''
   }
 }

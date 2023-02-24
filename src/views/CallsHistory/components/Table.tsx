@@ -23,7 +23,7 @@ const CallsTable = (): ReactElement => {
     },
     {
       accessorKey: 'source',
-      header: getMessage('origin')
+      header: getGlobalMessage('source', 'platformMessages')
     },
     {
       accessorKey: 'line',

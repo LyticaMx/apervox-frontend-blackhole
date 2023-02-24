@@ -9,7 +9,7 @@ import Typography from 'components/Typography'
 import ViewFilter from 'components/ViewFilter'
 import { useDrawer } from 'context/Drawer'
 import { format } from 'date-fns'
-import { actionsMessages, generalMessages } from 'globalMessages'
+import { actionsMessages, platformMessages } from 'globalMessages'
 import useTableColumns from 'hooks/useTableColumns'
 import { ReactElement, useCallback, useMemo, useState } from 'react'
 import { useIntl } from 'react-intl'
@@ -55,7 +55,7 @@ const Media = (): ReactElement => {
         case 'media':
           config.color = '#4646FD'
           config.letter = 'm'
-          config.caption = formatMessage(generalMessages.media)
+          config.caption = formatMessage(platformMessages.inputMedium)
           break
         default:
           break
