@@ -31,9 +31,8 @@ const CallsTable = (): ReactElement => {
       cell: ({ getValue }) => format(new Date(getValue<string>()), 'dd/MM/yyyy')
     },
     {
-      accessorKey: 'date',
       header: getMessage('time'),
-      cell: ({ getValue }) => format(new Date(getValue<string>()), 'hh:mm')
+      cell: ({ row }) => format(new Date(row.original.date), 'hh:mm')
     },
     {
       accessorKey: 'operator',
@@ -41,11 +40,11 @@ const CallsTable = (): ReactElement => {
     },
     {
       accessorKey: 'technique',
-      header: getGlobalMessage('technique', 'generalMessages')
+      header: getMessage('technique')
     },
     {
       accessorKey: 'priority',
-      header: getGlobalMessage('priority', 'generalMessages'),
+      header: getMessage('priority'),
       cell: ({ getValue }) => (
         <p className="px-1 py-0.5 rounded-3xl text-sm">
           <span className="w-3 h-3 rounded-full bg-primary inline-block mr-2" />

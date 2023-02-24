@@ -56,10 +56,6 @@ export const tableMessages = defineMessages({
     id: 'views.acquisition.table.derivation',
     defaultMessage: 'Derivación'
   },
-  source: {
-    id: 'views.acquisition.table.source',
-    defaultMessage: 'Medio'
-  },
   createdBy: {
     id: 'views.acquisition.table.createdBy',
     defaultMessage: 'Registrada por'
@@ -79,9 +75,5 @@ export const createMessages = defineMessages({
     id: 'views.acquisition.create.subtitle',
     defaultMessage:
       'Completa los siguientes campos para agregar una línea de derivación.'
-  },
-  source: {
-    id: 'views.acquisition.create.source',
-    defaultMessage: 'Medio'
   }
 })

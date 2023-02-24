@@ -32,7 +32,7 @@ const DataTable = (): ReactElement => {
     },
     {
       accessorKey: 'source',
-      header: getMessage('source')
+      header: getMessage('inputMedium')
     },
     {
       accessorKey: 'line',

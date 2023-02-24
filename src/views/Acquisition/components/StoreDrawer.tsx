@@ -29,10 +29,10 @@ const StoreDrawer = ({ open, onClose }: Props): ReactElement => {
       }
     >
       <div className="px-1">
-        <p className="text-sm italic">{getMessage('line')}</p>
+        <p className="text-sm italic">{getMessage('phoneLine')}</p>
         <TextField />
 
-        <p className="text-sm italic mt-4">{getMessage('source')}</p>
+        <p className="text-sm italic mt-4">{getMessage('inputMedium')}</p>
         <TextField />
 
         <div className="text-right mt-4">
