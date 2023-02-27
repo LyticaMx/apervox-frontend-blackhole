@@ -32,10 +32,10 @@ const Header = (): ReactElement => {
           </Typography>
 
           <ViewCounter count={5}>
-            {getGlobalMessage('hangsup', 'generalMessages')}
+            {getGlobalMessage('hangsup', 'platformMessages')}
           </ViewCounter>
           <ViewCounter count={5}>
-            {getGlobalMessage('techniques', 'generalMessages')}
+            {getGlobalMessage('techniques', 'platformMessages')}
           </ViewCounter>
           <ViewCounter count={5}>
             {getGlobalMessage('verification', 'generalMessages')}

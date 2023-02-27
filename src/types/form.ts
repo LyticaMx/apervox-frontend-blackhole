@@ -132,6 +132,15 @@ export interface SwitchProps {
   label?: string
 }
 
+export interface MultiChipSelectProps {
+  label?: string
+  items: Item[]
+  textField?: string
+  valueField?: string
+  noFoundText?: string
+  onNewOption?: (option: string) => void
+}
+
 export declare type FieldTypes =
   | {
       readonly type: 'text'
@@ -172,6 +181,10 @@ export declare type FieldTypes =
   | {
       readonly type: 'select-multiple'
       options: SelectMultipleProps
+    }
+  | {
+      readonly type: 'multi-chip-select'
+      options: MultiChipSelectProps
     }
   | {
       readonly type: 'switch'
