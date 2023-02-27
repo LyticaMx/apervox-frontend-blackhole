@@ -190,11 +190,15 @@ export const fieldMapper = <T,>({ field, formik }: Params<T>): ReactNode => {
 
     case 'switch':
       return (
-        <Switch
-          {...field.options}
-          value={formik.values[name]}
-          onChange={(val) => formik.setFieldValue(name, val)}
-        />
+        <div className="flex gap-2 items-center mt-2">
+          <Switch
+            {...field.options}
+            value={formik.values[name]}
+            onChange={(val) => formik.setFieldValue(name, val)}
+          />
+
+          <span className="text-sm">{field.options.label}</span>
+        </div>
       )
     case 'custom':
       if (typeof field.children === 'function') {

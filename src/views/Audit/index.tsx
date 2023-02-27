@@ -381,6 +381,7 @@ const Audit = (): ReactElement => {
           }}
           onRowClicked={handleOpenAction}
           maxHeight={!selectedTarget ? 500 : 225}
+          withCheckbox
         />
       </div>
       <SpecificMovementsHistory

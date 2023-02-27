@@ -129,6 +129,7 @@ export interface SwitchProps {
   size?: 'sm' | 'md' | 'lg'
   color?: string
   stopPropagation?: boolean
+  label?: string
 }
 
 export interface MultiChipSelectProps {

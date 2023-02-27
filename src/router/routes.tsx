@@ -7,8 +7,10 @@ import {
   BeakerIcon,
   Bars3Icon,
   IdentificationIcon,
+  UsersIcon,
   ComputerDesktopIcon
 } from '@heroicons/react/24/outline'
+
 import { PersonTargetIcon, AlertPlusIcon, DocIcon, AuditIcon } from 'assets/SVG'
 
 import SignIn from 'views/Auth/SignIn'
@@ -34,6 +36,7 @@ import UserAccount from 'views/Auth/UserAccount'
 import BondingNetwork from 'views/BondingNetwork'
 import FailedLoginAttemps from 'views/Audit/FailedLoginAttemps'
 import BlockedUsers from 'views/Audit/BlockedUsers'
+import UsersAdmin from 'views/UsersAdmin'
 import GeneralConfig from 'views/Config'
 import Monitoring from 'views/Monitoring'
 import Media from 'views/Config/Media'
@@ -111,6 +114,7 @@ export const pathRoute = {
     failedLoginAttemps: '/auditoria/inicios-de-sesion-fallidos',
     blockedUsers: '/auditoria/usuarios-bloqueados'
   },
+  users: '/usuarios',
   monitoring: {
     base: '/monitoreo',
     history: '/monitoreo/historial'
@@ -212,6 +216,18 @@ export const routes: Route[] = [
     icon: PhoneIcon,
     scopes: [],
     component: Calls,
+    layout: BaseLayout,
+    private: true,
+    sidebar: true
+  },
+  {
+    id: 'users',
+    path: pathRoute.users,
+    icon: UsersIcon,
+    i18Key: 'users',
+    modules: [],
+    scopes: [],
+    component: UsersAdmin,
     layout: BaseLayout,
     private: true,
     sidebar: true

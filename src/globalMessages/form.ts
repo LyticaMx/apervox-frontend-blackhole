@@ -70,6 +70,10 @@ export const formMessages = defineMessages({
     id: 'global.form.position',
     defaultMessage: 'Posición'
   },
+  automaticSessionExpiration: {
+    id: 'global.form.automaticSessionExpiration',
+    defaultMessage: 'Vencimiento de sesión automático'
+  },
 
   /* Errors */
   required: {
