@@ -12,6 +12,16 @@ import { useGlobalMessage } from 'hooks/useIntl'
 
 type Item = Record<string, any>
 
+export enum ActionSelect {
+  Deselect = 0,
+  Select = 1
+}
+
+interface Detail {
+  type: ActionSelect
+  item: string | number
+}
+
 interface Props {
   label?: string
   items: Item[]
@@ -19,7 +29,7 @@ interface Props {
   valueField: string
   value: string | number | undefined
   selected: Array<string | number>
-  onChange: (value: any) => void
+  onChange: (newValue: any, detail: Detail) => void
   noFoundText: string
   onNewOption?: (option: string) => void
 }
@@ -33,7 +43,7 @@ const defaultProps: Props = {
   noFoundText: 'Nothing found.'
 }
 
-const MultiChip = ({
+const MultiChipSelect = ({
   label,
   items,
   textField,
@@ -79,19 +89,22 @@ const MultiChip = ({
     setQuery('')
     let newSelected: Array<string | number> = []
 
+    let type: ActionSelect = 0
+
     if (onNewOption && typeof item === 'string') {
-      console.log('item')
       onNewOption(item)
       return
     }
 
     if (selected.includes(item[valueField])) {
       newSelected = selected.filter((value) => value !== item[valueField])
+      type = 0
     } else {
       newSelected = [...selected, item[valueField]]
+      type = 1
     }
 
-    onChange(newSelected)
+    onChange(newSelected, { type, item: item[valueField] })
   }
 
   return (
@@ -121,22 +134,27 @@ const MultiChip = ({
                     'w-full rounded-md border border-gray-200 bg-gray-50 flex flex-wrap gap-2 p-1'
                   )}
                 >
-                  {selected.map((item, index) => (
-                    <Chip
-                      key={index}
-                      variant="body2"
-                      label={
-                        items.find((listItem) => listItem.value === item)?.text
-                      }
-                      removeAction={() => {
-                        console.log('tag', item)
-                        const newSelected = selected.filter(
-                          (value) => value !== item
-                        )
-                        onChange(newSelected)
-                      }}
-                    />
-                  ))}
+                  {selected.map((item) => {
+                    const itemSelected = items.find(
+                      (listItem) => listItem[valueField] === item
+                    )
+
+                    if (!itemSelected) return <></>
+
+                    return (
+                      <Chip
+                        key={item}
+                        variant="body2"
+                        label={itemSelected[textField]}
+                        removeAction={() => {
+                          const newSelected = selected.filter(
+                            (value) => value !== item
+                          )
+                          onChange(newSelected, { type: 0, item })
+                        }}
+                      />
+                    )
+                  })}
                   <Combobox.Input
                     className={clsx(
                       !selected.length ? 'w-full' : 'w-auto',
@@ -242,6 +260,6 @@ const MultiChip = ({
   )
 }
 
-MultiChip.defaultProps = defaultProps
+MultiChipSelect.defaultProps = defaultProps
 
-export default MultiChip
+export default MultiChipSelect
