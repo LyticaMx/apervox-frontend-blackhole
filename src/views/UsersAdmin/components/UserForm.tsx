@@ -87,22 +87,18 @@ const UserForm = ({ initialValues, onSubmit }: Props): ReactElement => {
       breakpoints: { xs: 12 }
     },
     {
-      type: 'select-multiple',
       name: 'groups',
+      type: 'multi-chip-select',
       options: {
         label: getMessage('groups'),
         items: [
-          { id: 1, name: 'uno' },
-          { id: 2, name: 'dos' },
-          { id: 3, name: 'tres' },
-          { id: 4, name: 'cuatro' },
-          { id: 5, name: 'cinco' }
-        ],
-        textField: 'name',
-        valueField: 'id',
-        noFoundText: 'xxx'
-      },
-      breakpoints: { xs: 12 }
+          { value: 1, text: 'g-uno' },
+          { value: 2, text: 'g-dos' },
+          { value: 3, text: 'g-tres' },
+          { value: 4, text: 'g-cuatro' },
+          { value: 5, text: 'g-cinco' }
+        ]
+      }
     },
     {
       type: 'switch',
@@ -114,33 +110,6 @@ const UserForm = ({ initialValues, onSubmit }: Props): ReactElement => {
       },
       breakpoints: { xs: 12 }
     }
-    // {
-    //   type: 'custom',
-    //   name: 'groups',
-    //   children: (
-    //     <>
-    //       <label
-    //         className="mb-1 block text-sm font-medium text-gray-700"
-    //         data-headlessui-state=""
-    //       >
-    //         {getMessage('groups')}
-    //       </label>
-
-    //       <div className="flex flex-wrap space-x-2">
-    //         {mockGroups.map((group) => (
-    //           <Tag
-    //             key={group.id}
-    //             label={group.name}
-    //             className="text-sm py-0.5 px-3 bg-blue-50 mt-1 ml-2"
-    //             labelColorClassName=""
-    //             roundedClassName="rounded-sm"
-    //           />
-    //         ))}
-    //       </div>
-    //     </>
-    //   ),
-    //   breakpoints: { xs: 12, md: 6 }
-    // },
   ]
 
   const validationSchema = yup.object({
@@ -154,7 +123,7 @@ const UserForm = ({ initialValues, onSubmit }: Props): ReactElement => {
       .required(getMessage('required')),
     extension: yup.string().required(getMessage('required')),
     position: yup.string().required(getMessage('required')),
-    groups: yup.string().required(getMessage('required')),
+    groups: yup.array().required(getMessage('required')),
     automaticSessionExpiration: yup
       .bool()
       .required(getMessage('form.errors.required'))

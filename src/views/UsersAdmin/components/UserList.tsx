@@ -16,8 +16,8 @@ import {
 } from '@heroicons/react/24/outline'
 
 export interface Group {
-  id: string
-  name: string
+  value: string
+  text: string
 }
 
 export interface User {
@@ -55,16 +55,16 @@ const mockData: User[] = [
     email: 'armandoalbor@gmail.com',
     groups: [
       {
-        id: 'g1',
-        name: 'Grupo 1'
+        value: 'g1',
+        text: 'Grupo 1'
       },
       {
-        id: 'g2',
-        name: 'Grupo 2'
+        value: 'g2',
+        text: 'Grupo 2'
       },
       {
-        id: 'g3',
-        name: 'Grupo 3'
+        value: 'g3',
+        text: 'Grupo 3'
       }
     ],
     position: '',
@@ -85,12 +85,12 @@ const mockData: User[] = [
     email: 'javieralbor@gmail.com',
     groups: [
       {
-        id: 'g1',
-        name: 'Grupo 1'
+        value: 'g1',
+        text: 'Grupo 1'
       },
       {
-        id: 'g3',
-        name: 'Grupo 3'
+        value: 'g3',
+        text: 'Grupo 3'
       }
     ],
     position: '',
@@ -111,8 +111,8 @@ const mockData: User[] = [
     email: 'efrain.cuadras@octopy.com',
     groups: [
       {
-        id: 'g1',
-        name: 'Grupo 1'
+        value: 'g1',
+        text: 'Grupo 1'
       }
     ],
     position: '',
@@ -133,12 +133,12 @@ const mockData: User[] = [
     email: 'alfredo.gonzales@octopy.com',
     groups: [
       {
-        id: 'g1',
-        name: 'Grupo 1'
+        value: 'g1',
+        text: 'Grupo 1'
       },
       {
-        id: 'g3',
-        name: 'Grupo 3'
+        value: 'g3',
+        text: 'Grupo 3'
       }
     ],
     position: '',
@@ -209,7 +209,7 @@ const UserList = ({
       header: getMessage('groups'),
       cell: ({ getValue }) =>
         getValue<Group[]>()
-          .map((group) => group.name)
+          .map((group) => group.text)
           .join(', ')
     },
     {
