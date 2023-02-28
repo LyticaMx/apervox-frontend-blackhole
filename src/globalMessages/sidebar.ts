@@ -105,6 +105,10 @@ export const sidebarMessages = defineMessages({
     id: 'sidebar.monitoring',
     defaultMessage: 'Monitoreo'
   },
+  acquisition: {
+    id: 'sidebar.acquisition',
+    defaultMessage: 'Medios de adquisición'
+  },
   workGroups: {
     id: 'sidebar.workGroups',
     defaultMessage: 'Grupos de trabajo'

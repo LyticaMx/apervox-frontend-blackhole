@@ -1,5 +1,6 @@
 import { ReactElement, ReactNode } from 'react'
 import clsx from 'clsx'
+import Tooltip from 'components/Tooltip'
 
 interface Props {
   className?: string
@@ -21,6 +22,7 @@ interface Props {
   children: ReactNode
   onClick?: () => void
   tabIndex?: number
+  tooltip?: ReactNode
 }
 
 const IconButton = ({
@@ -28,7 +30,8 @@ const IconButton = ({
   type = 'button',
   color = 'base',
   variant = 'text',
-  margin = 'normal',
+  margin = 'none',
+  tooltip,
   ...props
 }: Props): ReactElement => {
   const marginClasses = {
@@ -88,8 +91,7 @@ const IconButton = ({
         'bg-purple-500 text-white hover:enabled:bg-purple-600 focus:ring-purple-500'
     }
   }
-
-  return (
+  const component = (
     <button
       type={type}
       className={clsx(
@@ -101,6 +103,25 @@ const IconButton = ({
       {...props}
     />
   )
+
+  if (tooltip) {
+    return (
+      <Tooltip
+        content={tooltip}
+        floatProps={{ offset: 10, arrow: true }}
+        classNames={{
+          panel:
+            'bg-secondary text-white py-1 px-2 rounded-md text-sm whitespace-nowrap',
+          arrow: 'absolute bg-white w-2 h-2 rounded-full bg-secondary'
+        }}
+        placement="top"
+      >
+        {component}
+      </Tooltip>
+    )
+  }
+
+  return component
 }
 
 export default IconButton

@@ -1,4 +1,4 @@
-import { useState, ReactElement } from 'react'
+import { useState, ReactElement, useRef } from 'react'
 
 import Checkbox from 'components/Form/Checkbox'
 import Daterangepicker from 'components/Form/Daterangepicker'
@@ -9,10 +9,42 @@ import Divider from 'components/Divider'
 import Switch from 'components/Form/Switch'
 import TextField from 'components/Form/Textfield'
 import SelectPaginate from './SelectPaginate'
+import MultiChip from 'components/Form/Selectmultiple/MultiChip'
+import Form from 'components/Form'
+import { FormikConfig, FormikContextType } from 'formik'
+
+const initialChipItems = [
+  { value: '1', text: 'This ir my value 1' },
+  { value: '2', text: 'This ir my value 2' },
+  { value: '3', text: 'This ir my value 3' },
+  { value: '4', text: 'This ir my value 4' },
+  { value: '5', text: 'This ir my value 5' }
+]
+
+interface ChipItem {
+  value: string
+  text: string
+}
+
+interface FormValues {
+  multiChip: ChipItem[]
+}
 
 const DemoForm = (): ReactElement => {
   const [dates, setDates] = useState<[Date?, Date?]>([])
   const [enable, setEnable] = useState(false)
+
+  const [multiChipItems, setMultiChipItems] = useState(initialChipItems)
+  const [chipSelected, setChipSelected] = useState([])
+
+  const formRef = useRef<FormikContextType<FormValues>>()
+
+  const formikConfig: FormikConfig<FormValues> = {
+    initialValues: { multiChip: [] },
+    onSubmit: async (values) => {
+      console.log(values)
+    }
+  }
 
   const items = [
     {
@@ -135,6 +167,41 @@ const DemoForm = (): ReactElement => {
       <DragDrop onChange={console.log} accept={{ 'image/*': [] }} />
       <Divider title="Select paginate" />
       <SelectPaginate />
+      <Divider title="Multi Chip Select" />
+      <MultiChip
+        label="Chip selector"
+        selected={chipSelected}
+        onChange={setChipSelected}
+        onNewOption={(newOption: string) =>
+          setMultiChipItems((prev) => [
+            ...prev,
+            { value: newOption, text: newOption }
+          ])
+        }
+        items={multiChipItems}
+      />
+      <Divider title="Form component" />
+      <Form
+        formikConfig={formikConfig}
+        fields={[
+          {
+            name: 'multi-chip',
+            type: 'multi-chip-select',
+            options: {
+              items: multiChipItems
+            }
+          }
+        ]}
+        renderSubmitButton={false}
+        formikRef={formRef}
+      />
+      <button
+        className="text-primary ml-2"
+        onClick={() => formRef.current?.submitForm()}
+        type="submit"
+      >
+        Submit
+      </button>
     </div>
   )
 }

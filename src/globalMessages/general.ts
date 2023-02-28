@@ -201,6 +201,10 @@ export const generalMessages = defineMessages({
     id: 'global.general.banneds',
     defaultMessage: 'Bloqueados'
   },
+  banned: {
+    id: 'global.general.banned',
+    defaultMessage: 'Bloqueado'
+  },
   username: {
     id: 'global.general.username',
     defaultMessage: 'Nombre de usuario'
@@ -233,9 +237,17 @@ export const generalMessages = defineMessages({
     id: 'global.general.actives',
     defaultMessage: 'Activos'
   },
+  active: {
+    id: 'global.general.active',
+    defaultMessage: 'Activo'
+  },
   inactives: {
     id: 'global.general.inactives',
     defaultMessage: 'Inactivos'
+  },
+  inactive: {
+    id: 'global.general.inactive',
+    defaultMessage: 'Inactivo'
   },
   archiveds: {
     id: 'global.general.archiveds',
@@ -388,17 +400,9 @@ export const generalMessages = defineMessages({
     id: 'global.general.userRol',
     defaultMessage: 'Rol de usuario'
   },
-  line: {
-    id: 'global.general.line',
-    defaultMessage: 'Línea'
-  },
   medium: {
     id: 'global.general.medium',
     defaultMessage: 'Medio'
-  },
-  tiName: {
-    id: 'global.general.tiName',
-    defaultMessage: 'Nombre de la técnica'
   },
   shift: {
     id: 'global.general.shift',
@@ -416,10 +420,6 @@ export const generalMessages = defineMessages({
     id: 'global.general.follow',
     defaultMessage: 'Seguimiento'
   },
-  activeStatus: {
-    id: 'global.general.activeStatus',
-    defaultMessage: 'Vigente'
-  },
   urgent: {
     id: 'global.general.urgent',
     defaultMessage: 'Urgente'
@@ -435,6 +435,26 @@ export const generalMessages = defineMessages({
   low: {
     id: 'global.general.low',
     defaultMessage: 'Baja'
+  },
+  createdBy: {
+    id: 'global.general.createdBy',
+    defaultMessage: 'Creado por'
+  },
+  registeredBy: {
+    id: 'global.general.registeredBy',
+    defaultMessage: 'Registrado por'
+  },
+  session: {
+    id: 'global.general.session',
+    defaultMessage: 'Sesión'
+  },
+  logguedIn: {
+    id: 'global.general.logguedIn',
+    defaultMessage: 'Logueado'
+  },
+  notLogguedIn: {
+    id: 'global.general.notLogguedIn',
+    defaultMessage: 'No logueado'
   },
   language: {
     id: 'global.general.language',
@@ -460,50 +480,17 @@ export const generalMessages = defineMessages({
     id: 'global.general.letterhead',
     defaultMessage: 'Membrete'
   },
-  audioEvidence: {
-    id: 'global.general.audioEvidence',
-    defaultMessage: 'Evidencia de audio'
-  },
-  // Medio (de entrada) cambia en inglés
-  media: {
-    id: 'global.general.media',
-    defaultMessage: 'Medio'
-  },
   device: {
     id: 'global.general.device',
     defaultMessage: 'Equipo'
-  },
-  hangsup: {
-    id: 'global.general.hangsup',
-    defaultMessage: 'Colgadas'
   },
   verification: {
     id: 'global.general.verification',
     defaultMessage: 'Verificación'
   },
-  techniques: {
-    id: 'global.general.techniques',
-    defaultMessage: 'Técnicas'
-  },
-  technique: {
-    id: 'global.general.technique',
-    defaultMessage: 'Técnica'
-  },
   trash: {
     id: 'global.general.trash',
     defaultMessage: 'Basura'
-  },
-  aim: {
-    id: 'global.general.aim',
-    defaultMessage: 'Objetivo'
-  },
-  target: {
-    id: 'global.general.target',
-    defaultMessage: 'Objetivo'
-  },
-  origin: {
-    id: 'global.general.origin',
-    defaultMessage: 'Origen'
   },
   clasification: {
     id: 'global.general.clasification',
@@ -520,9 +507,5 @@ export const generalMessages = defineMessages({
   main: {
     id: 'global.general.main', // Configuración principal / general
     defaultMessage: 'General'
-  },
-  registeredBy: {
-    id: 'global.general.registeredBy',
-    defaultMessage: 'Registrado por'
   }
 })
