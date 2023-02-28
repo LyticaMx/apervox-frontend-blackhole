@@ -56,6 +56,7 @@ import DemoCharts from 'views/Demo/Chart'
 import DemoForm from 'views/Demo/Form'
 import DemoAutoForm from 'views/Demo/AutoForm'
 import DemoWavesurfer from 'views/Demo/Wavesurfer'
+import DemoCommon from 'views/Demo/Common'
 import { WifiIcon } from '@heroicons/react/24/solid'
 
 export interface Route {
@@ -127,7 +128,8 @@ export const pathRoute = {
     form: '/demo-form',
     autoform: '/demo-autoform',
     system: '/demo-system',
-    wavesurfer: '/demo-wavesurfer'
+    wavesurfer: '/demo-wavesurfer',
+    common: '/demo-common'
   }
 }
 
@@ -519,6 +521,17 @@ export const routes: Route[] = [
         modules: [],
         scopes: [],
         component: DemoWavesurfer,
+        layout: BaseLayout,
+        private: true,
+        sidebar: true
+      },
+      {
+        id: 'demo-common',
+        i18Key: 'demoCommon',
+        path: pathRoute.demo.common,
+        modules: [],
+        scopes: [],
+        component: DemoCommon,
         layout: BaseLayout,
         private: true,
         sidebar: true

@@ -97,6 +97,10 @@ export const sidebarMessages = defineMessages({
     id: 'sidebar.demo.demoWavesurfer',
     defaultMessage: 'Wavesurfer'
   },
+  demoCommon: {
+    id: 'sidebar.demo.demoCommon',
+    defaultMessage: 'Componentes comunes'
+  },
   directory: {
     id: 'sidebar.demo.directory',
     defaultMessage: 'Directorio'
