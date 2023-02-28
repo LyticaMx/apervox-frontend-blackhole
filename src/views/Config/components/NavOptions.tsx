@@ -1,5 +1,5 @@
 import NavTabs from 'components/NavTabs'
-import { generalMessages } from 'globalMessages'
+import { platformMessages } from 'globalMessages'
 import { ReactElement } from 'react'
 import { useIntl } from 'react-intl'
 import { pathRoute } from 'router/routes'
@@ -13,7 +13,7 @@ const NavOptions = (): ReactElement => {
       tabs={[
         {
           to: pathRoute.config.general,
-          name: formatMessage(generalMessages.main)
+          name: formatMessage(platformMessages.main)
         },
         {
           to: pathRoute.config.media,

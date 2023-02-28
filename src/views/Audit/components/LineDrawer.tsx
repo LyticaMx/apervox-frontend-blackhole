@@ -3,7 +3,7 @@ import {
   DocumentMagnifyingGlassIcon
 } from '@heroicons/react/24/outline'
 import Typography from 'components/Typography'
-import { generalMessages } from 'globalMessages'
+import { generalMessages, platformMessages } from 'globalMessages'
 import { ReactElement, useEffect } from 'react'
 import { useIntl } from 'react-intl'
 import { Target } from '..'
@@ -29,7 +29,7 @@ const LineDrawer = (props: Props): ReactElement => {
       </Typography>
 
       <Typography variant="body1" className="italic mt-3">
-        {formatMessage(generalMessages.line)}
+        {formatMessage(platformMessages.phoneLine)}
       </Typography>
       <Typography variant="body1" className="mt-1 ml-2">
         5509876278
