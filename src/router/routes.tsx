@@ -10,6 +10,7 @@ import {
   UsersIcon,
   ComputerDesktopIcon
 } from '@heroicons/react/24/outline'
+import { WifiIcon } from '@heroicons/react/24/solid'
 
 import { PersonTargetIcon, AlertPlusIcon, DocIcon, AuditIcon } from 'assets/SVG'
 
@@ -55,7 +56,7 @@ import DemoCharts from 'views/Demo/Chart'
 import DemoForm from 'views/Demo/Form'
 import DemoAutoForm from 'views/Demo/AutoForm'
 import DemoWavesurfer from 'views/Demo/Wavesurfer'
-import { WifiIcon } from '@heroicons/react/24/solid'
+import ImageEditor from 'views/Demo/ImageEditor'
 
 export interface Route {
   id: string
@@ -125,7 +126,8 @@ export const pathRoute = {
     form: '/demo-form',
     autoform: '/demo-autoform',
     system: '/demo-system',
-    wavesurfer: '/demo-wavesurfer'
+    wavesurfer: '/demo-wavesurfer',
+    imageEditor: '/demo-image-editor'
   }
 }
 
@@ -505,6 +507,17 @@ export const routes: Route[] = [
         modules: [],
         scopes: [],
         component: DemoWavesurfer,
+        layout: BaseLayout,
+        private: true,
+        sidebar: true
+      },
+      {
+        id: 'demo-imageEditor',
+        i18Key: 'demoImageEditor',
+        path: pathRoute.demo.imageEditor,
+        modules: [],
+        scopes: [],
+        component: ImageEditor,
         layout: BaseLayout,
         private: true,
         sidebar: true
