@@ -45,6 +45,14 @@ export const generalMessages = defineMessages({
     id: 'global.general.date',
     defaultMessage: 'Fecha'
   },
+  registrationDate: {
+    id: 'global.general.registrationDate',
+    defaultMessage: 'Fecha de Registro'
+  },
+  effectiveDate: {
+    id: 'global.general.effectiveDate',
+    defaultMessage: 'Fecha de Vigencia'
+  },
   duration: {
     id: 'global.general.duration',
     defaultMessage: 'Duración'
@@ -76,6 +84,10 @@ export const generalMessages = defineMessages({
   time: {
     id: 'global.general.time',
     defaultMessage: 'Tiempo'
+  },
+  timeOnPlatform: {
+    id: 'global.general.timeOnPlatform',
+    defaultMessage: 'Tiempo en plataforma'
   },
   age: {
     id: 'global.general.age',
@@ -507,5 +519,65 @@ export const generalMessages = defineMessages({
   main: {
     id: 'global.general.main', // Configuración principal / general
     defaultMessage: 'General'
+  },
+  assignedPlural: {
+    id: 'global.general.assigned',
+    defaultMessage: 'Asignados'
+  },
+  assignedPluralFemale: {
+    id: 'global.general.assignedFemale',
+    defaultMessage: 'Asignadas'
+  },
+  currentPlural: {
+    id: 'global.general.currentPlural',
+    defaultMessage: 'Vigentes'
+  },
+  toConclude: {
+    id: 'global.general.toConclude',
+    defaultMessage: 'Por concluir'
+  },
+  concluded: {
+    id: 'global.general.concluded',
+    defaultMessage: 'Concluido'
+  },
+  concludedPlural: {
+    id: 'global.general.concludedPlural',
+    defaultMessage: 'Concluidos'
+  },
+  concludedPluralFemale: {
+    id: 'global.general.concludedPluralFemale',
+    defaultMessage: 'Concluidas'
+  },
+  assignedShortAbbreviation: {
+    id: 'global.general.assignedShortAbbreviation',
+    defaultMessage: 'A'
+  },
+  currentShortAbbreviation: {
+    id: 'global.general.currentShortAbbreviation',
+    defaultMessage: 'V'
+  },
+  toConcludeShortAbbreviation: {
+    id: 'global.general.toConcludeShortAbbreviation',
+    defaultMessage: 'P'
+  },
+  concludedShortAbbreviation: {
+    id: 'global.general.concludedShortAbbreviation',
+    defaultMessage: 'C'
+  },
+  turnOfAttention: {
+    id: 'global.general.turnOfAttention',
+    defaultMessage: 'Turno de atención'
+  },
+  morning: {
+    id: 'global.general.morning',
+    defaultMessage: 'Matutino'
+  },
+  evening: {
+    id: 'global.general.evening',
+    defaultMessage: 'Vespertino'
+  },
+  nightning: {
+    id: 'global.general.nightning',
+    defaultMessage: 'Nocturno'
   }
 })

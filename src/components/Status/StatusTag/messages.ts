@@ -12,5 +12,17 @@ export const messages = defineMessages({
   locked: {
     id: 'components.Status.value.locked',
     defaultMessage: 'Bloqueado'
+  },
+  toComplete: {
+    id: 'components.Status.value.toComplete',
+    defaultMessage: 'Por concluir'
+  },
+  completed: {
+    id: 'components.Status.value.completed',
+    defaultMessage: 'Concluido'
+  },
+  current: {
+    id: 'components.Status.value.current',
+    defaultMessage: 'Vigente'
   }
 })
