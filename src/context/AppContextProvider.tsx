@@ -14,6 +14,7 @@ import { AuditProvider } from 'context/Audit'
 import { BondingNetworkProvider } from 'context/BondingNetwork'
 import { DatesFilterProvider } from 'context/DatesFilter'
 import { CallDetailProvider } from 'context/CallDetail'
+import { WorkGroupsProvider } from 'context/WorkGroups'
 
 interface Props {
   children: ReactNode
@@ -33,7 +34,8 @@ export const AppContextProvider = (props: Props): any => {
     CasesProvider,
     AuditProvider,
     BondingNetworkProvider,
-    CallDetailProvider
+    CallDetailProvider,
+    WorkGroupsProvider
   ]
 
   const CombinedProviders = providers.reduce(
