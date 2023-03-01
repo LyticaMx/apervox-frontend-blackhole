@@ -12,6 +12,18 @@ export const workGroupsMessages = defineMessages({
   button: {
     id: 'views.workGroups.button',
     defaultMessage: 'Agregar grupo'
+  },
+  assignedSectionTitle: {
+    id: 'views.workGroups.assignedSectionTitle',
+    defaultMessage: 'Datos de grupo de trabajo'
+  },
+  assignedUsersSubtitle: {
+    id: 'views.workGroups.assignedUsersSubtitle',
+    defaultMessage: 'Usuarios asignados en el grupo'
+  },
+  assignedTechniquesSubtitle: {
+    id: 'views.workGroups.assignedTechniquesSubtitle',
+    defaultMessage: 'Técnicas asignadas al grupo'
   }
 })
 

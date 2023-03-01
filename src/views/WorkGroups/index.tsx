@@ -1,25 +1,45 @@
-import { ReactElement } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { useFormatMessage } from 'hooks/useIntl'
 import { useToggle } from 'usehooks-ts'
 import Title from 'components/Title'
+import Card from 'components/Card'
+import Tabs from 'components/Tabs'
+import { useWorkGroups } from 'context/WorkGroups'
 import WorkGroupFilter from './components/WorkGroupFilter'
 import DeleteDialog from './components/DeleteDialog'
 import DisableDialog from './components/DisableDialog'
-// import UserList from './components/UserList'
-// import RemoteLogOffDialog from './components/RemoteLogOffDialog'
-// import ResetPasswordDialog from './components/ResetPasswordDialog'
-// import UnlockDialog from './components/UnlockDialog'
+import WorkGroupList from './components/WorkGroupList'
+import AssociatedUserList from './components/AssociatedUserList'
+import AssociatedTechniqueList from './components/AssociatedTechniqueList'
 import CreateWorkGroupDrawer from './components/CreateWorkGroupDrawer'
-// import EditUserDrawer from './components/EditUserDrawer'
 import { workGroupsMessages } from './messages'
 
 const WorkGroups = (): ReactElement => {
   const getMessage = useFormatMessage(workGroupsMessages)
+  const [tab, setTab] = useState<string>('users')
   const [openCreateDrawer, toggleOpenCreateDrawer] = useToggle(false)
-  const [openDeleteDialog, toggleDeleteDialog] = useToggle(true)
-  const [openDisableDialog, toggleDisableDialog] = useToggle(true)
-  // const [selectedUser, setSelectedUser] = useState<any>(null)
-  // const [totalSelectedUsers, setTotalSelectedUsers] = useState<Number>(1)
+  const [openDeleteDialog, toggleDeleteDialog] = useToggle(false)
+  const [openDisableDialog, toggleDisableDialog] = useToggle(false)
+  const { actions, selected, associatedUsers, associatedTechniques } =
+    useWorkGroups()
+
+  useEffect(() => {
+    actions?.getUsers()
+    actions?.getTechniques()
+    actions?.getWorkGroups()
+  }, [])
+
+  useEffect(() => {
+    if (tab === 'users') {
+      actions?.getWorkGroupUsers(selected.id)
+    } else {
+      actions?.getWorkGroupTechniques(selected.id)
+    }
+  }, [tab])
+
+  useEffect(() => {
+    if (selected.id) actions?.getWorkGroupUsers(selected.id)
+  }, [selected])
 
   return (
     <>
@@ -51,16 +71,51 @@ const WorkGroups = (): ReactElement => {
       </div>
 
       <div className="flex gap-4 mt-2">
-        {/* <UserList
-          onSelectUser={setSelectedUser}
-          setTotalSelectedUsers={setTotalSelectedUsers}
-          onDeleteUser={toggleDeleteDialog}
-          onDisableUser={toggleDisableDialog}
-          onRemoteLogOffUser={toggleRemoteLogOffDialog}
-          onUnlockUser={toggleUnlockDialog}
-          onResetPasswordUser={toggleResetPasswordDialog}
-        /> */}
+        <WorkGroupList />
       </div>
+
+      {selected.id && (
+        <Card className="px-4 py-2">
+          <Title className="uppercase">
+            {getMessage('assignedSectionTitle')}
+          </Title>
+
+          <Tabs
+            tabs={[
+              {
+                id: 'users',
+                name: 'Usuarios asignados',
+                component: (
+                  <div className="py-2">
+                    <p className="uppercase mb-2">
+                      {associatedUsers.length}{' '}
+                      {getMessage('assignedUsersSubtitle')}
+                    </p>
+
+                    <AssociatedUserList />
+                  </div>
+                )
+              },
+              {
+                id: 'techniques',
+                name: 'Técnicas Asignadas',
+                component: (
+                  <div className="py-2">
+                    <p className="uppercase mb-2">
+                      {associatedTechniques.length}{' '}
+                      {getMessage('assignedTechniquesSubtitle')}
+                    </p>
+
+                    <AssociatedTechniqueList />
+                  </div>
+                )
+              }
+            ]}
+            defaultTab={tab}
+            onChangeTab={(newTab) => setTab(newTab)}
+          />
+        </Card>
+      )}
     </>
   )
 }
