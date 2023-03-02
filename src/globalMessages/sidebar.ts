@@ -101,6 +101,10 @@ export const sidebarMessages = defineMessages({
     id: 'sidebar.demo.demoCommon',
     defaultMessage: 'Componentes comunes'
   },
+  demoImageEditor: {
+    id: 'sidebar.demo.demoImageEditor',
+    defaultMessage: 'Editor de imagenes'
+  },
   directory: {
     id: 'sidebar.demo.directory',
     defaultMessage: 'Directorio'
