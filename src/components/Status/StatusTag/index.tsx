@@ -1,9 +1,9 @@
 import clsx from 'clsx'
 import { ReactElement } from 'react'
 import { useIntl } from 'react-intl'
+import { platformMessages } from 'globalMessages'
 import { Status as StatusEnum, colorByStatus } from 'types/status'
 import Typography, { Variant } from 'components/Typography'
-import { messages } from './messages'
 
 type StatusType = typeof StatusEnum[keyof typeof StatusEnum]
 
@@ -29,7 +29,7 @@ const StatusTag = ({
       )}
     >
       <Typography variant={variant} noWrap className="text-white">
-        {formatMessage(messages[value])}
+        {formatMessage(platformMessages[`${value}Status`])}
       </Typography>
     </div>
   )

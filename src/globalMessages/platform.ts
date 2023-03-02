@@ -38,12 +38,52 @@ export const platformMessages = defineMessages({
     id: 'global.platform.phoneLine',
     defaultMessage: 'Línea'
   },
-  activeStatus: {
-    id: 'global.platform.activeStatus',
-    defaultMessage: 'Vigente'
-  },
+  // activeStatus: {
+  //   id: 'global.platform.activeStatus',
+  //   defaultMessage: 'Vigente'
+  // },
   audioEvidence: {
     id: 'global.platform.audioEvidence',
     defaultMessage: 'Evidencia de audio'
+  },
+  activeStatus: {
+    id: 'global.platform.activeStatus',
+    defaultMessage: 'Activo'
+  },
+  inactiveStatus: {
+    id: 'global.platform.inactiveStatus',
+    defaultMessage: 'Inactivo'
+  },
+  lockedStatus: {
+    id: 'global.platform.lockedStatus',
+    defaultMessage: 'Bloqueado'
+  },
+  toCompleteStatus: {
+    id: 'global.platform.toCompleteStatus',
+    defaultMessage: 'Por concluir'
+  },
+  completedStatus: {
+    id: 'global.platform.completedStatus',
+    defaultMessage: 'Concluido'
+  },
+  currentStatus: {
+    id: 'global.platform.currentStatus',
+    defaultMessage: 'Vigente'
+  },
+  lowPriority: {
+    id: 'global.platform.lowPriority',
+    defaultMessage: 'Baja'
+  },
+  mediumPriority: {
+    id: 'global.platform.mediumPriority',
+    defaultMessage: 'Media'
+  },
+  highPriority: {
+    id: 'global.platform.highPriority',
+    defaultMessage: 'Alta'
+  },
+  urgentPriority: {
+    id: 'global.platform.urgentPriority',
+    defaultMessage: 'Urgente'
   }
 })

@@ -1,9 +1,9 @@
 import clsx from 'clsx'
 import { ReactElement } from 'react'
 import { useIntl } from 'react-intl'
+import { platformMessages } from 'globalMessages'
 import Typography, { Variant, Style } from 'components/Typography'
 import { Priority as PriorityEnum, colorByPriority } from 'types/priority'
-import { messages } from './messages'
 
 type PriorityType = typeof PriorityEnum[keyof typeof PriorityEnum]
 
@@ -42,7 +42,7 @@ const PriorityLabel = ({
         style={style}
         noWrap
       >
-        {formatMessage(messages[value])}
+        {formatMessage(platformMessages[`${value}Priority`])}
       </Typography>
     </div>
   )
