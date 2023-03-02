@@ -8,6 +8,7 @@ interface Props {
   icon?: (props: ComponentProps<'svg'>) => JSX.Element
   children: ReactNode
   defaultOpen?: boolean
+  useCustomTitle?: boolean
   classNames?: {
     button?: string
     icon?: string
@@ -24,7 +25,8 @@ const Accordion = ({
   title,
   children,
   defaultOpen,
-  classNames
+  classNames,
+  useCustomTitle = false
 }: Props): ReactElement => {
   return (
     <Disclosure defaultOpen={defaultOpen}>
@@ -36,10 +38,15 @@ const Accordion = ({
               classNames?.button ?? defaultButtonClass
             )}
           >
-            <div className="flex">
-              {Icon && <Icon className={classNames?.icon} />}
-              <p className={clsx({ 'pl-3.5': !!Icon })}>{title}</p>
-            </div>
+            {useCustomTitle ? (
+              title
+            ) : (
+              <div className="flex">
+                {Icon && <Icon className={classNames?.icon} />}
+                <p className={clsx({ 'pl-3.5': !!Icon })}>{title}</p>
+              </div>
+            )}
+
             <ChevronUpIcon
               className={clsx(
                 'h-5 w-5',
