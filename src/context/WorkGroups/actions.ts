@@ -14,26 +14,8 @@ import { Priority } from 'types/priority'
 import { PaginationFilter } from 'types/filters'
 import { actions } from './constants'
 import { initialState } from './context'
-// import { useServices } from './services'
-
-// getUsers: () => Promise<boolean>
-// getTechniques: () => Promise<boolean>
-// getHistory: () => Promise<boolean>
-// getWorkGroups: (params?: Partial<PaginationFilter>) => Promise<boolean>
-// getWorkGroupUsers: (params?: Partial<PaginationFilter>) => Promise<boolean>
-// getWorkGroupTechniques: (
-//   params?: Partial<PaginationFilter>
-// ) => Promise<boolean>
-// updateStatusWorkGroup: (id: string, active: boolean) => Promise<boolean>
-// deleteWorkGroup: (id: string) => Promise<boolean>
-// deleteUserOfWorkGroup: (id: string) => Promise<boolean>
-// deleteTechniqueOfWorkGroup: (id: string) => Promise<boolean>
-// createWorkgroup: (params: WorkGroup) => Promise<boolean>
-// updateWorkgroup: (params: WorkGroup) => Promise<boolean>
 
 const useActions = (state: State, dispatch): Actions => {
-  // const services = useServices()
-
   const getUsers = async (): Promise<boolean> => {
     try {
       const data = [

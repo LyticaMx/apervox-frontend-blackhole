@@ -192,7 +192,6 @@ const WorkGroupList = ({ handleClickOnHistory }: Props): ReactElement => {
         sorting: sortingState
       }}
       onRowClicked={(row) => {
-        // onSelectUser(row)
         console.log(`onSelectWorkGroup(${row.id})`)
 
         actions?.selectWorkGroup(row)

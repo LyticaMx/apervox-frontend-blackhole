@@ -160,37 +160,11 @@ const WorkGroupForm = ({ initialValues, onSubmit }: Props): ReactElement => {
       ),
       breakpoints: { xs: 12 }
     }
-    // {
-    //   type: 'multi-chip-select',
-    //   name: 'users',
-    //   options: {
-    //     label: getMessage('users'),
-    //     // items: [
-    //     //   { id: '001', name: 'xxx' },
-    //     //   { id: '002', name: 'yyy' }
-    //     // ],
-    //     items: users,
-    //     textField: 'name',
-    //     valueField: 'id'
-    //   }
-    // },
-    // {
-    //   type: 'multi-chip-select',
-    //   name: 'techniques',
-    //   options: {
-    //     label: getMessage('techniques'),
-    //     items: techniques,
-    //     textField: 'name',
-    //     valueField: 'id'
-    //   }
-    // }
   ]
 
   const validationSchema = yup.object({
     name: yup.string().required(getMessage('required')),
     description: yup.string().required(getMessage('required'))
-    // users: yup.string().required(getMessage('required')),
-    // techniques: yup.string().trim().required(getMessage('required'))
   })
 
   const formikConfig = useMemo<FormikConfig<FormValues>>(
@@ -198,8 +172,6 @@ const WorkGroupForm = ({ initialValues, onSubmit }: Props): ReactElement => {
       initialValues: {
         name: initialValues?.name ?? '',
         description: initialValues?.description ?? ''
-        // users: initialValues?.users ?? [],
-        // techniques: initialValues?.techniques ?? []
       },
       validationSchema,
       onSubmit: (values) => {
@@ -223,7 +195,6 @@ const WorkGroupForm = ({ initialValues, onSubmit }: Props): ReactElement => {
           variant: 'contained',
           className: 'mt-6 mb-2'
         }}
-        // className="work-account-data-form"
       />
     </div>
   )
