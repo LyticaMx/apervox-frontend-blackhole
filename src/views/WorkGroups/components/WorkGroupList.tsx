@@ -21,7 +21,11 @@ import { Status } from 'types/status'
 import { WorkGroup, WorkGroupTechniques } from 'types/workgroup'
 import * as helpers from './helpers'
 
-const WorkGroupList = (): ReactElement => {
+interface Props {
+  handleClickOnHistory: (id: string) => void
+}
+
+const WorkGroupList = ({ handleClickOnHistory }: Props): ReactElement => {
   const getMessage = useFormatMessage(generalMessages)
   const [sortingState, setSortingState] = useState<SortingState>([])
   const { workGroups, actions } = useWorkGroups()
@@ -149,7 +153,11 @@ const WorkGroupList = (): ReactElement => {
             >
               <RectangleGroupIcon
                 className="h-5 w-5 mx-1 ml-2 text-muted hover:text-primary cursor-pointer"
-                onClick={() => console.log(`onViewHistoryGroup(${id})`)}
+                onClick={() => {
+                  handleClickOnHistory(id)
+
+                  console.log(`onViewHistoryGroup(${id})`)
+                }}
               />
             </Tooltip>
 
@@ -178,6 +186,7 @@ const WorkGroupList = (): ReactElement => {
     <Table
       columns={columns}
       data={workGroups}
+      className="overflow-x-auto shadow rounded-lg flex-1"
       manualSorting={{
         onSortingChange: setSortingState,
         sorting: sortingState

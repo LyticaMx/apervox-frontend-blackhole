@@ -78,3 +78,31 @@ export const workGroupsDeleteDialogMessages = defineMessages({
       'Ingresa tu contraseña para validar la eliminación {selectedGroups, plural, one {del grupo de trabajo seleccionado} other {de los # grupos de trabajo seleccionados}}'
   }
 })
+
+export const workGroupsHistoryDrawerMessages = defineMessages({
+  title: {
+    id: 'views.workGroups.historyDrawer.title',
+    defaultMessage: 'Auditoría'
+  },
+  subtitle: {
+    id: 'views.workGroups.historyDrawer.subtitle',
+    defaultMessage: 'Historial de movimientos auditados'
+  },
+  message: {
+    id: 'views.workGroups.historyDrawer.message',
+    defaultMessage:
+      'Puedes visualizar los movimientos más recientes que han sido registrados en el grupo de trabajo.'
+  }
+})
+
+export const workGroupsFormMessages = defineMessages({
+  usersMessage: {
+    id: 'views.workGroups.historyDrawer.usersMessage',
+    defaultMessage:
+      'Selecciona los usuarios que quieras asignar a este grupo de trabajo.'
+  },
+  techniquesMessage: {
+    id: 'views.workGroups.historyDrawer.techniquesMessage',
+    defaultMessage: 'Selecciona las técnicas que quieras asignar a este grupo.'
+  }
+})

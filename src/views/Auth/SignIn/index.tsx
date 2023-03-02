@@ -33,8 +33,8 @@ const SignIn = (): ReactElement => {
 
   const config: FormikConfig<FormValues> = {
     initialValues: {
-      user: 'armandoalbor@gmail.com',
-      password: 'k24ldtmu'
+      user: '',
+      password: ''
     },
     onSubmit: async (values) => {
       const successLogin = await actions?.signIn({

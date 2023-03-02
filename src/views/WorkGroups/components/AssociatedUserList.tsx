@@ -83,7 +83,7 @@ const AssociatedUserList = (): ReactElement => {
     <Table
       columns={columns}
       data={associatedUsers}
-      className="overflow-x-auto shadow"
+      className="overflow-x-auto shadow rounded-lg"
       manualSorting={{
         onSortingChange: setSortingState,
         sorting: sortingState

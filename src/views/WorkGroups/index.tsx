@@ -12,12 +12,16 @@ import WorkGroupList from './components/WorkGroupList'
 import AssociatedUserList from './components/AssociatedUserList'
 import AssociatedTechniqueList from './components/AssociatedTechniqueList'
 import CreateWorkGroupDrawer from './components/CreateWorkGroupDrawer'
+import EditWorkGroupDrawer from './components/EditWorkGroupDrawer'
+import HistoryDrawer from './components/HistoryDrawer'
 import { workGroupsMessages } from './messages'
 
 const WorkGroups = (): ReactElement => {
   const getMessage = useFormatMessage(workGroupsMessages)
   const [tab, setTab] = useState<string>('users')
+  const [openHistoryDrawer, toggleOpenHistoryDrawer] = useToggle(false)
   const [openCreateDrawer, toggleOpenCreateDrawer] = useToggle(false)
+  const [openEditDrawer, toggleOpenEditDrawer] = useToggle(false)
   const [openDeleteDialog, toggleDeleteDialog] = useToggle(false)
   const [openDisableDialog, toggleDisableDialog] = useToggle(false)
   const { actions, selected, associatedUsers, associatedTechniques } =
@@ -38,8 +42,23 @@ const WorkGroups = (): ReactElement => {
   }, [tab])
 
   useEffect(() => {
-    if (selected.id) actions?.getWorkGroupUsers(selected.id)
+    if (selected.id) {
+      setTab('users')
+      actions?.getWorkGroupUsers(selected.id)
+
+      toggleOpenEditDrawer()
+    }
   }, [selected])
+
+  useEffect(() => {
+    openCreateDrawer && actions?.selectWorkGroup()
+  }, [openCreateDrawer])
+
+  const handleGetHistory = (id: string): void => {
+    toggleOpenHistoryDrawer()
+
+    actions?.getHistory(id)
+  }
 
   return (
     <>
@@ -56,22 +75,22 @@ const WorkGroups = (): ReactElement => {
           onClose={toggleOpenCreateDrawer}
         />
 
+        <HistoryDrawer
+          open={openHistoryDrawer}
+          onClose={toggleOpenHistoryDrawer}
+        />
+
         <DeleteDialog open={openDeleteDialog} onClose={toggleDeleteDialog} />
         <DisableDialog open={openDisableDialog} onClose={toggleDisableDialog} />
 
-        {/* {!!selectedUser && (
-          <EditUserDrawer
-            open={!!selectedUser}
-            onClose={() => {
-              setSelectedUser(null)
-            }}
-            user={selectedUser}
-          />
-        )} */}
+        <EditWorkGroupDrawer
+          open={openEditDrawer}
+          onClose={toggleOpenEditDrawer}
+        />
       </div>
 
-      <div className="flex gap-4 mt-2">
-        <WorkGroupList />
+      <div className="flex gap-4 mt-2 mb-4">
+        <WorkGroupList handleClickOnHistory={handleGetHistory} />
       </div>
 
       {selected.id && (
@@ -81,6 +100,9 @@ const WorkGroups = (): ReactElement => {
           </Title>
 
           <Tabs
+            actualTab={tab}
+            defaultTab={tab}
+            onChangeTab={(newTab) => setTab(newTab)}
             tabs={[
               {
                 id: 'users',
@@ -111,8 +133,6 @@ const WorkGroups = (): ReactElement => {
                 )
               }
             ]}
-            defaultTab={tab}
-            onChangeTab={(newTab) => setTab(newTab)}
           />
         </Card>
       )}

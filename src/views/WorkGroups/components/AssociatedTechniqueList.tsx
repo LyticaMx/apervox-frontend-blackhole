@@ -114,7 +114,7 @@ const AssociatedTechniqueList = (): ReactElement => {
     <Table
       columns={columns}
       data={associatedTechniques}
-      className="overflow-x-auto shadow"
+      className="overflow-x-auto shadow rounded-lg"
       manualSorting={{
         onSortingChange: setSortingState,
         sorting: sortingState

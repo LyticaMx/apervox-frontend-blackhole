@@ -22,6 +22,7 @@ export interface WorkGroup {
   name: string
   description: string
   registered_by: string
+  updated_by?: string
   total_users: number
   created_at: string
   updated_at?: string
@@ -73,7 +74,7 @@ export interface Pagination extends Partial<PaginationFilter> {
 
 export interface GenericItem {
   id: string
-  value: string
+  name: string
 }
 
 export interface State {
@@ -104,7 +105,7 @@ export interface State {
 export interface Actions {
   getUsers: () => Promise<boolean>
   getTechniques: () => Promise<boolean>
-  getHistory: () => Promise<boolean>
+  getHistory: (id: string) => Promise<boolean>
   getWorkGroups: (
     filters?: SortingState,
     params?: Partial<PaginationFilter>
@@ -123,7 +124,7 @@ export interface Actions {
   deleteTechniqueOfWorkGroup?: (id: string) => Promise<boolean>
   createWorkGroup?: (params: WorkGroup) => Promise<boolean>
   updateWorkGroup?: (params: WorkGroup) => Promise<boolean>
-  selectWorkGroup: (params: WorkGroup) => void
+  selectWorkGroup: (params?: WorkGroup) => void
 }
 
 export interface ContextType extends State {

@@ -6,7 +6,8 @@ import {
   WorkGroup,
   WorkGroupUser,
   Turn,
-  WorkGroupTechnique
+  WorkGroupTechnique,
+  WorkGroupHistory
 } from 'types/workgroup'
 import { Status } from 'types/status'
 import { Priority } from 'types/priority'
@@ -38,15 +39,15 @@ const useActions = (state: State, dispatch): Actions => {
       const data = [
         {
           id: '001',
-          value: 'Armando Albor'
+          name: 'Armando Albor'
         },
         {
           id: '002',
-          value: 'Javier Albor'
+          name: 'Javier Albor'
         },
         {
           id: '003',
-          value: 'Efraín Cuadras'
+          name: 'Efraín Cuadras'
         }
       ]
 
@@ -65,19 +66,19 @@ const useActions = (state: State, dispatch): Actions => {
       const data = [
         {
           id: '001',
-          value: 'T.i 23/2022-1'
+          name: 'T.i 23/2022-1'
         },
         {
           id: '002',
-          value: 'T.i 23/2022-3'
+          name: 'T.i 23/2022-3'
         },
         {
           id: '003',
-          value: 'T.i 20/2022-12'
+          name: 'T.i 20/2022-12'
         },
         {
           id: '004',
-          value: 'T.i 125/2022-10'
+          name: 'T.i 125/2022-10'
         }
       ]
 
@@ -91,9 +92,9 @@ const useActions = (state: State, dispatch): Actions => {
     }
   }
 
-  const getHistory = async (): Promise<boolean> => {
+  const getHistory = async (id: string): Promise<boolean> => {
     try {
-      const data = [
+      const mockedData = [
         {
           id: '001',
           action: 'Usuario agregado',
@@ -127,6 +128,23 @@ const useActions = (state: State, dispatch): Actions => {
         }
       ]
 
+      let data: WorkGroupHistory[] = []
+
+      if (id === '001') {
+        data = [...mockedData]
+      }
+
+      if (id === '003') {
+        data.push(mockedData[1])
+        data.push(mockedData[3])
+      }
+
+      if (id === '004') {
+        data.push(mockedData[1])
+        data.push(mockedData[2])
+        data.push(mockedData[3])
+      }
+
       dispatch(actions.setHistory(data ?? initialState.history))
 
       return Boolean(data)
@@ -145,9 +163,10 @@ const useActions = (state: State, dispatch): Actions => {
           name: 'Grupo 1',
           description: 'Monitoreo de datos',
           registered_by: 'armandoalbor',
+          updated_by: 'efracuadras',
           total_users: 3,
           created_at: new Date().toISOString(),
-          updated_at: '',
+          updated_at: new Date().toISOString(),
           techniques: {
             assigned: 7,
             current: 2,

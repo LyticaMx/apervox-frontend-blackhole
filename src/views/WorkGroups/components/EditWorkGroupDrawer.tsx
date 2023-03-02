@@ -1,27 +1,27 @@
 import { ReactElement } from 'react'
 import { useIntl } from 'react-intl'
 import { format } from 'date-fns'
+import { generalMessages } from 'globalMessages'
+import { useFormatMessage } from 'hooks/useIntl'
+import { useWorkGroups } from 'context/WorkGroups'
 import Drawer from 'components/Drawer'
 import Typography from 'components/Typography'
-import { useFormatMessage } from 'hooks/useIntl'
-import { generalMessages } from 'globalMessages'
-import { workGroupsEditDrawerMessages } from '../messages'
 import WorkGroupForm from './WorkGroupForm'
+import { workGroupsEditDrawerMessages } from '../messages'
 
 interface Props {
-  workGroup: any
   open: boolean
   onClose?: () => void
 }
-const EditWorkGroupDrawer = ({
-  workGroup,
-  open,
-  onClose
-}: Props): ReactElement => {
+const EditWorkGroupDrawer = ({ open, onClose }: Props): ReactElement => {
   const getMessage = useFormatMessage(workGroupsEditDrawerMessages)
   const { formatMessage } = useIntl()
 
-  return (
+  const { selected: workGroup } = useWorkGroups()
+
+  return !workGroup.id ? (
+    <></>
+  ) : (
     <Drawer
       open={open}
       onClose={onClose}
@@ -35,26 +35,37 @@ const EditWorkGroupDrawer = ({
 
         <p className="text-sm leading-tight mb-4">{getMessage('subtitle')}</p>
 
-        <span className="text-sm mb-2 text-gray-400">
-          {formatMessage(generalMessages.createdOn, {
-            date: format(workGroup.createdOn, 'dd/MM/yyyy - hh:mm')
-          })}
+        <div className="mb-4">
+          <Typography variant="caption">
+            {formatMessage(generalMessages.createdOn, {
+              date: format(new Date(workGroup.created_at), 'dd/MM/yyyy - hh:mm')
+            })}
 
-          <span className="ml-2">{workGroup.createdBy}</span>
-        </span>
+            <span className="ml-2">{workGroup.registered_by}</span>
+          </Typography>
 
-        <span className="text-sm mb-4 text-gray-400">
-          {formatMessage(generalMessages.updatedAt, {
-            date: format(workGroup.updatedAt, 'dd/MM/yyyy - hh:mm')
-          })}
+          {workGroup.updated_at && (
+            <Typography variant="caption">
+              {formatMessage(generalMessages.updatedAt, {
+                date: format(
+                  new Date(workGroup.updated_at),
+                  'dd/MM/yyyy - hh:mm'
+                )
+              })}
 
-          <span className="ml-2">{workGroup.updatedBy}</span>
-        </span>
+              <span className="ml-2">{workGroup.updated_by}</span>
+            </Typography>
+          )}
+        </div>
 
         <WorkGroupForm
-          initialValues={workGroup}
+          initialValues={{
+            id: workGroup.id,
+            name: workGroup.name,
+            description: workGroup.description
+          }}
           onSubmit={async (values) => {
-            console.log('Update user', values)
+            console.log('Update workGroup', values)
           }}
         />
       </div>

@@ -23,7 +23,8 @@ const CreateWorkGroupDrawer = ({ open, onClose }: Props): ReactElement => {
         <Typography variant="title" style="bold" className="uppercase">
           {getMessage('title')}
         </Typography>
-        <p className="text-sm leading-tight mb-4">{getMessage('message')}</p>
+
+        <p className="text-sm leading-tight mb-4">{getMessage('subtitle')}</p>
 
         <WorkGroupForm
           onSubmit={async (values) => {
