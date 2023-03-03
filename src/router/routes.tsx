@@ -57,6 +57,7 @@ import DemoForm from 'views/Demo/Form'
 import DemoAutoForm from 'views/Demo/AutoForm'
 import DemoWavesurfer from 'views/Demo/Wavesurfer'
 import ImageEditor from 'views/Demo/ImageEditor'
+import VideoPlayer from 'views/Demo/VideoPlayer'
 
 export interface Route {
   id: string
@@ -127,7 +128,8 @@ export const pathRoute = {
     autoform: '/demo-autoform',
     system: '/demo-system',
     wavesurfer: '/demo-wavesurfer',
-    imageEditor: '/demo-image-editor'
+    imageEditor: '/demo-image-editor',
+    videoPlayer: '/demo-video-player'
   }
 }
 
@@ -512,7 +514,7 @@ export const routes: Route[] = [
         sidebar: true
       },
       {
-        id: 'demo-imageEditor',
+        id: 'demo-image-editor',
         i18Key: 'demoImageEditor',
         path: pathRoute.demo.imageEditor,
         modules: [],
@@ -521,12 +523,23 @@ export const routes: Route[] = [
         layout: BaseLayout,
         private: true,
         sidebar: true
+      },
+      {
+        id: 'demo-video-player',
+        i18Key: 'demoVideoPlayer',
+        path: pathRoute.demo.videoPlayer,
+        modules: [],
+        scopes: [],
+        component: VideoPlayer,
+        layout: BaseLayout,
+        private: true,
+        sidebar: true
       }
     ],
     scopes: [],
     component: DemoSystem,
     layout: BaseLayout,
-    private: true,
+    private: false,
     sidebar: false
   }
 ]
