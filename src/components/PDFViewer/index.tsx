@@ -4,8 +4,10 @@ import {
   MagnifyingGlassMinusIcon,
   MagnifyingGlassPlusIcon
 } from '@heroicons/react/24/outline'
+import { useFormatMessage } from 'hooks/useIntl'
 import { ReactElement, useState } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
+import { messages } from './messages'
 import './style.css'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
@@ -14,6 +16,7 @@ interface Props {
   file: string
 }
 export const PDFViewer = (props: Props): ReactElement => {
+  const getMessage = useFormatMessage(messages)
   const [pageNumber, setPageNumber] = useState(1)
   const [numPages, setNumPages] = useState(1)
   const [file] = useState(props.file)
@@ -61,7 +64,7 @@ export const PDFViewer = (props: Props): ReactElement => {
           </Document>
         </div>
         <div className="flex justify-center gap-2 items-center select-none">
-          <span>Página</span>
+          <span>{getMessage('page')}</span>
           <button onClick={prev} disabled={pageNumber <= 1}>
             <ChevronLeftIcon className="w-4 h-4 text-muted" />
           </button>
@@ -71,6 +74,7 @@ export const PDFViewer = (props: Props): ReactElement => {
           <button onClick={next} disabled={pageNumber >= numPages}>
             <ChevronRightIcon className="w-4 h-4 text-muted" />
           </button>
+
           <button type="button" disabled={scale <= 0.5} onClick={zoomOut}>
             <MagnifyingGlassMinusIcon className="w-5 h-5 text-muted" />
           </button>
