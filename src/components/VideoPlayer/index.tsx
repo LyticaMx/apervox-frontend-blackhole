@@ -3,6 +3,8 @@ import {
   ArrowsPointingOutIcon,
   BackwardIcon,
   ForwardIcon,
+  MagnifyingGlassMinusIcon,
+  MagnifyingGlassPlusIcon,
   PauseCircleIcon,
   PlayCircleIcon,
   SpeakerWaveIcon,
@@ -42,12 +44,21 @@ interface Props {
   videoUrl: string
 }
 
+interface PlayerReferenceWithVideo extends PlayerReference {
+  video: {
+    // this is for the video component object see: (https://video-react.js.org/components/player/)
+    video: HTMLVideoElement // Get the original HTML element
+  }
+}
+
 const VideoPlayer = (props: Props): ReactElement => {
   const { videoUrl } = props
-  const playerRef = useRef<PlayerReference>(null)
+  const playerRef = useRef<PlayerReferenceWithVideo>(null)
   const volumeRef = useRef<HTMLInputElement>(null)
+  const zoomRef = useRef<HTMLInputElement>(null)
   const videoContainerRef = useRef<HTMLDivElement>(null)
   const [playerState, setPlayerState] = useState<PlayerState>()
+  const [zoom, setZoom] = useState<number>(1)
   const rates = useMemo<number[]>(() => [2, 1.5, 1, 0.75, 0.5], [])
 
   useEffect(() => {
@@ -109,7 +120,7 @@ const VideoPlayer = (props: Props): ReactElement => {
   )
 
   const applyFilters = (newFilters: ImageFiltersState): void => {
-    if (!videoContainerRef.current) return
+    if (!videoContainerRef.current || !playerRef.current) return
     const filters: string[] = []
 
     for (const key in newFilters) {
@@ -126,21 +137,47 @@ const VideoPlayer = (props: Props): ReactElement => {
       }
     }
 
-    videoContainerRef.current.style.filter = filters.join(' ').toLowerCase()
+    if (!playerRef.current.video?.video) return
+    playerRef.current.video.video.style.filter = filters.join(' ').toLowerCase()
   }
+
+  const applyTransformations = (zoom: number): void => {
+    if (!videoContainerRef.current) return
+    videoContainerRef.current.style.transform = `scale(${zoom})`
+  }
+
+  const changeZoom = useCallback((e: MouseEvent<HTMLButtonElement>) => {
+    const { name } = e.currentTarget
+    switch (name) {
+      case 'zoomIn':
+        setZoom((zoom) => (zoom < 3 ? zoom + 0.5 : zoom))
+        break
+      case 'zoomOut':
+        setZoom((zoom) => (zoom > 0.5 ? zoom - 0.5 : zoom))
+        break
+      default:
+        break
+    }
+  }, [])
 
   const playbackExtraProps: any = { order: 7.1 }
 
   useProgress(volumeRef, [playerVolume])
+
+  useProgress(zoomRef, [zoom])
 
   useEffect(() => {
     if (!playerRef.current) return
     playerRef.current.load()
   }, [videoUrl])
 
+  useEffect(() => {
+    applyTransformations(zoom)
+  }, [zoom])
+
   return (
     <div>
-      <div className="relative">
+      <div className="overflow-auto">
         <div ref={videoContainerRef}>
           <Player ref={playerRef}>
             <BigPlayButton className="!hidden" />
@@ -158,20 +195,20 @@ const VideoPlayer = (props: Props): ReactElement => {
             >
               <PlayIcon className="w-10 h-10 text-white" />
             </button>
+            <button
+              className={clsx(
+                'bg-white h-8 w-8 text-secondary-gray flex items-center justify-center absolute z-[2] top-1 right-1 transition-opacity duration-700 overflow-hidden rounded-md',
+                !playerState?.hasStarted ||
+                  playerState?.userActivity ||
+                  playerState?.paused
+                  ? 'opacity-1 pointer-events-auto'
+                  : 'opacity-0 pointer-events-none'
+              )}
+            >
+              <ArrowDownTrayIcon className="w-5 h-5" />
+            </button>
           </Player>
         </div>
-        <button
-          className={clsx(
-            'bg-white h-8 w-8 text-secondary-gray flex items-center justify-center absolute z-[2] top-1 right-1 transition-opacity duration-700 overflow-hidden rounded-md',
-            !playerState?.hasStarted ||
-              playerState?.userActivity ||
-              playerState?.paused
-              ? 'opacity-1 pointer-events-auto'
-              : 'opacity-0 pointer-events-none'
-          )}
-        >
-          <ArrowDownTrayIcon className="w-5 h-5" />
-        </button>
       </div>
       <ProgressBar
         currentTime={playerState?.currentTime ?? 1}
@@ -243,8 +280,9 @@ const VideoPlayer = (props: Props): ReactElement => {
                 min={0}
                 value={playerVolume}
                 max={100}
+                step={1}
                 onChange={changeVolume}
-                className="volume-control slider-progress w-36 bg-transparent"
+                className="video-slider slider-progress w-36 bg-transparent cursor-pointer"
                 ref={volumeRef}
               />
             </div>
@@ -256,6 +294,32 @@ const VideoPlayer = (props: Props): ReactElement => {
             </button>
           </Grid>
         </Grid>
+        <div className="mt-4 flex items-center gap-2">
+          <button
+            className="group hover:enabled:bg-white rounded-md p-1 transition-colors"
+            name="zoomOut"
+            onClick={changeZoom}
+          >
+            <MagnifyingGlassMinusIcon className="h-5 w-5 text-white group-hover:group-enabled:text-primary" />
+          </button>
+          <input
+            type="range"
+            ref={zoomRef}
+            min={0.5}
+            max={3}
+            step={0.5}
+            value={zoom}
+            onChange={(e) => setZoom(+e.target.value)}
+            className="video-slider slider-progress w-36 bg-transparent cursor-pointer"
+          />
+          <button
+            className="group hover:enabled:bg-white rounded-md p-1 transition-colors"
+            name="zoomIn"
+            onClick={changeZoom}
+          >
+            <MagnifyingGlassPlusIcon className="h-5 w-5 text-white group-hover:group-enabled:text-primary" />
+          </button>
+        </div>
         <div className="mt-4">
           <ImageFilters applyCallback={applyFilters} />
         </div>

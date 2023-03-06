@@ -539,7 +539,7 @@ export const routes: Route[] = [
     scopes: [],
     component: DemoSystem,
     layout: BaseLayout,
-    private: false,
+    private: true,
     sidebar: false
   }
 ]
