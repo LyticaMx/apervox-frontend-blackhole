@@ -5,7 +5,7 @@ import { XMarkIcon } from '@heroicons/react/24/outline'
 
 import Typography, { Variant } from 'components/Typography'
 
-interface Props {
+export interface Props {
   label: string
   className?: string
   labelColorClassName?: string

@@ -97,6 +97,10 @@ export const sidebarMessages = defineMessages({
     id: 'sidebar.demo.demoWavesurfer',
     defaultMessage: 'Wavesurfer'
   },
+  demoCommon: {
+    id: 'sidebar.demo.demoCommon',
+    defaultMessage: 'Componentes comunes'
+  },
   demoImageEditor: {
     id: 'sidebar.demo.demoImageEditor',
     defaultMessage: 'Editor de imagenes'
@@ -116,5 +120,9 @@ export const sidebarMessages = defineMessages({
   acquisition: {
     id: 'sidebar.acquisition',
     defaultMessage: 'Medios de adquisición'
+  },
+  workGroups: {
+    id: 'sidebar.workGroups',
+    defaultMessage: 'Grupos de trabajo'
   }
 })

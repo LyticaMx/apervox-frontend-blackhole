@@ -6,7 +6,7 @@ import { Combobox } from '@headlessui/react'
 import { Float } from '@headlessui-float/react'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 
-import Chip from 'components/Tag'
+import Chip, { Props as ChipProps } from 'components/Tag'
 import { labelFormClasses } from 'utils/classes'
 import { useGlobalMessage } from 'hooks/useIntl'
 
@@ -32,6 +32,7 @@ interface Props {
   onChange: (newValue: any, detail: Detail) => void
   noFoundText: string
   onNewOption?: (option: string) => void
+  chipProps?: Partial<ChipProps>
 }
 const defaultProps: Props = {
   items: [],
@@ -51,7 +52,8 @@ const MultiChipSelect = ({
   selected,
   onChange,
   noFoundText,
-  onNewOption
+  onNewOption,
+  chipProps
 }: Props): ReactElement => {
   const ref = useRef(null)
   const getMessage = useGlobalMessage()
@@ -83,7 +85,7 @@ const MultiChipSelect = ({
         ...item,
         selected: selected.includes(item[valueField])
       }))
-  }, [query, selected])
+  }, [query, selected, items])
 
   const handleChange = (item): void => {
     setQuery('')
@@ -152,6 +154,7 @@ const MultiChipSelect = ({
                           )
                           onChange(newSelected, { type: 0, item })
                         }}
+                        {...chipProps}
                       />
                     )
                   })}

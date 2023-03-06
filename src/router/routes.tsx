@@ -44,6 +44,7 @@ import Media from 'views/Config/Media'
 import Telecom from 'views/Config/Telecom'
 import CallsHistory from 'views/CallsHistory'
 import Acquisition from 'views/Acquisition'
+import WorkGroups from 'views/WorkGroups'
 
 import BaseLayout from 'layout/BaseLayout'
 import FullScreenLayout from 'layout/FullScreenLayout'
@@ -56,6 +57,7 @@ import DemoCharts from 'views/Demo/Chart'
 import DemoForm from 'views/Demo/Form'
 import DemoAutoForm from 'views/Demo/AutoForm'
 import DemoWavesurfer from 'views/Demo/Wavesurfer'
+import DemoCommon from 'views/Demo/Common'
 import ImageEditor from 'views/Demo/ImageEditor'
 import VideoPlayer from 'views/Demo/VideoPlayer'
 
@@ -108,6 +110,7 @@ export const pathRoute = {
   receiverAudio: '/reseiver-audio',
   senderAudio: '/sender-audio',
   controlGroups: '/grupos-de-control',
+  workGroups: '/grupos-de-trabajo',
   alerts: '/alertas',
   cases: '/casos',
   bondingNetwork: '/redes-de-vinculacion',
@@ -129,6 +132,7 @@ export const pathRoute = {
     system: '/demo-system',
     wavesurfer: '/demo-wavesurfer',
     imageEditor: '/demo-image-editor',
+    common: '/demo-common',
     videoPlayer: '/demo-video-player'
   }
 }
@@ -244,6 +248,18 @@ export const routes: Route[] = [
     modules: [],
     scopes: [],
     component: ControlGroups,
+    layout: BaseLayout,
+    private: true,
+    sidebar: true
+  },
+  {
+    id: 'work-groups',
+    path: pathRoute.workGroups,
+    icon: UserGroupIcon,
+    i18Key: 'workGroups',
+    modules: [],
+    scopes: [],
+    component: WorkGroups,
     layout: BaseLayout,
     private: true,
     sidebar: true
@@ -514,7 +530,19 @@ export const routes: Route[] = [
         sidebar: true
       },
       {
-        id: 'demo-image-editor',
+        id: 'demo-common',
+        i18Key: 'demoCommon',
+        path: pathRoute.demo.common,
+        modules: [],
+        scopes: [],
+        component: DemoCommon,
+        layout: BaseLayout,
+        private: true,
+        sidebar: true
+      },
+
+      {
+        id: 'demo-imageEditor',
         i18Key: 'demoImageEditor',
         path: pathRoute.demo.imageEditor,
         modules: [],

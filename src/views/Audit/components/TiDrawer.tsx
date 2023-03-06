@@ -128,7 +128,7 @@ const TiDrawer = (props: Props): ReactElement => {
       <Typography variant="body2" className="mt-1 ml-2 flex items-center">
         <CheckIcon className="w-5 h-5 text-primary" />
         <span className="ml-2">
-          {formatMessage(platformMessages.activeStatus)}
+          {formatMessage(platformMessages.currentStatus)}
         </span>
       </Typography>
       {handleFilter && (
