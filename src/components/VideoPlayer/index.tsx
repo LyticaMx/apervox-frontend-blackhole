@@ -25,11 +25,12 @@ import {
   useRef,
   useState
 } from 'react'
+import ProgressBar from './ProgressBar'
 import {
   Player,
   BigPlayButton,
   PlayerState,
-  StaticPlayerInstanceMethods,
+  PlayerReference,
   ControlBar,
   PlaybackRateMenuButton,
   PlayToggle
@@ -43,7 +44,7 @@ interface Props {
 
 const VideoPlayer = (props: Props): ReactElement => {
   const { videoUrl } = props
-  const playerRef = useRef<HTMLVideoElement & StaticPlayerInstanceMethods>(null)
+  const playerRef = useRef<PlayerReference>(null)
   const volumeRef = useRef<HTMLInputElement>(null)
   const videoContainerRef = useRef<HTMLDivElement>(null)
   const [playerState, setPlayerState] = useState<PlayerState>()
@@ -60,7 +61,7 @@ const VideoPlayer = (props: Props): ReactElement => {
     if (!playerState) return
     if (playerState?.paused) playerRef.current?.play()
     else playerRef.current?.pause()
-  }, [playerState])
+  }, [playerState?.paused])
 
   const changeCurrentTime = useCallback(
     (event: MouseEvent<HTMLButtonElement>): void => {
@@ -77,7 +78,7 @@ const VideoPlayer = (props: Props): ReactElement => {
           break
       }
     },
-    [playerState]
+    [playerState?.currentTime]
   )
 
   const changeRate = useCallback(
@@ -137,56 +138,47 @@ const VideoPlayer = (props: Props): ReactElement => {
     playerRef.current.load()
   }, [videoUrl])
 
-  const playerPercent = useMemo(() => {
-    if (!playerState) return 0
-
-    return playerState.duration === playerState.currentTime
-      ? 100
-      : Math.floor((playerState.currentTime * 100) / playerState.duration)
-  }, [playerState?.currentTime, playerState?.duration])
-
   return (
     <div>
-      <div ref={videoContainerRef}>
-        <Player ref={playerRef}>
-          <BigPlayButton className="!hidden" />
-          <ControlBar disableCompletely={!playerState?.isFullscreen}>
-            <PlayToggle />
-            <PlaybackRateMenuButton {...playbackExtraProps} rates={rates} />
-          </ControlBar>
-          <source src={videoUrl} />
-          <button
-            className={clsx(
-              'p-4 bg-black bg-opacity-40 rounded-full absolute top-1/2 left-1/2 z-[2] -translate-x-1/2 -translate-y-1/2',
-              playerState?.hasStarted && 'hidden'
-            )}
-            onClick={togglePlay}
-          >
-            <PlayIcon className="w-10 h-10 text-white" />
-          </button>
-          <button
-            className={clsx(
-              'bg-white h-8 w-8 text-secondary-gray flex items-center justify-center absolute z-[2] top-1 right-1 transition-opacity duration-700 overflow-hidden rounded-md',
-              !playerState?.hasStarted ||
-                playerState?.userActivity ||
-                playerState?.paused
-                ? 'opacity-1 pointer-events-auto'
-                : 'opacity-0 pointer-events-none'
-            )}
-          >
-            <ArrowDownTrayIcon className="w-5 h-5" />
-          </button>
-        </Player>
+      <div className="relative">
+        <div ref={videoContainerRef}>
+          <Player ref={playerRef}>
+            <BigPlayButton className="!hidden" />
+            <ControlBar disableCompletely={!playerState?.isFullscreen}>
+              <PlayToggle />
+              <PlaybackRateMenuButton {...playbackExtraProps} rates={rates} />
+            </ControlBar>
+            <source src={videoUrl} />
+            <button
+              className={clsx(
+                'p-4 bg-black bg-opacity-40 rounded-full absolute top-1/2 left-1/2 z-[2] -translate-x-1/2 -translate-y-1/2',
+                playerState?.hasStarted && 'hidden'
+              )}
+              onClick={togglePlay}
+            >
+              <PlayIcon className="w-10 h-10 text-white" />
+            </button>
+          </Player>
+        </div>
+        <button
+          className={clsx(
+            'bg-white h-8 w-8 text-secondary-gray flex items-center justify-center absolute z-[2] top-1 right-1 transition-opacity duration-700 overflow-hidden rounded-md',
+            !playerState?.hasStarted ||
+              playerState?.userActivity ||
+              playerState?.paused
+              ? 'opacity-1 pointer-events-auto'
+              : 'opacity-0 pointer-events-none'
+          )}
+        >
+          <ArrowDownTrayIcon className="w-5 h-5" />
+        </button>
       </div>
-      <div onClick={() => console.log('hola')} className="h-1">
-        <div
-          style={{
-            minWidth: `${playerPercent}%`,
-            maxWidth: `${playerPercent}%`
-          }}
-          className="bg-primary h-full transition-all"
-        ></div>
-      </div>
+      <ProgressBar
+        currentTime={playerState?.currentTime ?? 1}
+        duration={playerState?.duration ?? 100} // Número inicial cuando la duración no existe
+        buffered={playerState?.buffered}
+        playerRef={playerRef}
+      />
       <div className="bg-secondary text-white px-6 py-4 rounded-b-md">
         <Grid>
           <Grid item xs={12} md={4} className="flex gap-2 items-center">
