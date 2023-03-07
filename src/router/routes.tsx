@@ -573,14 +573,14 @@ export const routes: Route[] = [
         scopes: [],
         component: RichTextEditor,
         layout: BaseLayout,
-        private: false,
+        private: true,
         sidebar: true
       }
     ],
     scopes: [],
     component: DemoSystem,
     layout: BaseLayout,
-    private: false,
+    private: true,
     sidebar: false
   }
 ]
