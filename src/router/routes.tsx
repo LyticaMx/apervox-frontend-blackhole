@@ -60,6 +60,7 @@ import DemoWavesurfer from 'views/Demo/Wavesurfer'
 import DemoCommon from 'views/Demo/Common'
 import ImageEditor from 'views/Demo/ImageEditor'
 import VideoPlayer from 'views/Demo/VideoPlayer'
+import RichTextEditor from 'views/Demo/RichTextEditor'
 
 export interface Route {
   id: string
@@ -133,7 +134,8 @@ export const pathRoute = {
     wavesurfer: '/demo-wavesurfer',
     imageEditor: '/demo-image-editor',
     common: '/demo-common',
-    videoPlayer: '/demo-video-player'
+    videoPlayer: '/demo-video-player',
+    textEditor: '/demo-text-editor'
   }
 }
 
@@ -562,12 +564,23 @@ export const routes: Route[] = [
         layout: BaseLayout,
         private: true,
         sidebar: true
+      },
+      {
+        id: 'demo-text-editor',
+        i18Key: 'demoTextEditor',
+        path: pathRoute.demo.textEditor,
+        modules: [],
+        scopes: [],
+        component: RichTextEditor,
+        layout: BaseLayout,
+        private: false,
+        sidebar: true
       }
     ],
     scopes: [],
     component: DemoSystem,
     layout: BaseLayout,
-    private: true,
+    private: false,
     sidebar: false
   }
 ]
