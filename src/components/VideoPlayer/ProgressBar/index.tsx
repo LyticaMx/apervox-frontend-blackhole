@@ -77,7 +77,7 @@ const ProgressBar = (props: Props): ReactElement => {
 
       <div
         style={{ width: `${bufferedPercent}%` }}
-        className="bg-gray-300 h-full transition-all absolute"
+        className="bg-primary-300 h-full transition-all absolute"
       />
       <span
         className="absolute inline-block bg-secondary opacity-0 text-white transition-opacity -mt-8 px-2 rounded-md group-hover:z-[3] group-hover:pointer-events-none group-hover:opacity-100 -translate-x-1/2"
