@@ -2115,6 +2115,11 @@
     intl-messageformat "10.2.1"
     tslib "2.4.0"
 
+"@ghostramses/ckeditor5-blackhole-custom-build@^0.0.14":
+  version "0.0.14"
+  resolved "https://registry.yarnpkg.com/@ghostramses/ckeditor5-blackhole-custom-build/-/ckeditor5-blackhole-custom-build-0.0.14.tgz#4a09837065cb10fbf7a9e87b92a85b086f4f0929"
+  integrity sha512-Qp26WcmLsykUJ7K9x2UhlF3LscTv47f8Ce2yGMqLUr7lh/MiB3LsYGB4JU08dtPxMAiu0DJfhF2C2BRfqxyG3A==
+
 "@headlessui-float/react@^0.9.2":
   version "0.9.2"
   resolved "https://registry.yarnpkg.com/@headlessui-float/react/-/react-0.9.2.tgz#f32956d13eef62d0e1124089f68fb6c8ccd81e65"
