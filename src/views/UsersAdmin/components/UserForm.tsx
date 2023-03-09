@@ -25,7 +25,7 @@ const UserForm = ({ initialValues, onSubmit }: Props): ReactElement => {
   const getMessage = useFormatMessage(formMessages)
   const getGlobalMessage = useGlobalMessage()
 
-  const fields: Field[] = [
+  const fields: Array<Field<FormValues>> = [
     {
       type: 'text',
       name: 'name',

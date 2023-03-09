@@ -26,7 +26,7 @@ const EditMediaDrawer = (props: Props): ReactElement => {
     name: yup.string().required(formatMessage(formMessages.required))
   })
 
-  const fields = useMemo<Field[]>(
+  const fields = useMemo<Array<Field<FormValues>>>(
     () => [
       {
         type: 'text',

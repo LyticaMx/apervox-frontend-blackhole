@@ -40,7 +40,7 @@ const GeoreferenceDrawer = (props: Props): ReactElement => {
   const formikRef = useRef<FormikContextType<FormValues>>()
   const { formatMessage } = useIntl()
 
-  const fields = useMemo<Field[]>(
+  const fields = useMemo<Array<Field<FormValues>>>(
     () =>
       editMode
         ? [

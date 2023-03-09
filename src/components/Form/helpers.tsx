@@ -16,7 +16,7 @@ import Switch from './Switch'
 import TextField from './Textfield'
 
 interface Params<T> {
-  field: Field
+  field: Field<T>
   formik: FormikContextType<T>
 }
 
@@ -207,6 +207,8 @@ export const fieldMapper = <T,>({ field, formik }: Params<T>): ReactNode => {
             values={formik.values}
             errors={formik.errors}
             touched={formik.touched}
+            setFieldValue={formik.setFieldValue}
+            setFieldTouched={formik.setFieldTouched}
           />
         )
       }

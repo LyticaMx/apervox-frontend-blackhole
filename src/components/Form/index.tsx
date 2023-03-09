@@ -15,7 +15,7 @@ import { Field, Section, SubmitButtonProps } from 'types/form'
 import { fieldMapper } from './helpers'
 
 interface Props<T> {
-  fields: Field[]
+  fields: Array<Field<T>>
   formikConfig: FormikConfig<T>
   withSections?: {
     renderMainSection?: boolean
@@ -85,39 +85,43 @@ const Form = <DataType extends FormikValues = FormikValues>(
       onReset={formik.handleReset}
       className={className}
     >
-      {formattedSections.map(({ name, title, description, spacing }, index) => (
-        <div key={`${index}-${name}`} className={clsx(index !== 0 && 'mt-4')}>
-          {title && (
-            <Typography variant="body1" {...title}>
-              {title.text}
-            </Typography>
-          )}
-          {description && (
-            <Typography
-              variant="body2"
-              className="text-gray-400"
-              {...description}
-            >
-              {description.text}
-            </Typography>
-          )}
-          {(!!title || !!description) && <div className="mt-4" />}
-          <Grid spacing={spacing}>
-            {fields
-              .filter((field) => (field.section ?? 'main') === name)
-              .map((field, index) => (
-                <Grid
-                  key={`${index}-${field.type}`}
-                  item
-                  xs={12}
-                  {...field.breakpoints}
-                >
-                  {fieldMapper({ field, formik })}
-                </Grid>
-              ))}
-          </Grid>
-        </div>
-      ))}
+      {formattedSections.map(
+        ({ name, title, description, spacing, removeSeparator }, index) => (
+          <div key={`${index}-${name}`} className={clsx(index !== 0 && 'mt-4')}>
+            {title && (
+              <Typography variant="body1" {...title}>
+                {title.text}
+              </Typography>
+            )}
+            {description && (
+              <Typography
+                variant="body2"
+                className="text-gray-400"
+                {...description}
+              >
+                {description.text}
+              </Typography>
+            )}
+            {(!!title || !!description) && !removeSeparator && (
+              <div className="mt-4" />
+            )}
+            <Grid spacing={spacing}>
+              {fields
+                .filter((field) => (field.section ?? 'main') === name)
+                .map((field, index) => (
+                  <Grid
+                    key={`${index}-${field.type}`}
+                    item
+                    xs={12}
+                    {...field.breakpoints}
+                  >
+                    {fieldMapper({ field, formik })}
+                  </Grid>
+                ))}
+            </Grid>
+          </div>
+        )
+      )}
 
       <div className={clsx('flex items-center', buttonPosition)}>
         {renderSubmitButton && (

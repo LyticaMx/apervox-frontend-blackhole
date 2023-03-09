@@ -35,7 +35,7 @@ const CompanyDrawer = (props: Props): ReactElement => {
     validationSchema
   }
 
-  const fields = useMemo<Field[]>(
+  const fields = useMemo<Array<Field<FormValues>>>(
     () => [
       {
         type: 'text',
