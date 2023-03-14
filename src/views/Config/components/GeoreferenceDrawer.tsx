@@ -2,7 +2,12 @@ import clsx from 'clsx'
 import Form from 'components/Form'
 import Typography from 'components/Typography'
 import { FormikConfig, FormikContextType } from 'formik'
-import { actionsMessages, formMessages, generalMessages } from 'globalMessages'
+import {
+  actionsMessages,
+  formMessages,
+  generalMessages,
+  platformMessages
+} from 'globalMessages'
 import { ReactElement, useMemo, useRef } from 'react'
 import { useIntl } from 'react-intl'
 import { Field, Section } from 'types/form'
@@ -50,7 +55,7 @@ const GeoreferenceDrawer = (props: Props): ReactElement => {
               options: {
                 id: 'cellId',
                 placeholder: formatMessage(telecomMessages.geoPlaceholder),
-                label: formatMessage(telecomMessages.cellId)
+                label: formatMessage(platformMessages.cellId)
               }
             },
             {
@@ -79,7 +84,7 @@ const GeoreferenceDrawer = (props: Props): ReactElement => {
               options: {
                 id: 'cellId',
                 placeholder: formatMessage(telecomMessages.geoPlaceholder),
-                label: formatMessage(telecomMessages.cellId)
+                label: formatMessage(platformMessages.cellId)
               }
             },
             {
