@@ -2482,6 +2482,11 @@
     lodash "^4.17.15"
     tmp-promise "^3.0.2"
 
+"@mirei/leaflet-semicircle-ts@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@mirei/leaflet-semicircle-ts/-/leaflet-semicircle-ts-1.0.6.tgz#849e09c6ce569be4d3fdb81dd08abdd9efb597c6"
+  integrity sha512-LS7jhmBgLnjDRypvhxEZgvCskB3OeS4noyBXwR2vuMeJVZOMIWohBXOSVoh9vnIMH/3S8RlnTJe8Bn4sD6EHKA==
+
 "@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1":
   version "5.1.1-v1"
   resolved "https://registry.yarnpkg.com/@nicolo-ribaudo/eslint-scope-5-internals/-/eslint-scope-5-internals-5.1.1-v1.tgz#dbf733a965ca47b1973177dc0bb6c889edcfb129"
@@ -3302,6 +3307,13 @@
   integrity sha512-BQ5aZNSCpj7D6K2ksrRCTmKRLEpnPvWDiLPfoGyhZ++8YtiK9d/3DBKPJgry359X/P1PfruyYwvnvwFjuEiEIg==
   dependencies:
     "@types/node" "*"
+
+"@types/leaflet@^1.9.2":
+  version "1.9.2"
+  resolved "https://registry.yarnpkg.com/@types/leaflet/-/leaflet-1.9.2.tgz#545eaa5e5dbf16f1b386774fcfb58d3b34cdb25b"
+  integrity sha512-vrokGIGVO8RSNXQBcWdEJ4Xy6E9kLQHZfpxIkFjSD1OhqTKOjYLFJDG6JCoAWYm/n755fdNCyrpna6/00kVajw==
+  dependencies:
+    "@types/geojson" "*"
 
 "@types/lodash@^4.14.175":
   version "4.14.191"
@@ -8684,6 +8696,11 @@ lazy-val@^1.0.4, lazy-val@^1.0.5:
   resolved "https://registry.yarnpkg.com/lazy-val/-/lazy-val-1.0.5.tgz#6cf3b9f5bc31cee7ee3e369c0832b7583dcd923d"
   integrity sha512-0/BnGCCfyUMkBpeDgWihanIAF9JmZhHBgUhEqzvf+adhNGLoP6TaiI5oF8oyb3I45P+PcnrqihSf01M0l0G5+Q==
 
+leaflet@^1.9.3:
+  version "1.9.3"
+  resolved "https://registry.yarnpkg.com/leaflet/-/leaflet-1.9.3.tgz#52ec436954964e2d3d39e0d433da4b2500d74414"
+  integrity sha512-iB2cR9vAkDOu5l3HAay2obcUHZ7xwUBBjph8+PGtmW/2lYhbLizWtG7nTeYht36WfOslixQF9D/uSIzhZgGMfQ==
+
 leven@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/leven/-/leven-3.1.0.tgz#77891de834064cccba82ae7842bb6b14a13ed7f2"
@@ -10386,10 +10403,10 @@ react-fast-compare@^2.0.1:
   resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-2.0.4.tgz#e84b4d455b0fec113e0402c329352715196f81f9"
   integrity sha512-suNP+J1VU1MWFKcyt7RtjiSWUjvidmQSlqu+eHslq+342xCbGTYmC0mEhPCOHxlW0CywylOC1u2DFAT+bv4dBw==
 
-react-icons@^4.4.0:
-  version "4.6.0"
-  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-4.6.0.tgz#f83eda179af5d02c047449a20b702c858653d397"
-  integrity sha512-rR/L9m9340yO8yv1QT1QurxWQvWpbNHqVX0fzMln2HEb9TEIrQRGsqiNFQfiv9/JEUbyHmHPlNTB2LWm2Ttz0g==
+react-icons@^4.8.0:
+  version "4.8.0"
+  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-4.8.0.tgz#621e900caa23b912f737e41be57f27f6b2bff445"
+  integrity sha512-N6+kOLcihDiAnj5Czu637waJqSnwlMNROzVZMhfX68V/9bu9qHaMIJC4UdozWoOk57gahFCNHwVvWzm0MTzRjg==
 
 react-idle-timer@^5.5.2:
   version "5.5.2"
