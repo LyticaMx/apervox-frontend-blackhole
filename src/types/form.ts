@@ -1,5 +1,6 @@
 import { Columns, Spacing } from 'components/Grid'
 import { Style, Variant } from 'components/Typography'
+import { FormikErrors, FormikTouched } from 'formik'
 import { InputHTMLAttributes, ReactElement, ReactNode } from 'react'
 import { DropzoneOptions } from 'react-dropzone'
 
@@ -141,7 +142,19 @@ export interface MultiChipSelectProps {
   onNewOption?: (option: string) => void
 }
 
-export declare type FieldTypes =
+export interface CustomFieldFunctionProps<T> {
+  values: T
+  errors: FormikErrors<T>
+  touched: FormikTouched<T>
+  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void
+  setFieldTouched: (
+    field: string,
+    isTouched: boolean,
+    shouldValidate?: boolean
+  ) => void
+}
+
+export declare type FieldTypes<T> =
   | {
       readonly type: 'text'
       options: TextFieldProps
@@ -192,7 +205,7 @@ export declare type FieldTypes =
     }
   | {
       readonly type: 'custom'
-      children: ReactNode | React.FC<any>
+      children: ReactNode | React.FC<CustomFieldFunctionProps<T>>
     }
 
 interface Breakpoints {
@@ -203,7 +216,7 @@ interface Breakpoints {
   xl?: Columns
 }
 
-export type Field = FieldTypes & {
+export type Field<T> = FieldTypes<T> & {
   name: string
   breakpoints?: Breakpoints
   section?: string
@@ -232,19 +245,21 @@ export interface SubmitButtonProps {
 
 export interface Section {
   name: string
+  removeSeparator?: boolean
   spacing?: Spacing
   title?: {
     text: string
     className?: string
-    noWrao?: boolean
+    noWrap?: boolean
     variant?: Variant
     style?: Style
   }
   description?: {
     text: string
     className?: string
-    noWrao?: boolean
+    noWrap?: boolean
     variant?: Variant
     style?: Style
   }
+  className?: string
 }

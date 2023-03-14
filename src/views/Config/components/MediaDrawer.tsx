@@ -38,7 +38,7 @@ const MediaDrawer = (props: Props): ReactElement => {
     })
   })
 
-  const fields = useMemo<Field[]>(() => {
+  const fields = useMemo<Array<Field<FormValues>>>(() => {
     if (formType === 'media') {
       return [
         {

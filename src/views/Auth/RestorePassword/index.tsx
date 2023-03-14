@@ -30,7 +30,7 @@ const RestorePassword = (): ReactElement => {
     }
   }
 
-  const fields: Field[] = [
+  const fields: Array<Field<FormValues>> = [
     {
       type: 'password',
       name: 'oldPassword',

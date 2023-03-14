@@ -55,13 +55,12 @@ const LetterheadDrawer = (props: Props): ReactElement => {
   const formikConfig: FormikConfig<FormValues> = {
     initialValues,
     onSubmit: async (values) => {
-      console.log(values)
       await onAccept(values)
     },
     validationSchema
   }
 
-  const fields = useMemo<Field[]>(
+  const fields = useMemo<Array<Field<FormValues>>>(
     () => [
       {
         type: 'text',
@@ -120,9 +119,9 @@ const LetterheadDrawer = (props: Props): ReactElement => {
               )}
               htmlFor="file"
             >
-              {values.file || fileName ? (
+              {!!values.file || !!fileName ? (
                 <span className="bloc text-primary">
-                  {fileName ?? values.file.name}
+                  {fileName ?? values.file?.name}
                 </span>
               ) : (
                 <span className="text-secondary-gray block">

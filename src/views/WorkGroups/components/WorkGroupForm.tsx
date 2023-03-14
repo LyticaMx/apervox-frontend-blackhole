@@ -32,7 +32,7 @@ const WorkGroupForm = ({ initialValues, onSubmit }: Props): ReactElement => {
 
   if (!users || !techniques) return <></>
 
-  const fields: Field[] = [
+  const fields: Array<Field<FormValues>> = [
     {
       type: 'text',
       name: 'name',

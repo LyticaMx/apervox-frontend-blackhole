@@ -12,7 +12,7 @@ interface FormValues {
 }
 
 interface FormProps {
-  fields: Field[]
+  fields: Array<Field<FormValues>>
   formikConfig: FormikConfig<FormValues>
   sections: Section[]
 }
@@ -39,7 +39,7 @@ export const useForm = (): FormProps => {
     validationSchema
   }
 
-  const fields: Field[] = [
+  const fields: Array<Field<FormValues>> = [
     {
       type: 'text',
       name: 'name',

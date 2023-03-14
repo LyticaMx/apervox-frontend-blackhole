@@ -51,7 +51,7 @@ const SignIn = (): ReactElement => {
     validationSchema
   }
 
-  const fields: Field[] = useMemo<Field[]>(
+  const fields = useMemo<Array<Field<FormValues>>>(
     () => [
       {
         type: 'text',
