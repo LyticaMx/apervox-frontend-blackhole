@@ -47,7 +47,8 @@ const Typography = ({
     medium: 'font-medium',
     normal: 'font-normal',
     semibold: 'font-semibold',
-    bold: 'font-bold'
+    bold: 'font-bold',
+    italic: 'italic'
   }
 
   return (
