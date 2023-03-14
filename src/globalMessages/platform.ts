@@ -85,5 +85,54 @@ export const platformMessages = defineMessages({
   urgentPriority: {
     id: 'global.platform.urgentPriority',
     defaultMessage: 'Urgente'
+  },
+  startHour: {
+    id: 'global.platform.startHour',
+    defaultMessage: 'Hora inicio'
+  },
+  endHour: {
+    id: 'global.platform.endHour',
+    defaultMessage: 'Hora fin'
+  },
+  eventDate: {
+    id: 'global.platform.eventDate',
+    defaultMessage: 'Fecha del evento'
+  },
+  unseen: {
+    id: 'global.platform.unseen',
+    defaultMessage: 'No visto'
+  },
+  discarded: {
+    id: 'global.platform.discarded',
+    defaultMessage: 'Descartado'
+  },
+  relevant: {
+    id: 'global.platform.relevant',
+    defaultMessage: 'Relevante'
+  },
+  irrelevant: {
+    id: 'global.platform.irrelevant',
+    defaultMessage: 'No relevante'
+  },
+  synopsis: {
+    id: 'global.platform.synopsis',
+    defaultMessage: 'Sinopsis'
+  },
+  eventNumber: {
+    id: 'global.platform.eventNumber',
+    defaultMessage: 'No. evento'
+  },
+  // no tengo referencia de si se traduce
+  cellId: {
+    id: 'global.platform.cellId',
+    defaultMessage: 'Cell Id'
+  },
+  interval: {
+    id: 'global.platform.interval',
+    defaultMessage: 'Intervalo'
+  },
+  dialog: {
+    id: 'global.platform.dialog',
+    defaultMessage: 'Diálogo'
   }
 })
