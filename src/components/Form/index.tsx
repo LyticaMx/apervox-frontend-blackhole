@@ -86,8 +86,14 @@ const Form = <DataType extends FormikValues = FormikValues>(
       className={className}
     >
       {formattedSections.map(
-        ({ name, title, description, spacing, removeSeparator }, index) => (
-          <div key={`${index}-${name}`} className={clsx(index !== 0 && 'mt-4')}>
+        (
+          { name, title, description, spacing, removeSeparator, className },
+          index
+        ) => (
+          <div
+            key={`${index}-${name}`}
+            className={clsx(index !== 0 && 'mt-4', className)}
+          >
             {title && (
               <Typography variant="body1" {...title}>
                 {title.text}

@@ -50,7 +50,7 @@ const PasswordField = ({
         </Label>
       )}
       <div className="relative">
-        <div className="absolute right-0 flex items-center pl-3">
+        <div className="absolute top-1/2 -translate-y-1/2 right-0 flex items-center pl-3">
           <IconButton
             tabIndex={-1}
             onClick={() => setToggleView((old) => !old)}

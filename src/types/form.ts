@@ -261,4 +261,5 @@ export interface Section {
     variant?: Variant
     style?: Style
   }
+  className?: string
 }
