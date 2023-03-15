@@ -22,36 +22,27 @@ interface Detail {
   item: string | number
 }
 
-interface Props {
+export interface Props {
   label?: string
   items: Item[]
-  textField: string
-  valueField: string
-  value: string | number | undefined
+  textField?: string
+  valueField?: string
+  value?: string | number
   selected: Array<string | number>
   onChange: (newValue: any, detail: Detail) => void
-  noFoundText: string
+  noFoundText?: string
   onNewOption?: (option: string) => void
   chipProps?: Partial<ChipProps>
-}
-const defaultProps: Props = {
-  items: [],
-  textField: 'text',
-  valueField: 'value',
-  selected: [],
-  value: undefined,
-  onChange: () => {},
-  noFoundText: 'Nothing found.'
 }
 
 const MultiChipSelect = ({
   label,
-  items,
-  textField,
-  valueField,
-  selected,
-  onChange,
-  noFoundText,
+  items = [],
+  textField = 'text',
+  valueField = 'value',
+  selected = [],
+  onChange = () => {},
+  noFoundText = 'Nothing found.',
   onNewOption,
   chipProps
 }: Props): ReactElement => {
@@ -262,7 +253,5 @@ const MultiChipSelect = ({
     </div>
   )
 }
-
-MultiChipSelect.defaultProps = defaultProps
 
 export default MultiChipSelect

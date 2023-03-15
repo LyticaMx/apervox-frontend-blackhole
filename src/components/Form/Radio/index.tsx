@@ -1,7 +1,7 @@
 import { ReactElement } from 'react'
 import clsx from 'clsx'
 
-interface Props {
+export interface Props {
   id?: string
   label: string
   description?: string

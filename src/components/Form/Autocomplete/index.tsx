@@ -8,7 +8,7 @@ import { formClasses, labelFormClasses } from 'utils/classes'
 
 type Item = Record<string, any>
 
-interface Props {
+export interface Props {
   label?: string
   items: Item[]
   placeholder?: string

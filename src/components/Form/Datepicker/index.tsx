@@ -15,7 +15,7 @@ import DateView from './Date'
 import MonthView from './Month'
 
 type DatepickerType = 'date' | 'month' | 'year'
-interface Props {
+export interface Props {
   label?: string
   formatDisplay: string
   name?: string
