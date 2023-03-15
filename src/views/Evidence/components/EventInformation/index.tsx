@@ -67,13 +67,30 @@ const EventInformation = (props: Props): ReactElement => {
   const fields = useMemo<Array<Field<FormValues>>>(
     () => [
       {
-        type: 'text',
+        type: 'autocomplete',
         name: 'label',
         options: {
-          id: 'text',
-          label: formatMessage(generalMessages.label),
-          labelSpacing: '1',
-          labelClassname: 'italic text-base font-normal'
+          textField: 'value',
+          valueField: 'value',
+          decoratorField: 'decorator',
+          addOption: true,
+          items: [
+            {
+              color: 'red',
+              value: 'BCC'
+            },
+            { color: 'blue', value: 'BSC' }
+          ].map((item) => ({
+            ...item,
+            decorator: (
+              <div
+                className="w-4 h-4 rounded-full"
+                style={{ backgroundColor: item.color }}
+              />
+            )
+          })),
+          noFoundText: '',
+          label: formatMessage(generalMessages.label)
         },
         section: 'label'
       },

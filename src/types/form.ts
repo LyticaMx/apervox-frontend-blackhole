@@ -64,9 +64,11 @@ export interface AutocompleteProps {
   placeholder?: string
   textField: string
   valueField: string
+  decoratorField?: string
   className?: string
   onQueryChange?: (value: any) => void
   noFoundText: ReactElement | string
+  addOption?: boolean
 }
 
 export interface DatePickerProps {
