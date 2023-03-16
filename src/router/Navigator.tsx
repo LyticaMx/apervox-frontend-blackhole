@@ -48,7 +48,7 @@ const Navigator = (): ReactElement => {
           </Route>
         )
       })}
-      <Redirect to={pathRoute.speakers.dashboard} />
+      <Redirect to={pathRoute.auth.userAccount} />
     </Switch>
   )
 }
