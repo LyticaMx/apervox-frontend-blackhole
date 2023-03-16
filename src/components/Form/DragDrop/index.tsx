@@ -6,12 +6,12 @@ import { CloudArrowUpIcon } from '@heroicons/react/24/outline'
 
 import { messages } from './messages'
 
-interface Props extends DropzoneOptions {
+export interface Props extends DropzoneOptions {
   onChange?: (files: any) => void
 }
 const DragDrop = ({ onChange, ...config }: Props): ReactElement => {
   const intl = useIntl()
-  const onDrop = useCallback(acceptedFiles => {
+  const onDrop = useCallback((acceptedFiles) => {
     if (onChange) onChange(acceptedFiles)
   }, [])
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -20,7 +20,7 @@ const DragDrop = ({ onChange, ...config }: Props): ReactElement => {
   })
 
   return (
-    <div className='max-w-xl'>
+    <div className="max-w-xl">
       <div
         {...getRootProps()}
         className={clsx(
@@ -31,11 +31,11 @@ const DragDrop = ({ onChange, ...config }: Props): ReactElement => {
           }
         )}
       >
-        <span className='flex items-center space-x-2'>
-          <CloudArrowUpIcon className='h-6 w-6' />
-          <span className='font-medium text-gray-600 space-x-2'>
+        <span className="flex items-center space-x-2">
+          <CloudArrowUpIcon className="h-6 w-6" />
+          <span className="font-medium text-gray-600 space-x-2">
             {intl.formatMessage(messages.label)}
-            <span className='text-blue-600 underline'>
+            <span className="text-blue-600 underline">
               {intl.formatMessage(messages.browse)}
             </span>
           </span>

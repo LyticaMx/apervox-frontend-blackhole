@@ -5,7 +5,7 @@ import Label from 'components/Label'
 import { InputHTMLAttributes, ReactElement, useState } from 'react'
 import { formClasses } from 'utils/classes'
 
-interface Props {
+export interface Props {
   id: string
   label?: string
   className?: string

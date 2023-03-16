@@ -10,7 +10,7 @@ import { ChevronDownIcon } from '@heroicons/react/24/outline'
 
 type Item = Record<string, any>
 
-interface Props {
+export interface Props {
   label?: string
   placeholder?: string
   items: Item[]

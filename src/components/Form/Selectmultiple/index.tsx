@@ -10,7 +10,7 @@ import { useGlobalMessage } from 'hooks/useIntl'
 
 type Item = Record<string, any>
 
-interface Props {
+export interface Props {
   label?: string
   items: Item[]
   textField: string
