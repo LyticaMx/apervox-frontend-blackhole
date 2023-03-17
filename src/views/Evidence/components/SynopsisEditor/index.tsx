@@ -1,17 +1,17 @@
+import { Editor } from '@ghostramses/ckeditor5-blackhole-custom-build/build/ckeditor'
 import { ArrowDownTrayIcon } from '@heroicons/react/24/outline'
 import Button from 'components/Button'
 import RichTextEditor from 'components/RichTextEditor'
 import Typography from 'components/Typography'
 import { MutableRefObject, ReactElement } from 'react'
 import { useIntl } from 'react-intl'
-import { DecoupledEditor } from 'types/richTextEditor'
 import { eventHistoryMessages } from 'views/Evidence/messages'
 
 import './styles.css'
 
 interface Props {
   initialData: string
-  editorRef: MutableRefObject<DecoupledEditor | null>
+  editorRef: MutableRefObject<Editor | null>
   readonly?: boolean
 }
 
