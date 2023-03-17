@@ -18,7 +18,7 @@ interface FormValues {
 const ChangePassword = (): ReactElement => {
   const { formatMessage } = useIntl()
 
-  const fields: Field[] = [
+  const fields: Array<Field<FormValues>> = [
     {
       type: 'password',
       name: 'currentPassword',

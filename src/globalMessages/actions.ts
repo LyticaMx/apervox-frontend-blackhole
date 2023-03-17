@@ -155,5 +155,9 @@ export const actionsMessages = defineMessages({
   clickHere: {
     id: 'global.actions.clickHere',
     defaultMessage: 'Click aqui'
+  },
+  comment: {
+    id: 'global.actions.comment',
+    defaultMessage: 'Comentar'
   }
 })

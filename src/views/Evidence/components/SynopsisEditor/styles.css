@@ -1,0 +1,6 @@
+.synopsis-editor .ck.editor__editable[role='textbox'],
+.synopsis-editor .ck.ck-editor__editable[role='textbox']{
+  height: 20rem;
+  background-color: white!important;
+  overflow-y: auto;
+}

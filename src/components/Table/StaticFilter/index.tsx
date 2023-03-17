@@ -26,7 +26,7 @@ const StaticFilter = (props: Props): ReactElement => {
   const { onChange, options, optionsTitle } = props
   const [openFilter, setOpenFilter] = useState<boolean>(false)
   const { formatMessage } = useIntl()
-  const fields: Field[] = options.map((option, index) => ({
+  const fields: Array<Field<FormValues>> = options.map((option, index) => ({
     type: 'checkbox',
     name: 'filters',
     options: {

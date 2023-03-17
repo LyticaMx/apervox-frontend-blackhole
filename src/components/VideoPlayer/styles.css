@@ -1,0 +1,26 @@
+input[type="range"].video-slider{
+  -webkit-appearance: none;
+  appearance: none;
+  outline: none;
+}
+
+/*progress support*/
+input[type=range].video-slider.slider-progress {
+  --range: calc(var(--max) - var(--min));
+  --ratio: calc((var(--value) - var(--min)) / var(--range));
+  --sx: calc(var(--ratio) * 100%);
+}
+
+input[type="range"].video-slider::-webkit-slider-runnable-track{
+  height: theme("height[1.5]");
+  border-radius: theme("borderRadius.md");
+}
+
+input[type="range"].video-slider::-webkit-slider-thumb{
+  visibility: hidden;
+  pointer-events: none;
+}
+
+input[type=range].video-slider.slider-progress::-webkit-slider-runnable-track {
+  background: linear-gradient(theme("colors.primary.DEFAULT"),theme("colors.primary.DEFAULT")) 0/var(--sx) 100% no-repeat, #efefef;
+}

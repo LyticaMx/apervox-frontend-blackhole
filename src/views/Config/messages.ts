@@ -353,11 +353,6 @@ export const telecomMessages = defineMessages({
     id: 'views.Config.Telecom.addGeoreference',
     defaultMessage: 'Agregar georeferencia'
   },
-  // no tengo referencia de si se traduce
-  cellId: {
-    id: 'views.Config.Telecom.cellId',
-    defaultMessage: 'Cell Id'
-  },
   geoPlaceholder: {
     id: 'views.Config.Telecom.geoPlaceholder',
     defaultMessage: 'Ej. 1112223334'

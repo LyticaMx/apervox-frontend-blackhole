@@ -5,10 +5,10 @@ import {
 import { MagnifyingGlassMinusIcon } from '@heroicons/react/24/solid'
 import IconButton from 'components/Button/IconButton'
 import Switch from 'components/Form/Switch'
-import Grid from 'components/Grid'
 import Label from 'components/Label'
 import { ChangeEvent, ReactElement, useRef, useState } from 'react'
 import { useIntl } from 'react-intl'
+import ImageFilters, { ImageFiltersState } from './ImageFilters'
 import { messages } from './messages'
 
 import './styles.css'
@@ -18,27 +18,13 @@ interface ImageTransformations {
   scale: number
 }
 
-interface ImageFilters {
-  isInverted: boolean
-  hue: number
-  contrast: number
-  brightness: number
-  grayScale: number
-}
-
 interface Props {
   imageUrl: string
 }
 
 const ImageEditor = (props: Props): ReactElement => {
   const { imageUrl } = props
-  const [imageFilters, setImageFilters] = useState<ImageFilters>({
-    isInverted: false,
-    hue: 210,
-    contrast: 100,
-    brightness: 100,
-    grayScale: 0
-  })
+  const [isInverted, setIsInverted] = useState<boolean>(false)
   const [imageTransformations, setImageTransformations] =
     useState<ImageTransformations>({
       rotate: 0,
@@ -48,15 +34,12 @@ const ImageEditor = (props: Props): ReactElement => {
   const imageEvidenceRef = useRef<HTMLImageElement>(null)
   const { formatMessage } = useIntl()
 
-  const applyFilters = (newFilters: ImageFilters): void => {
+  const applyFilters = (newFilters: ImageFiltersState): void => {
     if (!imageEvidenceRef.current) return
-    const filters: string[] = []
+    const filters: string[] = [`invert(${isInverted ? 1 : 0})`]
 
     for (const key in newFilters) {
       switch (key) {
-        case 'isInverted':
-          filters.push(`invert(${newFilters[key] ? 1 : 0})`)
-          break
         case 'hue': {
           const hue = newFilters[key]
           if (hue >= 210 && hue <= 214) filters.push('hue-rotate(0deg)')
@@ -87,32 +70,6 @@ const ImageEditor = (props: Props): ReactElement => {
     }
 
     imageEvidenceRef.current.style.transform = transforms.join(' ')
-  }
-
-  const handleFilterChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    const { name, value } = event.target
-
-    const newFilters = Object.assign({}, imageFilters)
-
-    switch (name) {
-      case 'contrast':
-        newFilters.contrast = +value
-        break
-      case 'hue':
-        newFilters.hue = +value
-        break
-      case 'brightness':
-        newFilters.brightness = +value
-        break
-      case 'grayScale':
-        newFilters.grayScale = +value
-        break
-      default:
-        break
-    }
-
-    applyFilters(newFilters)
-    setImageFilters(newFilters)
   }
 
   const handleTransformationChange = (
@@ -165,9 +122,14 @@ const ImageEditor = (props: Props): ReactElement => {
   }
 
   const toggleInverted = (isInverted: boolean): void => {
-    const newFilters = Object.assign({}, imageFilters, { isInverted })
-    applyFilters(newFilters)
-    setImageFilters(newFilters)
+    if (!imageEvidenceRef.current) return
+    const actualFilters = imageEvidenceRef.current.style.filter // se obtienen filtros actuales
+    const newFilters = actualFilters
+      .split(' ') // separamos la cadena por espacios
+      .filter((filter) => !filter.includes('invert')) // quitamos aquel que sea de invert
+    newFilters.push(`invert(${isInverted ? 1 : 0})`) // agregamos el invert nuevo
+    imageEvidenceRef.current.style.filter = newFilters.join(' ') // asignamos la cadena
+    setIsInverted(isInverted) // actualizamos el estado
   }
 
   const changeRotation = (): void => {
@@ -236,7 +198,7 @@ const ImageEditor = (props: Props): ReactElement => {
             </div>
             <div className="flex gap-2 items-center">
               <Switch
-                value={imageFilters.isInverted}
+                value={isInverted}
                 size="sm"
                 color="primary"
                 onChange={toggleInverted}
@@ -247,86 +209,7 @@ const ImageEditor = (props: Props): ReactElement => {
             </div>
           </div>
         </div>
-        <Grid spacing={2}>
-          <Grid item xs={12} md={6} className="flex items-center">
-            <Label id="contrast" labelClassname="mb-0 text-white">
-              {formatMessage(messages.contrast)}
-            </Label>
-            <input
-              type="range"
-              min="0"
-              max="200"
-              step="1"
-              defaultValue="100"
-              name="contrast"
-              className="monocolor-slider ml-auto"
-              value={imageFilters.contrast}
-              onChange={handleFilterChange}
-            />
-            <span className="w-7 ml-1">
-              {(imageFilters.contrast / 100 - 1).toFixed(1)}
-            </span>
-          </Grid>
-          <Grid item xs={12} md={6} className="flex items-center">
-            <Label id="contrast" labelClassname="mb-0 text-white">
-              {formatMessage(messages.hue)}
-            </Label>
-            <input
-              type="range"
-              min="120"
-              max="300"
-              step="1"
-              defaultValue="210"
-              name="hue"
-              className="hue-slider ml-auto"
-              value={imageFilters.hue}
-              onChange={handleFilterChange}
-            />
-            <span className="w-7 ml-1">
-              {imageFilters.hue === 0
-                ? ''
-                : ((imageFilters.hue - 210) / 90).toFixed(1)}
-            </span>
-          </Grid>
-          <Grid item xs={12} md={6} className="flex items-center">
-            <Label id="brightness" labelClassname="mb-0 text-white">
-              {formatMessage(messages.brightness)}
-            </Label>
-            <input
-              type="range"
-              min="0"
-              max="200"
-              step="1"
-              defaultValue="200"
-              name="brightness"
-              value={imageFilters.brightness}
-              onChange={handleFilterChange}
-              className="monocolor-slider ml-auto"
-            />
-            <span className="w-7 ml-1">
-              {(imageFilters.brightness / 100 - 1).toFixed(1)}
-            </span>
-          </Grid>
-          <Grid item xs={12} md={6} className="flex items-center">
-            <Label id="color" labelClassname="mb-0 text-white">
-              {formatMessage(messages.grayScale)}
-            </Label>
-            <input
-              type="range"
-              min="0"
-              max="100"
-              step="1"
-              defaultValue="100"
-              name="grayScale"
-              value={imageFilters.grayScale}
-              onChange={handleFilterChange}
-              className="color-slider ml-auto"
-            />
-            <span className="w-7 ml-1">
-              {(1 - imageFilters.grayScale / 100).toFixed(1)}
-            </span>
-          </Grid>
-        </Grid>
+        <ImageFilters applyCallback={applyFilters} />
       </div>
     </div>
   )

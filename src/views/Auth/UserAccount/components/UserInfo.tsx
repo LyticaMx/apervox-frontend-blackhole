@@ -42,7 +42,7 @@ const UserInfo = (): ReactElement => {
   const { formatMessage } = useIntl()
   const { auth } = useAuth()
 
-  const fields: Field[] = [
+  const fields: Array<Field<FormValues>> = [
     {
       type: 'text',
       name: 'name',

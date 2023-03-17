@@ -8,7 +8,11 @@ import Typography from 'components/Typography'
 import ViewFilter from 'components/ViewFilter'
 import { useDrawer } from 'context/Drawer'
 import { format } from 'date-fns'
-import { actionsMessages, generalMessages } from 'globalMessages'
+import {
+  actionsMessages,
+  generalMessages,
+  platformMessages
+} from 'globalMessages'
 import useTableColumns from 'hooks/useTableColumns'
 import { ReactElement, useMemo, useState } from 'react'
 import { useIntl } from 'react-intl'
@@ -43,7 +47,7 @@ const Telecom = (): ReactElement => {
           </div>
           <div>
             <Typography className="text-secondary !text-base !leading-3">
-              {`${formatMessage(telecomMessages.cellId)}: ${
+              {`${formatMessage(platformMessages.cellId)}: ${
                 row.original.cellId
               }`}
             </Typography>

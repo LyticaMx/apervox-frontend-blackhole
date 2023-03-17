@@ -28,7 +28,7 @@ const EditDeviceDrawer = (props: Props): ReactElement => {
     media: yup.string().required(formatMessage(formMessages.required))
   })
 
-  const fields = useMemo<Field[]>(
+  const fields = useMemo<Array<Field<FormValues>>>(
     () => [
       {
         type: 'select',

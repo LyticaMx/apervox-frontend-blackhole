@@ -3,7 +3,7 @@ import { Switch as SwitchHL } from '@headlessui/react'
 import clsx from 'clsx'
 import { backgroudColorClassNames } from 'utils/classes'
 
-interface Props {
+export interface Props {
   value?: boolean
   onChange?: (value: boolean) => void
   size?: 'sm' | 'md' | 'lg'

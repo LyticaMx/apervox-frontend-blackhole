@@ -5,7 +5,7 @@ import Label from 'components/Label'
 
 // import { formClasses } from 'utils/classes'
 
-interface Props {
+export interface Props {
   id?: string
   label?: string
   type?: string

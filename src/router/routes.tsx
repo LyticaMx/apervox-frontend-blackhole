@@ -45,8 +45,10 @@ import Telecom from 'views/Config/Telecom'
 import CallsHistory from 'views/CallsHistory'
 import Acquisition from 'views/Acquisition'
 import WorkGroups from 'views/WorkGroups'
+import Evidence from 'views/Evidence'
 
 import BaseLayout from 'layout/BaseLayout'
+import EvidenceLayout from 'layout/EvidenceLayout'
 import FullScreenLayout from 'layout/FullScreenLayout'
 import { Layout } from 'types/layout'
 import { sidebarMessages } from 'globalMessages'
@@ -60,6 +62,9 @@ import DemoWavesurfer from 'views/Demo/Wavesurfer'
 import DemoCommon from 'views/Demo/Common'
 import ImageEditor from 'views/Demo/ImageEditor'
 import DemoEfra from 'views/Demo/efra'
+import VideoPlayer from 'views/Demo/VideoPlayer'
+import RichTextEditor from 'views/Demo/RichTextEditor'
+import EvidenceViewDemo from 'views/Demo/EvidenceViewDemo'
 
 export interface Route {
   id: string
@@ -125,14 +130,18 @@ export const pathRoute = {
     history: '/monitoreo/historial'
   },
   acquisition: '/medios-adquisicion',
+  evidence: '/evidencia',
   demo: {
     chart: '/demo-charts',
     form: '/demo-form',
     autoform: '/demo-autoform',
     system: '/demo-system',
     wavesurfer: '/demo-wavesurfer',
+    imageEditor: '/demo-image-editor',
     common: '/demo-common',
-    imageEditor: '/demo-image-editor'
+    videoPlayer: '/demo-video-player',
+    textEditor: '/demo-text-editor',
+    evidenceView: '/demo-evidence-view'
   }
 }
 
@@ -476,6 +485,16 @@ export const routes: Route[] = [
     private: true,
     sidebar: true
   },
+  {
+    id: 'evidence',
+    path: pathRoute.evidence,
+    scopes: [],
+    modules: [],
+    component: Evidence,
+    layout: EvidenceLayout,
+    private: false,
+    sidebar: false
+  },
   /* Siempre abajo */
   {
     id: 'demo',
@@ -559,7 +578,37 @@ export const routes: Route[] = [
         modules: [],
         scopes: [],
         component: DemoEfra,
-        layout: FullScreenLayout,
+        layout: FullScreenLayout
+      },
+      {
+        id: 'demo-video-player',
+        i18Key: 'demoVideoPlayer',
+        path: pathRoute.demo.videoPlayer,
+        modules: [],
+        scopes: [],
+        component: VideoPlayer,
+        layout: BaseLayout,
+        private: true,
+        sidebar: true
+      },
+      {
+        id: 'demo-text-editor',
+        i18Key: 'demoTextEditor',
+        path: pathRoute.demo.textEditor,
+        modules: [],
+        scopes: [],
+        component: RichTextEditor,
+        layout: BaseLayout,
+        private: false,
+        sidebar: true
+      },
+      {
+        id: 'demo-evidence-view',
+        path: pathRoute.demo.evidenceView,
+        modules: [],
+        scopes: [],
+        component: EvidenceViewDemo,
+        layout: BaseLayout,
         private: false,
         sidebar: true
       }
@@ -568,6 +617,6 @@ export const routes: Route[] = [
     component: DemoSystem,
     layout: BaseLayout,
     private: false,
-    sidebar: true
+    sidebar: false
   }
 ]
