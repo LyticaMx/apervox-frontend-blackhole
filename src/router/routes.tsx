@@ -59,6 +59,7 @@ import DemoAutoForm from 'views/Demo/AutoForm'
 import DemoWavesurfer from 'views/Demo/Wavesurfer'
 import DemoCommon from 'views/Demo/Common'
 import ImageEditor from 'views/Demo/ImageEditor'
+import DemoEfra from 'views/Demo/efra'
 
 export interface Route {
   id: string
@@ -201,7 +202,7 @@ export const routes: Route[] = [
     component: Speakers,
     layout: BaseLayout,
     private: true,
-    sidebar: true
+    sidebar: false
   },
   {
     id: 'calls',
@@ -224,7 +225,7 @@ export const routes: Route[] = [
     component: Calls,
     layout: BaseLayout,
     private: true,
-    sidebar: true
+    sidebar: false
   },
   {
     id: 'users',
@@ -248,7 +249,7 @@ export const routes: Route[] = [
     component: ControlGroups,
     layout: BaseLayout,
     private: true,
-    sidebar: true
+    sidebar: false
   },
   {
     id: 'work-groups',
@@ -549,12 +550,24 @@ export const routes: Route[] = [
         layout: BaseLayout,
         private: true,
         sidebar: true
+      },
+
+      {
+        id: 'demo-efra',
+        i18Key: 'demoImageEditor',
+        path: '/demo/efra',
+        modules: [],
+        scopes: [],
+        component: DemoEfra,
+        layout: FullScreenLayout,
+        private: false,
+        sidebar: true
       }
     ],
     scopes: [],
     component: DemoSystem,
     layout: BaseLayout,
-    private: true,
-    sidebar: false
+    private: false,
+    sidebar: true
   }
 ]
