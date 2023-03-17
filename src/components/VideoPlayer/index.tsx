@@ -2,6 +2,7 @@ import {
   ArrowDownTrayIcon,
   ArrowsPointingOutIcon,
   BackwardIcon,
+  ChevronUpIcon,
   ForwardIcon,
   MagnifyingGlassMinusIcon,
   MagnifyingGlassPlusIcon,
@@ -60,6 +61,7 @@ const VideoPlayer = (props: Props): ReactElement => {
   const [playerState, setPlayerState] = useState<PlayerState>()
   const [zoom, setZoom] = useState<number>(1)
   const rates = useMemo<number[]>(() => [2, 1.5, 1, 0.75, 0.5], [])
+  const [expanded, setExpanded] = useState<boolean>(true)
 
   useEffect(() => {
     if (!playerRef.current) return
@@ -287,6 +289,17 @@ const VideoPlayer = (props: Props): ReactElement => {
               />
             </div>
             <button
+              className="hover:enabled:bg-white group rounded-md p-1 mr-2 transition-colors"
+              onClick={() => setExpanded((exp) => !exp)}
+            >
+              <ChevronUpIcon
+                className={clsx(
+                  'w-5 h-5 text-white group-hover:group-enabled:text-primary transition-transform duration-500',
+                  expanded ? 'rotate-180' : ''
+                )}
+              />
+            </button>
+            <button
               onClick={() => playerRef.current?.toggleFullscreen()}
               className="hover:enabled:bg-white group rounded-md p-1 transition-colors"
             >
@@ -294,34 +307,51 @@ const VideoPlayer = (props: Props): ReactElement => {
             </button>
           </Grid>
         </Grid>
-        <div className="mt-4 flex items-center gap-2">
-          <button
-            className="group hover:enabled:bg-white rounded-md p-1 transition-colors"
-            name="zoomOut"
-            onClick={changeZoom}
+        <div
+          className={clsx(
+            'overflow-hidden transition-all duration-700',
+            expanded ? 'max-h-[300px]' : 'max-h-0'
+          )}
+        >
+          <div
+            className={clsx(
+              'mt-4 flex items-center gap-2 transition-opacity duration-500',
+              expanded ? 'opacity-100' : 'opacity-0'
+            )}
           >
-            <MagnifyingGlassMinusIcon className="h-5 w-5 text-white group-hover:group-enabled:text-primary" />
-          </button>
-          <input
-            type="range"
-            ref={zoomRef}
-            min={0.5}
-            max={3}
-            step={0.5}
-            value={zoom}
-            onChange={(e) => setZoom(+e.target.value)}
-            className="video-slider slider-progress w-36 bg-transparent cursor-pointer"
-          />
-          <button
-            className="group hover:enabled:bg-white rounded-md p-1 transition-colors"
-            name="zoomIn"
-            onClick={changeZoom}
+            <button
+              className="group hover:enabled:bg-white rounded-md p-1 transition-colors"
+              name="zoomOut"
+              onClick={changeZoom}
+            >
+              <MagnifyingGlassMinusIcon className="h-5 w-5 text-white group-hover:group-enabled:text-primary" />
+            </button>
+            <input
+              type="range"
+              ref={zoomRef}
+              min={0.5}
+              max={3}
+              step={0.5}
+              value={zoom}
+              onChange={(e) => setZoom(+e.target.value)}
+              className="video-slider slider-progress w-36 bg-transparent cursor-pointer"
+            />
+            <button
+              className="group hover:enabled:bg-white rounded-md p-1 transition-colors"
+              name="zoomIn"
+              onClick={changeZoom}
+            >
+              <MagnifyingGlassPlusIcon className="h-5 w-5 text-white group-hover:group-enabled:text-primary" />
+            </button>
+          </div>
+          <div
+            className={clsx(
+              'mt-4 transition-opacity duration-500',
+              expanded ? 'opacity-100' : 'opacity-0'
+            )}
           >
-            <MagnifyingGlassPlusIcon className="h-5 w-5 text-white group-hover:group-enabled:text-primary" />
-          </button>
-        </div>
-        <div className="mt-4">
-          <ImageFilters applyCallback={applyFilters} />
+            <ImageFilters applyCallback={applyFilters} />
+          </div>
         </div>
       </div>
     </div>

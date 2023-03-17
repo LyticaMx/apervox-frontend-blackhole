@@ -1,10 +1,11 @@
 import { MutableRefObject, ReactElement, useEffect, useRef } from 'react'
-import Editor from '@ghostramses/ckeditor5-blackhole-custom-build/build/ckeditor'
-import { DecoupledEditor } from 'types/richTextEditor'
+import Editor, {
+  Editor as EditorInstance
+} from '@ghostramses/ckeditor5-blackhole-custom-build/build/ckeditor'
 
 interface Props {
   initialData: string
-  editorRef: MutableRefObject<DecoupledEditor | null> // Referencia del editor
+  editorRef: MutableRefObject<EditorInstance | null> // Referencia del editor
   className?: string
   textAreaClassName?: string
   readOnly?: boolean

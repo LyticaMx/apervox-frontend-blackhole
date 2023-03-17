@@ -25,6 +25,8 @@
     "@typescript-eslint/no-floating-promises": "off",
     "@typescript-eslint/no-misused-promises": "off",
     "@typescript-eslint/restrict-template-expressions": "off",
+    "@typescript-eslint/space-before-function-paren": "off",
+
     // Manejar esta para eliminar los logs sin que se nos olviden
     "no-console": ["warn", { "allow": ["warn", "error"] }]
   }
