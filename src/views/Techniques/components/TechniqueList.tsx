@@ -1,12 +1,12 @@
 import { useState, ReactElement } from 'react'
 import { format } from 'date-fns'
-import { SortingState } from '@tanstack/react-table'
+import { SortingState, ColumnDef } from '@tanstack/react-table'
 import { TrashIcon } from '@heroicons/react/24/outline'
+import { NonEmptyArray } from 'types/utils'
 import { generalMessages } from 'globalMessages'
 import { useFormatMessage } from 'hooks/useIntl'
 import useTableColumns from 'hooks/useTableColumns'
-import { useWorkGroups } from 'context/WorkGroups'
-import { WorkGroupTechnique, Turn } from 'types/workgroup'
+import { Technique, Turn } from 'types/technique'
 import { Priority } from 'types/priority'
 import { Status } from 'types/status'
 import Table from 'components/Table'
@@ -14,12 +14,21 @@ import Tooltip from 'components/Tooltip'
 import PriorityLabel from 'components/Priority/PriorityLabel'
 import StatusTag from 'components/Status/StatusTag'
 
-const AssociatedTechniqueList = (): ReactElement => {
+interface Props {
+  data: Technique[]
+  shortMode?: boolean
+  onSelectItem?: () => void
+}
+
+const TechniqueList = ({
+  data,
+  shortMode,
+  onSelectItem
+}: Props): ReactElement => {
   const getMessage = useFormatMessage(generalMessages)
   const [sortingState, setSortingState] = useState<SortingState>([])
-  const { associatedTechniques } = useWorkGroups()
 
-  const columns = useTableColumns<WorkGroupTechnique>(() => [
+  const shortModeColums: NonEmptyArray<ColumnDef<Technique>> = [
     {
       accessorKey: 'id',
       header: 'ID'
@@ -28,6 +37,28 @@ const AssociatedTechniqueList = (): ReactElement => {
       accessorKey: 'name',
       header: getMessage('name')
     },
+    {
+      accessorKey: 'priority',
+      header: getMessage('priority'),
+      cell: ({ getValue }) => {
+        const priority = getValue<Priority>()
+
+        return <PriorityLabel value={priority} />
+      }
+    }
+  ]
+
+  const normalModeColumns: NonEmptyArray<ColumnDef<Technique>> = [
+    shortModeColums[0], // id
+    shortModeColums[1], // name
+    // {
+    //   accessorKey: 'id',
+    //   header: 'ID'
+    // },
+    // {
+    //   accessorKey: 'name',
+    //   header: getMessage('name')
+    // },
     {
       accessorKey: 'created_at',
       header: getMessage('registrationDate'),
@@ -48,15 +79,7 @@ const AssociatedTechniqueList = (): ReactElement => {
       accessorKey: 'time_on_platform',
       header: getMessage('timeOnPlatform')
     },
-    {
-      accessorKey: 'priority',
-      header: getMessage('priority'),
-      cell: ({ getValue }) => {
-        const priority = getValue<Priority>()
-
-        return <PriorityLabel value={priority} />
-      }
-    },
+    shortModeColums[2], // priority
     {
       accessorKey: 'status',
       header: getMessage('status'),
@@ -77,7 +100,7 @@ const AssociatedTechniqueList = (): ReactElement => {
     },
     {
       accessorKey: 'total_objective',
-      header: getMessage('status')
+      header: getMessage('totalObjective')
     },
     {
       accessorKey: 'id',
@@ -108,12 +131,17 @@ const AssociatedTechniqueList = (): ReactElement => {
         )
       }
     }
-  ])
+  ]
+
+  const columns = useTableColumns<Technique>(
+    () => (shortMode ? shortModeColums : normalModeColumns),
+    [shortMode]
+  )
 
   return (
     <Table
       columns={columns}
-      data={associatedTechniques}
+      data={data}
       className="overflow-x-auto shadow rounded-lg"
       manualSorting={{
         onSortingChange: setSortingState,
@@ -132,8 +160,9 @@ const AssociatedTechniqueList = (): ReactElement => {
           Icon: TrashIcon
         }
       ]}
+      onRowClicked={onSelectItem}
     />
   )
 }
 
-export default AssociatedTechniqueList
+export default TechniqueList

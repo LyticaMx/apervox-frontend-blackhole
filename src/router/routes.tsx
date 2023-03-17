@@ -8,7 +8,8 @@ import {
   Bars3Icon,
   IdentificationIcon,
   UsersIcon,
-  ComputerDesktopIcon
+  ComputerDesktopIcon,
+  FolderOpenIcon
 } from '@heroicons/react/24/outline'
 import { WifiIcon } from '@heroicons/react/24/solid'
 
@@ -45,6 +46,7 @@ import Telecom from 'views/Config/Telecom'
 import CallsHistory from 'views/CallsHistory'
 import Acquisition from 'views/Acquisition'
 import WorkGroups from 'views/WorkGroups'
+import Techniques from 'views/Techniques'
 
 import BaseLayout from 'layout/BaseLayout'
 import FullScreenLayout from 'layout/FullScreenLayout'
@@ -132,7 +134,8 @@ export const pathRoute = {
     wavesurfer: '/demo-wavesurfer',
     common: '/demo-common',
     imageEditor: '/demo-image-editor'
-  }
+  },
+  techniques: '/tecnicas'
 }
 
 export const routes: Route[] = [
@@ -471,6 +474,18 @@ export const routes: Route[] = [
     ],
     scopes: [],
     component: Comparisons,
+    layout: BaseLayout,
+    private: true,
+    sidebar: true
+  },
+  {
+    id: 'techniques',
+    path: pathRoute.techniques,
+    icon: FolderOpenIcon,
+    i18Key: 'techniques',
+    modules: [],
+    scopes: [],
+    component: Techniques,
     layout: BaseLayout,
     private: true,
     sidebar: true

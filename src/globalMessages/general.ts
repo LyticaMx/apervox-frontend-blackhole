@@ -579,5 +579,9 @@ export const generalMessages = defineMessages({
   nightning: {
     id: 'global.general.nightning',
     defaultMessage: 'Nocturno'
+  },
+  totalObjective: {
+    id: 'global.general.totalObjective',
+    defaultMessage: 'Total de objetivos'
   }
 })

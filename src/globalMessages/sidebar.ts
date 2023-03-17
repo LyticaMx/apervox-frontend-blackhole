@@ -120,5 +120,9 @@ export const sidebarMessages = defineMessages({
   workGroups: {
     id: 'sidebar.workGroups',
     defaultMessage: 'Grupos de trabajo'
+  },
+  techniques: {
+    id: 'sidebar.techniques',
+    defaultMessage: 'Técnicas'
   }
 })
