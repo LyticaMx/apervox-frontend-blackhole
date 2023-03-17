@@ -1,25 +1,17 @@
 import { useEffect, useRef, useState } from 'react'
 import { PluginDefinition } from 'wavesurfer.js/types/plugin'
-import createWavesurfer, {
-  WaveSurfer as WaveSurferRef,
-  WaveSurfer
-} from '../utils/createWavesurfer'
+import createWavesurfer, { WaveSurfer } from '../utils/createWavesurfer'
 import createPlugin from '../utils/createPlugin'
 import getDifference from '../utils/getDifference'
-import { PluginType } from '../types'
-
-interface UseWaveSurferParams {
-  container?: string | HTMLElement | null
-  plugins: PluginType[]
-  onMount: (wavesurferRef: null | WaveSurferRef) => any
-}
+import { UseWsParams } from '../types'
 
 const useWavesurfer = ({
   container,
   plugins = [],
   onMount,
+  audio,
   ...props
-}: UseWaveSurferParams): WaveSurfer | null => {
+}: UseWsParams): WaveSurfer | null => {
   const usedPluginsListCache = useRef<PluginDefinition[]>([])
   const [wavesurfer, setWavesurfer] = useState<WaveSurfer | null>(null)
 
@@ -36,9 +28,27 @@ const useWavesurfer = ({
 
     const ws = createWavesurfer({
       container,
+      splitChannelsOptions: {
+        overlay: false,
+        filterChannels: [],
+        channelColors: {
+          0: {
+            progressColor: '#7DD7EF',
+            waveColor: '#7DD7EF'
+          },
+          1: {
+            progressColor: '#6A59A3',
+            waveColor: '#6A59A3'
+          }
+        }
+      },
       ...props,
       plugins: _plugins
     })
+
+    if (audio) {
+      ws.load(audio.url, audio.peek, audio.preload)
+    }
 
     onMount?.(ws)
 

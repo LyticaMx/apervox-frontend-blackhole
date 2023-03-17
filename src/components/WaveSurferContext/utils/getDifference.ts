@@ -1,8 +1,8 @@
 import { PluginDefinition } from 'wavesurfer.js/types/plugin'
 
 const getDifference = (arr1: PluginDefinition[], arr2: PluginDefinition[]): any => {
-  let nextArr1 = [...arr1]
-  let nextArr2 = [...arr2]
+  const nextArr1 = [...arr1]
+  const nextArr2 = [...arr2]
 
   const disabled = nextArr1.filter((item) => {
     return nextArr2.findIndex((nextItem) => nextItem.name === item.name) === -1

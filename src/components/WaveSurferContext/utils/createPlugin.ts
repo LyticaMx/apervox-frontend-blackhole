@@ -1,7 +1,7 @@
 import { PluginDefinition } from 'wavesurfer.js/types/plugin'
 import { PluginType } from '../types'
 
-export default function createPlugin(pluginObj: PluginType): PluginDefinition {
+export default function createPlugin (pluginObj: PluginType): PluginDefinition {
   const { plugin, options, creator = 'create' } = pluginObj
 
   const createMethod: any = plugin[creator as keyof typeof plugin]

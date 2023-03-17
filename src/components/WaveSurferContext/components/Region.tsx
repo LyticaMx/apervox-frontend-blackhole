@@ -37,7 +37,7 @@ export const Region = ({
   onUpdateEnd,
   ...props
 }: RegionProps): ReactElement => {
-  const waveSurfer = useWavesurferContext()
+  const { wavesurfer } = useWavesurferContext()
 
   const isRenderedCache = useRef(false)
 
@@ -76,21 +76,21 @@ export const Region = ({
   )
 
   useEffect(() => {
-    if (!isRenderedCache.current && waveSurfer) {
+    if (!isRenderedCache.current && wavesurfer) {
       isRenderedCache.current = true
 
       let region
 
-      region = waveSurfer.regions.list[props.id]
+      region = wavesurfer.regions.list[props.id]
 
       if (!region) {
-        region = waveSurfer.addRegion(props)
+        region = wavesurfer.addRegion(props)
       }
 
       setRegionRef(region)
     }
     // eslint-disable-next-line
-  }, [waveSurfer])
+  }, [wavesurfer])
 
   useRegionEvent(regionRef, 'click', onClick)
 

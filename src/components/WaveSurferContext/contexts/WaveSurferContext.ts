@@ -1,5 +1,16 @@
 import { createContext } from 'react'
 import WaveSurfer from 'wavesurfer.js/src/wavesurfer'
-const WaveSurferContext = createContext<WaveSurfer | null>(null)
+
+interface WsContext {
+  wavesurfer: WaveSurfer | null
+  controls?: any
+  regions?: any
+  isReady: boolean
+}
+
+const WaveSurferContext = createContext<WsContext>({
+  wavesurfer: null,
+  isReady: false
+})
 
 export default WaveSurferContext

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-const useRegions = (wavesurfer): any => {
+const useRegions = (wavesurfer, regionsDefault: any): any => {
   const [regions, setRegions] = useState<any>([])
   const $regions = useRef<any>(regions)
   const $ws = useRef(wavesurfer)
@@ -29,6 +29,12 @@ const useRegions = (wavesurfer): any => {
       }
     ])
   }, [])
+
+  useEffect(() => {
+    if (regionsDefault) {
+      setRegions(regionsDefault)
+    }
+  }, [regionsDefault])
 
   const regionUpdatedHandler = useCallback((region) => {
     setRegions((prev) =>

@@ -73,6 +73,9 @@ const useWavesurferControls = (wavesurfer): any => {
     setFiltersState(fq)
     $ws.current.backend.setFilters(fq)
   }
+  const seekTo = (value: number): void => {
+    $ws.current.seekTo(value)
+  }
 
   return {
     isPlaying,
@@ -90,7 +93,8 @@ const useWavesurferControls = (wavesurfer): any => {
     setSpeed,
     skipBackward,
     skipForward,
-    setFilters
+    setFilters,
+    seekTo
   }
 }
 

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   BookmarkIcon,
   CheckCircleIcon,
@@ -15,8 +14,7 @@ import {
 import { useOnClickOutside } from 'usehooks-ts'
 import { Float } from '@headlessui-float/react'
 import clsx from 'clsx'
-import { cloneDeep, get, has, pick } from 'lodash'
-import useWavesurferContext from '../hooks/useWavesurferContext'
+import { has, pick } from 'lodash'
 
 interface Props {
   region: any
@@ -29,7 +27,6 @@ const RegionContent = (props: Props): ReactElement => {
   const [name, setName] = useState<string>('')
   const [editing, setEditing] = useState<boolean>(false)
 
-  const ws = useWavesurferContext()
   useOnClickOutside($menu, () => {
     setShow(false)
   })
@@ -77,6 +74,8 @@ const RegionContent = (props: Props): ReactElement => {
   }
 
   const handleSave = (): void => {
+    if (!name) return
+
     const data = pick(props.region, [
       'id',
       'start',
@@ -92,6 +91,7 @@ const RegionContent = (props: Props): ReactElement => {
     props.region.update({
       ...data,
       data: {
+        ...props.region.data,
         name
       }
     })
@@ -154,7 +154,9 @@ const RegionContent = (props: Props): ReactElement => {
                 />
                 <div className="flex gap-2 items-center">
                   <CheckCircleIcon
-                    className="h-5 w-5 text-muted hover:text-primary cursor-pointer"
+                    className={clsx('h-5 w-5 text-muted ', {
+                      'hover:text-primary cursor-pointer': !!name
+                    })}
                     onClick={handleSave}
                   />
                   <XCircleIcon
