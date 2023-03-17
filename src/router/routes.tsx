@@ -45,6 +45,7 @@ import DemoAutoForm from 'views/Demo/AutoForm'
 import DemoWavesurfer from 'views/Demo/Wavesurfer'
 import DemoCommon from 'views/Demo/Common'
 import ImageEditor from 'views/Demo/ImageEditor'
+import DemoEfra from 'views/Demo/efra'
 import VideoPlayer from 'views/Demo/VideoPlayer'
 import RichTextEditor from 'views/Demo/RichTextEditor'
 import EvidenceViewDemo from 'views/Demo/EvidenceViewDemo'
@@ -155,7 +156,6 @@ export const routes: Route[] = [
     private: true,
     sidebar: true
   },
-
   {
     id: 'work-groups',
     path: pathRoute.workGroups,
@@ -361,6 +361,16 @@ export const routes: Route[] = [
         layout: BaseLayout,
         private: true,
         sidebar: true
+      },
+
+      {
+        id: 'demo-efra',
+        i18Key: 'demoImageEditor',
+        path: '/demo/efra',
+        modules: [],
+        scopes: [],
+        component: DemoEfra,
+        layout: FullScreenLayout
       },
       {
         id: 'demo-video-player',
