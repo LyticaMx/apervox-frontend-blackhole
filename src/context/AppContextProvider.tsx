@@ -19,7 +19,6 @@ export const AppContextProvider = (props: Props): any => {
 
   const CombinedProviders = providers.reduce(
     (AccumulatedComponents, CurrentComponent) => {
-      // eslint-disable-next-line @typescript-eslint/space-before-function-paren
       return function Combined({ children }: Props): JSX.Element {
         return (
           <AccumulatedComponents>
