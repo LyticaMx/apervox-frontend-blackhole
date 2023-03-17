@@ -16,6 +16,7 @@ interface Props {
   value?: any
   onChange?: (element: any) => any
   onBlur?: (element: any) => any
+  onKeyDown?: (element: any) => any
   error?: boolean
   helperText?: string
   placeholder?: string
