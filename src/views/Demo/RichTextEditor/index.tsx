@@ -1,12 +1,12 @@
+import { Editor } from '@ghostramses/ckeditor5-blackhole-custom-build/build/ckeditor'
 import Button from 'components/Button'
 import RichTextEditorComponent from 'components/RichTextEditor'
 import Typography from 'components/Typography'
 import { ReactElement, useRef } from 'react'
-import { DecoupledEditor } from 'types/richTextEditor'
 import './RichTextEditor.css'
 
 const RichTextEditor = (): ReactElement => {
-  const editorRef = useRef<DecoupledEditor>(null)
+  const editorRef = useRef<Editor>(null)
 
   return (
     <div>

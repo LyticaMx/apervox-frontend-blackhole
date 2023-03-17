@@ -15,7 +15,6 @@ import VideoPlayer from 'components/VideoPlayer'
 import Typography from 'components/Typography'
 import ToolTabs, { ToolTab } from './components/ToolTabs'
 import SynopsisEditor from './components/SynopsisEditor'
-import { DecoupledEditor } from 'types/richTextEditor'
 import EventHistory from './components/EventHistory'
 import { generalMessages, platformMessages } from 'globalMessages'
 import { NonEmptyArray } from 'types/utils'
@@ -23,6 +22,7 @@ import { useLanguage } from 'context/Language'
 import Comments from './components/Comments'
 import LocationInformation from './components/LocationInformation'
 import TranscriptionTab from './components/TranscriptionTab'
+import { Editor } from '@ghostramses/ckeditor5-blackhole-custom-build/build/ckeditor'
 
 interface EvidenceLocation {
   type: 'audio' | 'video' | 'image' | 'doc'
@@ -33,7 +33,7 @@ const Evidence = (): ReactElement => {
   const location = useLocation<EvidenceLocation>()
   const { localeI18n } = useLanguage()
   const formikRef = useRef<FormikContextType<EventClassificationValues>>()
-  const synopsisRef = useRef<DecoupledEditor>(null)
+  const synopsisRef = useRef<Editor>(null)
 
   const eventInformation = useMemo<EvidenceData>(() => {
     switch (location.state?.type) {
