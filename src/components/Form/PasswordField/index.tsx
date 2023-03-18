@@ -5,7 +5,7 @@ import Label from 'components/Label'
 import { InputHTMLAttributes, ReactElement, useState } from 'react'
 import { formClasses } from 'utils/classes'
 
-interface Props {
+export interface Props {
   id: string
   label?: string
   className?: string
@@ -49,28 +49,30 @@ const PasswordField = ({
           {label}
         </Label>
       )}
-      <div className="relative">
-        <div className="absolute right-0 flex items-center pl-3">
-          <IconButton
-            tabIndex={-1}
-            onClick={() => setToggleView((old) => !old)}
-            color="indigo"
-          >
-            {toggleView ? (
-              <EyeSlashIcon className="w-5 h-5" />
-            ) : (
-              <EyeIcon className="w-5 h-5" />
-            )}
-          </IconButton>
+      <div>
+        <div className="relative">
+          <div className="absolute top-1/2 -translate-y-1/2 right-0 flex items-center pl-3">
+            <IconButton
+              tabIndex={-1}
+              onClick={() => setToggleView((old) => !old)}
+              color="indigo"
+            >
+              {toggleView ? (
+                <EyeSlashIcon className="w-5 h-5" />
+              ) : (
+                <EyeIcon className="w-5 h-5" />
+              )}
+            </IconButton>
+          </div>
+          <input
+            id={id}
+            type={toggleView ? 'text' : 'password'}
+            {...props}
+            className={clsx(formClasses, 'pr-10', {
+              'border-red-500 border-2': error
+            })}
+          />
         </div>
-        <input
-          id={id}
-          type={toggleView ? 'text' : 'password'}
-          {...props}
-          className={clsx(formClasses, 'pr-10', {
-            'border-red-500 border-2': error
-          })}
-        />
         {helperText && (
           <label className="text-xs text-red-500" id={`helper-${id}`}>
             {helperText}

@@ -488,6 +488,10 @@ export const generalMessages = defineMessages({
     id: 'global.general.labels',
     defaultMessage: 'Rótulos'
   },
+  label: {
+    id: 'global.general.label',
+    defaultMessage: 'Rótulo'
+  },
   letterhead: {
     id: 'global.general.letterhead',
     defaultMessage: 'Membrete'
@@ -583,5 +587,17 @@ export const generalMessages = defineMessages({
   totalObjective: {
     id: 'global.general.totalObjective',
     defaultMessage: 'Total de objetivos'
+  },
+  comments: {
+    id: 'global.general.comments',
+    defaultMessage: 'Comentarios'
+  },
+  comment: {
+    id: 'global.general.comment',
+    defaultMessage: 'Comentario'
+  },
+  country: {
+    id: 'global.general.county',
+    defaultMessage: 'País'
   }
 })

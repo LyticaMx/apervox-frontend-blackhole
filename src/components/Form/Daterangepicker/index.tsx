@@ -11,7 +11,7 @@ import DateView from './Date'
 import Switch from 'components/Form/Switch'
 import SelectField from '../Select'
 
-interface Props {
+export interface Props {
   id?: string
   name?: string
   label?: string

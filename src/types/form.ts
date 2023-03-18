@@ -1,147 +1,89 @@
 import { Columns, Spacing } from 'components/Grid'
 import { Style, Variant } from 'components/Typography'
-import { InputHTMLAttributes, ReactElement, ReactNode } from 'react'
-import { DropzoneOptions } from 'react-dropzone'
+import { FormikErrors, FormikTouched } from 'formik'
+import { ReactNode } from 'react'
+import { Props as TextFieldPropsOrigin } from 'components/Form/Textfield'
+import { Props as CheckboxPropsOrigin } from 'components/Form/Checkbox'
+import { Props as PasswordFieldPropsOrigin } from 'components/Form/PasswordField'
+import { Props as AutocompletePropsOrigin } from 'components/Form/Autocomplete'
+import { Props as DatepickerPropsOrigin } from 'components/Form/Datepicker'
+import { Props as DateRangePickerPropsOrigin } from 'components/Form/Daterangepicker'
+import { Props as DragDropPropsOrigin } from 'components/Form/DragDrop'
+import { Props as RadioPropsOrigin } from 'components/Form/Radio'
+import { Props as SelectPropsOrigin } from 'components/Form/Select'
+import { Props as SelectMultiplePropsOrigin } from 'components/Form/Selectmultiple'
+import { Props as MultiChipSelectPropsOrigin } from 'components/Form/Selectmultiple/MultiChip'
+import { Props as SwitchPropsOrigin } from 'components/Form/Switch'
 
-type Item = Record<string, any>
+export type TextFieldProps = Omit<
+  TextFieldPropsOrigin,
+  'value' | 'onChange' | 'onBlur' | 'error' | 'helperText'
+>
 
-export interface TextFieldProps {
-  id: string
-  label?: string
-  type?: string
-  className?: string
-  autoComplete?: string
-  required?: boolean
-  placeholder?: string
-  multiline?: boolean
-  rows?: number
-  labelSpacing?: '1' | '2' | '3' | '4' | '5'
-  inputProps?: InputHTMLAttributes<HTMLInputElement>
-  labelClassname?: string
-}
+export type PasswordFieldProps = Omit<
+  PasswordFieldPropsOrigin,
+  'name' | 'value' | 'onChange' | 'onBlur'
+>
 
-export interface PasswordFieldProps {
-  id: string
-  label?: string
-  className?: string
-  autoComplete?: string
-  required?: boolean
-  error?: boolean
-  helperText?: string
-  placeholder?: string
-  rows?: number
-  labelSpacing?: '1' | '2' | '3' | '4' | '5'
-  inputProps?: InputHTMLAttributes<HTMLInputElement>
-  labelClassname?: string
-}
+export type CheckboxProps = Omit<
+  CheckboxPropsOrigin,
+  'name' | 'checked' | 'onChange' | 'onBlur'
+>
 
-export interface CheckboxProps {
-  id?: string
-  label: string
-  description?: string
-  className?: string
-  required?: boolean
-  value?: any
-  disabled?: boolean
-  color?:
-    | 'base'
-    | 'slate'
-    | 'red'
-    | 'yellow'
-    | 'orange'
-    | 'green'
-    | 'cyan'
-    | 'sky'
-    | 'blue'
-    | 'indigo'
-    | 'purple'
-}
+export type AutocompleteProps = Omit<
+  AutocompletePropsOrigin,
+  'value' | 'onChange'
+>
 
-export interface AutocompleteProps {
-  label?: string
-  items: Item[]
-  placeholder?: string
-  textField: string
-  valueField: string
-  className?: string
-  onQueryChange?: (value: any) => void
-  noFoundText: ReactElement | string
-}
+export type DatePickerProps = Omit<
+  DatepickerPropsOrigin,
+  'name' | 'value' | 'onChange' | 'error' | 'helperText'
+>
 
-export interface DatePickerProps {
-  label?: string
-  formatDisplay: string
+export type DateRangePickerProps = Omit<
+  DateRangePickerPropsOrigin,
+  'name' | 'value' | 'onChange' | 'error' | 'helperText'
+>
 
-  id: string
-  clearable?: boolean
-  required?: boolean
-  placeholder?: string
-  minDate?: string
-  maxDate?: string
-}
+export type DragAndDropProps = DragDropPropsOrigin
 
-export interface DateRangePickerProps {
-  id?: string
-  label?: string
-  required?: boolean
-  formatDisplay?: string
-  clearable?: boolean
-  placeholder?: string
-  minDate?: string
-  maxDate?: string
-}
+export type RadioProps = Omit<
+  RadioPropsOrigin,
+  'name' | 'checked' | 'onChange' | 'onBlur'
+>
 
-export interface DragAndDropProps extends DropzoneOptions {
-  onChange?: (files: any) => void
-}
+export type SelectProps = Omit<
+  SelectPropsOrigin,
+  'value' | 'onChange' | 'error' | 'helperText'
+>
 
-export interface RadioProps {
-  id?: string
-  label: string
-  description?: string
-  className?: string
-  required?: boolean
-  checked?: boolean
-  disabled?: boolean
-  value: any
-}
+export type SelectMultipleProps = Omit<
+  SelectMultiplePropsOrigin,
+  'value' | 'selected' | 'onChange'
+>
 
-export interface SelectProps {
-  label?: string
-  placeholder?: string
-  items: Item[]
-  textField: string
-  valueField: string
-  clearable: boolean
-  disabled?: boolean
-  optionsContainerClassname?: string
-}
+export type MultiChipSelectProps = Omit<
+  MultiChipSelectPropsOrigin,
+  'value' | 'selected' | 'onChange'
+>
 
-export interface SelectMultipleProps {
-  label?: string
-  items: Item[]
-  textField: string
-  valueField: string
-  noFoundText: string
-}
-
-export interface SwitchProps {
-  size?: 'sm' | 'md' | 'lg'
-  color?: string
-  stopPropagation?: boolean
+export type SwitchProps = Omit<SwitchPropsOrigin, 'value' | 'onChange'> & {
   label?: string
 }
 
-export interface MultiChipSelectProps {
-  label?: string
-  items: Item[]
-  textField?: string
-  valueField?: string
-  noFoundText?: string
-  onNewOption?: (option: string) => void
+export interface CustomFieldFunctionProps<T> {
+  values: T
+  errors: FormikErrors<T>
+  touched: FormikTouched<T>
+  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void
+  setFieldTouched: (
+    field: string,
+    isTouched: boolean,
+    shouldValidate?: boolean
+  ) => void
 }
 
-export declare type FieldTypes =
+export declare type FieldTypes<T> =
   | {
       readonly type: 'text'
       options: TextFieldProps
@@ -192,7 +134,7 @@ export declare type FieldTypes =
     }
   | {
       readonly type: 'custom'
-      children: ReactNode | React.FC<any>
+      children: ReactNode | React.FC<CustomFieldFunctionProps<T>>
     }
 
 interface Breakpoints {
@@ -203,7 +145,7 @@ interface Breakpoints {
   xl?: Columns
 }
 
-export type Field = FieldTypes & {
+export type Field<T> = FieldTypes<T> & {
   name: string
   breakpoints?: Breakpoints
   section?: string
@@ -232,19 +174,21 @@ export interface SubmitButtonProps {
 
 export interface Section {
   name: string
+  removeSeparator?: boolean
   spacing?: Spacing
   title?: {
     text: string
     className?: string
-    noWrao?: boolean
+    noWrap?: boolean
     variant?: Variant
     style?: Style
   }
   description?: {
     text: string
     className?: string
-    noWrao?: boolean
+    noWrap?: boolean
     variant?: Variant
     style?: Style
   }
+  className?: string
 }

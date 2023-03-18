@@ -1,11 +1,10 @@
 import { ReactElement } from 'react'
 
 import {
-  PhoneIcon,
+  // PhoneIcon,
   UserGroupIcon,
-  Cog6ToothIcon,
+  // Cog6ToothIcon,
   BeakerIcon,
-  Bars3Icon,
   IdentificationIcon,
   UsersIcon,
   ComputerDesktopIcon,
@@ -13,29 +12,14 @@ import {
 } from '@heroicons/react/24/outline'
 import { WifiIcon } from '@heroicons/react/24/solid'
 
-import { PersonTargetIcon, AlertPlusIcon, DocIcon, AuditIcon } from 'assets/SVG'
+import { AuditIcon } from 'assets/SVG'
 
 import SignIn from 'views/Auth/SignIn'
-import Speakers from 'views/Speakers'
-import Pins from 'views/Pins'
-import Calls from 'views/Calls'
-import CallDetail from 'views/Calls/Detail'
-import ControlGroups from 'views/ControlGroups'
-import Directory from 'views/Directory'
-import Users from 'views/Users'
-import Dependencies from 'views/Dependencies'
 import RestorePassword from 'views/Auth/RestorePassword'
-import Alerts from 'views/Alerts'
-import Cases from 'views/Cases'
-import Profile from 'views/Profile'
 import Audit from 'views/Audit'
-import Comparisons from 'views/Comparisons'
-import OneToMany from 'views/Comparisons/OneToMany'
-import ReceiverToReceiver from 'views/Comparisons/ReceiverToReceiver'
 import Presentation from 'views/Presentation'
 import Roles from 'views/Roles'
 import UserAccount from 'views/Auth/UserAccount'
-import BondingNetwork from 'views/BondingNetwork'
 import FailedLoginAttemps from 'views/Audit/FailedLoginAttemps'
 import BlockedUsers from 'views/Audit/BlockedUsers'
 import UsersAdmin from 'views/UsersAdmin'
@@ -46,9 +30,11 @@ import Telecom from 'views/Config/Telecom'
 import CallsHistory from 'views/CallsHistory'
 import Acquisition from 'views/Acquisition'
 import WorkGroups from 'views/WorkGroups'
+import Evidence from 'views/Evidence'
 import Techniques from 'views/Techniques'
 
 import BaseLayout from 'layout/BaseLayout'
+import EvidenceLayout from 'layout/EvidenceLayout'
 import FullScreenLayout from 'layout/FullScreenLayout'
 import { Layout } from 'types/layout'
 import { sidebarMessages } from 'globalMessages'
@@ -61,6 +47,10 @@ import DemoAutoForm from 'views/Demo/AutoForm'
 import DemoWavesurfer from 'views/Demo/Wavesurfer'
 import DemoCommon from 'views/Demo/Common'
 import ImageEditor from 'views/Demo/ImageEditor'
+import DemoEfra from 'views/Demo/efra'
+import VideoPlayer from 'views/Demo/VideoPlayer'
+import RichTextEditor from 'views/Demo/RichTextEditor'
+import EvidenceViewDemo from 'views/Demo/EvidenceViewDemo'
 
 export interface Route {
   id: string
@@ -78,7 +68,6 @@ export interface Route {
 
 export const pathRoute = {
   home: '/',
-  profile: '/perfil',
   admin: {
     users: '/administracion/usuarios',
     dependencies: '/administracion/dependencias'
@@ -90,31 +79,13 @@ export const pathRoute = {
   },
   pins: '/pins',
   roles: '/roles',
-  speakers: {
-    dashboard: '/tablero-de-hablantes',
-    directory: '/directorio-de-hablantes'
-  },
-  calls: {
-    index: '/llamadas',
-    detail: '/detalle-de-llamada'
-  },
-  comparisons: {
-    oneToOne: '/comparison-one',
-    oneToMany: '/comparison-many',
-    receiverToReceiver: '/comparison-r'
-  },
   config: {
     general: '/configuracion',
     media: '/configuracion/medios',
     telecom: '/configuracion/telecom'
   },
-  receiverAudio: '/reseiver-audio',
-  senderAudio: '/sender-audio',
-  controlGroups: '/grupos-de-control',
   workGroups: '/grupos-de-trabajo',
   alerts: '/alertas',
-  cases: '/casos',
-  bondingNetwork: '/redes-de-vinculacion',
   audit: {
     general: '/auditoria',
     failedLoginAttemps: '/auditoria/inicios-de-sesion-fallidos',
@@ -126,16 +97,20 @@ export const pathRoute = {
     history: '/monitoreo/historial'
   },
   acquisition: '/medios-adquisicion',
+  evidence: '/evidencia',
+  techniques: '/tecnicas',
   demo: {
     chart: '/demo-charts',
     form: '/demo-form',
     autoform: '/demo-autoform',
     system: '/demo-system',
     wavesurfer: '/demo-wavesurfer',
+    imageEditor: '/demo-image-editor',
     common: '/demo-common',
-    imageEditor: '/demo-image-editor'
-  },
-  techniques: '/tecnicas'
+    videoPlayer: '/demo-video-player',
+    textEditor: '/demo-text-editor',
+    evidenceView: '/demo-evidence-view'
+  }
 }
 
 export const routes: Route[] = [
@@ -169,65 +144,8 @@ export const routes: Route[] = [
     modules: [],
     scopes: [],
     component: UserAccount,
-    layout: BaseLayout
-  },
-  {
-    id: 'profile',
-    path: pathRoute.profile,
-    modules: [],
-    icon: Bars3Icon,
-    scopes: [],
-    component: Profile,
     layout: BaseLayout,
-    private: true,
-    sidebar: false
-  },
-  {
-    id: 'speaker-dashboard',
-    i18Key: 'speakers',
-    path: pathRoute.speakers.dashboard,
-    modules: [
-      {
-        id: 'speaker-directory',
-        i18Key: 'directory',
-        path: pathRoute.speakers.directory,
-        modules: [],
-        icon: Bars3Icon,
-        scopes: [],
-        component: Directory,
-        layout: BaseLayout,
-        private: true
-      }
-    ],
-    icon: PersonTargetIcon,
-    scopes: [],
-    component: Speakers,
-    layout: BaseLayout,
-    private: true,
-    sidebar: true
-  },
-  {
-    id: 'calls',
-    i18Key: 'calls',
-    path: pathRoute.calls.index,
-    modules: [
-      {
-        id: 'call-detail',
-        i18Key: 'calls',
-        path: pathRoute.calls.detail,
-        modules: [],
-        scopes: [],
-        component: CallDetail,
-        layout: BaseLayout,
-        private: true
-      }
-    ],
-    icon: PhoneIcon,
-    scopes: [],
-    component: Calls,
-    layout: BaseLayout,
-    private: true,
-    sidebar: true
+    private: true
   },
   {
     id: 'users',
@@ -237,18 +155,6 @@ export const routes: Route[] = [
     modules: [],
     scopes: [],
     component: UsersAdmin,
-    layout: BaseLayout,
-    private: true,
-    sidebar: true
-  },
-  {
-    id: 'control-groups',
-    path: pathRoute.controlGroups,
-    icon: UserGroupIcon,
-    i18Key: 'controlGroups',
-    modules: [],
-    scopes: [],
-    component: ControlGroups,
     layout: BaseLayout,
     private: true,
     sidebar: true
@@ -266,18 +172,6 @@ export const routes: Route[] = [
     sidebar: true
   },
   {
-    id: 'alerts',
-    path: pathRoute.alerts,
-    icon: AlertPlusIcon,
-    i18Key: 'alerts',
-    modules: [],
-    scopes: [],
-    component: Alerts,
-    layout: BaseLayout,
-    private: true,
-    sidebar: true
-  },
-  {
     id: 'roles',
     path: pathRoute.roles,
     icon: IdentificationIcon,
@@ -285,30 +179,6 @@ export const routes: Route[] = [
     modules: [],
     scopes: [],
     component: Roles,
-    layout: BaseLayout,
-    private: true,
-    sidebar: true
-  },
-  {
-    id: 'cases',
-    path: pathRoute.cases,
-    icon: DocIcon,
-    i18Key: 'cases',
-    modules: [],
-    scopes: [],
-    component: Cases,
-    layout: BaseLayout,
-    private: true,
-    sidebar: true
-  },
-  {
-    id: 'bondingNetwork',
-    path: pathRoute.bondingNetwork,
-    icon: Bars3Icon,
-    i18Key: 'bondingNetwork',
-    modules: [],
-    scopes: [],
-    component: BondingNetwork,
     layout: BaseLayout,
     private: true,
     sidebar: true
@@ -411,72 +281,14 @@ export const routes: Route[] = [
     sidebar: true
   },
   {
-    id: 'admin-usuarios',
-    path: pathRoute.admin.users,
-    i18Key: 'users',
-    i18ModuleKey: 'admin',
-    modules: [
-      {
-        id: 'admin-dependencies',
-        i18Key: 'calls',
-        path: pathRoute.admin.dependencies,
-        modules: [],
-        scopes: [],
-        component: Dependencies,
-        layout: BaseLayout,
-        private: true
-      },
-      {
-        id: 'pins',
-        i18Key: 'pins',
-        path: pathRoute.pins,
-        modules: [],
-        scopes: [],
-        component: Pins,
-        layout: BaseLayout,
-        private: true,
-        sidebar: true
-      }
-    ],
-    icon: Cog6ToothIcon,
+    id: 'evidence',
+    path: pathRoute.evidence,
     scopes: [],
-    component: Users,
-    layout: BaseLayout,
-    private: true,
-    sidebar: true
-  },
-  {
-    id: 'comparison-one',
-    path: pathRoute.comparisons.oneToOne,
-    icon: Bars3Icon,
-    i18Key: 'comparisons',
-    modules: [
-      {
-        id: 'comparison-many',
-        path: pathRoute.comparisons.oneToMany,
-        modules: [],
-        scopes: [],
-        component: OneToMany,
-        layout: BaseLayout,
-        private: true
-      },
-      {
-        id: 'comparison-receiver',
-        i18Key: 'comparisonsRToR',
-        path: pathRoute.comparisons.receiverToReceiver,
-        modules: [],
-        scopes: [],
-        component: ReceiverToReceiver,
-        layout: BaseLayout,
-        private: true,
-        sidebar: true
-      }
-    ],
-    scopes: [],
-    component: Comparisons,
-    layout: BaseLayout,
-    private: true,
-    sidebar: true
+    modules: [],
+    component: Evidence,
+    layout: EvidenceLayout,
+    private: false,
+    sidebar: false
   },
   {
     id: 'techniques',
@@ -564,12 +376,54 @@ export const routes: Route[] = [
         layout: BaseLayout,
         private: true,
         sidebar: true
+      },
+
+      {
+        id: 'demo-efra',
+        i18Key: 'demoImageEditor',
+        path: '/demo/efra',
+        modules: [],
+        scopes: [],
+        component: DemoEfra,
+        layout: FullScreenLayout
+      },
+      {
+        id: 'demo-video-player',
+        i18Key: 'demoVideoPlayer',
+        path: pathRoute.demo.videoPlayer,
+        modules: [],
+        scopes: [],
+        component: VideoPlayer,
+        layout: BaseLayout,
+        private: true,
+        sidebar: true
+      },
+      {
+        id: 'demo-text-editor',
+        i18Key: 'demoTextEditor',
+        path: pathRoute.demo.textEditor,
+        modules: [],
+        scopes: [],
+        component: RichTextEditor,
+        layout: BaseLayout,
+        private: false,
+        sidebar: true
+      },
+      {
+        id: 'demo-evidence-view',
+        path: pathRoute.demo.evidenceView,
+        modules: [],
+        scopes: [],
+        component: EvidenceViewDemo,
+        layout: BaseLayout,
+        private: false,
+        sidebar: true
       }
     ],
     scopes: [],
     component: DemoSystem,
     layout: BaseLayout,
-    private: true,
+    private: false,
     sidebar: false
   }
 ]

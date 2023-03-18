@@ -105,6 +105,14 @@ export const sidebarMessages = defineMessages({
     id: 'sidebar.demo.demoImageEditor',
     defaultMessage: 'Editor de imagenes'
   },
+  demoVideoPlayer: {
+    id: 'sidebar.demo.demoVideoPlayer',
+    defaultMessage: 'Reproductor de video'
+  },
+  demoTextEditor: {
+    id: 'sidebar.demo.demoTextEditor',
+    defaultMessage: 'Editor de texto'
+  },
   directory: {
     id: 'sidebar.demo.directory',
     defaultMessage: 'Directorio'

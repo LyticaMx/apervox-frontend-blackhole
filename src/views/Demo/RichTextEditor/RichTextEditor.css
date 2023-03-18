@@ -1,0 +1,6 @@
+.editor-demo .ck.editor__editable[role='textbox'],
+.editor-demo .ck.ck-editor__editable[role='textbox']{
+  height: 25.5rem;
+  background-color: white !important;
+  overflow-y: auto;
+}
