@@ -23,6 +23,8 @@ import Comments from './components/Comments'
 import LocationInformation from './components/LocationInformation'
 import TranscriptionTab from './components/TranscriptionTab'
 import { Editor } from '@ghostramses/ckeditor5-blackhole-custom-build/build/ckeditor'
+import { PDFViewer } from 'components/PDFViewer'
+import PlanckTeory from 'assets/demo/Teoria_Planck.pdf'
 
 interface EvidenceLocation {
   type: 'audio' | 'video' | 'image' | 'doc'
@@ -176,6 +178,7 @@ const Evidence = (): ReactElement => {
             {location.state.type === 'video' && (
               <VideoPlayer videoUrl="http://media.w3.org/2010/05/bunny/movie.mp4" />
             )}
+            {location.state.type === 'doc' && <PDFViewer file={PlanckTeory} />}
           </div>
           <div className="bg-white rounded-md shadow-md p-3 mt-4">
             <Typography
