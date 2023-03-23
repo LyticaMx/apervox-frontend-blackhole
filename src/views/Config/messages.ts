@@ -247,7 +247,7 @@ export const mediaMessages = defineMessages({
     defaultMessage: 'Equipo - {device}'
   },
   deleteMedia: {
-    id: 'views.Config.Media.mediaCaption',
+    id: 'views.Config.Media.deleteMedia',
     defaultMessage: 'Eliminar Medio'
   },
   deleteQuestion: {
@@ -380,16 +380,16 @@ export const telecomMessages = defineMessages({
     defaultMessage: 'Datos actuales de la georeferencia seleccionada'
   },
   deleteGeo: {
-    id: 'views.Config.Media.mediaCaption',
+    id: 'views.Config.Telecom.deleteGeo',
     defaultMessage: 'Eliminar Georeferencia'
   },
   deleteQuestion: {
-    id: 'views.Config.Media.deleteQuestion',
+    id: 'views.Config.Telecom.deleteQuestion',
     defaultMessage:
       '¿Estás seguro de querer eliminar la(s) georeferencia(s) seleccionada(s)?'
   },
   deleteConfirmation: {
-    id: 'views.Config.Media.deleteConfirmation',
+    id: 'views.Config.Telecom.deleteConfirmation',
     defaultMessage:
       'Ingresa tu contraseña para validar la eliminación de la(s) georeferencia(s) seleccionada(s)'
   }

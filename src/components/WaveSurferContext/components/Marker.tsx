@@ -47,10 +47,10 @@ const Marker = ({ onClick, onDrop, onDrag, ...data }: MarkerProps): void => {
       onClick?.(marker, event)
     }
 
-    ws.on('marker-click', handler)
+    ws.wavesurfer?.on('marker-click', handler)
 
     return () => {
-      ws.un('marker-click', handler)
+      ws.wavesurfer?.un('marker-click', handler)
     }
   }, [ws, onClick])
 
@@ -67,10 +67,10 @@ const Marker = ({ onClick, onDrop, onDrag, ...data }: MarkerProps): void => {
       onDrag?.(marker, event)
     }
 
-    ws.on('marker-drag', handler)
+    ws.wavesurfer?.on('marker-drag', handler)
 
     return () => {
-      ws.un('marker-drag', handler)
+      ws.wavesurfer?.un('marker-drag', handler)
     }
   }, [ws, onDrag])
 
@@ -87,10 +87,10 @@ const Marker = ({ onClick, onDrop, onDrag, ...data }: MarkerProps): void => {
       onDrop?.(marker, event)
     }
 
-    ws.on('marker-drop', handler)
+    ws.wavesurfer?.on('marker-drop', handler)
 
     return () => {
-      ws.un('marker-drop', handler)
+      ws.wavesurfer?.un('marker-drop', handler)
     }
   }, [ws, onDrop])
 
@@ -107,7 +107,7 @@ const Marker = ({ onClick, onDrop, onDrag, ...data }: MarkerProps): void => {
     isRendered.current = true
 
     // create marker: marker becomes visible at the same time
-    markerEl.current = ws.addMarker(data)
+    markerEl.current = ws.wavesurfer?.addMarker(data)
   }, [ws])
 
   useEffect(() => {
@@ -125,15 +125,15 @@ const Marker = ({ onClick, onDrop, onDrag, ...data }: MarkerProps): void => {
     // that will add full marker update support.
     // https://wavesurfer-js.org/api/file/src/plugin/markers/index.js.html
 
-    const marker = ws.markers.markers.find(
-      (mark) => mark.el === markerEl.current?.el
+    const marker = ws.wavesurfer?.markers.markers.find(
+      (mark) => mark.position === markerEl.current?.position
     )
 
     if (!marker) return
 
     marker.time = data.time
 
-    ws.markers._updateMarkerPosition({
+    ;(ws.wavesurfer?.markers as any)._updateMarkerPosition({
       ...markerEl.current,
       time: data.time
     })
@@ -146,11 +146,13 @@ const Marker = ({ onClick, onDrop, onDrag, ...data }: MarkerProps): void => {
     () => () => {
       if (!ws$.current || !markerEl.current) return
 
-      const index = ws$.current.markers.markers.findIndex((marker: IMarker) => {
-        return marker.el === markerEl.current?.el
-      })
+      const index = ws$.current.wavesurfer?.markers.markers.findIndex(
+        (marker: IMarker) => {
+          return marker.el === markerEl.current?.el
+        }
+      )
 
-      ws$.current.markers.remove(index)
+      ws$.current.wavesurfer?.markers.remove(index ?? 0)
     },
     []
   )

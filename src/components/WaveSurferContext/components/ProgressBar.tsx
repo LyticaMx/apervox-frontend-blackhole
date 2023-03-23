@@ -24,8 +24,6 @@ const ProgressBar = (props: Props): ReactElement => {
     (e: MouseEvent<HTMLDivElement>) => {
       if (!progressRef.current) return
 
-      // const progressTime =
-      //   (e.nativeEvent.offsetX / progressRef.current.offsetWidth) * duration
       onClick(e.nativeEvent.offsetX / progressRef.current.offsetWidth)
     },
     [duration]

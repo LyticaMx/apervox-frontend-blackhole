@@ -25,6 +25,9 @@ import TranscriptionTab from './components/TranscriptionTab'
 import { Editor } from '@ghostramses/ckeditor5-blackhole-custom-build/build/ckeditor'
 import { PDFViewer } from 'components/PDFViewer'
 import PlanckTeory from 'assets/demo/Teoria_Planck.pdf'
+import WaveSurfer from 'components/WaveSurferContext'
+/* Demo */
+import DemoAudio from 'assets/audio/0989123090_20220128_173052_2_000126.wav'
 
 interface EvidenceLocation {
   type: 'audio' | 'video' | 'image' | 'doc'
@@ -179,6 +182,18 @@ const Evidence = (): ReactElement => {
               <VideoPlayer videoUrl="http://media.w3.org/2010/05/bunny/movie.mp4" />
             )}
             {location.state.type === 'doc' && <PDFViewer file={PlanckTeory} />}
+            {location.state.type === 'audio' && (
+              <WaveSurfer
+                plugins={['Regions', 'Timeline', 'Minimap']}
+                audio={{ url: DemoAudio }}
+                splitChannels
+                showEqualizer
+                showMinimap
+                showWave
+                showTimeline
+                showZoom
+              />
+            )}
           </div>
           <div className="bg-white rounded-md shadow-md p-3 mt-4">
             <Typography

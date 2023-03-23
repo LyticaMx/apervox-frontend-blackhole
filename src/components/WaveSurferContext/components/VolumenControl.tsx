@@ -16,9 +16,9 @@ const VolumenControl = (props: Props): ReactElement => {
       <input
         type="range"
         {...props}
-        value={controls.volume}
+        value={controls?.volume}
         onChange={(e) => {
-          controls.setVolume(e.target.value)
+          controls?.setVolume(+e.target.value)
         }}
         step={props.step ?? 1}
         className="ws-range rounded-lg flex-1 bg-white h-1 accent-primary"

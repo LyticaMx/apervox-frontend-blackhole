@@ -1,7 +1,7 @@
-import WaveSurferContext from '../contexts/WaveSurferContext'
+import WaveSurferContext, { WsContext } from '../contexts/WaveSurferContext'
 import { useContext } from 'react'
 
-const useWavesurferContext = (): any => {
+const useWavesurferContext = (): WsContext => {
   return useContext(WaveSurferContext)
 }
 

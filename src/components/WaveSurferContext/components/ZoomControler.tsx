@@ -19,9 +19,9 @@ const ZoomController = (props: Props): ReactElement => {
       <input
         type="range"
         {...props}
-        value={controls.zoom}
+        value={controls?.zoom}
         onChange={(e) => {
-          controls.setZoom(e.target.value)
+          controls?.setZoom(+e.target.value)
         }}
         step={props.step ?? 1}
         className="ws-range rounded-lg flex-1 bg-white h-1 accent-primary"

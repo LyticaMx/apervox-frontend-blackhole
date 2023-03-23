@@ -73,6 +73,7 @@
     "lint": "eslint --ext .jsx,.js,.ts,.tsx src/",
     "lint:fix": "yarn lint --fix",
     "extract-intl": "formatjs extract src/**/*.{js,jsx,ts,tsx} --ignore **/*.d.ts --out-file src/translations/es-mx.json --id-interpolation-pattern [sha512:contenthash:base64:6] --format simple",
+    "extract-intl:unix": "formatjs extract 'src/**/!(*.d).{js,jsx,ts,tsx}' --out-file src/translations/es-mx.json --id-interpolation-pattern [sha512:contenthash:base64:6] --format simple",
     "clean": "rm -rf dist && rm -rf build",
     "clean:modules": "rm -rf node_modules"
   },

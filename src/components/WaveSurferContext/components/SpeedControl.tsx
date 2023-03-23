@@ -23,11 +23,11 @@ export const SpeedControl = (): ReactElement => {
       {speedMarks.map((item) => (
         <button
           className={clsx(classes.base, {
-            [classes.active]: item.value === controls.speed,
-            [classes.inactive]: item.value !== controls.speed
+            [classes.active]: item.value === controls?.speed,
+            [classes.inactive]: item.value !== controls?.speed
           })}
           key={item.label}
-          onClick={() => controls.setSpeed(item.value)}
+          onClick={() => controls?.setSpeed(item.value)}
         >
           {item.label}
         </button>

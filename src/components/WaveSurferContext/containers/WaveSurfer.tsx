@@ -19,10 +19,13 @@ import VolumenControl from '../components/VolumenControl'
 import Equalizer from '../components/Equalizer'
 import clsx from 'clsx'
 import { ChevronUpIcon } from '@heroicons/react/24/outline'
+import { useIntl } from 'react-intl'
+import { messages } from '../messages'
 
 const WaveSurfer = (props: WsProps): ReactElement => {
   const [isReady, setIsReady] = useState<boolean>(false)
   const [expanded, setExpanded] = useState<boolean>(true)
+  const { formatMessage } = useIntl()
 
   // Definicion de plugins
   const plugins = usePlugins({
@@ -88,7 +91,7 @@ const WaveSurfer = (props: WsProps): ReactElement => {
               onClick={() => setExpanded((exp) => !exp)}
             >
               <span className="text-white group-hover:group-enabled:text-primary">
-                Ecualizador
+                {formatMessage(messages.equalizer)}
               </span>
               <ChevronUpIcon
                 className={clsx(
