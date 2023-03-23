@@ -1,6 +1,6 @@
 import { Priority } from 'types/priority'
 import { Status } from 'types/status'
-import { Technique, Turn } from 'types/technique'
+import { Evidence, Objective, Technique, Turn } from 'types/technique'
 
 export const techniquesData: Technique[] = [
   {
@@ -62,5 +62,125 @@ export const techniquesData: Technique[] = [
     priority: Priority.MEDIUM,
     turn_of_attention: Turn.MORNING,
     status: Status.COMPLETED
+  }
+]
+
+export const objectiveData: Objective[] = [
+  {
+    id: 'obtv_1',
+    name: 'Jorge Jimenez',
+    phone_number: '5545654789',
+    phone_company: 0,
+    created_at: new Date(Date.now() - 2 * (3600 * 1000 * 24)).toISOString(),
+    expires_at: new Date(Date.now() + 2 * (3600 * 1000 * 24)).toISOString(),
+    liid: 'random',
+    liid_v: 'random'
+  },
+  {
+    id: 'obtv_2',
+    name: 'Raul Perez',
+    phone_number: '5612654789',
+    phone_company: 0,
+    created_at: new Date(Date.now() - 2 * (3600 * 1000 * 24)).toISOString(),
+    expires_at: new Date(Date.now() + 2 * (3600 * 1000 * 24)).toISOString(),
+    liid: 'random',
+    liid_v: 'random'
+  },
+  {
+    id: 'obtv_3',
+    name: 'Eduardo Rangel',
+    phone_number: '7765690897',
+    phone_company: 0,
+    created_at: new Date(Date.now() - 2 * (3600 * 1000 * 24)).toISOString(),
+    expires_at: new Date(Date.now() + 2 * (3600 * 1000 * 24)).toISOString(),
+    liid: 'random',
+    liid_v: 'random'
+  }
+]
+
+export const evidencesData: Evidence[] = [
+  {
+    id: 'ev_1',
+    number_event: '00_1',
+    number_objective: '55-35674518',
+    number_origin: '55-31234565',
+    created_at: new Date().toISOString(),
+    expires_at: new Date(Date.now() + 2 * (3600 * 1000 * 24)).toISOString(),
+    duration: '00:07:00',
+    carrier: 'Telcel',
+    imei: 'AAAA-BBBB-CCCC',
+    imsi: '23452346545321',
+    code_cell_start: '123',
+    direction_cell_start: '123.123',
+    region_cell_start: '324',
+    audit_by: 'jmartinez',
+    follow_up: 'ggarcia',
+    obtained_from: 'ETZI',
+    tag: 0,
+    clasification: 0,
+    type: 0
+  },
+  {
+    id: 'ev_2',
+    number_event: '00_1',
+    number_objective: '55-35674518',
+    number_origin: '55-31234565',
+    created_at: new Date().toISOString(),
+    expires_at: new Date(Date.now() + 2 * (3600 * 1000 * 24)).toISOString(),
+    duration: '00:07:00',
+    carrier: 'Telcel',
+    imei: 'AAAA-BBBB-CCCC',
+    imsi: '23452346545321',
+    code_cell_start: '123',
+    direction_cell_start: '123.123',
+    region_cell_start: '324',
+    audit_by: 'jmartinez',
+    follow_up: 'ggarcia',
+    obtained_from: 'ETZI',
+    tag: 1,
+    clasification: 1,
+    type: 1
+  },
+  {
+    id: 'ev_3',
+    number_event: '00_1',
+    number_objective: '55-35674518',
+    number_origin: '55-31234565',
+    created_at: new Date().toISOString(),
+    expires_at: new Date(Date.now() + 2 * (3600 * 1000 * 24)).toISOString(),
+    duration: '00:07:00',
+    carrier: 'Telcel',
+    imei: 'AAAA-BBBB-CCCC',
+    imsi: '23452346545321',
+    code_cell_start: '123',
+    direction_cell_start: '123.123',
+    region_cell_start: '324',
+    audit_by: 'jmartinez',
+    follow_up: 'ggarcia',
+    obtained_from: 'ETZI',
+    tag: 1,
+    clasification: 2,
+    type: 2
+  },
+  {
+    id: 'ev_4',
+    number_event: '00_1',
+    number_objective: '55-35674518',
+    number_origin: '55-31234565',
+    created_at: new Date().toISOString(),
+    expires_at: new Date(Date.now() + 2 * (3600 * 1000 * 24)).toISOString(),
+    duration: '00:07:00',
+    carrier: 'Telcel',
+    imei: 'AAAA-BBBB-CCCC',
+    imsi: '23452346545321',
+    code_cell_start: '123',
+    direction_cell_start: '123.123',
+    region_cell_start: '324',
+    audit_by: 'jmartinez',
+    follow_up: 'ggarcia',
+    obtained_from: 'ETZI',
+    tag: 1,
+    clasification: 3,
+    type: 3
   }
 ]

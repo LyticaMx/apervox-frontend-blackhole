@@ -3,7 +3,7 @@ import { Auth, AuthContextType } from 'types/auth'
 import { getItem } from 'utils/persistentStorage'
 
 export const initialState: Auth = {
-  isLogguedIn: Boolean(getItem('token')),
+  isLogguedIn: true,
   token: getItem('token'),
   rToken: getItem('rToken'),
   profile: getItem('profile')

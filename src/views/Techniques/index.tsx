@@ -1,38 +1,42 @@
-import { ReactElement, useState, useEffect } from 'react'
-import { useFormatMessage } from 'hooks/useIntl'
+import { ReactElement, useState } from 'react'
 import { useToggle } from 'usehooks-ts'
+
 import Title from 'components/Title'
-// import { useWorkGroups } from 'context/WorkGroups'
 import GoBackButton from 'components/GoBackButton'
+
+import { useFormatMessage } from 'hooks/useIntl'
+import { Objective, Technique } from 'types/technique'
+
 import TechniqueFilter from './components/TechniqueFilter'
-import DeleteDialog from './components/DeleteDialog'
 import TechniqueList from './components/TechniqueList'
-// import CreateWorkGroupDrawer from './components/CreateWorkGroupDrawer'
-// import EditWorkGroupDrawer from './components/EditWorkGroupDrawer'
+import FormSection from './components/FormSection'
+import TechniqueInfo from './components/TechinqueInfo'
 import { techniquesMessages } from './messages'
 
 // TODO: replace this with context data
-import { techniquesData } from './mocks'
+import { techniquesData, objectiveData } from './mocks'
 
 const Techniques = (): ReactElement => {
   const getMessage = useFormatMessage(techniquesMessages)
-  const [openDeleteDialog, toggleDeleteDialog] = useToggle(false)
   const [openFilters, toggleOpenFilters] = useToggle(false)
-  const [shortMode, setShortMode] = useState(false)
+  const [techinqueSelected, setTechinqueSelected] = useState<Technique | null>(
+    null
+  )
+  const [objectiveSelected, setObjectiveSelected] = useState<Objective | null>(
+    null
+  )
 
   console.log(openFilters)
 
-  const toggleMode = (): void => setShortMode((prev) => !prev)
-
-  useEffect(() => {
-    setTimeout(() => toggleMode(), 2000)
-  }, [])
+  // const toggleMode = (): void => setTechinqueSelected((prev) => !prev)
 
   return (
     <>
       <div className="flex justify-between">
         <div className="flex justify-start items-center">
-          {shortMode && <GoBackButton onClick={toggleMode} />}
+          {techinqueSelected && (
+            <GoBackButton onClick={() => setTechinqueSelected(null)} />
+          )}
 
           <div className="ml-2">
             <Title className="uppercase">{getMessage('title')}</Title>
@@ -41,25 +45,26 @@ const Techniques = (): ReactElement => {
         </div>
 
         <TechniqueFilter toggleOpen={toggleOpenFilters} />
-
-        {/* <CreateWorkGroupDrawer
-          open={openCreateDrawer}
-          onClose={toggleOpenCreateDrawer}
-        /> */}
-
-        <DeleteDialog open={openDeleteDialog} onClose={toggleDeleteDialog} />
-
-        {/* <EditWorkGroupDrawer
-          open={openEditDrawer}
-          onClose={toggleOpenEditDrawer}
-        /> */}
       </div>
 
       <div className="flex gap-4 mt-2 mb-4">
         <TechniqueList
           data={techniquesData}
-          shortMode={shortMode}
-          onSelectItem={toggleMode}
+          shortMode={Boolean(techinqueSelected)}
+          onSelectItem={(techinque) => {
+            setTechinqueSelected(techinque)
+          }}
+        />
+        <FormSection
+          show={Boolean(techinqueSelected)}
+          objective={objectiveSelected as Objective}
+          technique={techinqueSelected as Technique}
+        />
+        <TechniqueInfo
+          technique={techinqueSelected as Technique}
+          objectiveList={objectiveData}
+          show={Boolean(techinqueSelected)}
+          onSelectItem={setObjectiveSelected}
         />
       </div>
     </>

@@ -87,7 +87,7 @@ const RegionMenu = (props: Props): ReactElement => {
       {inputOpen && (
         <div>
           <div className="flex items-center justify-between max-w-[13.5rem] p-1">
-            <IconButton onClick={toggleInputOpen}>
+            <IconButton onClick={() => toggleInputOpen}>
               <ChevronLeftIcon />
             </IconButton>
             <AnnotationInput

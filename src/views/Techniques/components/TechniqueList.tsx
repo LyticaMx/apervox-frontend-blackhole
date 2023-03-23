@@ -1,23 +1,34 @@
 import { useState, ReactElement } from 'react'
 import { format } from 'date-fns'
 import { SortingState, ColumnDef } from '@tanstack/react-table'
+
 import { TrashIcon } from '@heroicons/react/24/outline'
-import { NonEmptyArray } from 'types/utils'
-import { generalMessages } from 'globalMessages'
-import { useFormatMessage } from 'hooks/useIntl'
-import useTableColumns from 'hooks/useTableColumns'
-import { Technique, Turn } from 'types/technique'
-import { Priority } from 'types/priority'
-import { Status } from 'types/status'
+
 import Table from 'components/Table'
 import Tooltip from 'components/Tooltip'
 import PriorityLabel from 'components/Priority/PriorityLabel'
 import StatusTag from 'components/Status/StatusTag'
+import IconButton from 'components/Button/IconButton'
+import ActionNotification from 'components/Dialog/ActionNotification'
+
+import { NonEmptyArray } from 'types/utils'
+import { Technique, Turn } from 'types/technique'
+import { Priority } from 'types/priority'
+import { Status } from 'types/status'
+
+import { useFormatMessage } from 'hooks/useIntl'
+import useTableColumns from 'hooks/useTableColumns'
+
+import { generalMessages } from 'globalMessages'
+
+import Wrapper, { ContentType } from './Wrapper'
+import DeleteTechinqueDialog, { EliminationType } from './DeleteTechinqueDialog'
+import { techniquesDeleteDialogMessages } from '../messages'
 
 interface Props {
   data: Technique[]
   shortMode?: boolean
-  onSelectItem?: () => void
+  onSelectItem?: (rowSelected: Technique) => void
 }
 
 const TechniqueList = ({
@@ -26,7 +37,29 @@ const TechniqueList = ({
   onSelectItem
 }: Props): ReactElement => {
   const getMessage = useFormatMessage(generalMessages)
+  const getDeleteMessage = useFormatMessage(techniquesDeleteDialogMessages)
+
   const [sortingState, setSortingState] = useState<SortingState>([])
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
+  const [openActionNotification, setOpenActionNotification] = useState(false)
+  const [techinqueToDelete, setTechinqueToDelete] = useState<string | null>(
+    null
+  )
+
+  const handleOpenDeleteDialog = (e): void => {
+    e.preventDefault()
+    setOpenDeleteDialog(true)
+  }
+  const handleCloseDeleteDialog = (): void => {
+    setOpenDeleteDialog(false)
+    setTechinqueToDelete(null)
+  }
+
+  const handleDeleteTechinque = (eliminationType: EliminationType): void => {
+    setOpenDeleteDialog(false)
+    setOpenActionNotification(true)
+    console.log('techinque_id: ', techinqueToDelete, eliminationType)
+  }
 
   const shortModeColums: NonEmptyArray<ColumnDef<Technique>> = [
     {
@@ -120,12 +153,16 @@ const TechniqueList = ({
               }}
               placement="top"
             >
-              <TrashIcon
-                className="h-5 w-5 mx-1 text-muted hover:text-primary cursor-pointer"
-                onClick={() =>
-                  console.log(`onDeleteTechniqueFromWorkGroup(${id})`)
-                }
-              />
+              <IconButton
+                onClick={(e) => {
+                  e?.stopPropagation()
+                  handleOpenDeleteDialog(e)
+                  setTechinqueToDelete(id)
+                }}
+                className="text-muted hover:text-primary"
+              >
+                <TrashIcon className="h-5 w-5 mx-1" />
+              </IconButton>
             </Tooltip>
           </div>
         )
@@ -139,29 +176,43 @@ const TechniqueList = ({
   )
 
   return (
-    <Table
-      columns={columns}
-      data={data}
-      className="overflow-x-auto shadow rounded-lg"
-      manualSorting={{
-        onSortingChange: setSortingState,
-        sorting: sortingState
-      }}
-      maxHeight={500}
-      withCheckbox
-      actionsForSelectedItems={[
-        {
-          name: 'Eliminar',
-          action: (items) => {
-            console.log(
-              `onDeleteTechniquesFromWorkGroup(${items.map((user) => user.id)})`
-            )
-          },
-          Icon: TrashIcon
-        }
-      ]}
-      onRowClicked={onSelectItem}
-    />
+    <Wrapper expanded={!shortMode} contentType={ContentType.TECHNIQUE_LIST}>
+      <Table
+        columns={columns}
+        data={data}
+        className="overflow-x-auto shadow rounded-lg"
+        manualSorting={{
+          onSortingChange: setSortingState,
+          sorting: sortingState
+        }}
+        maxHeight={500}
+        withCheckbox
+        actionsForSelectedItems={[
+          {
+            name: 'Eliminar',
+            action: (items) => {
+              console.log(
+                `onDeleteTechniquesFromWorkGroup(${items.map(
+                  (user) => user.id
+                )})`
+              )
+            },
+            Icon: TrashIcon
+          }
+        ]}
+        onRowClicked={onSelectItem}
+      />
+      <DeleteTechinqueDialog
+        open={openDeleteDialog}
+        onClose={handleCloseDeleteDialog}
+        onAccept={handleDeleteTechinque}
+      />
+      <ActionNotification
+        open={openActionNotification}
+        title={getDeleteMessage('title')}
+        onAccept={() => setOpenActionNotification(false)}
+      />
+    </Wrapper>
   )
 }
 
