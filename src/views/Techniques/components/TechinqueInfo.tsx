@@ -10,11 +10,7 @@ import { Objective, Technique } from 'types/technique'
 import ObjectiveList from './ObjectiveList'
 import Wrapper, { ContentType } from './Wrapper'
 import CustomTabs from './CustomTabs'
-import {
-  DESCRIPTION_TAB,
-  OBJECTIVE_TAB,
-  techiniqueInfoTabs
-} from '../constants'
+import { techiniqueInfoTabs, TECHNIQUE_INFO_TABS } from '../constants'
 import Button from 'components/Button'
 import { ArrowDownTrayIcon } from '@heroicons/react/24/outline'
 
@@ -33,7 +29,7 @@ const TechniqueInfo = ({
 }: Props): ReactElement => {
   const descriptionRef = useRef<Editor>(null)
 
-  const [active, setActive] = useState(OBJECTIVE_TAB)
+  const [active, setActive] = useState(TECHNIQUE_INFO_TABS.OBJECTIVE)
 
   if (!technique) {
     return <Wrapper expanded={show} contentType={ContentType.TECHNIQUE_INFO} />
@@ -49,14 +45,20 @@ const TechniqueInfo = ({
           classNames={{ container: 'my-2' }}
           items={techiniqueInfoTabs}
           onChange={(tabClicked) => {
-            setActive(tabClicked)
+            setActive(tabClicked as TECHNIQUE_INFO_TABS)
           }}
           active={active}
         />
-        <div className={clsx(active !== OBJECTIVE_TAB && 'hidden')}>
+        <div
+          className={clsx(active !== TECHNIQUE_INFO_TABS.OBJECTIVE && 'hidden')}
+        >
           <ObjectiveList data={objectiveList} onSelectItem={onSelectItem} />
         </div>
-        <div className={clsx(active !== DESCRIPTION_TAB && 'hidden')}>
+        <div
+          className={clsx(
+            active !== TECHNIQUE_INFO_TABS.DESCRIPTION && 'hidden'
+          )}
+        >
           <Typography variant="body2" style="semibold">
             DESCRIPCIÓN DE LA TÉCNICA
           </Typography>

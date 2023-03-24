@@ -6,8 +6,9 @@ import { Objective, Technique } from 'types/technique'
 
 import Wrapper, { ContentType } from './Wrapper'
 import CustomTabs from './CustomTabs'
-import { EVIDENCE_TAB, objectiveInfoTabs } from '../constants'
+import { objectiveInfoTabs, OBJECTIVE_INFO_TABS } from '../constants'
 import EvidenceList from './EvidenceList'
+import ObjectiveForms from './ObjectiveForms'
 
 // TODO: replace this with context data
 import { evidencesData } from '../mocks'
@@ -19,7 +20,7 @@ interface Props {
 }
 
 const FormSection = ({ show, objective, technique }: Props): ReactElement => {
-  const [active, setActive] = useState(EVIDENCE_TAB)
+  const [active, setActive] = useState(OBJECTIVE_INFO_TABS.EVIDENCE)
 
   if (!show) return <Wrapper expanded={show} contentType={ContentType.FORMS} />
 
@@ -30,16 +31,28 @@ const FormSection = ({ show, objective, technique }: Props): ReactElement => {
           <Typography variant="title" style="bold">
             {technique.name}
           </Typography>
+
           <CustomTabs
             classNames={{ container: 'my-2' }}
             items={objectiveInfoTabs}
             onChange={(tabClicked) => {
-              setActive(tabClicked)
+              setActive(tabClicked as OBJECTIVE_INFO_TABS)
             }}
             active={active}
           />
-          <div className={clsx(active !== EVIDENCE_TAB && 'hidden')}>
+
+          <div
+            className={clsx(
+              active !== OBJECTIVE_INFO_TABS.EVIDENCE && 'hidden'
+            )}
+          >
             <EvidenceList data={evidencesData} />
+          </div>
+
+          <div
+            className={clsx(active !== OBJECTIVE_INFO_TABS.FORMS && 'hidden')}
+          >
+            <ObjectiveForms />
           </div>
         </div>
       </div>
