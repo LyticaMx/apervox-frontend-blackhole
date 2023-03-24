@@ -15,18 +15,18 @@ import { techniquesMessages } from './messages'
 
 // TODO: replace this with context data
 import { techniquesData, objectiveData } from './mocks'
+import CreateTechniqueDrawer from './components/CreateTechniqueDrawer'
 
 const Techniques = (): ReactElement => {
   const getMessage = useFormatMessage(techniquesMessages)
-  const [openFilters, toggleOpenFilters] = useToggle(false)
+
+  const [openCreateDrawer, toggleOpenCreateDrawer] = useToggle(false)
   const [techinqueSelected, setTechinqueSelected] = useState<Technique | null>(
     null
   )
   const [objectiveSelected, setObjectiveSelected] = useState<Objective | null>(
     null
   )
-
-  console.log(openFilters)
 
   // const toggleMode = (): void => setTechinqueSelected((prev) => !prev)
 
@@ -44,7 +44,7 @@ const Techniques = (): ReactElement => {
           </div>
         </div>
 
-        <TechniqueFilter toggleOpen={toggleOpenFilters} />
+        <TechniqueFilter toggleOpen={toggleOpenCreateDrawer} />
       </div>
 
       <div className="flex gap-4 mt-2 mb-4">
@@ -67,6 +67,10 @@ const Techniques = (): ReactElement => {
           onSelectItem={setObjectiveSelected}
         />
       </div>
+      <CreateTechniqueDrawer
+        open={openCreateDrawer}
+        onClose={toggleOpenCreateDrawer}
+      />
     </>
   )
 }

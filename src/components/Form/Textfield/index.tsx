@@ -14,7 +14,7 @@ export interface Props {
   autoComplete?: string
   required?: boolean
   value?: any
-  onChange?: (element: any) => any
+  onChange?: (element: React.ChangeEvent<HTMLInputElement>) => any
   onBlur?: (element: any) => any
   onKeyDown?: (element: any) => any
   error?: boolean

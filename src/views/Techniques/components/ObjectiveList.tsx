@@ -7,6 +7,7 @@ import Typography from 'components/Typography'
 import { Objective } from 'types/technique'
 
 import ObjectiveCard from './ObjectiveCard'
+import CreateObjectiveDialog from './CreateObjectiveDialog'
 
 interface Props {
   onSelectItem: (item: Objective) => void
@@ -18,6 +19,7 @@ const ObjectiveList = ({ data, onSelectItem }: Props): ReactElement => {
 
   const [searchValue, setSearchValue] = useState<string>('')
   const [objectivesChecked, setObjectivesChecked] = useState<string[]>([]) // Multi selección de objetivos
+  const [openObjectiveForm, setOpenObjectiveForm] = useState(false)
 
   const filteredSpeakers = useMemo(() => {
     const matches = data.filter(
@@ -64,7 +66,12 @@ const ObjectiveList = ({ data, onSelectItem }: Props): ReactElement => {
             }, 1000)
           }}
         />
-        <Button variant="contained" color="indigo" className="w-4/12">
+        <Button
+          variant="contained"
+          color="indigo"
+          className="w-4/12"
+          onClick={() => setOpenObjectiveForm(true)}
+        >
           Agregar objetivo
         </Button>
       </div>
@@ -77,6 +84,14 @@ const ObjectiveList = ({ data, onSelectItem }: Props): ReactElement => {
           onCheck={handleCheckObjective}
         />
       ))}
+      <CreateObjectiveDialog
+        open={openObjectiveForm}
+        onClose={() => setOpenObjectiveForm(false)}
+        onAccept={(objective: Objective) => {
+          console.log(objective)
+          setOpenObjectiveForm(false)
+        }}
+      />
     </div>
   )
 }
