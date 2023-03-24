@@ -10,7 +10,7 @@ export interface WsProps {
   config: Omit<WaveSurferParams, 'container' | 'plugins' | 'splitChannels'>
   splitChannels: boolean
   onMount?: (wavesurferRef: null | WaveSurfer) => any
-
+  onDownload?: (() => Promise<void>) | (() => Promise<boolean>)
   showMinimap?: boolean
   showTimeline?: boolean
   showWave?: boolean

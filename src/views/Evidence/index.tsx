@@ -186,6 +186,9 @@ const Evidence = (): ReactElement => {
               <WaveSurfer
                 plugins={['Regions', 'Timeline', 'Minimap']}
                 audio={{ url: DemoAudio }}
+                onDownload={async () => {
+                  console.log('hola')
+                }}
                 splitChannels
                 showEqualizer
                 showMinimap
