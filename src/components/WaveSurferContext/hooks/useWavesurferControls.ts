@@ -26,6 +26,9 @@ const useWavesurferControls = (wavesurfer): any => {
       $ws.current.on('audioprocess', function (process) {
         setAudioProcess(process)
       })
+      $ws.current.on('seek', (process) => {
+        setAudioProcess(process * $ws.current.getDuration())
+      })
     }
   }, [wavesurfer])
 
