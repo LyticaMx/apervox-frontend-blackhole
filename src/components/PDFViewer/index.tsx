@@ -8,6 +8,8 @@ import { useFormatMessage } from 'hooks/useIntl'
 import { ReactElement, useState } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
 import { messages } from './messages'
+import 'react-pdf/dist/esm/Page/TextLayer.css' // se mostraba mal el texto
+import 'react-pdf/dist/esm/Page/AnnotationLayer.css' // La info se mostraba de manera erronea
 import './style.css'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`

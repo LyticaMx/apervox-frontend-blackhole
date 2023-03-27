@@ -12,7 +12,9 @@ const format = function (string: string, ...args: any): any {
 
 const EqualizerControl = (): ReactElement => {
   const { controls } = useWavesurferContext()
-  const [defaultFilters, setDefaultFilters] = useState(controls.filters)
+  const [defaultFilters, setDefaultFilters] = useState<any>(
+    controls?.filters ?? []
+  )
   const [$container, { width, height }] = useElementSize()
 
   const [ranges, setRanges] = useState<number[]>([])
@@ -99,8 +101,8 @@ const EqualizerControl = (): ReactElement => {
   }
 
   useEffect(() => {
-    setDefaultFilters(controls.filters)
-  }, [controls.filters])
+    setDefaultFilters(controls?.filters ?? [])
+  }, [controls?.filters])
 
   useEffect(() => {
     setRanges(defaultFilters.map((item) => item.gain.value))
@@ -117,9 +119,9 @@ const EqualizerControl = (): ReactElement => {
   }, [points])
 
   const handleChange = (frequency: string, newValue: number): void => {
-    const newFilters = controls.filters.map((filter) => {
+    const newFilters = controls?.filters.map((filter) => {
       const modifiedFilter = filter
-      if (filter.frequency.value === frequency) {
+      if (filter.frequency.value === +frequency) {
         modifiedFilter.gain.value = newValue
       }
 
@@ -127,7 +129,7 @@ const EqualizerControl = (): ReactElement => {
     })
 
     setDefaultFilters(newFilters)
-    controls.setFilters(newFilters)
+    controls?.setFilters(newFilters ?? [])
   }
 
   const getLabel = (filter): string =>
@@ -169,9 +171,6 @@ const EqualizerControl = (): ReactElement => {
               onChange={(e: any) =>
                 handleChange(item.frequency.value, e.target.value)
               }
-              // onChange={(e) => {
-              //   updateSlider(e.target)
-              // }}
             />
             <div className="range-slider__bar"></div>
             <div className="range-slider__thumb"></div>

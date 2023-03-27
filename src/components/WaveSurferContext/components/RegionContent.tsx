@@ -15,9 +15,14 @@ import { useOnClickOutside } from 'usehooks-ts'
 import { Float } from '@headlessui-float/react'
 import clsx from 'clsx'
 import { has, pick } from 'lodash'
+import { useIntl } from 'react-intl'
+import { generalMessages } from 'globalMessages'
+import { messages } from '../messages'
+import { Region } from 'wavesurfer.js/src/plugin/regions'
+import useWavesurferContext from '../hooks/useWavesurferContext'
 
 interface Props {
-  region: any
+  region: Region
 }
 const RegionContent = (props: Props): ReactElement => {
   const $wraper = useRef<HTMLDivElement>(null)
@@ -26,6 +31,8 @@ const RegionContent = (props: Props): ReactElement => {
   const [show, setShow] = useState(false)
   const [name, setName] = useState<string>('')
   const [editing, setEditing] = useState<boolean>(false)
+  const { controls } = useWavesurferContext()
+  const { formatMessage } = useIntl()
 
   useOnClickOutside($menu, () => {
     setShow(false)
@@ -48,7 +55,7 @@ const RegionContent = (props: Props): ReactElement => {
 
   useEffect(() => {
     if (props.region.data.name) {
-      setName(props.region.data.name)
+      setName(props.region.data.name as string)
     }
   }, [props])
 
@@ -63,6 +70,11 @@ const RegionContent = (props: Props): ReactElement => {
         break
       case 'DELETE':
         handleRemove()
+        break
+      case 'PLAY':
+        props.region.playLoop()
+        controls?.setIsPlaying(true)
+        setShow(false)
         break
     }
 
@@ -144,10 +156,10 @@ const RegionContent = (props: Props): ReactElement => {
           >
             {editing && (
               <div className="flex gap-2 items-center p-2">
-                <span>Etiqueta:</span>
+                <span>{`${formatMessage(generalMessages.tag)}:`}</span>
                 <input
                   type="text"
-                  placeholder="Nombre de etiqueta"
+                  placeholder={formatMessage(messages.tagName)}
                   className="text-sm px-2 py-1 border border-slate-200 rounded-md focus:ring-0"
                   value={name}
                   onChange={handleChange}
@@ -170,36 +182,43 @@ const RegionContent = (props: Props): ReactElement => {
             )}
             {!editing && (
               <ul>
-                {isNew && (
+                {isNew ? (
                   <li
                     className="px-2 py-1 whitespace-nowrap text-sm hover:text-primary hover:bg-background-secondary cursor-pointer"
                     onClick={(e) => {
                       handleClick(e, 'CREATE')
                     }}
                   >
-                    Crear etiqueta
+                    {formatMessage(messages.createTag)}
+                  </li>
+                ) : (
+                  <li
+                    className="px-2 py-1 whitespace-nowrap text-sm hover:text-primary hover:bg-background-secondary cursor-pointer"
+                    onClick={(e) => {
+                      handleClick(e, 'EDIT')
+                    }}
+                  >
+                    {formatMessage(messages.editTag)}
                   </li>
                 )}
-                {!isNew && (
-                  <>
-                    <li
-                      className="px-2 py-1 whitespace-nowrap text-sm hover:text-primary hover:bg-background-secondary cursor-pointer"
-                      onClick={(e) => {
-                        handleClick(e, 'EDIT')
-                      }}
-                    >
-                      Editar etiqueta
-                    </li>
-                    <li
-                      className="px-2 py-1 whitespace-nowrap text-sm hover:text-primary hover:bg-background-secondary cursor-pointer"
-                      onClick={(e) => {
-                        handleClick(e, 'DELETE')
-                      }}
-                    >
-                      Eliminar etiqueta
-                    </li>
-                  </>
-                )}
+                <li
+                  className="px-2 py-1 whitespace-nowrap text-sm hover:text-primary hover:bg-background-secondary cursor-pointer"
+                  onClick={(e) => {
+                    handleClick(e, 'PLAY')
+                  }}
+                >
+                  {formatMessage(messages.playInLoop)}
+                </li>
+                <li
+                  className="px-2 py-1 whitespace-nowrap text-sm hover:text-primary hover:bg-background-secondary cursor-pointer"
+                  onClick={(e) => {
+                    handleClick(e, 'DELETE')
+                  }}
+                >
+                  {formatMessage(
+                    isNew ? messages.deleteRegion : messages.deleteTag
+                  )}
+                </li>
               </ul>
             )}
           </div>

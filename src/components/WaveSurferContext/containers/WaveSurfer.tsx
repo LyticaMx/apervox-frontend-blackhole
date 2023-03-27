@@ -18,11 +18,16 @@ import { SpeedControl } from '../components/SpeedControl'
 import VolumenControl from '../components/VolumenControl'
 import Equalizer from '../components/Equalizer'
 import clsx from 'clsx'
-import { ChevronUpIcon } from '@heroicons/react/24/outline'
+import { ArrowDownTrayIcon, ChevronUpIcon } from '@heroicons/react/24/outline'
+import { useIntl } from 'react-intl'
+import { messages } from '../messages'
+import Tooltip from 'components/Tooltip'
+import '../styles.css'
 
 const WaveSurfer = (props: WsProps): ReactElement => {
   const [isReady, setIsReady] = useState<boolean>(false)
   const [expanded, setExpanded] = useState<boolean>(true)
+  const { formatMessage } = useIntl()
 
   // Definicion de plugins
   const plugins = usePlugins({
@@ -71,7 +76,29 @@ const WaveSurfer = (props: WsProps): ReactElement => {
           <div id="minimap" />
         </div>
 
-        {props.showZoom && <ZoomController />}
+        <div className="flex gap-3 items-center">
+          {props.showZoom && <ZoomController />}
+          {props.onDownload && (
+            <Tooltip
+              content="Descargar audio"
+              className="h-5 w-5"
+              floatProps={{ offset: 10, arrow: true }}
+              classNames={{
+                panel:
+                  'bg-secondary text-white py-1 px-2 rounded-md text-sm whitespace-nowrap',
+                arrow: 'absolute bg-white w-2 h-2 rounded-full bg-secondary'
+              }}
+              placement="top"
+            >
+              <button
+                onClick={props.onDownload}
+                className="text-secondary-gray hover:enabled:text-secondary rounded-md"
+              >
+                <ArrowDownTrayIcon className="w-5 h-5" />
+              </button>
+            </Tooltip>
+          )}
+        </div>
       </div>
 
       <div
@@ -88,7 +115,7 @@ const WaveSurfer = (props: WsProps): ReactElement => {
               onClick={() => setExpanded((exp) => !exp)}
             >
               <span className="text-white group-hover:group-enabled:text-primary">
-                Ecualizador
+                {formatMessage(messages.equalizer)}
               </span>
               <ChevronUpIcon
                 className={clsx(

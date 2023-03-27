@@ -477,7 +477,7 @@ export const generalMessages = defineMessages({
     defaultMessage: 'Español'
   },
   english: {
-    id: 'global.general.spanish',
+    id: 'global.general.english',
     defaultMessage: 'Inglés'
   },
   inactivity: {
@@ -525,7 +525,7 @@ export const generalMessages = defineMessages({
     defaultMessage: 'General'
   },
   assignedPlural: {
-    id: 'global.general.assigned',
+    id: 'global.general.assignedPlural',
     defaultMessage: 'Asignados'
   },
   assignedPluralFemale: {

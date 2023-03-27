@@ -1,9 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { Popover } from '@headlessui/react'
-import { BookmarkIcon } from '@heroicons/react/24/outline'
 import { ReactElement, useCallback, useEffect, useRef, useState } from 'react'
 import ReactDOM from 'react-dom'
-import { useElementSize } from 'usehooks-ts'
 import {
   Region as RegionWS,
   RegionParams
@@ -113,7 +109,7 @@ export const Region = ({
   const Portal = useCallback(() => {
     const $region = document.querySelector(`[data-id="${regionRef?.id}"]`)
 
-    if (!$region) return null
+    if (!$region || !regionRef) return null
 
     let element = $region.querySelector('.region-container')
 

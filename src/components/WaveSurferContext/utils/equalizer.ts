@@ -43,10 +43,14 @@ const EQ: Filter[] = [
   }
 ]
 
-export const generteFilters = (ws, fq: Filter[] = EQ): any => {
+// Media element no tiene la propiedad ac
+export const generteFilters = (
+  ws: any,
+  fq: Filter[] = EQ
+): BiquadFilterNode[] => {
   return fq.map((band) => {
-    const filter = ws.backend.ac.createBiquadFilter()
-    filter.type = band.type
+    const filter: BiquadFilterNode = ws.backend.ac.createBiquadFilter()
+    filter.type = band.type as any
     filter.gain.value = 0
     filter.Q.value = 1
     filter.frequency.value = band.f
