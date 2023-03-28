@@ -28,6 +28,7 @@ interface Props<T> {
   submitButtonProps?: SubmitButtonProps
   formikRef?: MutableRefObject<FormikContextType<T> | undefined>
   className?: string
+  onBroadcastChanges?: (values: FormikContextType<T>) => void
 }
 
 const Form = <DataType extends FormikValues = FormikValues>(
@@ -43,7 +44,8 @@ const Form = <DataType extends FormikValues = FormikValues>(
     submitButtonPosition,
     submitButtonProps = {},
     formikRef,
-    className
+    className,
+    onBroadcastChanges
   } = props
   const { formatMessage } = useIntl()
   const formik = useFormik<DataType>(formikConfig)
@@ -65,6 +67,10 @@ const Form = <DataType extends FormikValues = FormikValues>(
 
   useEffect(() => {
     if (formikRef) formikRef.current = formik
+
+    if (onBroadcastChanges) {
+      onBroadcastChanges(formik)
+    }
   }, [formik])
 
   const buttonPosition = useMemo(() => {
