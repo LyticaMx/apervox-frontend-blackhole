@@ -1,18 +1,8 @@
-import React, {
-  ReactElement,
-  useCallback,
-  useEffect,
-  useMemo
-  // useRef,
-  // useState
-} from 'react'
+import React, { ReactElement, useCallback, useEffect, useMemo } from 'react'
 import ReactDOM from 'react-dom'
 import useRegionEvent from '../hooks/useRegionEvent'
 import useWavesurferContext from '../hooks/useWavesurferContext'
-import {
-  // Region as RegionWS,
-  RegionParams
-} from 'wavesurfer.js/src/plugin/regions'
+import { RegionParams } from 'wavesurfer.js/src/plugin/regions'
 import { RegionContentProps, WsRegionProps } from '../types'
 
 const asRegion = (
@@ -34,10 +24,6 @@ const asRegion = (
     ...props
   }: WsRegionProps): ReactElement => {
     const { wavesurfer } = useWavesurferContext()
-
-    // const isRenderedCache = useRef(false)
-
-    // const [regionRef, setRegionRef] = useState<RegionWS | null>(null)
 
     const regionRef = useMemo(() => {
       if (wavesurfer) {
@@ -69,24 +55,6 @@ const asRegion = (
       },
       UpdatableRegionProps.map((prop) => props[prop as keyof RegionParams])
     )
-
-    /*
-    useEffect(() => {
-      if (!isRenderedCache.current && wavesurfer) {
-        isRenderedCache.current = true
-
-        let region = wavesurfer.regions.list[props.id]
-
-        if (!region) {
-          region = wavesurfer.addRegion(props)
-          console.log(region)
-        }
-
-        setRegionRef(region)
-      }
-      // eslint-disable-next-line
-    }, [wavesurfer])
-    */
 
     useRegionEvent(regionRef, 'click', onClick)
 
