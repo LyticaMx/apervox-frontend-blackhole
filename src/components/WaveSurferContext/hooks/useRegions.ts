@@ -1,9 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import WaveSurfer from 'wavesurfer.js/src/wavesurfer'
 
-const useRegions = (wavesurfer, regionsDefault: any): any => {
+const useRegions = (
+  wavesurfer: WaveSurfer | null,
+  regionsDefault: any
+): any => {
   const [regions, setRegions] = useState<any>([])
-  const $regions = useRef<any>(regions)
-  const $ws = useRef(wavesurfer)
+  const $regions = useRef<any[]>(regions)
+  const $ws = useRef<WaveSurfer | null>(wavesurfer)
 
   useEffect(() => {
     if (wavesurfer) {
@@ -18,7 +22,7 @@ const useRegions = (wavesurfer, regionsDefault: any): any => {
   }, [regions])
 
   const regionCreatedHandler = useCallback((region) => {
-    setRegions((prev) => [
+    setRegions((prev: any[]) => [
       ...prev,
       {
         ...region,
@@ -31,10 +35,17 @@ const useRegions = (wavesurfer, regionsDefault: any): any => {
   }, [])
 
   useEffect(() => {
+    if (!wavesurfer) return
     if (regionsDefault) {
-      setRegions(regionsDefault)
+      setRegions(
+        regionsDefault.map((region) => $ws.current?.regions?.add(region))
+      )
     }
-  }, [regionsDefault])
+
+    return () => {
+      $ws.current?.regions.clear()
+    }
+  }, [wavesurfer, regionsDefault])
 
   const regionUpdatedHandler = useCallback((region) => {
     setRegions((prev) =>
