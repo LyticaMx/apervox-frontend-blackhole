@@ -10,7 +10,7 @@ import useRegions from '../hooks/useRegions'
 import { useHotkeys } from '../hooks/useHotkeys'
 import useWavesurferControls from '../hooks/useWavesurferControls'
 
-import Region from '../components/Region'
+import RegionWs from '../components/Region'
 import ZoomController from '../components/ZoomControler'
 import RangeControl from '../components/RangeControl'
 import PlayButtons from '../components/PlayButtons'
@@ -62,6 +62,8 @@ const WaveSurfer = (props: WsProps): ReactElement => {
       props.wsRef({ wavesurfer, controls, regions })
     }
   }, [wavesurfer, controls, regions])
+
+  const Region = props.CustomRegion ?? RegionWs
 
   return (
     <WaveSurferContext.Provider

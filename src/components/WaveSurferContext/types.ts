@@ -1,5 +1,10 @@
 import WaveSurfer from 'wavesurfer.js/src/wavesurfer'
 import { WaveSurferParams } from 'wavesurfer.js/types/params'
+import {
+  Region as RegionWS,
+  RegionParams
+} from 'wavesurfer.js/src/plugin/regions'
+import { EventHandler } from 'wavesurfer.js/types/util'
 
 export interface WsProps {
   plugins: Plugins
@@ -16,6 +21,7 @@ export interface WsProps {
   showWave?: boolean
   showZoom?: boolean
   showEqualizer?: boolean
+  CustomRegion?: React.ComponentType<WsRegionProps>
 }
 
 export interface UseWsParams
@@ -53,4 +59,20 @@ export interface Audio {
   url: string
   peek?: any
   preload?: any
+}
+
+export interface WsRegionProps extends RegionParams {
+  onClick?: EventHandler
+  onOver?: EventHandler
+  onLeave?: EventHandler
+  onDoubleClick?: EventHandler
+  onIn?: EventHandler
+  onOut?: EventHandler
+  onRemove?: EventHandler
+  onUpdate?: EventHandler
+  onUpdateEnd?: EventHandler
+  id: string
+}
+export interface RegionContentProps {
+  region: RegionWS
 }
