@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ReactElement, useEffect, useRef, useState } from 'react'
 import { useIMask, IMask } from 'react-imask'
+import { useIntl } from 'react-intl'
 import {
   formatSeconds,
   getSecondsFromTime,
   TimeSeconds
 } from 'utils/formatTime'
 import useWavesurferContext from '../hooks/useWavesurferContext'
+import { messages } from '../messages'
 
 const REGEX = /([01]?[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])/
 
@@ -15,6 +17,7 @@ const RangeControl = (): ReactElement => {
   const waitUpdate = useRef(true)
   const [start, setStart] = useState(0)
   const [end, setEnd] = useState(0)
+  const { formatMessage } = useIntl()
 
   const [opts] = useState({
     overwrite: true,
@@ -64,8 +67,8 @@ const RangeControl = (): ReactElement => {
 
   useEffect(() => {
     startMask.setValue(formatSeconds(0, true))
-    endMask.setValue(formatSeconds(controls.duration, true))
-  }, [controls.duration])
+    endMask.setValue(formatSeconds(controls?.duration ?? 0, true))
+  }, [controls?.duration])
 
   useEffect(() => {
     if (waitUpdate.current) {
@@ -73,13 +76,15 @@ const RangeControl = (): ReactElement => {
       return
     }
 
-    controls.play(start, end)
+    controls?.play(start, end)
   }, [start, end])
 
   return (
     <div className="flex gap-2">
       <div>
-        <span className="text-sm text-white">Iniciar en</span>
+        <span className="text-sm text-white">
+          {formatMessage(messages.startAt)}
+        </span>
         <input
           ref={startMask.ref}
           className="w-full bg-transparent border border-black text-white text-sm px-2 rounded-lg"
@@ -87,7 +92,9 @@ const RangeControl = (): ReactElement => {
         />
       </div>
       <div>
-        <span className="text-sm text-white">Terminar en</span>
+        <span className="text-sm text-white">
+          {formatMessage(messages.endAt)}
+        </span>
         <input
           ref={endMask.ref}
           className="w-full bg-transparent border border-black text-white text-sm px-2 rounded-lg"

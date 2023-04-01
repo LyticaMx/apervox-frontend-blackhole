@@ -3,7 +3,6 @@ import { ControlGroup, ControlAudio, ControlCall } from 'types/control'
 import { Dependency } from 'types/dependency'
 import { Penitentiary } from 'types/penitentiaries'
 import { Chunk, Pin } from 'types/pin'
-import { Segment } from 'types/segment'
 import { Speaker } from 'types/speaker'
 import { State, Country, Location } from 'types/location'
 import { PinActivity, TimeChartValues } from 'types/statistics'
@@ -22,8 +21,6 @@ export const dependencies: Dependency[] = [] // Ready
 export const callChartValues: TimeChartValues[] = [] // Ready
 export const alertChartValues: TimeChartValues[] = [] // Ready
 export const tags: TagModel[] = []
-export const regions: any[] = []
-export const transcription: Segment[] = []
 
 export const countries: Country[] = [
   {
@@ -259,24 +256,21 @@ export const controlCalls: ControlCall[] = Array.from(
   })
 )
 /* regionChart */
-for (let index = 0; index < 5; index++) {
-  regions.push({
-    id: `Region-${index}`,
+export const regions: any[] = Array.from({ length: 5 }, (_, index) => ({
+  id: `Region-${index}`,
+  start: index,
+  partialStart: index,
+  end: index * 1.5,
+  partialEnd: index * 1.5
+}))
+
+export const transcriptionRegions: any[] = Array.from(
+  { length: 2 },
+  (_, index) => ({
+    id: `Transcription-${index}`,
     start: index,
     partialStart: index,
-    end: index * 1.5,
-    partialEnd: index * 1.5
+    end: (index + 10) * 5,
+    partialEnd: (index + 10) * 5
   })
-}
-
-for (let index = 0; index < 10; index++) {
-  transcription.push({
-    id: `Segment-${index}`,
-    audio_id: 'audio_id',
-    created_at: '',
-    updated_at: '',
-    start_time: index * 2,
-    end_time: index * 2 + index * 1,
-    transcription: `Segmento ${index}`
-  })
-}
+)

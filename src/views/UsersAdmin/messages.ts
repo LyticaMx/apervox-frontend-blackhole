@@ -100,7 +100,7 @@ export const usersCreateMessages = defineMessages({
 
 export const usersEditMessages = defineMessages({
   title: {
-    id: 'views.users.create.title',
+    id: 'views.users.edit.title',
     defaultMessage: 'Datos del usuario'
   },
   message: {

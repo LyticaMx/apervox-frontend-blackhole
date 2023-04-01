@@ -23,7 +23,7 @@ export const messages = defineMessages({
     defaultMessage: 'Roles y permisos'
   },
   usersControl: {
-    id: 'views.Audit.rolesAndPermissions',
+    id: 'views.Audit.usersControl',
     defaultMessage: 'Control de usuarios'
   },
   workgroups: {

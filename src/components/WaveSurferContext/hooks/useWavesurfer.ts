@@ -28,6 +28,7 @@ const useWavesurfer = ({
 
     const ws = createWavesurfer({
       container,
+      height: 150,
       splitChannelsOptions: {
         overlay: false,
         filterChannels: [],

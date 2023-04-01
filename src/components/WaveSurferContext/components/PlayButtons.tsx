@@ -18,7 +18,7 @@ const PlayButtons = (): ReactElement => {
         <button
           disabled={!isReady}
           onClick={() => {
-            controls.skipBackward()
+            controls?.skipBackward()
           }}
           className="text-muted hover:text-white disabled:text-gray-300 disabled:hover:text-gray-300"
         >
@@ -27,11 +27,11 @@ const PlayButtons = (): ReactElement => {
         <button
           disabled={!isReady}
           onClick={() => {
-            controls.playPause()
+            controls?.playPause()
           }}
           className="text-muted hover:text-white disabled:text-gray-300 disabled:hover:text-gray-300"
         >
-          {controls.isPlaying ? (
+          {controls?.isPlaying ? (
             <PauseCircleIcon className="w-8 h-8" />
           ) : (
             <PlayCircleIcon className="w-8 h-8" />
@@ -40,7 +40,7 @@ const PlayButtons = (): ReactElement => {
         <button
           disabled={!isReady}
           onClick={() => {
-            controls.skipForward()
+            controls?.skipForward()
           }}
           className="text-muted hover:text-white disabled:text-gray-300 disabled:hover:text-gray-300"
         >
@@ -48,18 +48,28 @@ const PlayButtons = (): ReactElement => {
         </button>
       </div>
       <div className="py-3 flex items-center w-full text-white text-sm">
-        {formatSeconds(0)}
+        <span className="min-w-12">
+          {formatSeconds(
+            controls?.audioProcess ?? 0,
+            (controls?.audioProcess ?? 0) >= 3600
+          )}
+        </span>
         <div className="px-5 w-full">
           <ProgressBar
-            currentTime={controls.audioProcess}
-            duration={controls.duration}
+            currentTime={controls?.audioProcess ?? 0}
+            duration={controls?.duration ?? 0}
             onClick={(value) => {
-              controls.seekTo(value)
-              controls.play()
+              controls?.seekTo(value)
+              controls?.play()
             }}
           />
         </div>
-        {formatSeconds(controls.duration)}
+        <span className="min-w-12">
+          {formatSeconds(
+            controls?.duration ?? 0,
+            (controls?.audioProcess ?? 0) >= 3600
+          )}
+        </span>
       </div>
     </div>
   )

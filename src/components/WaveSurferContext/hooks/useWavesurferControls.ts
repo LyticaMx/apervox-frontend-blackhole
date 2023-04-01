@@ -10,7 +10,7 @@ const useWavesurferControls = (wavesurfer): any => {
   const [zoom, setZoomState] = useState(0)
   const [volume, setVolumeState] = useState(50)
   const [speed, setSpeedState] = useState(1)
-  const [filters, setFiltersState] = useState([])
+  const [filters, setFiltersState] = useState<BiquadFilterNode[]>([])
 
   useEffect(() => {
     if (wavesurfer) {
@@ -25,6 +25,9 @@ const useWavesurferControls = (wavesurfer): any => {
       })
       $ws.current.on('audioprocess', function (process) {
         setAudioProcess(process)
+      })
+      $ws.current.on('seek', (process) => {
+        setAudioProcess(process * $ws.current.getDuration())
       })
     }
   }, [wavesurfer])
@@ -69,7 +72,7 @@ const useWavesurferControls = (wavesurfer): any => {
     }
   }
 
-  const setFilters = (fq: any): void => {
+  const setFilters = (fq: BiquadFilterNode[]): void => {
     setFiltersState(fq)
     $ws.current.backend.setFilters(fq)
   }
@@ -88,6 +91,7 @@ const useWavesurferControls = (wavesurfer): any => {
     play,
     stop,
     playPause,
+    setIsPlaying,
     setZoom,
     setVolume,
     setSpeed,

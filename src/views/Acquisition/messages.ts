@@ -41,7 +41,7 @@ export const tableMessages = defineMessages({
     defaultMessage: 'Fecha de registro'
   },
   releaseDate: {
-    id: 'views.acquisition.table.date',
+    id: 'views.acquisition.table.releaseDate',
     defaultMessage: 'Fecha de liberación'
   },
   time: {
