@@ -13,6 +13,7 @@ import CustomTabs from './CustomTabs'
 import { techiniqueInfoTabs, TECHNIQUE_INFO_TABS } from '../constants'
 import Button from 'components/Button'
 import { ArrowDownTrayIcon } from '@heroicons/react/24/outline'
+import TechniqueUpdateForm from './TechniqueUpdateForm'
 
 interface Props {
   show: boolean
@@ -87,6 +88,20 @@ const TechniqueInfo = ({
               textAreaClassName="editor-demo"
             />
           </div>
+        </div>
+        <div
+          className={clsx(active !== TECHNIQUE_INFO_TABS.CONFIG && 'hidden')}
+        >
+          <Typography variant="body2" style="semibold">
+            CONFIGURACIÓN DE LA TÉCNICA
+          </Typography>
+          <div className="flex items-center justify-between">
+            <Typography variant="body2">Datos de la técnica.</Typography>
+            <Button color="indigo">Guardar</Button>
+          </div>
+          <TechniqueUpdateForm
+            onSubmit={async (values) => console.log('values', values)}
+          />
         </div>
       </div>
     </Wrapper>

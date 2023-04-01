@@ -12,6 +12,7 @@ import ObjectiveForms from './ObjectiveForms'
 
 // TODO: replace this with context data
 import { evidencesData } from '../mocks'
+import GeneralDataForm from './ObjectiveForms/GeneralDataForm'
 
 interface Props {
   show: boolean
@@ -26,7 +27,10 @@ const FormSection = ({ show, objective, technique }: Props): ReactElement => {
 
   return (
     <Wrapper expanded={show} contentType={ContentType.FORMS}>
-      <div className="rounded-lg shadow-md border border-gray-100 p-3 h-full">
+      <div
+        id="technique-objetive-forms"
+        className="rounded-lg shadow-md border border-gray-100 p-3 h-full"
+      >
         <div>
           <Typography variant="title" style="bold">
             {technique.name}
@@ -50,9 +54,17 @@ const FormSection = ({ show, objective, technique }: Props): ReactElement => {
           </div>
 
           <div
+            className={clsx(
+              active !== OBJECTIVE_INFO_TABS.GENERAL_DATA && 'hidden'
+            )}
+          >
+            <GeneralDataForm />
+          </div>
+
+          <div
             className={clsx(active !== OBJECTIVE_INFO_TABS.FORMS && 'hidden')}
           >
-            <ObjectiveForms />
+            {active === OBJECTIVE_INFO_TABS.FORMS && <ObjectiveForms />}
           </div>
         </div>
       </div>

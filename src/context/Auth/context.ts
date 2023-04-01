@@ -6,7 +6,16 @@ export const initialState: Auth = {
   isLogguedIn: true,
   token: getItem('token'),
   rToken: getItem('rToken'),
-  profile: getItem('profile')
+  profile: {
+    email: '',
+    profile_id: '',
+    name: '',
+    fathers_name: '',
+    mothers_name: '',
+    since: '',
+    activated: '',
+    pic: ''
+  }
 }
 
 export const AuthContext: Context<AuthContextType> = createContext({

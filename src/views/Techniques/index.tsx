@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ReactElement, useState } from 'react'
 import { useToggle } from 'usehooks-ts'
 

@@ -56,7 +56,7 @@ const ObjectiveList = ({ data, onSelectItem }: Props): ReactElement => {
       <div className="flex gap-2">
         <TextField
           placeholder="Buscar..."
-          className="w-8/12"
+          className="w-7/12"
           onChange={(e) => {
             clearTimeout(timer)
             const value = e.target.value
@@ -69,7 +69,7 @@ const ObjectiveList = ({ data, onSelectItem }: Props): ReactElement => {
         <Button
           variant="contained"
           color="indigo"
-          className="w-4/12"
+          className="w-5/12"
           onClick={() => setOpenObjectiveForm(true)}
         >
           Agregar objetivo

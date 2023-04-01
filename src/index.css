@@ -80,3 +80,7 @@
 .user-account-data-form label {
   @apply mb-3;
 }
+
+#technique-objetive-forms form button[id^='headlessui-listbox-button'] {
+  @apply bg-white;
+}

@@ -245,11 +245,7 @@ const TechniqueForm = ({ initialValues, onSubmit }: Props): ReactElement => {
             style="medium"
             className="uppercase text-primary-500 mt-2"
           >
-            Seguimiento
-          </Typography>
-          <Typography variant="body2" className="mb-2">
-            Establece si la técnica debe enviarse a ciertos turnos de trabajo o
-            cortes
+            Objetivos asociados
           </Typography>
           <div className="my-2">
             {objectivesLinked.map((objective, index) => (
