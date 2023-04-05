@@ -27,7 +27,7 @@ const CallsTable = (): ReactElement => {
     },
     {
       accessorKey: 'line',
-      header: getMessage('line')
+      header: getGlobalMessage('phoneLine', 'platformMessages')
     },
     {
       accessorKey: 'target',
@@ -53,7 +53,7 @@ const CallsTable = (): ReactElement => {
     },
     {
       accessorKey: 'technique',
-      header: getGlobalMessage('technique', 'generalMessages')
+      header: getGlobalMessage('technique', 'platformMessages')
     },
     {
       accessorKey: 'priority',
