@@ -27,10 +27,10 @@ import { ArrowDownIcon, ArrowUpIcon } from '@heroicons/react/20/solid'
 import IndeterminateCheckbox from './IndeterminateCheckbox'
 import Typography from 'components/Typography'
 import TableConfiguration from './TableConfiguration'
-import StaticFilter from './StaticFilter'
 import { useVirtual } from 'react-virtual'
 import { useIntl } from 'react-intl'
 import { messages } from './messages'
+import ColumnFilter from './ColumnFilter'
 
 export interface ActionForSelectedItems<T> {
   name: string
@@ -327,18 +327,18 @@ const Table = <DataType,>({
                                     header.column.getIsSorted() as string
                                   )
                                 : ''}
-                              {header.column.columnDef.meta?.staticFilters ? (
-                                <StaticFilter
+                              {header.column.columnDef.meta?.columnFilters ? (
+                                <ColumnFilter
                                   onChange={
-                                    header.column.columnDef.meta.staticFilters
+                                    header.column.columnDef.meta.columnFilters
                                       .onChange
                                   }
                                   options={
-                                    header.column.columnDef.meta.staticFilters
+                                    header.column.columnDef.meta.columnFilters
                                       .options
                                   }
                                   optionsTitle={
-                                    header.column.columnDef.meta.staticFilters
+                                    header.column.columnDef.meta.columnFilters
                                       .optionsName
                                   }
                                 />

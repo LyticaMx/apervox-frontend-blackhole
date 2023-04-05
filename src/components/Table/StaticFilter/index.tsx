@@ -2,15 +2,17 @@ import { Float } from '@headlessui-float/react'
 import { Popover } from '@headlessui/react'
 import { AdjustmentsVerticalIcon } from '@heroicons/react/24/outline'
 import Form from 'components/Form'
+import TextField from 'components/Form/Textfield'
 import Grid from 'components/Grid'
 import Typography from 'components/Typography'
 import { FormikConfig, FormikContextType } from 'formik'
 import { actionsMessages, generalMessages } from 'globalMessages'
-import { ReactElement, useRef, useState } from 'react'
+import { ReactElement, useMemo, useRef, useState } from 'react'
 import { useIntl } from 'react-intl'
 import { Field } from 'types/form'
 import { OnChangeTableFilter, TableFilterOption } from 'types/table'
 import { ReadOnlyNonEmptyArray } from 'types/utils'
+import { normalizeString } from 'utils/normalizeString'
 
 interface Props {
   optionsTitle?: string
@@ -25,16 +27,29 @@ interface FormValues {
 const StaticFilter = (props: Props): ReactElement => {
   const { onChange, options, optionsTitle } = props
   const [openFilter, setOpenFilter] = useState<boolean>(false)
+  const [inputSearch, setInputSearch] = useState<string>('')
   const { formatMessage } = useIntl()
-  const fields: Array<Field<FormValues>> = options.map((option, index) => ({
-    type: 'checkbox',
-    name: 'filters',
-    options: {
-      label: option.name,
-      value: option.value,
-      id: `${option.name}-${index}`
-    }
-  }))
+
+  const fields: Array<Field<FormValues>> = useMemo<
+    Array<Field<FormValues>>
+  >(() => {
+    const query = normalizeString(inputSearch)
+    const newOptions =
+      inputSearch === ''
+        ? options
+        : options.filter((option) =>
+            normalizeString(option.name).includes(query)
+          )
+    return newOptions.map<Field<FormValues>>((option, index) => ({
+      type: 'checkbox' as any,
+      name: 'filters',
+      options: {
+        label: option.name,
+        value: option.value,
+        id: `${option.name}-${index}`
+      }
+    }))
+  }, [options, inputSearch])
 
   const formikRef = useRef<FormikContextType<FormValues>>()
 
@@ -122,6 +137,11 @@ const StaticFilter = (props: Props): ReactElement => {
                   {optionsTitle}
                 </Typography>
               )}
+              <TextField
+                value={inputSearch}
+                onChange={(e) => setInputSearch(e.target.value)}
+                className="mb-2"
+              />
               <Form
                 fields={fields}
                 formikConfig={formikConfig}
