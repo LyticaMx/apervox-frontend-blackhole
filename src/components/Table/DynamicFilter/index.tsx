@@ -11,6 +11,7 @@ import { useIntl } from 'react-intl'
 import { PageInfo } from 'types/api'
 import { OnChangeTableFilter } from 'types/table'
 import { useDebounce } from 'usehooks-ts'
+// import useApi from 'hooks/useApi'
 
 // Siempre al final
 import demo from './demo'
@@ -20,6 +21,7 @@ import Checkbox from 'components/Form/Checkbox'
 interface Props {
   optionsTitle?: string
   onChange: OnChangeTableFilter
+  apiBackend: string
 }
 
 const DynamicFilter = (props: Props): ReactElement => {
@@ -27,6 +29,7 @@ const DynamicFilter = (props: Props): ReactElement => {
   const [openFilter, setOpenFilter] = useState<boolean>(false)
   const { formatMessage } = useIntl()
   const [fieldFilter, setFieldFilter] = useState<string>('')
+  // const getFilterService = useApi({ endpoint: props.apiBackend, method: 'get' })
   const [pageInfo, setPageInfo] = useState<PageInfo>({
     current_page: 1,
     has_next_page: true,
@@ -45,15 +48,21 @@ const DynamicFilter = (props: Props): ReactElement => {
   })
 
   const fetchNextPage = async (query: string): Promise<number> => {
-    return await new Promise((resolve) => {
-      setTimeout(() => {
-        const rows: any[] = query
-          ? demo.filter((item) => item.name.includes(query))
-          : (demo as any)
-        setAllRows(rows)
-        resolve(rows.length)
-      }, 1500)
-    })
+    try {
+      // const response = await getFilterService()
+
+      return await new Promise((resolve) => {
+        setTimeout(() => {
+          const rows: any[] = query
+            ? demo.filter((item) => item.name.includes(query))
+            : (demo as any)
+          setAllRows(rows)
+          resolve(rows.length)
+        }, 1500)
+      })
+    } catch {
+      return -1
+    }
   }
 
   useEffect(() => {
