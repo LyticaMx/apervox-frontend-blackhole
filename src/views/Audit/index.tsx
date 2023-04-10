@@ -157,10 +157,20 @@ const Audit = (): ReactElement => {
   const columns = useTableColumns<AuditInterface>(() => [
     {
       accessorKey: 'id',
-      header: 'ID'
+      header: 'ID',
+      id: 'id'
     },
     {
       accessorKey: 'user',
+      id: 'user',
+      /* TODO: Se comenta de manera temporal
+      meta: {
+        columnFilters: {
+          optionsName: formatMessage(generalMessages.user),
+          onChange: () => {}
+        }
+      }
+      */
       header: formatMessage(generalMessages.user),
       cell: ({ getValue }) => (
         <button
@@ -198,6 +208,7 @@ const Audit = (): ReactElement => {
     },
     {
       accessorKey: 'description',
+      id: 'description',
       header: formatMessage(generalMessages.description),
       cell: ({ row, getValue }) => (
         <div>
@@ -218,9 +229,10 @@ const Audit = (): ReactElement => {
     },
     {
       accessorKey: 'module',
+      id: 'module',
       header: formatMessage(messages.auditedModule),
       meta: {
-        staticFilters: {
+        columnFilters: {
           options: [
             {
               name: formatMessage(generalMessages.statistics),
@@ -250,11 +262,13 @@ const Audit = (): ReactElement => {
     },
     {
       accessorKey: 'date',
+      id: 'date',
       header: formatMessage(generalMessages.date),
       cell: ({ getValue }) => format(new Date(getValue<string>()), 'dd/MM/yyyy')
     },
     {
       accessorKey: 'date',
+      id: 'hour',
       header: formatMessage(generalMessages.hour),
       cell: ({ getValue }) => format(new Date(getValue<string>()), 'hh:mm')
     }

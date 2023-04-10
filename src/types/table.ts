@@ -17,10 +17,11 @@ export type OnChangeTableFilter =
 
 declare module '@tanstack/table-core' {
   interface ColumnMeta<TData extends RowData, TValue> {
-    staticFilters?: {
+    columnFilters?: {
       optionsName?: string
-      options: ReadOnlyNonEmptyArray<TableFilterOption>
+      options?: ReadOnlyNonEmptyArray<TableFilterOption>
       onChange: OnChangeTableFilter
+      apiBackend?: string
     }
   }
 }

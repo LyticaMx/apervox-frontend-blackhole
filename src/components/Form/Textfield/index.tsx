@@ -24,6 +24,7 @@ export interface Props {
   rows?: number
   labelSpacing?: '1' | '2' | '3' | '4' | '5'
   inputProps?: InputHTMLAttributes<HTMLInputElement>
+  ref?: React.RefObject<HTMLInputElement>
   labelClassname?: string
 }
 
