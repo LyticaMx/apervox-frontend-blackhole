@@ -13,6 +13,8 @@ import ObjectiveForms from './ObjectiveForms'
 // TODO: replace this with context data
 import { evidencesData } from '../mocks'
 import GeneralDataForm from './ObjectiveForms/GeneralDataForm'
+import { useHistory } from 'react-router-dom'
+import { pathRoute } from 'router/routes'
 
 interface Props {
   show: boolean
@@ -20,8 +22,12 @@ interface Props {
   technique: Technique
 }
 
+const evidenceTypes = ['audio', 'video', 'image', 'doc']
+
 const FormSection = ({ show, objective, technique }: Props): ReactElement => {
   const [active, setActive] = useState(OBJECTIVE_INFO_TABS.EVIDENCE)
+
+  const history = useHistory()
 
   if (!show) return <Wrapper expanded={show} contentType={ContentType.FORMS} />
 
@@ -50,7 +56,14 @@ const FormSection = ({ show, objective, technique }: Props): ReactElement => {
               active !== OBJECTIVE_INFO_TABS.EVIDENCE && 'hidden'
             )}
           >
-            <EvidenceList data={evidencesData} />
+            <EvidenceList
+              data={evidencesData}
+              onSelectItem={(evidence) =>
+                history.push(pathRoute.evidence, {
+                  type: evidenceTypes[evidence.type]
+                })
+              }
+            />
           </div>
 
           <div
