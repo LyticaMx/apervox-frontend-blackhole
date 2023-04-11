@@ -7,7 +7,8 @@ import {
   BeakerIcon,
   IdentificationIcon,
   UsersIcon,
-  ComputerDesktopIcon
+  ComputerDesktopIcon,
+  FolderOpenIcon
 } from '@heroicons/react/24/outline'
 import { WifiIcon } from '@heroicons/react/24/solid'
 
@@ -30,6 +31,7 @@ import CallsHistory from 'views/CallsHistory'
 import Acquisition from 'views/Acquisition'
 import WorkGroups from 'views/WorkGroups'
 import Evidence from 'views/Evidence'
+import Techniques from 'views/Techniques'
 
 import BaseLayout from 'layout/BaseLayout'
 import EvidenceLayout from 'layout/EvidenceLayout'
@@ -96,6 +98,7 @@ export const pathRoute = {
   },
   acquisition: '/medios-adquisicion',
   evidence: '/evidencia',
+  techniques: '/tecnicas',
   demo: {
     chart: '/demo-charts',
     form: '/demo-form',
@@ -286,6 +289,18 @@ export const routes: Route[] = [
     layout: EvidenceLayout,
     private: false,
     sidebar: false
+  },
+  {
+    id: 'techniques',
+    path: pathRoute.techniques,
+    icon: FolderOpenIcon,
+    i18Key: 'techniques',
+    modules: [],
+    scopes: [],
+    component: Techniques,
+    layout: BaseLayout,
+    private: true,
+    sidebar: true
   },
   /* Siempre abajo */
   {

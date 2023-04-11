@@ -584,6 +584,10 @@ export const generalMessages = defineMessages({
     id: 'global.general.nightning',
     defaultMessage: 'Nocturno'
   },
+  totalObjective: {
+    id: 'global.general.totalObjective',
+    defaultMessage: 'Total de objetivos'
+  },
   comments: {
     id: 'global.general.comments',
     defaultMessage: 'Comentarios'
@@ -595,5 +599,13 @@ export const generalMessages = defineMessages({
   country: {
     id: 'global.general.county',
     defaultMessage: 'País'
+  },
+  configuration: {
+    id: 'global.general.configuration',
+    defaultMessage: 'Configuración'
+  },
+  forms: {
+    id: 'global.general.forms',
+    defaultMessage: 'Formularios'
   }
 })

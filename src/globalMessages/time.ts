@@ -24,5 +24,13 @@ export const timeMessages = defineMessages({
   minute: {
     id: 'global.time.minute',
     defaultMessage: 'Minuto'
+  },
+  days: {
+    id: 'global.time.days',
+    defaultMessage: 'Días'
+  },
+  hours: {
+    id: 'global.time.hours',
+    defaultMessage: 'Horas'
   }
 })

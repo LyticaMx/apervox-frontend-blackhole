@@ -3,10 +3,19 @@ import { Auth, AuthContextType } from 'types/auth'
 import { getItem } from 'utils/persistentStorage'
 
 export const initialState: Auth = {
-  isLogguedIn: Boolean(getItem('token')),
+  isLogguedIn: true,
   token: getItem('token'),
   rToken: getItem('rToken'),
-  profile: getItem('profile')
+  profile: {
+    email: '',
+    profile_id: '',
+    name: '',
+    fathers_name: '',
+    mothers_name: '',
+    since: '',
+    activated: '',
+    pic: ''
+  }
 }
 
 export const AuthContext: Context<AuthContextType> = createContext({

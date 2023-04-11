@@ -28,6 +28,8 @@ interface Props<T> {
   submitButtonProps?: SubmitButtonProps
   formikRef?: MutableRefObject<FormikContextType<T> | undefined>
   className?: string
+  initialValuesCanChange?: boolean
+  onChangeValues?: (values: FormikContextType<T>) => void
 }
 
 const Form = <DataType extends FormikValues = FormikValues>(
@@ -43,8 +45,11 @@ const Form = <DataType extends FormikValues = FormikValues>(
     submitButtonPosition,
     submitButtonProps = {},
     formikRef,
-    className
+    className,
+    initialValuesCanChange,
+    onChangeValues
   } = props
+
   const { formatMessage } = useIntl()
   const formik = useFormik<DataType>(formikConfig)
 
@@ -66,6 +71,24 @@ const Form = <DataType extends FormikValues = FormikValues>(
   useEffect(() => {
     if (formikRef) formikRef.current = formik
   }, [formik])
+
+  // Add this method to update form values when base instance re-render with another initialValues
+  useEffect(() => {
+    if (initialValuesCanChange && formik) {
+      const keys = Object.keys(formikConfig.initialValues)
+
+      keys.forEach((keyName) => {
+        formik.setFieldValue(keyName, formikConfig.initialValues[keyName])
+      })
+    }
+  }, [formikConfig.initialValues])
+
+  // Add this method to broadcast form changes when values or status of the formik instance are updated
+  useEffect(() => {
+    if (onChangeValues) {
+      onChangeValues(formik)
+    }
+  }, [formik.isValid, formik.values])
 
   const buttonPosition = useMemo(() => {
     switch (submitButtonPosition) {

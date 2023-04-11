@@ -159,5 +159,9 @@ export const actionsMessages = defineMessages({
   comment: {
     id: 'global.actions.comment',
     defaultMessage: 'Comentar'
+  },
+  restore: {
+    id: 'global.actions.restore',
+    defaultMessage: 'Restablecer'
   }
 })

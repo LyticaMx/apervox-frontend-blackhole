@@ -20,7 +20,7 @@ interface Props {
   margin?: 'none' | 'normal' | 'dense'
   disabled?: boolean
   children: ReactNode
-  onClick?: () => void
+  onClick?: (event?: React.MouseEvent<HTMLElement>) => void
   tabIndex?: number
   tooltip?: ReactNode
 }

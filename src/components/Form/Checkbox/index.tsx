@@ -3,7 +3,7 @@ import clsx from 'clsx'
 
 export interface Props {
   id?: string
-  label: string
+  label?: string
   description?: string
   className?: string
   name?: string
@@ -12,6 +12,7 @@ export interface Props {
   checked?: boolean
   disabled?: boolean
   onChange?: (element: any) => any
+  onClick?: (event?: React.MouseEvent<HTMLElement>) => void
   onBlur?: (element: any) => any
   color?:
     | 'base'

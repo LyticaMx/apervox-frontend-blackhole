@@ -4,13 +4,13 @@ import { useToggle } from 'usehooks-ts'
 import Title from 'components/Title'
 import Card from 'components/Card'
 import Tabs from 'components/Tabs'
+import TechniqueList from '../Techniques/components/TechniqueList'
 import { useWorkGroups } from 'context/WorkGroups'
 import WorkGroupFilter from './components/WorkGroupFilter'
 import DeleteDialog from './components/DeleteDialog'
 import DisableDialog from './components/DisableDialog'
 import WorkGroupList from './components/WorkGroupList'
 import AssociatedUserList from './components/AssociatedUserList'
-import AssociatedTechniqueList from './components/AssociatedTechniqueList'
 import CreateWorkGroupDrawer from './components/CreateWorkGroupDrawer'
 import EditWorkGroupDrawer from './components/EditWorkGroupDrawer'
 import HistoryDrawer from './components/HistoryDrawer'
@@ -128,7 +128,7 @@ const WorkGroups = (): ReactElement => {
                       {getMessage('assignedTechniquesSubtitle')}
                     </p>
 
-                    <AssociatedTechniqueList />
+                    <TechniqueList data={associatedTechniques} />
                   </div>
                 )
               }
