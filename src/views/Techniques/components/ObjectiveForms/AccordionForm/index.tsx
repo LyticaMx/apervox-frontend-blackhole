@@ -5,7 +5,7 @@ import { PlusCircleIcon, TrashIcon } from '@heroicons/react/24/outline'
 import { useGlobalMessage } from 'hooks/useIntl'
 import Typography from 'components/Typography'
 import Button from 'components/Button'
-import { Field } from 'types/form'
+import { Field, Section } from 'types/form'
 import BasicAccordion from './BasicAccordion'
 import GenericForm from './GenericForm'
 
@@ -14,6 +14,10 @@ interface Props<T> {
   itemTitle: string
   fields: Array<Field<T>>
   validationSchema?: any
+  withSections?: {
+    renderMainSection: boolean
+    sections: Section[]
+  }
 }
 
 interface FormData<T> {
@@ -26,7 +30,8 @@ const AccordionForm = <T extends Object>({
   title,
   itemTitle,
   fields,
-  validationSchema
+  validationSchema,
+  withSections
 }: Props<T>): ReactElement => {
   const getGlobalMessage = useGlobalMessage()
 
@@ -124,6 +129,7 @@ const AccordionForm = <T extends Object>({
               onChangeValues={(formik: FormikContextType<T>) =>
                 handleUpdateForm(index, formik)
               }
+              withSections={withSections}
             />
 
             {index > 0 && (

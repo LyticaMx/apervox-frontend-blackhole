@@ -16,6 +16,9 @@ import { Objective } from 'types/technique'
 import BasicInfo from './ObjectiveBasicInfo'
 import DeleteObjectiveDialog from './DeleteObjectiveDialog'
 import Tooltip from 'components/Tooltip'
+import { useIntl } from 'react-intl'
+import { objectiveCardMessages } from '../messages'
+import { useGlobalMessage } from 'hooks/useIntl'
 
 interface Props {
   data: Objective
@@ -31,6 +34,8 @@ const ObjectiveCard = ({
   onCheck
 }: Props): ReactElement => {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
+  const { formatMessage } = useIntl()
+  const getGlobalMessage = useGlobalMessage()
 
   const handleOpenDeleteDialog = (e): void => {
     e?.stopPropagation()
@@ -52,13 +57,13 @@ const ObjectiveCard = ({
         <BasicInfo name={data.name} phoneNumber={data.phone_number} />
         <div className="flex flex-col items-start">
           <Typography variant="body2" style="semibold">
-            Creación:
+            {`${formatMessage(objectiveCardMessages.creation)}:`}
             <span className="font-normal ml-1">
               {format(new Date(data.created_at), 'dd/mm/yyyy - HH:mm:ss')}
             </span>
           </Typography>
           <Typography variant="body2" style="semibold">
-            Finalización:
+            {`${formatMessage(objectiveCardMessages.finalization)}:`}
             <span className="font-normal ml-1">
               {format(new Date(data.expires_at), 'dd/mm/yyyy - HH:mm:ss')}
             </span>
@@ -72,7 +77,7 @@ const ObjectiveCard = ({
           />
           <div className="flex">
             <Tooltip
-              content="Actividad del objetivo"
+              content={formatMessage(objectiveCardMessages.activity)}
               floatProps={{ offset: 10, arrow: true }}
               classNames={{
                 panel:
@@ -89,7 +94,7 @@ const ObjectiveCard = ({
               </IconButton>
             </Tooltip>
             <Tooltip
-              content="Formularios"
+              content={formatMessage(objectiveCardMessages.forms)}
               floatProps={{ offset: 10, arrow: true }}
               classNames={{
                 panel:
@@ -106,7 +111,7 @@ const ObjectiveCard = ({
               </IconButton>
             </Tooltip>
             <Tooltip
-              content="Historial"
+              content={formatMessage(objectiveCardMessages.history)}
               floatProps={{ offset: 10, arrow: true }}
               classNames={{
                 panel:
@@ -123,7 +128,7 @@ const ObjectiveCard = ({
               </IconButton>
             </Tooltip>
             <Tooltip
-              content="Eliminar"
+              content={getGlobalMessage('delete', 'actionsMessages')}
               floatProps={{ offset: 10, arrow: true }}
               classNames={{
                 panel:

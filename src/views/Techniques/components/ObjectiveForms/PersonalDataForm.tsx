@@ -2,11 +2,15 @@ import { ReactElement, useMemo } from 'react'
 import { FormikConfig } from 'formik'
 import * as yup from 'yup'
 import Form from 'components/Form'
-import { Field } from 'types/form'
+import { Field, Section } from 'types/form'
 import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
-import { formMessages } from 'globalMessages'
 import Typography from 'components/Typography'
 import { useAddressForm, AddressFormValues } from './useAddressForm'
+import {
+  objectiveFormsGeneralMessages,
+  personalDataFormMessages
+} from 'views/Techniques/messages'
+import { useIntl } from 'react-intl'
 
 interface FormValues extends AddressFormValues {
   name: string
@@ -24,9 +28,10 @@ interface Props {
 }
 
 const PersonalDataForm = ({ initialValues }: Props): ReactElement => {
-  const getMessage = useFormatMessage(formMessages)
+  const getMessage = useFormatMessage(personalDataFormMessages)
+  const { formatMessage } = useIntl()
   const getGlobalMessage = useGlobalMessage()
-  const { addressFields, addressValidationSchema } = useAddressForm()
+  const { addressFields, addressValidationSchema } = useAddressForm('address')
 
   const fields: Array<Field<FormValues | AddressFormValues>> = [
     {
@@ -34,8 +39,8 @@ const PersonalDataForm = ({ initialValues }: Props): ReactElement => {
       name: 'name',
       options: {
         id: 'personal-data-name',
-        label: 'Alias / Nombre del objetivo',
-        placeholder: 'Ej. José Mendez'
+        label: getMessage('targetName'),
+        placeholder: getMessage('targetNamePlaceholder')
       },
       breakpoints: { xs: 3 }
     },
@@ -44,8 +49,10 @@ const PersonalDataForm = ({ initialValues }: Props): ReactElement => {
       name: 'phone',
       options: {
         id: 'personal-data-phone',
-        label: 'Número del objetivo',
-        placeholder: 'Ej. 5533445566'
+        label: getMessage('targetPhone'),
+        placeholder: formatMessage(
+          objectiveFormsGeneralMessages.phonePlaceholder
+        )
       },
       breakpoints: { xs: 3 }
     },
@@ -53,17 +60,17 @@ const PersonalDataForm = ({ initialValues }: Props): ReactElement => {
       type: 'select',
       name: 'gender',
       options: {
-        label: 'Género',
+        label: getMessage('gender'),
         clearable: true,
-        placeholder: 'Ej. Masculino',
+        placeholder: getMessage('genderPlaceholder'),
         items: [
           {
             id: '1',
-            label: 'Masculino'
+            label: getMessage('male')
           },
           {
             id: '2',
-            label: 'Feménino'
+            label: getMessage('female')
           }
         ],
         textField: 'label',
@@ -78,8 +85,8 @@ const PersonalDataForm = ({ initialValues }: Props): ReactElement => {
       name: 'birthdate',
       options: {
         id: 'personal-data-birthdate',
-        label: 'Fecha de nacimiento',
-        placeholder: 'Ej. 12/12/2022 - 13:00:00'
+        label: getMessage('birthDate'),
+        placeholder: getMessage('birthDatePlaceholder')
       },
       breakpoints: { xs: 3 }
     },
@@ -88,8 +95,8 @@ const PersonalDataForm = ({ initialValues }: Props): ReactElement => {
       name: 'age',
       options: {
         id: 'personal-data-age',
-        label: 'Edad',
-        placeholder: 'Ej. 30 años'
+        label: getMessage('age'),
+        placeholder: getMessage('agePlaceholder')
       },
       breakpoints: { xs: 3 }
     },
@@ -99,7 +106,7 @@ const PersonalDataForm = ({ initialValues }: Props): ReactElement => {
       options: {
         id: 'personal-data-curp',
         label: 'CURP',
-        placeholder: 'Ej. AAAA0000MAAAAA00'
+        placeholder: getMessage('curpPlaceholder')
       },
       breakpoints: { xs: 3 }
     },
@@ -108,8 +115,8 @@ const PersonalDataForm = ({ initialValues }: Props): ReactElement => {
       name: 'rfc',
       options: {
         id: 'personal-data-rfc',
-        label: 'CURP',
-        placeholder: 'Ej. AAAA0000XXX'
+        label: 'RFC',
+        placeholder: getMessage('rfcPlaceholder')
       },
       breakpoints: { xs: 3 }
     },
@@ -118,20 +125,10 @@ const PersonalDataForm = ({ initialValues }: Props): ReactElement => {
       name: 'nationality',
       options: {
         id: 'personal-data-nationality',
-        label: 'Nacionalidad',
-        placeholder: 'Ej. Mexicana'
+        label: getMessage('nationality'),
+        placeholder: getMessage('nationalityPlaceholder')
       },
       breakpoints: { xs: 3 }
-    },
-    {
-      type: 'custom',
-      name: 'addressTitle',
-      children: (
-        <Typography variant="body1" className="text-primary uppercase mt-2">
-          Domicilio actual
-        </Typography>
-      ),
-      breakpoints: { xs: 12 }
     },
     ...addressFields
   ]
@@ -173,10 +170,20 @@ const PersonalDataForm = ({ initialValues }: Props): ReactElement => {
     [initialValues]
   )
 
+  const sections: Section[] = [
+    {
+      name: 'address',
+      title: {
+        text: getMessage('actualAddress'),
+        className: 'text-primary uppercase mt-2'
+      }
+    }
+  ]
+
   return (
     <div className="w-full">
       <Typography variant="title" style="bold" className="uppercase mb-2">
-        Datos Personales, Biométricos y Domicilio
+        {getMessage('title')}
       </Typography>
 
       <div className="bg-white p-2 py-4 rounded-md">
@@ -190,6 +197,10 @@ const PersonalDataForm = ({ initialValues }: Props): ReactElement => {
             variant: 'contained'
           }}
           className="user-account-data-form"
+          withSections={{
+            renderMainSection: true,
+            sections
+          }}
         />
       </div>
     </div>

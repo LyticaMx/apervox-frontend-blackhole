@@ -4,6 +4,8 @@ import Dialog from 'components/Dialog'
 import { Objective } from 'types/technique'
 import Typography from 'components/Typography'
 import ObjectiveForm from './ObjectiveForm'
+import { useIntl } from 'react-intl'
+import { createObjectiveDialogMessages } from '../messages'
 
 interface Props {
   open?: boolean
@@ -17,15 +19,16 @@ const CreateObjectiveDialog = ({
   onClose = () => {},
   onAccept
 }: Props): ReactElement => {
+  const { formatMessage } = useIntl()
+
   return (
     <Dialog open={open} onClose={onClose} size="md" padding="none">
       <div className="bg-white px-8 py-5">
         <Typography variant="title" style="bold" className="uppercase">
-          Agregar objetivo
+          {formatMessage(createObjectiveDialogMessages.addObjective)}
         </Typography>
         <Typography className="leading-tight my-2">
-          Selecciona el tipo de objetivo que será agregado a la técnica y
-          completa los datos del formulario.
+          {formatMessage(createObjectiveDialogMessages.selectObjectiveType)}
         </Typography>
         <ObjectiveForm onSubmit={onAccept as any} />
       </div>

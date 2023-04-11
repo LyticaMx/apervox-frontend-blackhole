@@ -2,10 +2,11 @@ import * as yup from 'yup'
 import { useIntl } from 'react-intl'
 import { ReactElement } from 'react'
 import { formMessages } from 'globalMessages'
-import { Field } from 'types/form'
-import Typography from 'components/Typography'
+import { Field, Section } from 'types/form'
 import AccordionForm from './AccordionForm'
 import { useAddressForm, AddressFormValues } from './useAddressForm'
+import { useGlobalMessage } from 'hooks/useIntl'
+import { academicFormMessages } from 'views/Techniques/messages'
 
 interface FormValues extends AddressFormValues {
   name: string
@@ -15,7 +16,8 @@ interface FormValues extends AddressFormValues {
 
 const AcademicForm = (): ReactElement => {
   const { formatMessage } = useIntl()
-  const { addressFields, addressValidationSchema } = useAddressForm()
+  const { addressFields, addressValidationSchema } = useAddressForm('address')
+  const getGlobalMessage = useGlobalMessage()
 
   const fields: Array<Field<FormValues | AddressFormValues>> = [
     {
@@ -23,8 +25,8 @@ const AcademicForm = (): ReactElement => {
       name: 'name',
       options: {
         id: 'academic-name',
-        label: 'Nombre de la institución',
-        placeholder: 'Ej. Institución XXXX'
+        label: formatMessage(academicFormMessages.academicName),
+        placeholder: formatMessage(academicFormMessages.academicNamePlaceholder)
       },
       breakpoints: { xs: 3 }
     },
@@ -33,8 +35,10 @@ const AcademicForm = (): ReactElement => {
       name: 'email',
       options: {
         id: 'academic-email',
-        label: 'Correo electrónico',
-        placeholder: 'Ej. correo@dominio.com'
+        label: getGlobalMessage('email', 'formMessages'),
+        placeholder: formatMessage(
+          academicFormMessages.academicEmailPlaceholder
+        )
       },
       breakpoints: { xs: 3 }
     },
@@ -43,20 +47,12 @@ const AcademicForm = (): ReactElement => {
       name: 'phone',
       options: {
         id: 'academic-phone',
-        label: 'Número teléfonico',
-        placeholder: 'Ej. numero a 10 dígitos'
+        label: formatMessage(academicFormMessages.academicPhone),
+        placeholder: formatMessage(
+          academicFormMessages.academicPhonePlaceholder
+        )
       },
       breakpoints: { xs: 3 }
-    },
-    {
-      type: 'custom',
-      name: 'addressTitle',
-      children: (
-        <Typography variant="body1" className="text-primary uppercase mt-2">
-          Domicilio de la institución
-        </Typography>
-      ),
-      breakpoints: { xs: 12 }
     },
     ...addressFields
   ]
@@ -73,13 +69,27 @@ const AcademicForm = (): ReactElement => {
     })
     .concat(addressValidationSchema)
 
+  const sections: Section[] = [
+    {
+      name: 'address',
+      title: {
+        text: formatMessage(academicFormMessages.institutionAddress),
+        className: 'text-primary uppercase mt-2'
+      }
+    }
+  ]
+
   return (
     <div>
       <AccordionForm<FormValues | AddressFormValues>
         fields={fields}
         validationSchema={validationSchema}
-        title="DATOS ACADÉMICOS"
-        itemTitle="Institución Educativa"
+        title={formatMessage(academicFormMessages.title).toUpperCase()}
+        itemTitle={formatMessage(academicFormMessages.itemTitle)}
+        withSections={{
+          renderMainSection: true,
+          sections
+        }}
       />
     </div>
   )

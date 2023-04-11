@@ -7,6 +7,8 @@ import Button from 'components/Button'
 import Typography from 'components/Typography'
 
 import { useGlobalMessage } from 'hooks/useIntl'
+import { useIntl } from 'react-intl'
+import { messages } from './messages'
 
 interface Props {
   open: boolean
@@ -20,6 +22,7 @@ const ActionNotification = ({
   onAccept = () => {}
 }: Props): ReactElement => {
   const getGlobalMessage = useGlobalMessage()
+  const { formatMessage } = useIntl()
 
   return (
     <Dialog open={open} onClose={() => {}} size="md" padding="none">
@@ -31,8 +34,7 @@ const ActionNotification = ({
           </Typography>
 
           <Typography className="mt-1 mb-2">
-            El registro se eliminará definitivamente y quedará registrado para
-            ser auditada esta acción.
+            {formatMessage(messages.willBeDeleted)}
           </Typography>
         </div>
       </div>

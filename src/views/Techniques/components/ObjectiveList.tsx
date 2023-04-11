@@ -8,6 +8,9 @@ import { Objective } from 'types/technique'
 
 import ObjectiveCard from './ObjectiveCard'
 import CreateObjectiveDialog from './CreateObjectiveDialog'
+import { useIntl } from 'react-intl'
+import { actionsMessages } from 'globalMessages'
+import { objectiveListMessages } from '../messages'
 
 interface Props {
   onSelectItem: (item: Objective) => void
@@ -20,6 +23,7 @@ const ObjectiveList = ({ data, onSelectItem }: Props): ReactElement => {
   const [searchValue, setSearchValue] = useState<string>('')
   const [objectivesChecked, setObjectivesChecked] = useState<string[]>([]) // Multi selección de objetivos
   const [openObjectiveForm, setOpenObjectiveForm] = useState(false)
+  const { formatMessage } = useIntl()
 
   const filteredSpeakers = useMemo(() => {
     const matches = data.filter(
@@ -48,14 +52,14 @@ const ObjectiveList = ({ data, onSelectItem }: Props): ReactElement => {
 
   return (
     <div className="grid grid-cols-1 gap-3">
-      <Typography
-        variant="body2"
-        style="semibold"
-        className="uppercase"
-      >{`${data.length} Objetivos existentes en la técnica de investigación`}</Typography>
+      <Typography variant="body2" style="semibold" className="uppercase">
+        {formatMessage(objectiveListMessages.totalObjectives, {
+          total: data.length
+        })}
+      </Typography>
       <div className="flex gap-2">
         <TextField
-          placeholder="Buscar..."
+          placeholder={`${formatMessage(actionsMessages.search)}...`}
           className="w-7/12"
           onChange={(e) => {
             clearTimeout(timer)
@@ -72,7 +76,7 @@ const ObjectiveList = ({ data, onSelectItem }: Props): ReactElement => {
           className="w-5/12"
           onClick={() => setOpenObjectiveForm(true)}
         >
-          Agregar objetivo
+          {formatMessage(objectiveListMessages.addObjective)}
         </Button>
       </div>
       {filteredSpeakers.map((objective) => (

@@ -2,10 +2,13 @@ import * as yup from 'yup'
 import { useIntl } from 'react-intl'
 import { ReactElement } from 'react'
 import { formMessages } from 'globalMessages'
-import { Field } from 'types/form'
-import Typography from 'components/Typography'
+import { Field, Section } from 'types/form'
 import AccordionForm from './AccordionForm'
 import { useAddressForm, AddressFormValues } from './useAddressForm'
+import {
+  objectiveFormsGeneralMessages,
+  organizationFormMessages
+} from 'views/Techniques/messages'
 
 interface FormValues extends AddressFormValues {
   name: string
@@ -15,7 +18,7 @@ interface FormValues extends AddressFormValues {
 
 const OrganizationsForm = (): ReactElement => {
   const { formatMessage } = useIntl()
-  const { addressFields, addressValidationSchema } = useAddressForm()
+  const { addressFields, addressValidationSchema } = useAddressForm('address')
 
   const fields: Array<Field<FormValues | AddressFormValues>> = [
     {
@@ -23,8 +26,10 @@ const OrganizationsForm = (): ReactElement => {
       name: 'name',
       options: {
         id: 'organization-name',
-        label: 'Nombre de la organización',
-        placeholder: 'Ej. Organización XXXX'
+        label: formatMessage(organizationFormMessages.organizationName),
+        placeholder: formatMessage(
+          organizationFormMessages.organizationNamePlaceholder
+        )
       },
       breakpoints: { xs: 3 }
     },
@@ -33,8 +38,10 @@ const OrganizationsForm = (): ReactElement => {
       name: 'email',
       options: {
         id: 'organization-email',
-        label: 'Correo electrónico',
-        placeholder: 'Ej. correo@dominio.com'
+        label: formatMessage(formMessages.email),
+        placeholder: formatMessage(
+          objectiveFormsGeneralMessages.emailPlaceholder
+        )
       },
       breakpoints: { xs: 3 }
     },
@@ -43,21 +50,14 @@ const OrganizationsForm = (): ReactElement => {
       name: 'phone',
       options: {
         id: 'organization-phone',
-        label: 'Número teléfonico',
-        placeholder: 'Ej. numero a 10 dígitos'
+        label: formatMessage(objectiveFormsGeneralMessages.phone),
+        placeholder: formatMessage(
+          objectiveFormsGeneralMessages.phonePlaceholder
+        )
       },
       breakpoints: { xs: 3 }
     },
-    {
-      type: 'custom',
-      name: 'addressTitle',
-      children: (
-        <Typography variant="body1" className="text-primary uppercase mt-2">
-          Domicilio de la organización
-        </Typography>
-      ),
-      breakpoints: { xs: 12 }
-    },
+
     ...addressFields
   ]
 
@@ -73,13 +73,27 @@ const OrganizationsForm = (): ReactElement => {
     })
     .concat(addressValidationSchema)
 
+  const sections: Section[] = [
+    {
+      name: 'address',
+      title: {
+        text: formatMessage(organizationFormMessages.organizationAddress),
+        className: 'text-primary uppercase mt-2'
+      }
+    }
+  ]
+
   return (
     <div>
       <AccordionForm<FormValues | AddressFormValues>
         fields={fields}
         validationSchema={validationSchema}
-        title="ORGANIZACIONES"
-        itemTitle="Organización"
+        title={formatMessage(organizationFormMessages.title).toUpperCase()}
+        itemTitle={formatMessage(organizationFormMessages.itemTitle)}
+        withSections={{
+          renderMainSection: true,
+          sections
+        }}
       />
     </div>
   )

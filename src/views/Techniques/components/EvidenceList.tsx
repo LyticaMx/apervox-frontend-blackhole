@@ -10,6 +10,9 @@ import Table from 'components/Table'
 import { Evidence, EvidenceClasification, EvidenceTag } from 'types/technique'
 
 import useTableColumns from 'hooks/useTableColumns'
+import { useIntl } from 'react-intl'
+import { evidenceListMessages } from '../messages'
+import { useGlobalMessage } from 'hooks/useIntl'
 
 interface Props {
   data: Evidence[]
@@ -18,43 +21,41 @@ interface Props {
 
 const EvidenceList = ({ data, onSelectItem }: Props): ReactElement => {
   const [sortingState, setSortingState] = useState<SortingState>([])
+  const { formatMessage } = useIntl()
+  const getGlobalMessage = useGlobalMessage()
 
   const columns = useTableColumns<Evidence>(() => [
     {
-      accessorKey: 'id',
-      header: 'ID'
-    },
-    {
       accessorKey: 'number_event',
-      header: 'NO. EVENTO'
+      header: formatMessage(evidenceListMessages.eventNumber).toUpperCase()
     },
     {
       accessorKey: 'number_objective',
-      header: 'NO. OBJETIVO'
+      header: formatMessage(evidenceListMessages.targetNumber).toUpperCase()
     },
     {
       accessorKey: 'number_origin',
-      header: 'NO. ORIGEN'
+      header: formatMessage(evidenceListMessages.sourceNumber).toUpperCase()
     },
     {
       accessorKey: 'created_at',
-      header: 'FECHA /HORA INICIO',
+      header: formatMessage(evidenceListMessages.startDateTime).toUpperCase(),
       cell: ({ getValue }) =>
         format(new Date(getValue<string>()), 'dd/MM/yyyy - HH:mm')
     },
     {
       accessorKey: 'expires_at',
-      header: 'FECHA /HORA FIN',
+      header: formatMessage(evidenceListMessages.endDateTime).toUpperCase(),
       cell: ({ getValue }) =>
         format(new Date(getValue<string>()), 'dd/MM/yyyy - HH:mm')
     },
     {
       accessorKey: 'duration',
-      header: 'DURACIÓN'
+      header: getGlobalMessage('duration', 'generalMessages').toUpperCase()
     },
     {
       accessorKey: 'carrier',
-      header: 'CARRIER'
+      header: formatMessage(evidenceListMessages.carrier).toUpperCase()
     },
     {
       accessorKey: 'imei',
@@ -66,31 +67,35 @@ const EvidenceList = ({ data, onSelectItem }: Props): ReactElement => {
     },
     {
       accessorKey: 'code_cell_start',
-      header: 'CÓDIGO CELL INICIO'
+      header: formatMessage(evidenceListMessages.codeCellStart).toUpperCase()
     },
     {
       accessorKey: 'direction_cell_start',
-      header: 'DIRECCIÓN CELL INICIO'
+      header: formatMessage(
+        evidenceListMessages.directionCellStart
+      ).toUpperCase()
     },
     {
       accessorKey: 'region_cell_start',
-      header: 'ALCALDIA CELL INICIO'
+      header: formatMessage(
+        evidenceListMessages.townhallCellStart
+      ).toUpperCase()
     },
     {
       accessorKey: 'audit_by',
-      header: 'AUDITADO POR'
+      header: formatMessage(evidenceListMessages.auditedBy).toUpperCase()
     },
     {
       accessorKey: 'follow_up',
-      header: 'SEGIMIENTO'
+      header: formatMessage(evidenceListMessages.followUp).toUpperCase()
     },
     {
       accessorKey: 'obtained_from',
-      header: 'OBTENIDO DESDE'
+      header: formatMessage(evidenceListMessages.obtainedFrom).toUpperCase()
     },
     {
       accessorKey: 'tag',
-      header: 'RÓTULO',
+      header: formatMessage(evidenceListMessages.tag).toUpperCase(),
       cell: ({ getValue }) => {
         let text = ''
         let circleClass = ''
@@ -121,7 +126,7 @@ const EvidenceList = ({ data, onSelectItem }: Props): ReactElement => {
     },
     {
       accessorKey: 'clasification',
-      header: 'CLASIFICACIÓN',
+      header: formatMessage(evidenceListMessages.clasification).toUpperCase(),
       cell: ({ getValue }) => {
         let text = ''
         let starsClass = {
@@ -132,7 +137,7 @@ const EvidenceList = ({ data, onSelectItem }: Props): ReactElement => {
 
         switch (getValue()) {
           case EvidenceClasification.RELEVANT:
-            text = 'Relevante'
+            text = getGlobalMessage('relevant', 'platformMessages')
             starsClass = {
               one: 'text-yellow-500',
               two: 'text-yellow-500',
@@ -140,7 +145,7 @@ const EvidenceList = ({ data, onSelectItem }: Props): ReactElement => {
             }
             break
           case EvidenceClasification.NOT_RELEVANT:
-            text = 'No relevante'
+            text = getGlobalMessage('irrelevant', 'platformMessages')
             starsClass = {
               one: 'text-yellow-500',
               two: 'text-yellow-500',
@@ -148,10 +153,10 @@ const EvidenceList = ({ data, onSelectItem }: Props): ReactElement => {
             }
             break
           case EvidenceClasification.DISCARDED:
-            text = 'Descartado'
+            text = getGlobalMessage('discarded', 'platformMessages')
             break
           default:
-            text = 'Descartado'
+            text = getGlobalMessage('discarded', 'platformMessages')
             break
         }
 
@@ -167,7 +172,7 @@ const EvidenceList = ({ data, onSelectItem }: Props): ReactElement => {
     },
     {
       accessorKey: 'type',
-      header: 'TIPO',
+      header: formatMessage(evidenceListMessages.type).toUpperCase(),
       cell: ({ getValue }) => {
         let type = ''
 

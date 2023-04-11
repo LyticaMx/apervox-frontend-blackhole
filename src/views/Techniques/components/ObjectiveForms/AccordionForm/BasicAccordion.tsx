@@ -1,6 +1,7 @@
 import { useState, useRef, ReactElement, useCallback, useEffect } from 'react'
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline'
 import Typography from 'components/Typography'
+import clsx from 'clsx'
 
 interface AccordionProps {
   title: string
@@ -53,7 +54,7 @@ const BasicAccordion = ({
         <Typography
           variant="subtitle"
           style="semibold"
-          className={`uppercase ${error ? 'text-red-500' : ''}`}
+          className={clsx('uppercase', error && 'text-red-500')}
         >
           {title}
           {error ? ' * ' : ''}
@@ -68,7 +69,7 @@ const BasicAccordion = ({
 
       <div
         ref={contentElement}
-        style={{ height: height }}
+        style={{ height }}
         className="bg-white overflow-hidden transition-all duration-200"
       >
         {children}

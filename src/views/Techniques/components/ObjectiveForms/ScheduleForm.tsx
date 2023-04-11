@@ -2,10 +2,13 @@ import * as yup from 'yup'
 import { useIntl } from 'react-intl'
 import { ReactElement } from 'react'
 import { formMessages } from 'globalMessages'
-import { Field } from 'types/form'
-import Typography from 'components/Typography'
+import { Field, Section } from 'types/form'
 import AccordionForm from './AccordionForm'
 import { useAddressForm, AddressFormValues } from './useAddressForm'
+import {
+  objectiveFormsGeneralMessages,
+  scheduleFormMessages
+} from 'views/Techniques/messages'
 
 interface FormValues extends AddressFormValues {
   name: string
@@ -15,7 +18,7 @@ interface FormValues extends AddressFormValues {
 const ScheduleForm = (): ReactElement => {
   const { formatMessage } = useIntl()
 
-  const { addressFields, addressValidationSchema } = useAddressForm()
+  const { addressFields, addressValidationSchema } = useAddressForm('address')
 
   const fields: Array<Field<FormValues | AddressFormValues>> = [
     {
@@ -23,8 +26,8 @@ const ScheduleForm = (): ReactElement => {
       name: 'contactName',
       options: {
         id: 'contact-name',
-        label: 'Nombre del contacto',
-        placeholder: 'Ej. El chapo'
+        label: formatMessage(scheduleFormMessages.name),
+        placeholder: formatMessage(scheduleFormMessages.namePlaceholder)
       },
       breakpoints: { xs: 3 }
     },
@@ -33,21 +36,14 @@ const ScheduleForm = (): ReactElement => {
       name: 'contactPhoneNumber',
       options: {
         id: 'contact-number',
-        label: 'Número teléfonico',
-        placeholder: 'Ej. numero a 10 dígitos'
+        label: formatMessage(objectiveFormsGeneralMessages.phone),
+        placeholder: formatMessage(
+          objectiveFormsGeneralMessages.phonePlaceholder
+        )
       },
       breakpoints: { xs: 3 }
     },
-    {
-      type: 'custom',
-      name: 'addressTitle',
-      children: (
-        <Typography variant="body1" className="text-primary uppercase mt-2">
-          Domicilio del contacto
-        </Typography>
-      ),
-      breakpoints: { xs: 12 }
-    },
+
     ...addressFields
   ]
 
@@ -60,13 +56,27 @@ const ScheduleForm = (): ReactElement => {
     })
     .concat(addressValidationSchema)
 
+  const sections: Section[] = [
+    {
+      name: 'address',
+      title: {
+        text: formatMessage(scheduleFormMessages.address),
+        className: 'text-primary uppercase mt-2'
+      }
+    }
+  ]
+
   return (
     <div>
       <AccordionForm<FormValues | AddressFormValues>
         fields={fields}
         validationSchema={validationSchema}
-        title="DATOS DE AGENDA"
-        itemTitle="Contacto"
+        title={formatMessage(scheduleFormMessages.title).toUpperCase()}
+        itemTitle={formatMessage(scheduleFormMessages.itemTitle)}
+        withSections={{
+          renderMainSection: true,
+          sections
+        }}
       />
     </div>
   )

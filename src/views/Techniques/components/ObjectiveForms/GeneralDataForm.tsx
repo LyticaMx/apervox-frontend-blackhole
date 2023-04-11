@@ -4,7 +4,7 @@ import * as yup from 'yup'
 import Form from 'components/Form'
 import { Field } from 'types/form'
 import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
-import { formMessages } from 'globalMessages'
+import { generalDataFormMessages } from 'views/Techniques/messages'
 
 interface FormValues {
   name: string
@@ -19,7 +19,7 @@ interface Props {
 }
 
 const GeneralDataForm = ({ initialValues }: Props): ReactElement => {
-  const getMessage = useFormatMessage(formMessages)
+  const getMessage = useFormatMessage(generalDataFormMessages)
   const getGlobalMessage = useGlobalMessage()
 
   const fields: Array<Field<FormValues>> = [
@@ -28,8 +28,8 @@ const GeneralDataForm = ({ initialValues }: Props): ReactElement => {
       name: 'name',
       options: {
         id: 'general-data-name',
-        label: 'Alias / Nombre del objetivo',
-        placeholder: 'Ej. José Mendez'
+        label: getMessage('name'),
+        placeholder: getMessage('namePlaceholder')
       },
       breakpoints: { xs: 4 }
     },
@@ -38,8 +38,8 @@ const GeneralDataForm = ({ initialValues }: Props): ReactElement => {
       name: 'phone',
       options: {
         id: 'general-data-phone',
-        label: 'Número del objetivo',
-        placeholder: 'Ej. 5533445566'
+        label: getMessage('phone'),
+        placeholder: getMessage('phonePlaceholder')
       },
       breakpoints: { xs: 4 }
     },
@@ -47,9 +47,9 @@ const GeneralDataForm = ({ initialValues }: Props): ReactElement => {
       type: 'select',
       name: 'derivationLine',
       options: {
-        label: 'Línea de derivación',
+        label: getMessage('overflowLine'),
         clearable: true,
-        placeholder: 'Ej. 5693678905',
+        placeholder: getMessage('phonePlaceholder'),
         items: [
           {
             id: '1',
@@ -83,9 +83,9 @@ const GeneralDataForm = ({ initialValues }: Props): ReactElement => {
       type: 'select',
       name: 'phoneCompany',
       options: {
-        label: 'Compañía teléfonica',
+        label: getMessage('carrier'),
         clearable: true,
-        placeholder: 'Ej. Telcel',
+        placeholder: getMessage('carrierPlaceholder'),
         items: [
           {
             id: '1',
@@ -113,11 +113,11 @@ const GeneralDataForm = ({ initialValues }: Props): ReactElement => {
     },
     {
       type: 'text',
-      name: 'birthdate',
+      name: 'endDate',
       options: {
         id: 'general-data-enddate',
-        label: 'Fecha de finalización',
-        placeholder: 'Ej. 12/12/2022 - 13:00:00'
+        label: getMessage('endDate'),
+        placeholder: getMessage('endDatePlaceholder')
       },
       breakpoints: { xs: 4 }
     }

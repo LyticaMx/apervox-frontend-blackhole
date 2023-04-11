@@ -29,8 +29,6 @@ const Techniques = (): ReactElement => {
     null
   )
 
-  // const toggleMode = (): void => setTechinqueSelected((prev) => !prev)
-
   return (
     <>
       <div className="flex justify-between">

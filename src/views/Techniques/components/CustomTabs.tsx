@@ -2,6 +2,7 @@ import { ReactElement } from 'react'
 
 import Button from 'components/Button'
 import clsx from 'clsx'
+import { useIntl } from 'react-intl'
 
 interface ClassNames {
   container: string
@@ -9,7 +10,10 @@ interface ClassNames {
 
 interface Item {
   id: string
-  label: string
+  label: {
+    id: string
+    defaultMessage: string
+  }
 }
 
 interface Props {
@@ -25,6 +29,8 @@ const CustomTabs = ({
   onChange,
   classNames
 }: Props): ReactElement => {
+  const { formatMessage } = useIntl()
+
   return (
     <div className={clsx(classNames.container)}>
       {items.map((item) => (
@@ -35,7 +41,7 @@ const CustomTabs = ({
           className={clsx(active === item.id && 'bg-indigo-100', 'mr-2 ')}
           onClick={() => onChange(item.id)}
         >
-          {item.label}
+          {formatMessage(item.label)}
         </Button>
       ))}
     </div>

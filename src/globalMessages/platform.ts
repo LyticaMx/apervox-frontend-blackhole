@@ -38,10 +38,7 @@ export const platformMessages = defineMessages({
     id: 'global.platform.phoneLine',
     defaultMessage: 'Línea'
   },
-  // activeStatus: {
-  //   id: 'global.platform.activeStatus',
-  //   defaultMessage: 'Vigente'
-  // },
+  evidences: { id: 'global.platform.evidences', defaultMessage: 'Evidencias' },
   audioEvidence: {
     id: 'global.platform.audioEvidence',
     defaultMessage: 'Evidencia de audio'

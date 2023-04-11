@@ -4,6 +4,10 @@ import { ReactElement } from 'react'
 import { formMessages } from 'globalMessages'
 import { Field } from 'types/form'
 import AccordionForm from './AccordionForm'
+import {
+  accountBankFormMessages,
+  objectiveFormsGeneralMessages
+} from 'views/Techniques/messages'
 
 interface FormValues {
   bankname: string
@@ -21,8 +25,8 @@ const AccountBankForm = (): ReactElement => {
       name: 'bankname',
       options: {
         id: 'social-media-bankname',
-        label: 'Institución bancaria',
-        placeholder: 'Ej. Banorte'
+        label: formatMessage(accountBankFormMessages.bank),
+        placeholder: formatMessage(accountBankFormMessages.bankPlaceholder)
       },
       breakpoints: { xs: 12, md: 3 }
     },
@@ -31,8 +35,8 @@ const AccountBankForm = (): ReactElement => {
       name: 'amount',
       options: {
         id: 'social-media-amount',
-        label: 'Monto',
-        placeholder: 'Ej. $999,999'
+        label: formatMessage(accountBankFormMessages.ammount),
+        placeholder: formatMessage(accountBankFormMessages.ammountPlaceholder)
       },
       breakpoints: { xs: 12, md: 3 }
     },
@@ -40,21 +44,21 @@ const AccountBankForm = (): ReactElement => {
       type: 'select',
       name: 'cardstype',
       options: {
-        label: 'Tipo de tarjetas',
+        label: formatMessage(accountBankFormMessages.cardType),
         clearable: true,
-        placeholder: 'Ej. Crédito',
+        placeholder: formatMessage(accountBankFormMessages.cardTypePlaceholder),
         items: [
           {
             id: '1',
-            label: 'Crédito'
+            label: formatMessage(accountBankFormMessages.creditType)
           },
           {
             id: '2',
-            label: 'Debito'
+            label: formatMessage(accountBankFormMessages.debitType)
           },
           {
             id: '3',
-            label: 'Nomina'
+            label: formatMessage(accountBankFormMessages.payrollType)
           }
         ],
         textField: 'label',
@@ -69,8 +73,10 @@ const AccountBankForm = (): ReactElement => {
       name: 'bankCredit',
       options: {
         id: 'social-media-bank-credit',
-        label: 'Crédito bancario',
-        placeholder: 'Ej. Auto $254,000'
+        label: formatMessage(accountBankFormMessages.creditBank),
+        placeholder: formatMessage(
+          accountBankFormMessages.creditBankPlaceholder
+        )
       },
       breakpoints: { xs: 12, md: 3 }
     },
@@ -79,8 +85,10 @@ const AccountBankForm = (): ReactElement => {
       name: 'comments',
       options: {
         id: 'social-media-comments',
-        label: 'Comentarios',
-        placeholder: 'Escribe algun comentario aquí',
+        label: formatMessage(objectiveFormsGeneralMessages.comments),
+        placeholder: formatMessage(
+          objectiveFormsGeneralMessages.commentsPlaceholder
+        ),
         multiline: true,
         rows: 4
       },
@@ -99,8 +107,8 @@ const AccountBankForm = (): ReactElement => {
       <AccordionForm<FormValues>
         fields={fields}
         validationSchema={validationSchema}
-        title="CUENTAS BANCARIAS"
-        itemTitle="Cuenta bancaria"
+        title={formatMessage(accountBankFormMessages.title).toUpperCase()}
+        itemTitle={formatMessage(accountBankFormMessages.itemTitle)}
       />
     </div>
   )

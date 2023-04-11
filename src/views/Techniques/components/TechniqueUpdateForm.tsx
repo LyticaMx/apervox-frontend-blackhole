@@ -5,12 +5,12 @@ import * as yup from 'yup'
 import Form from 'components/Form'
 import { Field } from 'types/form'
 import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
-import { formMessages } from 'globalMessages'
 import Typography from 'components/Typography'
 import Grid from 'components/Grid'
 import { workGroups } from '../mocks'
 import Radio from 'components/Form/Radio'
 import TextField from 'components/Form/Textfield'
+import { techniqueFormMessages } from '../messages'
 
 type AdvanceTimeType = 'days' | 'hours'
 type PriorityType = 'urgent' | 'high' | 'medium' | 'low'
@@ -31,7 +31,7 @@ const TechniqueUpdateForm = ({
   initialValues,
   onSubmit
 }: Props): ReactElement => {
-  const getMessage = useFormatMessage(formMessages)
+  const getMessage = useFormatMessage(techniqueFormMessages)
   const getGlobalMessage = useGlobalMessage()
 
   const [advanceTimeType, setAdvanceTimeType] =
@@ -45,8 +45,8 @@ const TechniqueUpdateForm = ({
       name: 'name',
       options: {
         id: 'technique-name',
-        label: 'Nombre de la técnica',
-        placeholder: 'Ej. T.I.000/2022-0'
+        label: getMessage('name'),
+        placeholder: getMessage('namePlaceholder')
       },
       breakpoints: { xs: 12 }
     },
@@ -55,7 +55,7 @@ const TechniqueUpdateForm = ({
       name: 'dates',
       options: {
         id: 'techinque-date-start-end',
-        label: 'Fecha de incio y finalización',
+        label: getMessage('startEndDate'),
         formatDisplay: 'dd/mm/yyyy'
       },
       breakpoints: { xs: 6 }
@@ -64,7 +64,7 @@ const TechniqueUpdateForm = ({
       type: 'multi-chip-select',
       name: 'groups',
       options: {
-        label: 'Grupos',
+        label: getMessage('groups'),
         items: workGroups,
         textField: 'name',
         valueField: 'id'
@@ -81,22 +81,22 @@ const TechniqueUpdateForm = ({
             style="medium"
             className="uppercase text-primary-500"
           >
-            Notificaciones de caducidad
+            {getMessage('notification')}
           </Typography>
 
           <Typography variant="body2" className="mb-2">
-            Configura el tiempo de antelación en dias u horas
+            {getMessage('notificationTime')}
           </Typography>
           <Grid spacing={1} className="mb-3">
             <Grid item xs={6}>
               <Radio
-                label="Dias"
+                label={getMessage('days')}
                 value="days"
                 checked={advanceTimeType === 'days'}
                 onChange={() => setAdvanceTimeType('days')}
               />
               <TextField
-                placeholder="Ej.3 dias"
+                placeholder={getMessage('daysPlaceholder')}
                 type="number"
                 value={advanceTimeType === 'days' ? advanceTime : ''}
                 onChange={(e) => setAdvanceTime(e.target.value)}
@@ -104,13 +104,13 @@ const TechniqueUpdateForm = ({
             </Grid>
             <Grid item xs={6}>
               <Radio
-                label="Horas"
+                label={getMessage('hours')}
                 value="hours"
                 checked={advanceTimeType === 'hours'}
                 onChange={() => setAdvanceTimeType('hours')}
               />
               <TextField
-                placeholder="Ej.3 horas"
+                placeholder={getMessage('hoursPlaceholder')}
                 type="number"
                 value={advanceTimeType === 'hours' ? advanceTime : ''}
                 onChange={(e) => setAdvanceTime(e.target.value)}
@@ -122,32 +122,32 @@ const TechniqueUpdateForm = ({
             style="medium"
             className="uppercase text-primary-500"
           >
-            Prioridad
+            {getMessage('priority')}
           </Typography>
           <div className="flex mt-2">
             <Radio
-              label="Urgente"
+              label={getMessage('urgent')}
               value="urgent"
               checked={priority === 'urgent'}
               onChange={() => setPriority('urgent')}
               className="mr-4"
             />
             <Radio
-              label="Alta"
+              label={getMessage('high')}
               value="high"
               checked={priority === 'high'}
               onChange={() => setPriority('high')}
               className="mr-4"
             />
             <Radio
-              label="Media"
+              label={getMessage('normal')}
               value="urgent"
               checked={priority === 'medium'}
               onChange={() => setPriority('urgent')}
               className="mr-4"
             />
             <Radio
-              label="Baja"
+              label={getMessage('low')}
               value="low"
               checked={priority === 'low'}
               onChange={() => setPriority('low')}
@@ -158,11 +158,10 @@ const TechniqueUpdateForm = ({
             style="medium"
             className="uppercase text-primary-500 mt-2"
           >
-            Seguimiento
+            {getMessage('follow')}
           </Typography>
           <Typography variant="body2" className="mb-2">
-            Establece si la técnica debe enviarse a ciertos turnos de trabajo o
-            cortes
+            {getMessage('cutSubtitle')}
           </Typography>
         </div>
       ),
@@ -172,17 +171,21 @@ const TechniqueUpdateForm = ({
       type: 'select',
       name: 'shift',
       options: {
-        label: 'Turno',
+        label: getMessage('shift'),
         clearable: true,
-        placeholder: 'Ej.Matutino',
+        placeholder: getMessage('shiftPlaceholder'),
         items: [
           {
             id: 'm',
-            label: 'Matutino'
+            label: getMessage('morning')
           },
           {
             id: 'v',
-            label: 'Vespertino'
+            label: getMessage('evening')
+          },
+          {
+            id: 'n',
+            label: getMessage('nightning')
           }
         ],
         textField: 'label',
@@ -191,24 +194,11 @@ const TechniqueUpdateForm = ({
       breakpoints: { xs: 6 }
     },
     {
-      type: 'select',
+      type: 'text',
       name: 'court',
       options: {
-        label: 'Corte',
-        clearable: true,
-        placeholder: 'Ej.001',
-        items: [
-          {
-            id: '001',
-            label: '001'
-          },
-          {
-            id: '002',
-            label: '002'
-          }
-        ],
-        textField: 'label',
-        valueField: 'id'
+        label: getMessage('court'),
+        placeholder: getMessage('courtPlaceholder')
       },
       breakpoints: { xs: 6 }
     }

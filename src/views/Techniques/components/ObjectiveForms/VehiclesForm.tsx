@@ -4,6 +4,10 @@ import { ReactElement } from 'react'
 import { formMessages } from 'globalMessages'
 import { Field } from 'types/form'
 import AccordionForm from './AccordionForm'
+import {
+  objectiveFormsGeneralMessages,
+  vehiclesFormMessages
+} from 'views/Techniques/messages'
 
 interface FormValues {
   brand: string
@@ -23,8 +27,8 @@ const VehiclesForm = (): ReactElement => {
       name: 'brand',
       options: {
         id: 'vehicle-brand',
-        label: 'Marca del vehículo',
-        placeholder: 'Ej. Chevrolet'
+        label: formatMessage(vehiclesFormMessages.brand),
+        placeholder: formatMessage(vehiclesFormMessages.brandPlaceholder)
       },
       breakpoints: { xs: 12, md: 3 }
     },
@@ -33,8 +37,8 @@ const VehiclesForm = (): ReactElement => {
       name: 'model',
       options: {
         id: 'vehicle-model',
-        label: 'Modelo',
-        placeholder: 'Ej. Corvette'
+        label: formatMessage(vehiclesFormMessages.model),
+        placeholder: formatMessage(vehiclesFormMessages.modelPlaceholder)
       },
       breakpoints: { xs: 12, md: 3 }
     },
@@ -43,8 +47,8 @@ const VehiclesForm = (): ReactElement => {
       name: 'year',
       options: {
         id: 'vehicle-year',
-        label: 'Año',
-        placeholder: 'Ej. 2023'
+        label: formatMessage(vehiclesFormMessages.year),
+        placeholder: formatMessage(vehiclesFormMessages.yearPlaceholder)
       },
       breakpoints: { xs: 12, md: 3 }
     },
@@ -52,25 +56,25 @@ const VehiclesForm = (): ReactElement => {
       type: 'select',
       name: 'vehicleType',
       options: {
-        label: 'Tipo de vehículo',
+        label: formatMessage(vehiclesFormMessages.vehicleType),
         clearable: true,
-        placeholder: 'Ej. Deportivo',
+        placeholder: formatMessage(vehiclesFormMessages.vehicleTypePlaceholder),
         items: [
           {
             id: '1',
-            label: 'Deportivo'
+            label: formatMessage(vehiclesFormMessages.sport)
           },
           {
             id: '2',
-            label: 'Sedan'
+            label: formatMessage(vehiclesFormMessages.sedan)
           },
           {
             id: '3',
-            label: 'Motocicleta'
+            label: formatMessage(vehiclesFormMessages.motorcycle)
           },
           {
             id: '4',
-            label: 'Pickup'
+            label: formatMessage(vehiclesFormMessages.pickup)
           }
         ],
         textField: 'label',
@@ -85,8 +89,8 @@ const VehiclesForm = (): ReactElement => {
       name: 'plates',
       options: {
         id: 'vehicle-plates',
-        label: 'Placas',
-        placeholder: 'Ej. XA12BC'
+        label: formatMessage(vehiclesFormMessages.plates),
+        placeholder: formatMessage(vehiclesFormMessages.platesPlaceholder)
       },
       breakpoints: { xs: 12, md: 3 }
     },
@@ -95,8 +99,10 @@ const VehiclesForm = (): ReactElement => {
       name: 'comments',
       options: {
         id: 'vehicle-comments',
-        label: 'Comentarios',
-        placeholder: 'Escribe algun comentario aquí',
+        label: formatMessage(objectiveFormsGeneralMessages.comments),
+        placeholder: formatMessage(
+          objectiveFormsGeneralMessages.commentsPlaceholder
+        ),
         multiline: true,
         rows: 4
       },
@@ -117,8 +123,8 @@ const VehiclesForm = (): ReactElement => {
       <AccordionForm<FormValues>
         fields={fields}
         validationSchema={validationSchema}
-        title="VEHÍCULOS"
-        itemTitle="Vehículo"
+        title={formatMessage(vehiclesFormMessages.title).toUpperCase()}
+        itemTitle={formatMessage(vehiclesFormMessages.itemTitle)}
       />
     </div>
   )

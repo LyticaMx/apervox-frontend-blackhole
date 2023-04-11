@@ -4,8 +4,8 @@ import * as yup from 'yup'
 import Form from 'components/Form'
 import { Field } from 'types/form'
 import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
-import { formMessages } from 'globalMessages'
 import Typography from 'components/Typography'
+import { physicalDescriptionFormMessages } from 'views/Techniques/messages'
 
 interface FormValues {
   height: string
@@ -21,7 +21,7 @@ interface Props {
 }
 
 const PhysicalDescriptionForm = ({ initialValues }: Props): ReactElement => {
-  const getMessage = useFormatMessage(formMessages)
+  const getMessage = useFormatMessage(physicalDescriptionFormMessages)
   const getGlobalMessage = useGlobalMessage()
 
   const fields: Array<Field<FormValues>> = [
@@ -30,8 +30,8 @@ const PhysicalDescriptionForm = ({ initialValues }: Props): ReactElement => {
       name: 'height',
       options: {
         id: 'physical-description-height',
-        label: 'Altura',
-        placeholder: 'Ej. 170 cm'
+        label: getMessage('height'),
+        placeholder: getMessage('heightPlaceholder')
       },
       breakpoints: { xs: 3 }
     },
@@ -40,8 +40,8 @@ const PhysicalDescriptionForm = ({ initialValues }: Props): ReactElement => {
       name: 'weight',
       options: {
         id: 'physical-description-weight',
-        label: 'Peso',
-        placeholder: 'Ej. 70 kg'
+        label: getMessage('weight'),
+        placeholder: getMessage('weightPlaceholder')
       },
       breakpoints: { xs: 3 }
     },
@@ -50,8 +50,8 @@ const PhysicalDescriptionForm = ({ initialValues }: Props): ReactElement => {
       name: 'bodyType',
       options: {
         id: 'physical-description-body-type',
-        label: 'Tipo de cuerpo',
-        placeholder: 'Ej. Ectomorfo'
+        label: getMessage('bodyType'),
+        placeholder: getMessage('bodyTypePlaceholder')
       },
       breakpoints: { xs: 3 }
     },
@@ -59,21 +59,21 @@ const PhysicalDescriptionForm = ({ initialValues }: Props): ReactElement => {
       type: 'select',
       name: 'skinColor',
       options: {
-        label: 'Color de piel',
+        label: getMessage('skinColor'),
         clearable: true,
-        placeholder: 'Ej. Piel clara',
+        placeholder: getMessage('skinColorPlaceholder'),
         items: [
           {
             id: '1',
-            label: 'Piel clara'
+            label: getMessage('lightSkin')
           },
           {
             id: '2',
-            label: 'Piel Oscura'
+            label: getMessage('darkSkin')
           },
           {
             id: '3',
-            label: 'Piel blanca'
+            label: getMessage('whiteSkin')
           }
         ],
         textField: 'label',
@@ -87,25 +87,25 @@ const PhysicalDescriptionForm = ({ initialValues }: Props): ReactElement => {
       type: 'select',
       name: 'hairType',
       options: {
-        label: 'Tipo de cabello',
+        label: getMessage('hairType'),
         clearable: true,
-        placeholder: 'Ej. Corto, ondulado',
+        placeholder: getMessage('hairTypePlaceholder'),
         items: [
           {
             id: '1',
-            label: 'Corto, ondulado'
+            label: getMessage('shortCurly')
           },
           {
             id: '2',
-            label: 'Largo, ondulado'
+            label: getMessage('longCurly')
           },
           {
             id: '3',
-            label: 'Corto, quebrado'
+            label: getMessage('shortWavy')
           },
           {
             id: '4',
-            label: 'Largo, quebrado'
+            label: getMessage('longWavy')
           }
         ],
         textField: 'label',
@@ -120,8 +120,8 @@ const PhysicalDescriptionForm = ({ initialValues }: Props): ReactElement => {
       name: 'hairColor',
       options: {
         id: 'physical-description-hair-color',
-        label: 'Color de cabello',
-        placeholder: 'Ej. Castaño'
+        label: getMessage('hairColor'),
+        placeholder: getMessage('hairColorPlaceholder')
       },
       breakpoints: { xs: 3 }
     }
@@ -157,7 +157,7 @@ const PhysicalDescriptionForm = ({ initialValues }: Props): ReactElement => {
   return (
     <div className="w-full">
       <Typography variant="title" style="bold" className="uppercase mb-2">
-        Descipción Fisíca
+        {getMessage('title')}
       </Typography>
 
       <div className="bg-white p-2 py-4 rounded-md">

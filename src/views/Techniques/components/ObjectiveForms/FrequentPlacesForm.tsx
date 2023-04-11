@@ -2,10 +2,10 @@ import * as yup from 'yup'
 import { useIntl } from 'react-intl'
 import { ReactElement } from 'react'
 import { formMessages } from 'globalMessages'
-import { Field } from 'types/form'
-import Typography from 'components/Typography'
+import { Field, Section } from 'types/form'
 import AccordionForm from './AccordionForm'
 import { useAddressForm, AddressFormValues } from './useAddressForm'
+import { frequentPlacesFormMessages } from 'views/Techniques/messages'
 
 interface FormValues extends AddressFormValues {
   name: string
@@ -15,7 +15,7 @@ interface FormValues extends AddressFormValues {
 const FrequentPlacesForm = (): ReactElement => {
   const { formatMessage } = useIntl()
 
-  const { addressFields, addressValidationSchema } = useAddressForm()
+  const { addressFields, addressValidationSchema } = useAddressForm('address')
 
   const fields: Array<Field<FormValues | AddressFormValues>> = [
     {
@@ -23,32 +23,36 @@ const FrequentPlacesForm = (): ReactElement => {
       name: 'placeName',
       options: {
         id: 'place-name',
-        label: 'Nombre del sitio que visita',
-        placeholder: 'Ej. Lugar AAAA'
+        label: formatMessage(frequentPlacesFormMessages.placeName),
+        placeholder: formatMessage(
+          frequentPlacesFormMessages.placeNamePlaceholder
+        )
       },
-      breakpoints: { xs: 3 }
+      breakpoints: { xs: 6 }
     },
     {
       type: 'text',
       name: 'placeActivity',
       options: {
         id: 'place-activity',
-        label: 'Actividad que realiza',
-        placeholder: 'Ej. correr'
+        label: formatMessage(frequentPlacesFormMessages.placeActivity),
+        placeholder: formatMessage(
+          frequentPlacesFormMessages.placeActivityPlaceholder
+        )
       },
-      breakpoints: { xs: 3 }
-    },
-    {
-      type: 'custom',
-      name: 'addressTitle',
-      children: (
-        <Typography variant="body1" className="text-primary uppercase mt-2">
-          Domicilio del lugar
-        </Typography>
-      ),
-      breakpoints: { xs: 12 }
+      breakpoints: { xs: 6 }
     },
     ...addressFields
+  ]
+
+  const sections: Section[] = [
+    {
+      name: 'address',
+      title: {
+        text: formatMessage(frequentPlacesFormMessages.placeAddress),
+        className: 'text-primary uppercase mt-2'
+      }
+    }
   ]
 
   const validationSchema = yup
@@ -63,8 +67,12 @@ const FrequentPlacesForm = (): ReactElement => {
       <AccordionForm<FormValues | AddressFormValues>
         fields={fields}
         validationSchema={validationSchema}
-        title="LUGARES FRECUENTES"
-        itemTitle="Lugar"
+        title={formatMessage(frequentPlacesFormMessages.title).toUpperCase()}
+        itemTitle={formatMessage(frequentPlacesFormMessages.itemTitle)}
+        withSections={{
+          renderMainSection: true,
+          sections
+        }}
       />
     </div>
   )

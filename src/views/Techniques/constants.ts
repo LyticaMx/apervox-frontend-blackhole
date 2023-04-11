@@ -1,3 +1,6 @@
+import { generalMessages, platformMessages } from 'globalMessages'
+import { techniqueInfoTabsMessages } from './messages'
+
 export enum TECHNIQUE_INFO_TABS {
   OBJECTIVE = 'OBJECTIVE',
   DESCRIPTION = 'DESCRIPTION',
@@ -28,33 +31,72 @@ export enum OBJECTIVE_FORMS_TABS {
 }
 
 export const techiniqueInfoTabs = [
-  { id: TECHNIQUE_INFO_TABS.OBJECTIVE, label: 'Objetivo' },
-  { id: TECHNIQUE_INFO_TABS.DESCRIPTION, label: 'Descripción' },
-  { id: TECHNIQUE_INFO_TABS.CONFIG, label: 'Configuración' }
+  { id: TECHNIQUE_INFO_TABS.OBJECTIVE, label: platformMessages.target },
+  { id: TECHNIQUE_INFO_TABS.DESCRIPTION, label: generalMessages.description },
+  { id: TECHNIQUE_INFO_TABS.CONFIG, label: generalMessages.configuration }
 ]
 
 export const objectiveInfoTabs = [
-  { id: OBJECTIVE_INFO_TABS.EVIDENCE, label: 'Evidencias' },
-  { id: OBJECTIVE_INFO_TABS.GENERAL_DATA, label: 'Datos generales' },
-  { id: OBJECTIVE_INFO_TABS.FORMS, label: 'Formularios' }
+  { id: OBJECTIVE_INFO_TABS.EVIDENCE, label: platformMessages.evidences },
+  {
+    id: OBJECTIVE_INFO_TABS.GENERAL_DATA,
+    label: techniqueInfoTabsMessages.generalData
+  },
+  { id: OBJECTIVE_INFO_TABS.FORMS, label: generalMessages.forms }
 ]
 
 export const objectiveFormsTabs = [
-  { id: OBJECTIVE_FORMS_TABS.PERSONAL_DATA, label: 'Datos personales' },
+  {
+    id: OBJECTIVE_FORMS_TABS.PERSONAL_DATA,
+    label: techniqueInfoTabsMessages.personalData
+  },
   {
     id: OBJECTIVE_FORMS_TABS.PHYSICAL_DESCRIPTION,
-    label: 'Descripción fisíca'
+    label: techniqueInfoTabsMessages.physicalDescription
   },
-  { id: OBJECTIVE_FORMS_TABS.LABOR_DATA, label: 'Datos laborales' },
-  { id: OBJECTIVE_FORMS_TABS.ACADEMIC_DATA, label: 'Datos académicos' },
-  { id: OBJECTIVE_FORMS_TABS.ORGANIZATION_DATA, label: 'Datos organizaciones' },
-  { id: OBJECTIVE_FORMS_TABS.SOCIAL_CIRCLE, label: 'Circulo social' },
-  { id: OBJECTIVE_FORMS_TABS.FREQUENT_PLACES, label: 'Lugares frecuentes' },
-  { id: OBJECTIVE_FORMS_TABS.SOCIAL_MEDIA, label: 'Redes sociales' },
-  { id: OBJECTIVE_FORMS_TABS.LANGUAGE, label: 'Idiomas' },
-  { id: OBJECTIVE_FORMS_TABS.ACCOUNT_BANK, label: 'Cuentas bancarias' },
-  { id: OBJECTIVE_FORMS_TABS.CARS, label: 'Vehículos' },
-  { id: OBJECTIVE_FORMS_TABS.PROPERTIES, label: 'Propiedades' },
-  { id: OBJECTIVE_FORMS_TABS.COMPANIES, label: 'Empresas' },
-  { id: OBJECTIVE_FORMS_TABS.SCHEDULE_DATA, label: 'Datos de agenda' }
+  {
+    id: OBJECTIVE_FORMS_TABS.LABOR_DATA,
+    label: techniqueInfoTabsMessages.laboralData
+  },
+  {
+    id: OBJECTIVE_FORMS_TABS.ACADEMIC_DATA,
+    label: techniqueInfoTabsMessages.academicData
+  },
+  {
+    id: OBJECTIVE_FORMS_TABS.ORGANIZATION_DATA,
+    label: techniqueInfoTabsMessages.organizationData
+  },
+  {
+    id: OBJECTIVE_FORMS_TABS.SOCIAL_CIRCLE,
+    label: techniqueInfoTabsMessages.socialCircle
+  },
+  {
+    id: OBJECTIVE_FORMS_TABS.FREQUENT_PLACES,
+    label: techniqueInfoTabsMessages.frequentPlaces
+  },
+  {
+    id: OBJECTIVE_FORMS_TABS.SOCIAL_MEDIA,
+    label: techniqueInfoTabsMessages.socialMedia
+  },
+  {
+    id: OBJECTIVE_FORMS_TABS.LANGUAGE,
+    label: techniqueInfoTabsMessages.language
+  },
+  {
+    id: OBJECTIVE_FORMS_TABS.ACCOUNT_BANK,
+    label: techniqueInfoTabsMessages.bankAccount
+  },
+  { id: OBJECTIVE_FORMS_TABS.CARS, label: techniqueInfoTabsMessages.cars },
+  {
+    id: OBJECTIVE_FORMS_TABS.PROPERTIES,
+    label: techniqueInfoTabsMessages.properties
+  },
+  {
+    id: OBJECTIVE_FORMS_TABS.COMPANIES,
+    label: techniqueInfoTabsMessages.companies
+  },
+  {
+    id: OBJECTIVE_FORMS_TABS.SCHEDULE_DATA,
+    label: techniqueInfoTabsMessages.scheduleData
+  }
 ]

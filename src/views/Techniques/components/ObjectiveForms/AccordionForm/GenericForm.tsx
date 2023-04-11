@@ -3,7 +3,7 @@
 import { ReactElement } from 'react'
 import { FormikConfig, FormikContextType } from 'formik'
 import Form from 'components/Form'
-import { Field } from 'types/form'
+import { Field, Section } from 'types/form'
 
 interface Props<T> {
   initialValues: T
@@ -11,6 +11,10 @@ interface Props<T> {
   validationSchema?: any
   onSubmit?: (values: T) => void
   onChangeValues?: (values: FormikContextType<T>) => void
+  withSections?: {
+    renderMainSection: boolean
+    sections: Section[]
+  }
 }
 
 const GenericForm = <T extends Object>({
@@ -18,7 +22,8 @@ const GenericForm = <T extends Object>({
   fields,
   validationSchema,
   onSubmit,
-  onChangeValues
+  onChangeValues,
+  withSections
 }: Props<T>): ReactElement => {
   const initialValuesMapped: T = {} as T
 
@@ -41,6 +46,7 @@ const GenericForm = <T extends Object>({
       fields={fields}
       renderSubmitButton={false}
       initialValuesCanChange
+      withSections={withSections}
       onChangeValues={onChangeValues}
     />
   )

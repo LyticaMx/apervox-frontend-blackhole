@@ -599,5 +599,13 @@ export const generalMessages = defineMessages({
   country: {
     id: 'global.general.county',
     defaultMessage: 'País'
+  },
+  configuration: {
+    id: 'global.general.configuration',
+    defaultMessage: 'Configuración'
+  },
+  forms: {
+    id: 'global.general.forms',
+    defaultMessage: 'Formularios'
   }
 })

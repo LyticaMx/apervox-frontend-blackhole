@@ -5,7 +5,6 @@ import * as yup from 'yup'
 import Form from 'components/Form'
 import { Field } from 'types/form'
 import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
-import { formMessages } from 'globalMessages'
 import Grid from 'components/Grid'
 import Radio from 'components/Form/Radio'
 import SelectField from 'components/Form/Select'
@@ -14,6 +13,7 @@ import Switch from 'components/Form/Switch'
 import Datepicker from 'components/Form/Datepicker'
 import Typography from 'components/Typography'
 import { useToggle } from 'usehooks-ts'
+import { objectiveFormMessages } from '../messages'
 
 type ObjectiveType = 'etsi' | 'conventional'
 
@@ -29,7 +29,7 @@ interface Props {
 }
 
 const ObjectiveForm = ({ initialValues, onSubmit }: Props): ReactElement => {
-  const getMessage = useFormatMessage(formMessages)
+  const getMessage = useFormatMessage(objectiveFormMessages)
   const getGlobalMessage = useGlobalMessage()
   const [state, toggle] = useToggle(false)
 
@@ -54,7 +54,7 @@ const ObjectiveForm = ({ initialValues, onSubmit }: Props): ReactElement => {
           <Grid spacing={1} className="mb-3">
             <Grid item xs={6}>
               <Radio
-                label="Objetivos ETSI"
+                label={getMessage('etsiTargets')}
                 value="etsi"
                 checked={objectiveType === 'etsi'}
                 onChange={() => setObjectiveType('etsi')}
@@ -62,7 +62,7 @@ const ObjectiveForm = ({ initialValues, onSubmit }: Props): ReactElement => {
             </Grid>
             <Grid item xs={6}>
               <Radio
-                label="Objetivos convencionales"
+                label={getMessage('conventionalTargets')}
                 value="conventional"
                 checked={objectiveType === 'conventional'}
                 onChange={() => setObjectiveType('conventional')}
@@ -78,8 +78,8 @@ const ObjectiveForm = ({ initialValues, onSubmit }: Props): ReactElement => {
       name: 'name',
       options: {
         id: 'objective-name',
-        label: 'Alias / Nombre del objetivo',
-        placeholder: 'Ej. El chapo',
+        label: getMessage('targetName'),
+        placeholder: getMessage('targetNamePlaceholder'),
         labelSpacing: '1'
       },
       breakpoints: { xs: 12 }
@@ -89,8 +89,8 @@ const ObjectiveForm = ({ initialValues, onSubmit }: Props): ReactElement => {
       name: 'number',
       options: {
         id: 'objective-number',
-        label: 'Número del objetivo',
-        placeholder: 'Ej. numero a 10 dígitos',
+        label: getMessage('targetNumber'),
+        placeholder: getMessage('targetNumberPlaceholder'),
         labelSpacing: '1'
       },
       breakpoints: { xs: 12 }
@@ -103,12 +103,11 @@ const ObjectiveForm = ({ initialValues, onSubmit }: Props): ReactElement => {
           <div className="flex items-center">
             <Switch onChange={toggle} value={state} color="indigo" />
             <Typography className="ml-2 uppercase text-indigo-500 font-semibold">
-              Fecha de finalización
+              {getMessage('endDate')}
             </Typography>
           </div>
           <Typography className="leading-tight mb-2">
-            Si habilitas este campo deberás ingresar una fecha de finalización
-            diferente y anterior a la fecha de vigencia de la técnica.
+            {getMessage('endDateWarning')}
           </Typography>
           <Datepicker onChange={(value) => setEndDate(value)} value={endDate} />
         </div>
@@ -119,7 +118,7 @@ const ObjectiveForm = ({ initialValues, onSubmit }: Props): ReactElement => {
       type: 'select',
       name: 'phoneCompany',
       options: {
-        label: 'Compañia telefonica',
+        label: getMessage('carrier'),
         items: [
           { id: '01', name: 'Telcel' },
           { id: '02', name: 'AT&T' },
@@ -140,7 +139,7 @@ const ObjectiveForm = ({ initialValues, onSubmit }: Props): ReactElement => {
             <div className="w-full">
               <TextField
                 label="LIID"
-                placeholder="Ej. 00000000"
+                placeholder={getMessage('phoneExample')}
                 value={etsiLiid.base}
                 labelSpacing="1"
                 onChange={(e) => {
@@ -150,7 +149,7 @@ const ObjectiveForm = ({ initialValues, onSubmit }: Props): ReactElement => {
               <TextField
                 className="mt-2"
                 label="LIID VoLTE"
-                placeholder="Ej. 00000000"
+                placeholder={getMessage('phoneExample')}
                 value={etsiLiid.volte}
                 labelSpacing="1"
                 onChange={(e) => {
@@ -162,8 +161,8 @@ const ObjectiveForm = ({ initialValues, onSubmit }: Props): ReactElement => {
             <div className="w-full">
               <SelectField
                 className="w-full"
-                label="Linea de derivación"
-                placeholder="Ej. 5500000000"
+                label={getMessage('derivationLine')}
+                placeholder={getMessage('phoneExample')}
                 items={[
                   {
                     id: 'line_001',

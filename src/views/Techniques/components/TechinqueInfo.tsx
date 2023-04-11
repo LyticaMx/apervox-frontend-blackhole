@@ -14,6 +14,9 @@ import { techiniqueInfoTabs, TECHNIQUE_INFO_TABS } from '../constants'
 import Button from 'components/Button'
 import { ArrowDownTrayIcon } from '@heroicons/react/24/outline'
 import TechniqueUpdateForm from './TechniqueUpdateForm'
+import { useIntl } from 'react-intl'
+import { techniqueInfoMessages } from '../messages'
+import { actionsMessages } from 'globalMessages'
 
 interface Props {
   show: boolean
@@ -31,6 +34,8 @@ const TechniqueInfo = ({
   const descriptionRef = useRef<Editor>(null)
 
   const [active, setActive] = useState(TECHNIQUE_INFO_TABS.OBJECTIVE)
+
+  const { formatMessage } = useIntl()
 
   if (!technique) {
     return <Wrapper expanded={show} contentType={ContentType.TECHNIQUE_INFO} />
@@ -60,12 +65,12 @@ const TechniqueInfo = ({
             active !== TECHNIQUE_INFO_TABS.DESCRIPTION && 'hidden'
           )}
         >
-          <Typography variant="body2" style="semibold">
-            DESCRIPCIÓN DE LA TÉCNICA
+          <Typography variant="body2" style="semibold" className="uppercase">
+            {formatMessage(techniqueInfoMessages.title)}
           </Typography>
           <div className="flex justify-between">
             <Typography variant="body2">
-              Espacio que indica de que trata la técnica en curso.
+              {formatMessage(techniqueInfoMessages.subtitle)}
             </Typography>
             <div className="flex ml-1">
               <Button
@@ -76,7 +81,7 @@ const TechniqueInfo = ({
                 <ArrowDownTrayIcon className="h-6 text-slate-400" />
               </Button>
               <Button className="h-max" variant="contained" color="indigo">
-                Guardar descripción
+                {formatMessage(techniqueInfoMessages.saveDescription)}
               </Button>
             </div>
           </div>
@@ -92,12 +97,16 @@ const TechniqueInfo = ({
         <div
           className={clsx(active !== TECHNIQUE_INFO_TABS.CONFIG && 'hidden')}
         >
-          <Typography variant="body2" style="semibold">
-            CONFIGURACIÓN DE LA TÉCNICA
+          <Typography variant="body2" style="semibold" className="uppercase">
+            {formatMessage(techniqueInfoMessages.configuration)}
           </Typography>
           <div className="flex items-center justify-between">
-            <Typography variant="body2">Datos de la técnica.</Typography>
-            <Button color="indigo">Guardar</Button>
+            <Typography variant="body2">
+              {formatMessage(techniqueInfoMessages.techniqueData)}
+            </Typography>
+            <Button color="indigo">
+              {formatMessage(actionsMessages.save)}
+            </Button>
           </div>
           <TechniqueUpdateForm
             onSubmit={async (values) => console.log('values', values)}

@@ -2,10 +2,10 @@ import * as yup from 'yup'
 import { useIntl } from 'react-intl'
 import { ReactElement } from 'react'
 import { formMessages } from 'globalMessages'
-import { Field } from 'types/form'
-import Typography from 'components/Typography'
+import { Field, Section } from 'types/form'
 import AccordionForm from './AccordionForm'
 import { useAddressForm, AddressFormValues } from './useAddressForm'
+import { propertiesFormMessages } from 'views/Techniques/messages'
 
 interface FormValues extends AddressFormValues {
   type: string
@@ -14,28 +14,28 @@ interface FormValues extends AddressFormValues {
 const PropertiesForm = (): ReactElement => {
   const { formatMessage } = useIntl()
 
-  const { addressFields, addressValidationSchema } = useAddressForm()
+  const { addressFields, addressValidationSchema } = useAddressForm('address')
 
   const fields: Array<Field<FormValues | AddressFormValues>> = [
     {
       type: 'select',
       name: 'type',
       options: {
-        label: 'Tipo de inmueble',
+        label: formatMessage(propertiesFormMessages.type),
         clearable: true,
-        placeholder: 'Ej. Departamento',
+        placeholder: formatMessage(propertiesFormMessages.typePlaceholder),
         items: [
           {
             id: '1',
-            label: 'Departamento'
+            label: formatMessage(propertiesFormMessages.apartment)
           },
           {
             id: '2',
-            label: 'Casa'
+            label: formatMessage(propertiesFormMessages.house)
           },
           {
             id: '3',
-            label: 'Oficina'
+            label: formatMessage(propertiesFormMessages.office)
           }
         ],
         textField: 'label',
@@ -45,16 +45,7 @@ const PropertiesForm = (): ReactElement => {
       },
       breakpoints: { xs: 12, md: 3 }
     },
-    {
-      type: 'custom',
-      name: 'addressTitle',
-      children: (
-        <Typography variant="body1" className="text-primary uppercase mt-2">
-          Domicilio de la propiedad
-        </Typography>
-      ),
-      breakpoints: { xs: 12 }
-    },
+
     ...addressFields
   ]
 
@@ -64,13 +55,27 @@ const PropertiesForm = (): ReactElement => {
     })
     .concat(addressValidationSchema)
 
+  const sections: Section[] = [
+    {
+      name: 'address',
+      title: {
+        text: formatMessage(propertiesFormMessages.propertyAddress),
+        className: 'text-primary uppercase mt-2'
+      }
+    }
+  ]
+
   return (
     <div>
       <AccordionForm<FormValues | AddressFormValues>
         fields={fields}
         validationSchema={validationSchema}
-        title="Propiedades"
-        itemTitle="Propiedad"
+        title={formatMessage(propertiesFormMessages.title).toUpperCase()}
+        itemTitle={formatMessage(propertiesFormMessages.itemTitle)}
+        withSections={{
+          renderMainSection: true,
+          sections
+        }}
       />
     </div>
   )

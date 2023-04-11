@@ -2,10 +2,13 @@ import * as yup from 'yup'
 import { useIntl } from 'react-intl'
 import { ReactElement } from 'react'
 import { formMessages } from 'globalMessages'
-import { Field } from 'types/form'
-import Typography from 'components/Typography'
+import { Field, Section } from 'types/form'
 import AccordionForm from './AccordionForm'
 import { useAddressForm, AddressFormValues } from './useAddressForm'
+import {
+  laborFormMessages,
+  objectiveFormsGeneralMessages
+} from 'views/Techniques/messages'
 
 interface FormValues extends AddressFormValues {
   name: string
@@ -16,7 +19,7 @@ interface FormValues extends AddressFormValues {
 
 const LaborForm = (): ReactElement => {
   const { formatMessage } = useIntl()
-  const { addressFields, addressValidationSchema } = useAddressForm()
+  const { addressFields, addressValidationSchema } = useAddressForm('address')
 
   const fields: Array<Field<FormValues | AddressFormValues>> = [
     {
@@ -24,8 +27,10 @@ const LaborForm = (): ReactElement => {
       name: 'organizationName',
       options: {
         id: 'labor-organization-name',
-        label: 'Nombre de la organización',
-        placeholder: 'Ej. Empresa XXXX'
+        label: formatMessage(laborFormMessages.organizationName),
+        placeholder: formatMessage(
+          laborFormMessages.organizationNamePlaceholder
+        )
       },
       breakpoints: { xs: 3 }
     },
@@ -34,8 +39,8 @@ const LaborForm = (): ReactElement => {
       name: 'job',
       options: {
         id: 'labor-company-job',
-        label: 'Cargo / Puesto',
-        placeholder: 'Ej. Operador Técnico'
+        label: formatMessage(laborFormMessages.job),
+        placeholder: formatMessage(laborFormMessages.jobPlaceholder)
       },
       breakpoints: { xs: 3 }
     },
@@ -44,8 +49,10 @@ const LaborForm = (): ReactElement => {
       name: 'email',
       options: {
         id: 'labor-company-email',
-        label: 'Correo electrónico',
-        placeholder: 'Ej. correo@dominio.com'
+        label: formatMessage(formMessages.email),
+        placeholder: formatMessage(
+          objectiveFormsGeneralMessages.emailPlaceholder
+        )
       },
       breakpoints: { xs: 3 }
     },
@@ -54,20 +61,12 @@ const LaborForm = (): ReactElement => {
       name: 'phone',
       options: {
         id: 'labor-company-phone',
-        label: 'Número teléfonico',
-        placeholder: 'Ej. numero a 10 dígitos'
+        label: formatMessage(objectiveFormsGeneralMessages.phone),
+        placeholder: formatMessage(
+          objectiveFormsGeneralMessages.phonePlaceholder
+        )
       },
       breakpoints: { xs: 3 }
-    },
-    {
-      type: 'custom',
-      name: 'addressTitle',
-      children: (
-        <Typography variant="body1" className="text-primary uppercase mt-2">
-          Domicilio de la organización
-        </Typography>
-      ),
-      breakpoints: { xs: 12 }
     },
     ...addressFields
   ]
@@ -85,13 +84,27 @@ const LaborForm = (): ReactElement => {
     })
     .concat(addressValidationSchema)
 
+  const sections: Section[] = [
+    {
+      name: 'address',
+      title: {
+        text: formatMessage(laborFormMessages.organizationAddress),
+        className: 'text-primary uppercase mt-2'
+      }
+    }
+  ]
+
   return (
     <div>
       <AccordionForm<FormValues | AddressFormValues>
         fields={fields}
         validationSchema={validationSchema}
-        title="DATOS LABORALES"
-        itemTitle="Organización"
+        title={formatMessage(laborFormMessages.title)}
+        itemTitle={formatMessage(laborFormMessages.itemTitle)}
+        withSections={{
+          renderMainSection: true,
+          sections
+        }}
       />
     </div>
   )

@@ -2,6 +2,7 @@ import * as yup from 'yup'
 import { useIntl } from 'react-intl'
 import { formMessages } from 'globalMessages'
 import { Field } from 'types/form'
+import { useAddressMessages } from 'views/Techniques/messages'
 
 export interface AddressFormValues {
   state: string
@@ -17,7 +18,7 @@ interface AddressForm {
   addressValidationSchema: any
 }
 
-export const useAddressForm = (): AddressForm => {
+export const useAddressForm = (section?: string): AddressForm => {
   const { formatMessage } = useIntl()
 
   const addressFields: Array<Field<AddressFormValues>> = [
@@ -25,9 +26,9 @@ export const useAddressForm = (): AddressForm => {
       type: 'select',
       name: 'state',
       options: {
-        label: 'Estado',
+        label: formatMessage(useAddressMessages.state),
         clearable: true,
-        placeholder: 'Ej. CDMX',
+        placeholder: formatMessage(useAddressMessages.statePlaceholder),
         items: [
           {
             id: '1',
@@ -47,15 +48,16 @@ export const useAddressForm = (): AddressForm => {
         className: 'bg-white-500 mt-3',
         optionsContainerClassname: 'w-[95%]'
       },
-      breakpoints: { xs: 12, md: 3 }
+      breakpoints: { xs: 12, md: 3 },
+      section
     },
     {
       type: 'select',
       name: 'municipality',
       options: {
-        label: 'Municipio / Alcaldía',
+        label: formatMessage(useAddressMessages.municipality),
         clearable: true,
-        placeholder: 'Ej. Iztapalapa',
+        placeholder: formatMessage(useAddressMessages.municipalityPlaceholder),
         items: [
           {
             id: '1',
@@ -83,47 +85,52 @@ export const useAddressForm = (): AddressForm => {
         className: 'bg-white-500 mt-3',
         optionsContainerClassname: 'w-[95%]'
       },
-      breakpoints: { xs: 12, md: 3 }
+      breakpoints: { xs: 12, md: 3 },
+      section
     },
     {
       type: 'text',
       name: 'postalCode',
       options: {
         id: 'company-postalCode',
-        label: 'Código Postal',
-        placeholder: 'Ej. 12345'
+        label: formatMessage(useAddressMessages.zipCode),
+        placeholder: formatMessage(useAddressMessages.zipCodePlaceholder)
       },
-      breakpoints: { xs: 12, md: 3 }
+      breakpoints: { xs: 12, md: 3 },
+      section
     },
     {
       type: 'text',
       name: 'colony',
       options: {
         id: 'company-colony',
-        label: 'Colonia',
-        placeholder: 'Ej. Héroes de Tec'
+        label: formatMessage(useAddressMessages.colony),
+        placeholder: formatMessage(useAddressMessages.colonyPlaceholder)
       },
-      breakpoints: { xs: 12, md: 3 }
+      breakpoints: { xs: 12, md: 3 },
+      section
     },
     {
       type: 'text',
       name: 'street',
       options: {
         id: 'company-street',
-        label: 'Nombre de la calle',
-        placeholder: 'Ej. Av. Ejercito nacional'
+        label: formatMessage(useAddressMessages.street),
+        placeholder: formatMessage(useAddressMessages.streetPlaceholder)
       },
-      breakpoints: { xs: 12, md: 3 }
+      breakpoints: { xs: 12, md: 3 },
+      section
     },
     {
       type: 'text',
       name: 'number',
       options: {
         id: 'company-number',
-        label: 'Número exterior',
-        placeholder: 'Ej. Edificio 1-A 564'
+        label: formatMessage(useAddressMessages.number),
+        placeholder: formatMessage(useAddressMessages.numberPlaceholder)
       },
-      breakpoints: { xs: 12, md: 3 }
+      breakpoints: { xs: 12, md: 3 },
+      section
     }
   ]
 

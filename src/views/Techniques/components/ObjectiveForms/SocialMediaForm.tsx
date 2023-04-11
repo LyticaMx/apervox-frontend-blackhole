@@ -4,6 +4,7 @@ import { ReactElement } from 'react'
 import { formMessages } from 'globalMessages'
 import { Field } from 'types/form'
 import AccordionForm from './AccordionForm'
+import { socialMediaFormMessages } from 'views/Techniques/messages'
 
 interface FormValues {
   name: string
@@ -20,8 +21,8 @@ const SocialMediaForm = (): ReactElement => {
       name: 'name',
       options: {
         id: 'social-media-name',
-        label: 'Nombre de la red social',
-        placeholder: 'Ej. Facebook'
+        label: formatMessage(socialMediaFormMessages.name),
+        placeholder: formatMessage(socialMediaFormMessages.namePlaceholder)
       },
       breakpoints: { xs: 12, md: 3 }
     },
@@ -31,7 +32,7 @@ const SocialMediaForm = (): ReactElement => {
       options: {
         id: 'social-media-url',
         label: 'URL',
-        placeholder: 'Ej. https://facebook.com/user123456'
+        placeholder: formatMessage(socialMediaFormMessages.urlPlaceholder)
       },
       breakpoints: { xs: 12, md: 3 }
     },
@@ -40,8 +41,8 @@ const SocialMediaForm = (): ReactElement => {
       name: 'username',
       options: {
         id: 'social-media-username',
-        label: 'Nombre de usuario',
-        placeholder: 'Ej. armandoalbor'
+        label: formatMessage(socialMediaFormMessages.username),
+        placeholder: formatMessage(socialMediaFormMessages.usernamePlaceholder)
       },
       breakpoints: { xs: 12, md: 3 }
     }
@@ -58,8 +59,8 @@ const SocialMediaForm = (): ReactElement => {
       <AccordionForm<FormValues>
         fields={fields}
         validationSchema={validationSchema}
-        title="REDES SOCIALES"
-        itemTitle="Red social"
+        title={formatMessage(socialMediaFormMessages.title).toUpperCase()}
+        itemTitle={formatMessage(socialMediaFormMessages.itemTitle)}
       />
     </div>
   )
