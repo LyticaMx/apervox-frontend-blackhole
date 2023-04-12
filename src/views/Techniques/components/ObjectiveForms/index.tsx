@@ -15,6 +15,7 @@ import LaborForm from './LaborForm'
 import AcademicForm from './AcademicForm'
 import PhysicalDescriptionForm from './PhysicalDescriptionForm'
 import PersonalDataForm from './PersonalDataForm'
+import SocialCircleForm from './SocialCircleForm'
 
 const ObjectiveForms = (): ReactElement => {
   const [activeForm, setActiveForm] = useState(
@@ -47,6 +48,16 @@ const ObjectiveForms = (): ReactElement => {
       >
         {activeForm === OBJECTIVE_FORMS_TABS.SOCIAL_MEDIA && (
           <SocialMediaForm />
+        )}
+      </div>
+
+      <div
+        className={clsx(
+          activeForm !== OBJECTIVE_FORMS_TABS.SOCIAL_CIRCLE && 'hidden'
+        )}
+      >
+        {activeForm === OBJECTIVE_FORMS_TABS.SOCIAL_CIRCLE && (
+          <SocialCircleForm />
         )}
       </div>
 

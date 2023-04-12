@@ -709,6 +709,37 @@ export const socialMediaFormMessages = defineMessages({
   }
 })
 
+export const socialCircleFormMessages = defineMessages({
+  title: {
+    id: 'views.techniques.SocialCircleForm.title',
+    defaultMessage: 'Circulo social'
+  },
+  itemTitle: {
+    id: 'views.techniques.SocialCircleForm.itemTitle',
+    defaultMessage: 'Persona'
+  },
+  name: {
+    id: 'views.techniques.SocialCircleForm.name',
+    defaultMessage: 'Nombre'
+  },
+  namePlaceholder: {
+    id: 'views.techniques.SocialCircleForm.namePlaceholder',
+    defaultMessage: 'Ej. Pedro Picapiedra'
+  },
+  activity: {
+    id: 'views.techniques.SocialCircleForm.activity',
+    defaultMessage: 'Actividad'
+  },
+  activityPlaceholder: {
+    id: 'views.techniques.SocialCircleForm.activityPlaceholder',
+    defaultMessage: 'Ej. Extracción de cantera'
+  },
+  address: {
+    id: 'views.techniques.SocialCircleForm.address',
+    defaultMessage: 'Dirección'
+  }
+})
+
 export const scheduleFormMessages = defineMessages({
   title: {
     id: 'views.techniques.ScheduleForm.title',
