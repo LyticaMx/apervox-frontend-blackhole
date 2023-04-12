@@ -15,6 +15,7 @@ export enum OBJECTIVE_INFO_TABS {
 
 export enum OBJECTIVE_FORMS_TABS {
   PERSONAL_DATA = 'PERSONAL_DATA',
+  BIOMETRIC_DATA = 'BIOMETRIC_DATA',
   PHYSICAL_DESCRIPTION = 'PHYSICAL_DESCRIPTION',
   LABOR_DATA = 'LABOR_DATA',
   ACADEMIC_DATA = 'ACADEMIC_DATA',
@@ -49,6 +50,10 @@ export const objectiveFormsTabs = [
   {
     id: OBJECTIVE_FORMS_TABS.PERSONAL_DATA,
     label: techniqueInfoTabsMessages.personalData
+  },
+  {
+    id: OBJECTIVE_FORMS_TABS.BIOMETRIC_DATA,
+    label: techniqueInfoTabsMessages.biometricData
   },
   {
     id: OBJECTIVE_FORMS_TABS.PHYSICAL_DESCRIPTION,
