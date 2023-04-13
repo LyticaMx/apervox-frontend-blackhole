@@ -35,6 +35,11 @@ export interface PaginationParams {
   limit?: number
 }
 
+export interface SearchParams {
+  query?: string
+  filters?: string[]
+}
+
 export interface GeneralParams extends PaginationParams, DateFilter {}
 
 interface PropChange {
