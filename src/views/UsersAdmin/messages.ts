@@ -95,6 +95,10 @@ export const usersCreateMessages = defineMessages({
     id: 'views.users.create.message',
     defaultMessage:
       'Completa los siguientes campos para agregar un nuevo usuario.'
+  },
+  success: {
+    id: 'views.users.create.success',
+    defaultMessage: 'Usuario registrado correctamente'
   }
 })
 
@@ -104,8 +108,11 @@ export const usersEditMessages = defineMessages({
     defaultMessage: 'Datos del usuario'
   },
   message: {
-    id: 'views.users.create.message',
-    defaultMessage:
-      'Completa los siguientes campos para agregar un nuevo usuario.'
+    id: 'views.users.edit.message',
+    defaultMessage: 'Datos actuales del usuario'
+  },
+  success: {
+    id: 'views.users.edit.success',
+    defaultMessage: 'Usuario editado correctamente'
   }
 })

@@ -75,8 +75,6 @@ const Pagination = ({
     }
   }
 
-  console.log(paginationRange[paginationRange.length - 1], currentPage)
-
   const lastPage = paginationRange[paginationRange.length - 1]
 
   const limitOptions = useMemo(

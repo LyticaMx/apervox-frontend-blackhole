@@ -3,6 +3,7 @@ import ViewFilter from 'components/ViewFilter'
 import { useFormatMessage } from 'hooks/useIntl'
 import { generalMessages } from 'globalMessages'
 import { usersMessages } from '../messages'
+import { useUsers } from 'context/Users'
 
 interface Props {
   toggleOpen: () => void
@@ -11,18 +12,15 @@ interface Props {
 const UserFilter = ({ toggleOpen }: Props): ReactElement => {
   const getMessage = useFormatMessage(usersMessages)
   const getGeneralMessage = useFormatMessage(generalMessages)
+  const { actions } = useUsers()
 
   const filterItems = [
     {
-      name: 'id',
-      label: 'ID'
-    },
-    {
-      name: 'name',
+      name: 'names',
       label: getGeneralMessage('name')
     },
     {
-      name: 'surnames',
+      name: 'last_name',
       label: getGeneralMessage('surnames')
     },
     {
@@ -30,28 +28,16 @@ const UserFilter = ({ toggleOpen }: Props): ReactElement => {
       label: getGeneralMessage('user')
     },
     {
-      name: 'groups',
+      name: 'group_name',
       label: getGeneralMessage('groups')
     },
     {
-      name: 'userRol',
+      name: 'role_name',
       label: getGeneralMessage('profile')
     },
     {
-      name: 'createdBy',
+      name: 'created_by',
       label: getGeneralMessage('registeredBy')
-    },
-    {
-      name: 'session',
-      label: getGeneralMessage('session')
-    },
-    {
-      name: 'session',
-      label: getGeneralMessage('status')
-    },
-    {
-      name: 'createdOn',
-      label: getGeneralMessage('date')
     }
   ]
 
@@ -60,7 +46,14 @@ const UserFilter = ({ toggleOpen }: Props): ReactElement => {
       fields={filterItems}
       action={{ label: getMessage('button'), onClick: toggleOpen }}
       download={(document) => alert(document)}
-      onChange={(data) => console.log('userViewFilter', data)}
+      onChange={(data) =>
+        actions?.getUsers({
+          start_time: data.dateRange[0],
+          end_time: data.dateRange[1],
+          filters: data.filterByField.fields,
+          query: data.filterByField.search
+        })
+      }
     />
   )
 }

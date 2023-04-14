@@ -13,7 +13,9 @@ interface FormValues {
   email: string
   extension: string
   position: string
+  role: string
   groups: string[]
+  automaticSessionExpiration: boolean
 }
 
 interface Props {
@@ -87,6 +89,22 @@ const UserForm = ({ initialValues, onSubmit }: Props): ReactElement => {
       breakpoints: { xs: 12 }
     },
     {
+      name: 'role',
+      type: 'select',
+      options: {
+        label: getMessage('role'),
+        clearable: false,
+        items: [
+          {
+            value: '6438832867fc00ea0266b1ee',
+            text: 'root'
+          }
+        ],
+        textField: 'text',
+        valueField: 'value'
+      }
+    },
+    {
       name: 'groups',
       type: 'multi-chip-select',
       options: {
@@ -121,8 +139,9 @@ const UserForm = ({ initialValues, onSubmit }: Props): ReactElement => {
       .trim()
       .email(getMessage('invalidEmail'))
       .required(getMessage('required')),
-    extension: yup.string().required(getMessage('required')),
+    extension: yup.string(),
     position: yup.string().required(getMessage('required')),
+    role: yup.string().required(getMessage('required')),
     groups: yup.array().required(getMessage('required')),
     automaticSessionExpiration: yup
       .bool()
@@ -138,12 +157,13 @@ const UserForm = ({ initialValues, onSubmit }: Props): ReactElement => {
         email: initialValues?.email ?? '',
         extension: initialValues?.extension ?? '',
         position: initialValues?.position ?? '',
+        role: initialValues?.role ?? '',
+        automaticSessionExpiration:
+          initialValues?.automaticSessionExpiration ?? false,
         groups: initialValues?.groups ?? []
       },
       validationSchema,
-      onSubmit: (values) => {
-        console.log(values)
-      }
+      onSubmit
     }),
     [initialValues]
   )

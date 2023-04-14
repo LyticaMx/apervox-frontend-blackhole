@@ -2,7 +2,8 @@ import Button from 'components/Button'
 import DownloadDialog from 'components/DownloadDialog'
 import FilterByField from 'components/FilterByField'
 import Daterangepicker from 'components/Form/Daterangepicker'
-import { ReactElement, ReactNode, useEffect, useState } from 'react'
+import { useDidMountEffect } from 'hooks/useDidMountEffect'
+import { ReactElement, ReactNode, useState } from 'react'
 import { DocumentType } from 'types/utils'
 
 interface Field {
@@ -16,9 +17,17 @@ interface ActionButton {
   disabled?: boolean
 }
 
+interface FilterStatus {
+  dateRange: [Date?, Date?]
+  filterByField: {
+    fields: string[]
+    search: string
+  }
+}
+
 interface Props {
   fields: Field[]
-  onChange?: (values: any) => void
+  onChange?: (values: FilterStatus) => void
   action?: ActionButton | ActionButton[]
   download?:
     | ((documentType: DocumentType) => void)
@@ -30,7 +39,7 @@ const ViewFilter = (props: Props): ReactElement => {
   const [filterByField, setFilterByField] = useState({ search: '', fields: [] })
 
   // Revisar si es conveniente que se llame cada vez que entra la persona a la vista
-  useEffect(() => {
+  useDidMountEffect(() => {
     if (props.onChange) props.onChange({ dateRange, filterByField })
   }, [dateRange, filterByField])
 

@@ -7,7 +7,7 @@ export interface User {
   lastName: string
   username: string
   groups: string[]
-  role: string
+  role?: string
   roleId?: string
   id?: string
   email?: string

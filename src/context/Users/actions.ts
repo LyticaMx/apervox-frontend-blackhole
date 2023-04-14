@@ -53,13 +53,15 @@ export const useActions = (
             return old
           }, {})
         )
+
+        console.log(mappedFilters)
       }
 
       // TODO: cambiar el response data
       const response: ResponseData = await getUsersService({
         urlParams: {
           ...sort,
-          ...filters,
+          ...mappedFilters,
           page: params?.page ?? usersPagination.page,
           limit: params?.limit ?? usersPagination.limit,
           start_time: params?.start_time ?? dateFilter.start_time,
@@ -81,7 +83,10 @@ export const useActions = (
             createdBy: item.created_by,
             sessions: item.sessions,
             status: item.status ? 'enabled' : 'disabled',
-            createdOn: item.created_at
+            createdOn: item.created_at,
+            closeSession: item.close_session,
+            phone: item.company?.phone_extension ?? '',
+            position: item.company?.position ?? ''
           }))
         )
       )
