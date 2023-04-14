@@ -1,6 +1,5 @@
-import { ReactElement, useState } from 'react'
+import { ReactElement } from 'react'
 import { useHistory } from 'react-router-dom'
-import clsx from 'clsx'
 
 import { pathRoute } from 'router/routes'
 // import { useTechnique } from 'context/Technique'
@@ -11,15 +10,14 @@ import EvidenceList from './EvidenceList'
 import ObjectiveForms from './ObjectiveForms'
 import GeneralDataForm from './ObjectiveForms/GeneralDataForm'
 import { evidencesData } from 'views/Techniques/mocks'
-
-// TODO: replace this with context data
+import { useTabs } from 'hooks/useTabs'
 
 const evidenceTypes = ['audio', 'video', 'image', 'doc']
 
 const FormSection = (): ReactElement => {
   const history = useHistory()
+  const [active, setActive, Tab] = useTabs(OBJECTIVE_INFO_TABS.EVIDENCE)
   // const { technique, objective } = useTechnique()
-  const [active, setActive] = useState(OBJECTIVE_INFO_TABS.EVIDENCE)
 
   return (
     <div id="technique-objetive-forms" className="h-full">
@@ -33,9 +31,7 @@ const FormSection = (): ReactElement => {
           active={active}
         />
 
-        <div
-          className={clsx(active !== OBJECTIVE_INFO_TABS.EVIDENCE && 'hidden')}
-        >
+        <Tab value={OBJECTIVE_INFO_TABS.EVIDENCE}>
           <EvidenceList
             data={evidencesData}
             onSelectItem={(evidence) =>
@@ -44,19 +40,15 @@ const FormSection = (): ReactElement => {
               })
             }
           />
-        </div>
+        </Tab>
 
-        <div
-          className={clsx(
-            active !== OBJECTIVE_INFO_TABS.GENERAL_DATA && 'hidden'
-          )}
-        >
+        <Tab value={OBJECTIVE_INFO_TABS.GENERAL_DATA}>
           <GeneralDataForm />
-        </div>
+        </Tab>
 
-        <div className={clsx(active !== OBJECTIVE_INFO_TABS.FORMS && 'hidden')}>
-          {active === OBJECTIVE_INFO_TABS.FORMS && <ObjectiveForms />}
-        </div>
+        <Tab value={OBJECTIVE_INFO_TABS.FORMS}>
+          <ObjectiveForms />
+        </Tab>
       </div>
     </div>
   )

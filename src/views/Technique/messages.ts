@@ -1,61 +1,5 @@
 import { defineMessages } from 'react-intl'
 
-export const techniquesMessages = defineMessages({
-  title: {
-    id: 'views.Techniques.title',
-    defaultMessage: 'Técnicas'
-  },
-  subtitle: {
-    id: 'views.Techniques.subtitle',
-    defaultMessage: 'Técnicas existentes en la plataforma'
-  },
-  button: {
-    id: 'views.Techniques.button',
-    defaultMessage: 'Agregar técnica'
-  }
-})
-
-export const techniquesDeleteDialogMessages = defineMessages({
-  title: {
-    id: 'views.techniques.deleteDialog.title',
-    defaultMessage: 'Eliminar técnica'
-  },
-  message: {
-    id: 'views.techniques.deleteDialog.message',
-    defaultMessage:
-      '¿Qué tipo de eliminación te gustaría realizar a esta técnica?'
-  },
-  removeCompletely: {
-    id: 'views.techniques.deleteDialog.removeCompletely',
-    defaultMessage: 'Eliminar completamente la técnica'
-  },
-  removeOnlyFiles: {
-    id: 'views.techniques.deleteDialog.removeOnlyFiles',
-    defaultMessage: 'Eliminar únicamente archivos'
-  },
-  hazardConfirmation: {
-    id: 'views.techniques.deleteDialog.hazardConfirmation',
-    defaultMessage:
-      'Acepto y comprendo los riesgos legales y de autorías derivados de la acción de eliminar el registro.'
-  },
-  passwordConfirmMessage: {
-    id: 'views.techniques.deleteDialog.passwordConfirmMessage',
-    defaultMessage: 'Ingresa tu contraseña para validar la eliminación.'
-  }
-})
-
-export const createTechniqueDrawerMessages = defineMessages({
-  addTechnique: {
-    id: 'views.techniques.CreateTechniqueDrawer.addTechnique',
-    defaultMessage: 'Agregar técnica'
-  },
-  completeFields: {
-    id: 'views.techniques.CreateTechniqueDrawer.completeFields',
-    defaultMessage:
-      'Completa los siguientes campos para crear una nueva técnica.'
-  }
-})
-
 export const createObjectiveDialogMessages = defineMessages({
   addObjective: {
     id: 'views.techniques.CreateObjectiveDialog.addObjective',
@@ -1012,5 +956,9 @@ export const techniqueInfoTabsMessages = defineMessages({
   scheduleData: {
     id: 'views.techniques.constants.scheduleData',
     defaultMessage: 'Datos de agenda'
+  },
+  biometricData: {
+    id: 'views.techniques.constants.biometricData',
+    defaultMessage: 'Datos biométricos'
   }
 })

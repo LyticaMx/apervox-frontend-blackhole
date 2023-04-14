@@ -50,8 +50,8 @@ const ObjectiveCard = ({
 
   return (
     <div className="">
-      <button
-        className="p-3 bg-neutral-50 rounded-lg w-full"
+      <div
+        className="p-3 bg-neutral-50 rounded-lg w-full cursor-pointer"
         onClick={() => onClick(data)}
       >
         <BasicInfo name={data.name} phoneNumber={data.phone_number} />
@@ -143,7 +143,7 @@ const ObjectiveCard = ({
             </Tooltip>
           </div>
         </div>
-      </button>
+      </div>
       <DeleteObjectiveDialog
         open={openDeleteDialog}
         objectivePhone={data.phone_number}

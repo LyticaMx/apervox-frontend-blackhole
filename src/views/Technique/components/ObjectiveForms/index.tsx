@@ -1,7 +1,6 @@
-import clsx from 'clsx'
-import { useState, ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { objectiveFormsTabs, OBJECTIVE_FORMS_TABS } from '../../constants'
-import CustomTabs from '../CustomTabs'
+import CustomTabs from '../../../Techniques/components/CustomTabs'
 import LanguagesForm from './LanguagesForm'
 import SocialMediaForm from './SocialMediaForm'
 import AccountBankForm from './AccountBankForm'
@@ -15,136 +14,83 @@ import LaborForm from './LaborForm'
 import AcademicForm from './AcademicForm'
 import PhysicalDescriptionForm from './PhysicalDescriptionForm'
 import PersonalDataForm from './PersonalDataForm'
+import SocialCircleForm from './SocialCircleForm'
+import BiometricForm from './BiometricForm'
+import { useTabs } from 'hooks/useTabs'
 
 const ObjectiveForms = (): ReactElement => {
-  const [activeForm, setActiveForm] = useState(
-    OBJECTIVE_FORMS_TABS.PERSONAL_DATA
-  )
+  const [active, setActive, Tab] = useTabs(OBJECTIVE_FORMS_TABS.PERSONAL_DATA)
 
   return (
     <div>
       <CustomTabs
-        classNames={{ container: 'my-4' }}
+        classNames={{ container: 'mb-4' }}
         items={objectiveFormsTabs}
         onChange={(tabClicked) => {
-          setActiveForm(tabClicked as OBJECTIVE_FORMS_TABS)
+          setActive(tabClicked as OBJECTIVE_FORMS_TABS)
         }}
-        active={activeForm}
+        active={active}
       />
 
-      <div
-        className={clsx(
-          activeForm !== OBJECTIVE_FORMS_TABS.LANGUAGE && 'hidden'
-        )}
-      >
-        {activeForm === OBJECTIVE_FORMS_TABS.LANGUAGE && <LanguagesForm />}
-      </div>
+      <Tab value={OBJECTIVE_FORMS_TABS.LANGUAGE}>
+        <LanguagesForm />
+      </Tab>
 
-      <div
-        className={clsx(
-          activeForm !== OBJECTIVE_FORMS_TABS.SOCIAL_MEDIA && 'hidden'
-        )}
-      >
-        {activeForm === OBJECTIVE_FORMS_TABS.SOCIAL_MEDIA && (
-          <SocialMediaForm />
-        )}
-      </div>
+      <Tab value={OBJECTIVE_FORMS_TABS.SOCIAL_MEDIA}>
+        <SocialMediaForm />
+      </Tab>
 
-      <div
-        className={clsx(
-          activeForm !== OBJECTIVE_FORMS_TABS.ACCOUNT_BANK && 'hidden'
-        )}
-      >
-        {activeForm === OBJECTIVE_FORMS_TABS.ACCOUNT_BANK && (
-          <AccountBankForm />
-        )}
-      </div>
+      <Tab value={OBJECTIVE_FORMS_TABS.SOCIAL_CIRCLE}>
+        <SocialCircleForm />
+      </Tab>
 
-      <div
-        className={clsx(activeForm !== OBJECTIVE_FORMS_TABS.CARS && 'hidden')}
-      >
-        {activeForm === OBJECTIVE_FORMS_TABS.CARS && <VehiclesForm />}
-      </div>
+      <Tab value={OBJECTIVE_FORMS_TABS.BIOMETRIC_DATA}>
+        <BiometricForm />
+      </Tab>
 
-      <div
-        className={clsx(
-          activeForm !== OBJECTIVE_FORMS_TABS.COMPANIES && 'hidden'
-        )}
-      >
-        {activeForm === OBJECTIVE_FORMS_TABS.COMPANIES && <CompaniesForm />}
-      </div>
+      <Tab value={OBJECTIVE_FORMS_TABS.ACCOUNT_BANK}>
+        <AccountBankForm />
+      </Tab>
 
-      <div
-        className={clsx(
-          activeForm !== OBJECTIVE_FORMS_TABS.PROPERTIES && 'hidden'
-        )}
-      >
-        {activeForm === OBJECTIVE_FORMS_TABS.PROPERTIES && <PropertiesForm />}
-      </div>
+      <Tab value={OBJECTIVE_FORMS_TABS.CARS}>
+        <VehiclesForm />
+      </Tab>
 
-      <div
-        className={clsx(
-          activeForm !== OBJECTIVE_FORMS_TABS.SCHEDULE_DATA && 'hidden'
-        )}
-      >
-        {activeForm === OBJECTIVE_FORMS_TABS.SCHEDULE_DATA && <ScheduleForm />}
-      </div>
+      <Tab value={OBJECTIVE_FORMS_TABS.COMPANIES}>
+        <CompaniesForm />
+      </Tab>
 
-      <div
-        className={clsx(
-          activeForm !== OBJECTIVE_FORMS_TABS.FREQUENT_PLACES && 'hidden'
-        )}
-      >
-        {activeForm === OBJECTIVE_FORMS_TABS.FREQUENT_PLACES && (
-          <FrequentPlacesForm />
-        )}
-      </div>
+      <Tab value={OBJECTIVE_FORMS_TABS.PROPERTIES}>
+        <PropertiesForm />
+      </Tab>
 
-      <div
-        className={clsx(
-          activeForm !== OBJECTIVE_FORMS_TABS.ORGANIZATION_DATA && 'hidden'
-        )}
-      >
-        {activeForm === OBJECTIVE_FORMS_TABS.ORGANIZATION_DATA && (
-          <OrganizationsForm />
-        )}
-      </div>
+      <Tab value={OBJECTIVE_FORMS_TABS.SCHEDULE_DATA}>
+        <ScheduleForm />
+      </Tab>
 
-      <div
-        className={clsx(
-          activeForm !== OBJECTIVE_FORMS_TABS.ACADEMIC_DATA && 'hidden'
-        )}
-      >
-        {activeForm === OBJECTIVE_FORMS_TABS.ACADEMIC_DATA && <AcademicForm />}
-      </div>
+      <Tab value={OBJECTIVE_FORMS_TABS.FREQUENT_PLACES}>
+        <FrequentPlacesForm />
+      </Tab>
 
-      <div
-        className={clsx(
-          activeForm !== OBJECTIVE_FORMS_TABS.LABOR_DATA && 'hidden'
-        )}
-      >
-        {activeForm === OBJECTIVE_FORMS_TABS.LABOR_DATA && <LaborForm />}
-      </div>
+      <Tab value={OBJECTIVE_FORMS_TABS.ORGANIZATION_DATA}>
+        <OrganizationsForm />
+      </Tab>
 
-      <div
-        className={clsx(
-          activeForm !== OBJECTIVE_FORMS_TABS.PHYSICAL_DESCRIPTION && 'hidden'
-        )}
-      >
-        {activeForm === OBJECTIVE_FORMS_TABS.PHYSICAL_DESCRIPTION && (
-          <PhysicalDescriptionForm />
-        )}
-      </div>
+      <Tab value={OBJECTIVE_FORMS_TABS.ACADEMIC_DATA}>
+        <AcademicForm />
+      </Tab>
 
-      <div
-        className={clsx(
-          activeForm !== OBJECTIVE_FORMS_TABS.PERSONAL_DATA && 'hidden'
-        )}
-      >
-        {activeForm === OBJECTIVE_FORMS_TABS.PERSONAL_DATA && (
-          <PersonalDataForm />
-        )}
-      </div>
+      <Tab value={OBJECTIVE_FORMS_TABS.LABOR_DATA}>
+        <LaborForm />
+      </Tab>
+
+      <Tab value={OBJECTIVE_FORMS_TABS.PHYSICAL_DESCRIPTION}>
+        <PhysicalDescriptionForm />
+      </Tab>
+
+      <Tab value={OBJECTIVE_FORMS_TABS.PERSONAL_DATA}>
+        <PersonalDataForm />
+      </Tab>
     </div>
   )
 }

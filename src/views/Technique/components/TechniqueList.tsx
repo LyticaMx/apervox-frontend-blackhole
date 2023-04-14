@@ -5,6 +5,7 @@ import Scroller from 'components/Scroller'
 import clsx from 'clsx'
 import { useTechnique } from 'context/Technique'
 import { useTechniques } from 'context/Techniques'
+import { useGlobalMessage } from 'hooks/useIntl'
 
 export enum Priority {
   LOW = 'low',
@@ -23,7 +24,7 @@ export const colorByPriority = {
 const TechniqueList = (): ReactElement => {
   const { technique, actions } = useTechnique()
   const { techniques, actions: actionsTechniques } = useTechniques()
-
+  const getMessage = useGlobalMessage()
   useEffect(() => {
     actionsTechniques?.getTechniques()
   }, [])
@@ -31,7 +32,7 @@ const TechniqueList = (): ReactElement => {
   return (
     <div className="h-full flex flex-col">
       <Typography variant="body2" style="semibold" className="uppercase mb-2">
-        Tecnicas
+        {getMessage('techniques', 'sidebarMessages')}
       </Typography>
       <Scroller>
         {techniques?.map((item) => (
