@@ -50,17 +50,17 @@ const Pagination = ({
   })
 
   const onNext = (): void => {
-    if (currentPage + 1 !== lastPage) {
+    if (currentPage + 1 < lastPage) {
       onPageChange(currentPage + 1)
     }
   }
 
   const goToStart = (): void => {
-    if (currentPage !== 0) onPageChange(0)
+    if (currentPage > 1) onPageChange(0)
   }
 
   const onPrevious = (): void => {
-    if (currentPage !== 0) {
+    if (currentPage > 1) {
       onPageChange(currentPage - 1)
     }
   }
@@ -74,6 +74,8 @@ const Pagination = ({
       manualLimit.onChangeLimit(0, newLimit)
     }
   }
+
+  console.log(paginationRange[paginationRange.length - 1], currentPage)
 
   const lastPage = paginationRange[paginationRange.length - 1]
 
