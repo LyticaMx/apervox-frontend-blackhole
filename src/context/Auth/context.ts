@@ -7,14 +7,16 @@ export const initialState: Auth = {
   token: getItem('token'),
   rToken: getItem('rToken'),
   profile: {
-    email: '',
-    profile_id: '',
-    name: '',
-    fathers_name: '',
-    mothers_name: '',
+    id: '',
+    names: '',
+    lastName: '',
+    username: '',
     since: '',
-    activated: '',
-    pic: ''
+    email: '',
+    phone: '',
+    position: '',
+    groups: [],
+    role: ''
   }
 }
 

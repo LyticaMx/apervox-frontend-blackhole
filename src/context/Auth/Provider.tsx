@@ -15,6 +15,7 @@ import { apiMessages } from 'globalMessages'
 
 import { useLoader } from 'context/Loader'
 import { AuthContext, initialState } from './context'
+import { format } from 'date-fns'
 
 interface Props {
   children: ReactNode
@@ -48,7 +49,7 @@ const AuthProvider = ({ children }: Props): ReactElement => {
   })
 
   const getProfileService = useApi({
-    endpoint: 'profile/me',
+    endpoint: 'me',
     method: 'get'
   })
 
@@ -72,14 +73,14 @@ const AuthProvider = ({ children }: Props): ReactElement => {
         body: params
       })
 
-      const token: string = res.data.access_token
+      const token: string = res.data.token
       const rToken: string = res.data.refresh_token
 
       const session: any = jwtDecode(token) // decode your token here
 
-      const email = session?.email
+      const id = session?.id
 
-      if (email) {
+      if (id) {
         setItem('token', token)
         setItem('rToken', rToken)
 
@@ -90,10 +91,21 @@ const AuthProvider = ({ children }: Props): ReactElement => {
           token,
           rToken,
           profile: {
-            ...resProfile.data,
+            id,
+            names: resProfile.data?.profile?.names ?? '',
+            lastName: resProfile.data?.profile?.last_names ?? '',
+            username: resProfile.data?.username ?? '',
             since: `${String(
-              resProfile.data?.activated ?? '1970-01-01'
-            )} 00:00:00`
+              format(
+                new Date(resProfile.data?.created_at ?? '1970-01-01T00:00:00Z'),
+                'dd-MM-yyyy HH:mm:ss'
+              )
+            )}`,
+            email: resProfile.data?.email ?? '',
+            phone: resProfile.data?.company.phone_extension ?? '',
+            position: resProfile.data?.company.position ?? '',
+            groups: resProfile.data?.groups ?? [],
+            role: resProfile.data?.role ?? ''
           }
         }
 
@@ -198,7 +210,7 @@ const AuthProvider = ({ children }: Props): ReactElement => {
   const updateProfile = async (newProfile: FormProfile): Promise<void> => {
     try {
       const res: any = await updateProfileService({
-        queryString: `?id=${String(auth.profile.profile_id)}`,
+        queryString: `?id=${String(auth.profile.id)}`,
         body: {
           first_name: newProfile.name,
           fathers_name: newProfile.fathersName,

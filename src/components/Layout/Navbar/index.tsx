@@ -12,10 +12,7 @@ import { pathRoute } from 'router/routes'
 const Navbar = (): ReactElement => {
   const { auth, actions } = useAuth()
   const fullName = useMemo(
-    () =>
-      `${String(auth.profile.name)} ${String(
-        auth.profile.fathers_name
-      )} ${String(auth.profile.mothers_name)}`,
+    () => `${String(auth.profile.names)} ${String(auth.profile.lastName)}`,
     [auth.profile]
   )
 
