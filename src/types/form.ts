@@ -72,6 +72,7 @@ export type SwitchProps = Omit<SwitchPropsOrigin, 'value' | 'onChange'> & {
 }
 
 export interface CustomFieldFunctionProps<T> {
+  name: string
   values: T
   errors: FormikErrors<T>
   touched: FormikTouched<T>

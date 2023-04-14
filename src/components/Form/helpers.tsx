@@ -204,6 +204,7 @@ export const fieldMapper = <T,>({ field, formik }: Params<T>): ReactNode => {
       if (typeof field.children === 'function') {
         return (
           <field.children
+            name={field.name}
             values={formik.values}
             errors={formik.errors}
             touched={formik.touched}

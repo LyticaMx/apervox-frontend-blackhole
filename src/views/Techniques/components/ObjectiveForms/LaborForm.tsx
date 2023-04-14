@@ -32,7 +32,7 @@ const LaborForm = (): ReactElement => {
           laborFormMessages.organizationNamePlaceholder
         )
       },
-      breakpoints: { xs: 3 }
+      breakpoints: { xs: 6 }
     },
     {
       type: 'text',

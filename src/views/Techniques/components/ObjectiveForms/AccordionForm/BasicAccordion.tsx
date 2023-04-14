@@ -1,4 +1,4 @@
-import { useState, useRef, ReactElement, useCallback, useEffect } from 'react'
+import { useState, useRef, ReactElement, useEffect } from 'react'
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline'
 import Typography from 'components/Typography'
 import clsx from 'clsx'
@@ -17,29 +17,15 @@ const BasicAccordion = ({
   error = true
 }: AccordionProps): ReactElement => {
   const [isOpened, setOpened] = useState<boolean>(false)
-  const [height, setHeight] = useState<string>('0px')
   const contentElement = useRef<HTMLDivElement>(null)
 
   const toggleOpen = (): void => {
     setOpened(!isOpened)
-    setHeight(!isOpened ? `${contentElement.current?.scrollHeight}px` : '0px')
   }
 
-  const onResize = useCallback(() => {
-    if (contentElement.current) {
-      setHeight(`${contentElement.current?.scrollHeight}px`)
-    }
-  }, [])
-
   useEffect(() => {
-    window.addEventListener('resize', onResize)
-
     if (startOpen) {
       toggleOpen()
-    }
-
-    return () => {
-      window.removeEventListener('resize', onResize)
     }
   }, [])
 
@@ -69,8 +55,10 @@ const BasicAccordion = ({
 
       <div
         ref={contentElement}
-        style={{ height }}
-        className="bg-white overflow-hidden transition-all duration-200"
+        className={clsx(
+          'bg-white overflow-hidden transition-all duration-200',
+          !isOpened ? 'max-h-0' : 'max-h-[600px]'
+        )}
       >
         {children}
       </div>

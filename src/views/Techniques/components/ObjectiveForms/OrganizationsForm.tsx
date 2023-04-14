@@ -31,7 +31,7 @@ const OrganizationsForm = (): ReactElement => {
           organizationFormMessages.organizationNamePlaceholder
         )
       },
-      breakpoints: { xs: 3 }
+      breakpoints: { xs: 6 }
     },
     {
       type: 'text',
