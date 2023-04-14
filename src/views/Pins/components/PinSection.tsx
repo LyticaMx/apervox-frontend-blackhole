@@ -50,10 +50,10 @@ const PinsTable = (): ReactElement => {
     const data = await actions?.getPins(pinFilters)
 
     if (data) {
-      setTotalRecords(data.page_info.total_records)
+      setTotalRecords(data.size)
       setFilters((prev) => ({
         ...prev,
-        page: data?.page_info.current_page,
+        page: data?.page,
         is_active: pinFilters?.is_active ?? prev.is_active
       }))
 

@@ -56,7 +56,8 @@ const useAsyncSelect = (props: Props): AsyncOptions => {
           label: customLabel ? customLabel(item) : get(item, label, ''),
           data: fullObject ? item : undefined
         })),
-        hasMore: response?.page_info.has_next_page
+        // TODO: corregir el async select
+        hasMore: false //response?.page_info.has_next_page
       }
     } catch {
       return {
