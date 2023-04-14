@@ -58,10 +58,12 @@ const AuthProvider = ({ children }: Props): ReactElement => {
     method: 'post'
   })
 
+  /*
   const refreshTokenService = useApi({
     endpoint: '/auth/refresh-token',
     method: 'post'
   })
+  */
 
   const updateProfileService = useApi({ endpoint: '/profile', method: 'put' })
 
@@ -188,6 +190,8 @@ const AuthProvider = ({ children }: Props): ReactElement => {
 
   const refreshToken = async (): Promise<boolean> => {
     try {
+      await signOut()
+      /*
       const res = await refreshTokenService()
       if (res.data) {
         const token: string = res.data.access_token
@@ -200,6 +204,7 @@ const AuthProvider = ({ children }: Props): ReactElement => {
 
         return true
       }
+      */
 
       return false
     } catch (error) {
