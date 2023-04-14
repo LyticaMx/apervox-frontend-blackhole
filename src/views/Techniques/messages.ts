@@ -237,6 +237,25 @@ export const objectiveFormsGeneralMessages = defineMessages({
   }
 })
 
+export const biometricFormMessages = defineMessages({
+  title: {
+    id: 'views.techniques.BiometricForm.title',
+    defaultMessage: 'Datos biométricos'
+  },
+  photos: {
+    id: 'views.techniques.BiometricForm.photos',
+    defaultMessage: 'Fotografías'
+  },
+  fingerprints: {
+    id: 'views.techniques.BiometricForm.fingerprints',
+    defaultMessage: 'Huellas dactilares'
+  },
+  voiceprints: {
+    id: 'views.techniques.BiometricForm.voiceprints',
+    defaultMessage: 'Huellas de voz'
+  }
+})
+
 export const academicFormMessages = defineMessages({
   title: {
     id: 'views.techniques.AcademicForm.title',
@@ -504,7 +523,7 @@ export const organizationFormMessages = defineMessages({
 export const personalDataFormMessages = defineMessages({
   title: {
     id: 'views.techniques.PersonalDataForm.title',
-    defaultMessage: 'Datos personales, biométricos y domicilio'
+    defaultMessage: 'Datos personales y domicilio'
   },
   targetName: {
     id: 'views.techniques.PersonalDataForm.targetName',
@@ -706,6 +725,37 @@ export const socialMediaFormMessages = defineMessages({
   usernamePlaceholder: {
     id: 'views.techniques.SocialMediaForm.usernamePlaceholder',
     defaultMessage: 'Ej. FooBar'
+  }
+})
+
+export const socialCircleFormMessages = defineMessages({
+  title: {
+    id: 'views.techniques.SocialCircleForm.title',
+    defaultMessage: 'Circulo social'
+  },
+  itemTitle: {
+    id: 'views.techniques.SocialCircleForm.itemTitle',
+    defaultMessage: 'Persona'
+  },
+  name: {
+    id: 'views.techniques.SocialCircleForm.name',
+    defaultMessage: 'Nombre'
+  },
+  namePlaceholder: {
+    id: 'views.techniques.SocialCircleForm.namePlaceholder',
+    defaultMessage: 'Ej. Pedro Picapiedra'
+  },
+  activity: {
+    id: 'views.techniques.SocialCircleForm.activity',
+    defaultMessage: 'Actividad'
+  },
+  activityPlaceholder: {
+    id: 'views.techniques.SocialCircleForm.activityPlaceholder',
+    defaultMessage: 'Ej. Extracción de cantera'
+  },
+  address: {
+    id: 'views.techniques.SocialCircleForm.address',
+    defaultMessage: 'Dirección'
   }
 })
 
@@ -1012,5 +1062,9 @@ export const techniqueInfoTabsMessages = defineMessages({
   scheduleData: {
     id: 'views.techniques.constants.scheduleData',
     defaultMessage: 'Datos de agenda'
+  },
+  biometricData: {
+    id: 'views.techniques.constants.biometricData',
+    defaultMessage: 'Datos biométricos'
   }
 })

@@ -28,7 +28,7 @@ const AcademicForm = (): ReactElement => {
         label: formatMessage(academicFormMessages.academicName),
         placeholder: formatMessage(academicFormMessages.academicNamePlaceholder)
       },
-      breakpoints: { xs: 3 }
+      breakpoints: { xs: 6 }
     },
     {
       type: 'text',
