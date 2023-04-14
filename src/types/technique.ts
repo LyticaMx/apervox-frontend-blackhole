@@ -44,7 +44,7 @@ export interface Technique {
   status: Status
 }
 
-export interface Objective {
+export interface Target {
   id: string
   name: string
   phone_number: string
