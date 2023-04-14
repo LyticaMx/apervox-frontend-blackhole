@@ -95,6 +95,7 @@ const Table = <DataType,>({
 
   const rowPadding = useMemo(
     () => ({
+      xs: 'py-1 px-0.5',
       sm: 'py-2 px-1.5',
       md: 'py-4 px-3'
     }),
@@ -374,14 +375,15 @@ const Table = <DataType,>({
                         }
                       }}
                     >
-                      {row.getVisibleCells().map((cell) => {
+                      {row.getVisibleCells().map((cell, index) => {
                         return (
                           <td
                             key={cell.id}
                             className={clsx(
                               'whitespace-nowrap py-4 px-3 text-sm font-medium text-gray-900',
-                              rowPadding[rowConfig?.paddingSize ?? 'md'],
-                              rowConfig?.className
+                              rowPadding[rowConfig?.paddingSize ?? 'xs'],
+                              rowConfig?.className,
+                              index === 0 && withCheckbox && 'text-center'
                             )}
                           >
                             {flexRender(
