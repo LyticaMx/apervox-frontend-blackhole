@@ -1,7 +1,7 @@
 import { ReactElement } from 'react'
 
 import Dialog from 'components/Dialog'
-import { Objective } from 'types/technique'
+import { Target } from 'types/technique'
 import Typography from 'components/Typography'
 import ObjectiveForm from './ObjectiveForm'
 import { useIntl } from 'react-intl'
@@ -11,7 +11,7 @@ interface Props {
   open?: boolean
   selected?: Number
   onClose?: (event?: any) => void
-  onAccept?: (objective: Objective) => void
+  onAccept?: (objective: Target) => void
 }
 
 const CreateObjectiveDialog = ({

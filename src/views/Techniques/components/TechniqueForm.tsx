@@ -13,7 +13,7 @@ import Radio from 'components/Form/Radio'
 import TextField from 'components/Form/Textfield'
 import Button from 'components/Button'
 import { PlusCircleIcon } from '@heroicons/react/24/outline'
-import { Objective } from 'types/technique'
+import { Target } from 'types/technique'
 import CreateObjectiveDialog from './CreateObjectiveDialog'
 import { techniqueFormMessages } from '../messages'
 
@@ -38,7 +38,7 @@ const TechniqueForm = ({ initialValues, onSubmit }: Props): ReactElement => {
   const getGlobalMessage = useGlobalMessage()
 
   const [selectedGroups, setSelectedGroups] = useState([])
-  const [objectivesLinked, setObjectivesLinked] = useState<Objective[]>([])
+  const [objectivesLinked, setObjectivesLinked] = useState<Target[]>([])
   const [advanceTimeType, setAdvanceTimeType] =
     useState<AdvanceTimeType>('days')
   const [advanceTime, setAdvanceTime] = useState('')
@@ -297,7 +297,7 @@ const TechniqueForm = ({ initialValues, onSubmit }: Props): ReactElement => {
       <CreateObjectiveDialog
         open={openObjectiveForm}
         onClose={() => setOpenObjectiveForm(false)}
-        onAccept={(objective: Objective) => {
+        onAccept={(objective: Target) => {
           const newObjectiveLinkedList = [...objectivesLinked, objective]
           setObjectivesLinked(newObjectiveLinkedList)
           setOpenObjectiveForm(false)

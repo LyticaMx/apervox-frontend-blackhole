@@ -1,37 +1,37 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { ReactElement, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { useToggle } from 'usehooks-ts'
 
 import Title from 'components/Title'
 import GoBackButton from 'components/GoBackButton'
 
 import { useFormatMessage } from 'hooks/useIntl'
-import { Objective, Technique } from 'types/technique'
+import { Target, Technique } from 'types/technique'
 
 import TechniqueFilter from './components/TechniqueFilter'
 import TechniqueList from './components/TechniqueList'
-import FormSection from './components/FormSection'
-import TechniqueInfo from './components/TechinqueInfo'
+
 import { techniquesMessages } from './messages'
 
-// TODO: replace this with context data
-import { techniquesData, objectiveData } from './mocks'
 import CreateTechniqueDrawer from './components/CreateTechniqueDrawer'
+import { useTechniques } from 'context/Techniques'
 
 const Techniques = (): ReactElement => {
   const getMessage = useFormatMessage(techniquesMessages)
+  const { actions } = useTechniques()
 
   const [openCreateDrawer, toggleOpenCreateDrawer] = useToggle(false)
   const [techinqueSelected, setTechinqueSelected] = useState<Technique | null>(
     null
   )
-  const [objectiveSelected, setObjectiveSelected] = useState<Objective | null>(
-    null
-  )
+
+  useEffect(() => {
+    actions?.getTechniques()
+  }, [])
 
   return (
     <>
-      <div className="flex justify-between">
+      <div className="flex justify-between mb-4">
         <div className="flex justify-start items-center">
           {techinqueSelected && (
             <GoBackButton onClick={() => setTechinqueSelected(null)} />
@@ -46,26 +46,8 @@ const Techniques = (): ReactElement => {
         <TechniqueFilter toggleOpen={toggleOpenCreateDrawer} />
       </div>
 
-      <div className="flex gap-4 mt-2 mb-4">
-        <TechniqueList
-          data={techniquesData}
-          shortMode={Boolean(techinqueSelected)}
-          onSelectItem={(techinque) => {
-            setTechinqueSelected(techinque)
-          }}
-        />
-        <FormSection
-          show={Boolean(techinqueSelected)}
-          objective={objectiveSelected as Objective}
-          technique={techinqueSelected as Technique}
-        />
-        <TechniqueInfo
-          technique={techinqueSelected as Technique}
-          objectiveList={objectiveData}
-          show={Boolean(techinqueSelected)}
-          onSelectItem={setObjectiveSelected}
-        />
-      </div>
+      <TechniqueList />
+
       <CreateTechniqueDrawer
         open={openCreateDrawer}
         onClose={toggleOpenCreateDrawer}

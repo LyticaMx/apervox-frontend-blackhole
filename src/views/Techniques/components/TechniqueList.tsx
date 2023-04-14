@@ -1,8 +1,14 @@
 import { useState, ReactElement } from 'react'
+import { useHistory } from 'react-router-dom'
 import { format } from 'date-fns'
 import { SortingState, ColumnDef } from '@tanstack/react-table'
 
 import { TrashIcon } from '@heroicons/react/24/outline'
+
+import { pathRoute } from 'router/routes'
+
+import { useTechniques } from 'context/Techniques'
+import { useTechnique } from 'context/Technique'
 
 import Table from 'components/Table'
 import Tooltip from 'components/Tooltip'
@@ -21,21 +27,13 @@ import useTableColumns from 'hooks/useTableColumns'
 
 import { generalMessages } from 'globalMessages'
 
-import Wrapper, { ContentType } from './Wrapper'
 import DeleteTechinqueDialog, { EliminationType } from './DeleteTechinqueDialog'
 import { techniquesDeleteDialogMessages } from '../messages'
 
-interface Props {
-  data: Technique[]
-  shortMode?: boolean
-  onSelectItem?: (rowSelected: Technique) => void
-}
-
-const TechniqueList = ({
-  data,
-  shortMode,
-  onSelectItem
-}: Props): ReactElement => {
+const TechniqueList = (): ReactElement => {
+  const history = useHistory()
+  const { techniques } = useTechniques()
+  const { actions } = useTechnique()
   const getMessage = useFormatMessage(generalMessages)
   const getDeleteMessage = useFormatMessage(techniquesDeleteDialogMessages)
 
@@ -61,7 +59,11 @@ const TechniqueList = ({
     console.log('techinque_id: ', techinqueToDelete, eliminationType)
   }
 
-  const shortModeColums: NonEmptyArray<ColumnDef<Technique>> = [
+  const handleClick = (item: Technique): void => {
+    actions?.setTechnique(item)
+    history.push(pathRoute.technique)
+  }
+  const normalModeColumns: NonEmptyArray<ColumnDef<Technique>> = [
     {
       accessorKey: 'id',
       header: 'ID'
@@ -70,28 +72,6 @@ const TechniqueList = ({
       accessorKey: 'name',
       header: getMessage('name')
     },
-    {
-      accessorKey: 'priority',
-      header: getMessage('priority'),
-      cell: ({ getValue }) => {
-        const priority = getValue<Priority>()
-
-        return <PriorityLabel value={priority} />
-      }
-    }
-  ]
-
-  const normalModeColumns: NonEmptyArray<ColumnDef<Technique>> = [
-    shortModeColums[0], // id
-    shortModeColums[1], // name
-    // {
-    //   accessorKey: 'id',
-    //   header: 'ID'
-    // },
-    // {
-    //   accessorKey: 'name',
-    //   header: getMessage('name')
-    // },
     {
       accessorKey: 'created_at',
       header: getMessage('registrationDate'),
@@ -112,7 +92,15 @@ const TechniqueList = ({
       accessorKey: 'time_on_platform',
       header: getMessage('timeOnPlatform')
     },
-    shortModeColums[2], // priority
+    {
+      accessorKey: 'priority',
+      header: getMessage('priority'),
+      cell: ({ getValue }) => {
+        const priority = getValue<Priority>()
+
+        return <PriorityLabel value={priority} />
+      }
+    },
     {
       accessorKey: 'status',
       header: getMessage('status'),
@@ -170,16 +158,13 @@ const TechniqueList = ({
     }
   ]
 
-  const columns = useTableColumns<Technique>(
-    () => (shortMode ? shortModeColums : normalModeColumns),
-    [shortMode]
-  )
+  const columns = useTableColumns<Technique>(() => normalModeColumns)
 
   return (
-    <Wrapper expanded={!shortMode} contentType={ContentType.TECHNIQUE_LIST}>
+    <>
       <Table
         columns={columns}
-        data={data}
+        data={techniques}
         className="overflow-x-auto shadow rounded-lg"
         manualSorting={{
           onSortingChange: setSortingState,
@@ -200,7 +185,7 @@ const TechniqueList = ({
             Icon: TrashIcon
           }
         ]}
-        onRowClicked={onSelectItem}
+        onRowClicked={handleClick}
       />
       <DeleteTechinqueDialog
         open={openDeleteDialog}
@@ -212,7 +197,7 @@ const TechniqueList = ({
         title={getDeleteMessage('title')}
         onAccept={() => setOpenActionNotification(false)}
       />
-    </Wrapper>
+    </>
   )
 }
 

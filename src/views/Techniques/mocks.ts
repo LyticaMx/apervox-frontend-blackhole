@@ -1,6 +1,6 @@
 import { Priority } from 'types/priority'
 import { Status } from 'types/status'
-import { Evidence, Objective, Technique, Turn } from 'types/technique'
+import { Evidence, Target, Technique, Turn } from 'types/technique'
 import { WorkGroup } from 'types/workgroup'
 
 export const techniquesData: Technique[] = [
@@ -66,7 +66,7 @@ export const techniquesData: Technique[] = [
   }
 ]
 
-export const objectiveData: Objective[] = [
+export const objectiveData: Target[] = [
   {
     id: 'obtv_1',
     name: 'Jorge Jimenez',
