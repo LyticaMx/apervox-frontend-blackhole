@@ -32,6 +32,7 @@ import Acquisition from 'views/Acquisition'
 import WorkGroups from 'views/WorkGroups'
 import Evidence from 'views/Evidence'
 import Techniques from 'views/Techniques'
+import Technique from 'views/Technique'
 
 import BaseLayout from 'layout/BaseLayout'
 import EvidenceLayout from 'layout/EvidenceLayout'
@@ -99,6 +100,7 @@ export const pathRoute = {
   acquisition: '/medios-adquisicion',
   evidence: '/evidencia',
   techniques: '/tecnicas',
+  technique: '/tecnica',
   demo: {
     chart: '/demo-charts',
     form: '/demo-form',
@@ -301,6 +303,18 @@ export const routes: Route[] = [
     layout: BaseLayout,
     private: true,
     sidebar: true
+  },
+  {
+    id: 'technique',
+    path: pathRoute.technique,
+    icon: FolderOpenIcon,
+    i18Key: 'techniques',
+    modules: [],
+    scopes: [],
+    component: Technique,
+    layout: BaseLayout,
+    private: true,
+    sidebar: false
   },
   /* Siempre abajo */
   {
