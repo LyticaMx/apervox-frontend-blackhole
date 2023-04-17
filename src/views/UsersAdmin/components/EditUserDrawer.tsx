@@ -7,15 +7,45 @@ import { useFormatMessage } from 'hooks/useIntl'
 import { generalMessages } from 'globalMessages'
 import { usersEditMessages } from '../messages'
 import UserForm from './UserForm'
+import { User } from 'types/user'
+import { useUsers } from 'context/Users'
+import useToast from 'hooks/useToast'
 
 interface Props {
-  user: any
+  user: User
   open: boolean
   onClose?: () => void
 }
 const EditUserDrawer = ({ user, open, onClose }: Props): ReactElement => {
   const getMessage = useFormatMessage(usersEditMessages)
   const { formatMessage } = useIntl()
+  const { actions } = useUsers()
+  const { launchToast } = useToast()
+
+  const handleSubmit = async (values): Promise<void> => {
+    try {
+      const updated = await actions?.updateUser({
+        id: user.id,
+        username: values.username,
+        email: values.email,
+        name: values.name,
+        lastName: values.lastname,
+        position: values.position,
+        phone: values.extension,
+        groups: values.groups,
+        roleId: values.role,
+        closeSession: values.automaticSessionExpiration
+      })
+      if (updated) {
+        actions?.getUsers()
+        onClose?.()
+        launchToast({
+          type: 'Success',
+          title: getMessage('success')
+        })
+      }
+    } catch {}
+  }
 
   return (
     <Drawer
@@ -31,17 +61,25 @@ const EditUserDrawer = ({ user, open, onClose }: Props): ReactElement => {
 
         <span className="text-sm mb-4 text-gray-400">
           {formatMessage(generalMessages.createdOn, {
-            date: format(user.createdOn, 'dd/MM/yyyy - hh:mm')
+            date: format(new Date(user.createdOn ?? ''), 'dd/MM/yyyy - hh:mm')
           })}
 
           <span className="ml-2">{user.createdBy}</span>
         </span>
 
         <UserForm
-          initialValues={user}
-          onSubmit={async (values) => {
-            console.log('Update user', values)
+          initialValues={{
+            automaticSessionExpiration: user.closeSession ?? false,
+            email: user.email ?? '',
+            extension: user.phone ?? '',
+            groups: user.groups ?? [],
+            lastname: user.lastName ?? '',
+            name: user.name ?? '',
+            position: user.position ?? '',
+            role: user.roleId ?? '',
+            username: user.username ?? ''
           }}
+          onSubmit={handleSubmit}
         />
       </div>
     </Drawer>

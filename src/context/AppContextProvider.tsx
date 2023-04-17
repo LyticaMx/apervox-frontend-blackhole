@@ -4,6 +4,7 @@ import { PinsProvider } from 'context/Pins'
 import { AlertsProvider } from 'context/Alerts'
 import { DatesFilterProvider } from 'context/DatesFilter'
 import { WorkGroupsProvider } from 'context/WorkGroups'
+import { UsersProvider } from 'context/Users'
 
 interface Props {
   children: ReactNode
@@ -14,7 +15,9 @@ export const AppContextProvider = (props: Props): any => {
     DatesFilterProvider,
     PinsProvider,
     AlertsProvider,
-    WorkGroupsProvider
+    WorkGroupsProvider,
+    /* Contextos de BH2 */
+    UsersProvider
   ]
 
   const CombinedProviders = providers.reduce(

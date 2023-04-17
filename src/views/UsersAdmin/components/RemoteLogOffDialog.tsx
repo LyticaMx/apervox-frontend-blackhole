@@ -1,25 +1,46 @@
-import { ReactElement } from 'react'
+import { ReactElement, useMemo } from 'react'
 import { InformationCircleIcon } from '@heroicons/react/24/outline'
 import Dialog from 'components/Dialog'
 import Button from 'components/Button'
 import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
 import { usersRemoteLogOffMessages } from '../messages'
+import { useUsers } from 'context/Users'
+import useToast from 'hooks/useToast'
 
 interface Props {
-  open?: boolean
-  selectedUsers?: Number
+  ids: string[]
   onClose?: (event?: any) => void
-  onAccept?: () => void
 }
 
 const RemoteLogOffDialog = ({
-  open = true,
-  selectedUsers = 1,
-  onClose = () => {},
-  onAccept = () => {}
+  ids,
+  onClose = () => {}
 }: Props): ReactElement => {
   const getMessage = useFormatMessage(usersRemoteLogOffMessages)
   const getGlobalMessage = useGlobalMessage()
+  const { actions } = useUsers()
+  const { launchToast } = useToast()
+
+  const open = useMemo(() => ids.length > 0, [ids.length])
+
+  const handleLogOut = async (): Promise<void> => {
+    try {
+      let loggedOut = false
+      if (ids.length === 1) {
+        loggedOut = Boolean(await actions?.closeSession(ids[0]))
+      } else {
+        loggedOut = Boolean(await actions?.closeMultipleSessions(ids))
+      }
+
+      if (loggedOut) {
+        onClose()
+        launchToast({
+          type: 'Success',
+          title: getMessage('success')
+        })
+      }
+    } catch {}
+  }
 
   return (
     <Dialog open={open} onClose={onClose} size="sm" padding="none">
@@ -28,17 +49,17 @@ const RemoteLogOffDialog = ({
           <InformationCircleIcon className="h-6 w-6 text-primary m-auto mb-2" />
 
           <h3 className="text-lg font-medium leading-6 text-gray-900">
-            {getMessage('title', { selectedUsers })}
+            {getMessage('title', { selectedUsers: ids.length })}
           </h3>
 
           <p className="text-sm text-gray-500 mt-1">
-            {getMessage('message', { selectedUsers })}
+            {getMessage('message', { selectedUsers: ids.length })}
           </p>
         </div>
       </div>
 
       <div className=" px-4 pb-8 sm:flex gap-2 justify-center">
-        <Button variant="contained" color="primary" onClick={onAccept}>
+        <Button variant="contained" color="primary" onClick={handleLogOut}>
           {getGlobalMessage('accept', 'actionsMessages')}
         </Button>
         <Button variant="contained" color="secondary" onClick={onClose}>

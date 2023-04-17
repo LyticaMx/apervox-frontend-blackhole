@@ -4,23 +4,32 @@ import Dialog from 'components/Dialog'
 import Button from 'components/Button'
 import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
 import { usersResetPasswordMessages } from '../messages'
+import { useUsers } from 'context/Users'
 
 interface Props {
-  open?: boolean
+  id: string
   onClose?: (event?: any) => void
-  onAccept?: () => void
+  onAccept?: (password: string) => void
 }
 
 const ResetPasswordDialog = ({
-  open = true,
+  id,
   onClose = () => {},
-  onAccept = () => {}
+  onAccept = (password: string) => {}
 }: Props): ReactElement => {
   const getMessage = useFormatMessage(usersResetPasswordMessages)
   const getGlobalMessage = useGlobalMessage()
+  const { actions } = useUsers()
+
+  const handlePasswordReset = async (): Promise<void> => {
+    try {
+      const password = await actions?.resetPassword(id)
+      onAccept(password ?? '')
+    } catch {}
+  }
 
   return (
-    <Dialog open={open} onClose={onClose} size="sm" padding="none">
+    <Dialog open={!!id} onClose={onClose} size="sm" padding="none">
       <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
         <div className="text-center sm:mt-0">
           <InformationCircleIcon className="h-6 w-6 text-primary m-auto mb-2" />
@@ -34,7 +43,11 @@ const ResetPasswordDialog = ({
       </div>
 
       <div className=" px-4 pb-8 sm:flex gap-2 justify-center">
-        <Button variant="contained" color="primary" onClick={onAccept}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handlePasswordReset}
+        >
           {getGlobalMessage('accept', 'actionsMessages')}
         </Button>
         <Button variant="contained" color="secondary" onClick={onClose}>

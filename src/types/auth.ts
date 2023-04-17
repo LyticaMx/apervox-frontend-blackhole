@@ -24,7 +24,7 @@ export interface Auth {
 }
 
 export interface SignIn {
-  email: string
+  user: string
   password: string
 }
 

@@ -1,7 +1,6 @@
 import { ResponseData } from './api'
 import { PaginationFilter } from './filters'
 import { Speaker } from './speaker'
-import { User } from './user'
 
 export interface Pin {
   id: string
@@ -14,7 +13,7 @@ export interface Pin {
 
 export interface Chunk {
   id: string
-  creator: User
+  creator: string
   creator_id: string
   pins: Pin[]
 }

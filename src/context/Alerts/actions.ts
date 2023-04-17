@@ -80,9 +80,9 @@ export const useActions = (
 
       dispatch(
         actions.setAlertsPagination({
-          page: response.page_info.current_page,
+          page: response.page,
           limit: params?.limit ?? alertsPagination.limit,
-          totalRecords: response.page_info.total_records
+          totalRecords: response.size
         })
       )
     } catch {}
@@ -132,9 +132,9 @@ export const useActions = (
 
       dispatch(
         actions.setCallAlertsPagination({
-          page: response.page_info.current_page,
+          page: response.page,
           limit: params?.limit ?? callsPagination.limit,
-          totalRecords: response.page_info.total_records,
+          totalRecords: response.size,
           sort: params?.sort ?? callsPagination.sort
         })
       )
