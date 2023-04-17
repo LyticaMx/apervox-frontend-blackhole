@@ -62,20 +62,20 @@ const FloatingActions = ({
           className="bg-white border border-gray-100 rounded-md shadow-lg focus:outline-none z-10 py-1"
         >
           {actions.map((action) => (
-            <a
+            <button
               className={clsx(
                 action.className,
-                'hover:bg-gray-100 cursor-pointer py-1 px-4 text-sm block',
-                action.disabled ? 'text-gray-300' : ''
+                'hover:bg-gray-100 cursor-pointer py-1 px-4 text-sm block w-full text-left disabled:text-gray-300'
               )}
               onClick={(e) => {
                 e.stopPropagation()
                 action.onClick()
               }}
+              disabled={action.disabled}
               key={action.label}
             >
               {action.label}
-            </a>
+            </button>
           ))}
         </Popover.Panel>
       </Float>
