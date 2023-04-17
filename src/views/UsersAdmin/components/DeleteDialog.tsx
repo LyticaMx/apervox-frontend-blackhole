@@ -10,10 +10,17 @@ import useToast from 'hooks/useToast'
 
 interface Props {
   ids: string[]
+  resolve: (value: boolean | PromiseLike<boolean>) => void
   onClose?: (event?: any) => void
+  onConfirm?: () => void
 }
 
-const DeleteDialog = ({ onClose = () => {}, ids }: Props): ReactElement => {
+const DeleteDialog = ({
+  onClose = () => {},
+  onConfirm = () => {},
+  ids,
+  resolve
+}: Props): ReactElement => {
   const getMessage = useFormatMessage(usersDeleteMessages)
   const getGlobalMessage = useGlobalMessage()
   const [firstConfirmation, setFirstConfirmation] = useState(false)
@@ -43,15 +50,20 @@ const DeleteDialog = ({ onClose = () => {}, ids }: Props): ReactElement => {
         deleted = Boolean(await actions?.deleteUsers(ids))
       }
 
+      resolve(deleted)
+
       if (deleted) {
-        onClose()
+        onConfirm()
         launchToast({
           title: getMessage('success', { users: ids.length }),
           type: 'Success'
         })
         actions?.getUsers()
+        return
       }
-    } catch {}
+    } catch {
+      resolve(false)
+    }
   }
 
   return (

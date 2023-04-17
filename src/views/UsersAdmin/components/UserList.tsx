@@ -24,7 +24,7 @@ const colorByStatus = {
 
 interface Props {
   onSelectUser: (user: User) => void
-  onDeleteUser: (ids: string[]) => void
+  onDeleteUser: (ids: string[]) => Promise<boolean>
   onDisableUser: (ids: string[]) => void
   onRemoteLogOffUser: (ids: string[]) => void
   onUnlockUser: (id: string) => void
@@ -202,9 +202,8 @@ const UserList = ({
         actionsForSelectedItems={[
           {
             name: 'Eliminar',
-            action: (items) => {
-              onDeleteUser(items.map((user) => user.id ?? ''))
-            },
+            action: async (items) =>
+              await onDeleteUser(items.map((user) => user.id ?? '')),
             Icon: TrashIcon
           },
           {

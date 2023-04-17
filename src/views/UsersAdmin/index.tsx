@@ -14,12 +14,20 @@ import EditUserDrawer from './components/EditUserDrawer'
 import { usersMessages } from './messages'
 import NewPasswordDialog from './components/NewPasswordDialog'
 
+interface SynchroDeleteIds {
+  ids: string[]
+  resolve: ((value: boolean | PromiseLike<boolean>) => void) | null
+}
+
 const UsersAdmin = (): ReactElement => {
   const getMessage = useFormatMessage(usersMessages)
   const [openCreateDrawer, toggleOpenCreateDrawer] = useToggle(false)
   const [disableIds, setDisableIds] = useState<string[]>([])
   const [logOutIds, setLogOutIds] = useState<string[]>([])
-  const [deleteIds, setDeleteIds] = useState<string[]>([])
+  const [deleteUsers, setDeleteUsers] = useState<SynchroDeleteIds>({
+    ids: [],
+    resolve: null
+  })
   const [resetPasswordId, setResetPasswordId] = useState<string>('')
   const [newPassword, setNewPassword] = useState<string>('')
   const [openUnlockDialog, toggleUnlockDialog] = useToggle(false)
@@ -50,7 +58,15 @@ const UsersAdmin = (): ReactElement => {
           />
         )}
 
-        <DeleteDialog ids={deleteIds} onClose={() => setDeleteIds([])} />
+        <DeleteDialog
+          ids={deleteUsers.ids}
+          resolve={deleteUsers.resolve ?? (() => {})}
+          onConfirm={() => setDeleteUsers({ ids: [], resolve: null })}
+          onClose={() => {
+            if (deleteUsers.resolve) deleteUsers.resolve(false)
+            setDeleteUsers({ ids: [], resolve: null })
+          }}
+        />
         <DisableDialog ids={disableIds} onClose={() => setDisableIds([])} />
         <RemoteLogOffDialog ids={logOutIds} onClose={() => setLogOutIds([])} />
         <ResetPasswordDialog
@@ -71,7 +87,11 @@ const UsersAdmin = (): ReactElement => {
       <div className="flex gap-4 mt-2">
         <UserList
           onSelectUser={setSelectedUser}
-          onDeleteUser={setDeleteIds}
+          onDeleteUser={async (ids) =>
+            await new Promise<boolean>((resolve) => {
+              setDeleteUsers({ ids, resolve })
+            })
+          }
           onDisableUser={setDisableIds}
           onRemoteLogOffUser={setLogOutIds}
           onUnlockUser={toggleUnlockDialog}
