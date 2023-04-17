@@ -135,7 +135,7 @@ export const useActions = (
         })
       )
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
   }
 
