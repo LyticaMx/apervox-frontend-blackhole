@@ -66,6 +66,10 @@ export const formMessages = defineMessages({
     id: 'global.form.extension',
     defaultMessage: 'Extensión'
   },
+  role: {
+    id: 'global.form.role',
+    defaultMessage: 'Rol'
+  },
   position: {
     id: 'global.form.position',
     defaultMessage: 'Posición'

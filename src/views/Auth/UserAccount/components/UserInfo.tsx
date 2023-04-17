@@ -148,14 +148,12 @@ const UserInfo = (): ReactElement => {
 
   const formikConfig: FormikConfig<FormValues> = {
     initialValues: {
-      name: auth.profile.name,
-      lastname: [auth.profile.fathers_name, auth.profile.mothers_name].join(
-        ' '
-      ),
-      username: '',
-      email: '',
-      extension: '',
-      position: '',
+      name: auth.profile.names,
+      lastname: auth.profile.lastName,
+      username: auth.profile.username,
+      email: auth.profile.email,
+      extension: auth.profile.phone,
+      position: auth.profile.position,
       groups: []
     },
     validationSchema,
@@ -172,7 +170,7 @@ const UserInfo = (): ReactElement => {
             <Typography variant="subtitle" style="semibold" className="mb-2">
               {formatMessage(userInfoMessages.startDate)}
             </Typography>
-            <Typography variant="body1">{auth.profile.activated}</Typography>
+            <Typography variant="body1">{auth.profile.since}</Typography>
           </Card>
         </Grid>
         <Grid item cols={6}>
@@ -180,7 +178,7 @@ const UserInfo = (): ReactElement => {
             <Typography variant="subtitle" style="semibold" className="mb-2">
               {formatMessage(userInfoMessages.role)}
             </Typography>
-            <Typography variant="body1">{auth.profile.dependency}</Typography>
+            <Typography variant="body1">{auth.profile.role}</Typography>
           </Card>
         </Grid>
       </Grid>

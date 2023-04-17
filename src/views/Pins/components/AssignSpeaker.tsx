@@ -82,7 +82,7 @@ const AssignSpeaker = ({
 
     return {
       options: res?.data.map((pin) => ({ value: pin.id, label: pin.number })),
-      hasMore: res?.page_info.has_next_page
+      hasMore: false
     }
   }
 
@@ -97,7 +97,7 @@ const AssignSpeaker = ({
           value: speaker.id,
           label: `${speaker.names} ${speaker.fathers_name} ${speaker.mothers_name}`
         })),
-        hasMore: res?.page_info.has_next_page
+        hasMore: false
       }
     }
 

@@ -1,12 +1,10 @@
 import { CallVM, TagModel } from 'types/call'
 import { ControlGroup, ControlAudio, ControlCall } from 'types/control'
-import { Dependency } from 'types/dependency'
 import { Penitentiary } from 'types/penitentiaries'
 import { Chunk, Pin } from 'types/pin'
 import { Speaker } from 'types/speaker'
 import { State, Country, Location } from 'types/location'
 import { PinActivity, TimeChartValues } from 'types/statistics'
-import { Role, User } from 'types/user'
 
 export const calls: CallVM[] = []
 export const speakers: Speaker[] = []
@@ -16,8 +14,6 @@ export const states: State[] = [] // Ready
 export const pins: Pin[] = [] // Ready
 export const pinActivity: PinActivity[] = [] // Ready
 export const chunks: Chunk[] = [] // Ready
-export const users: User[] = [] // Ready
-export const dependencies: Dependency[] = [] // Ready
 export const callChartValues: TimeChartValues[] = [] // Ready
 export const alertChartValues: TimeChartValues[] = [] // Ready
 export const tags: TagModel[] = []
@@ -42,14 +38,6 @@ export const countries: Country[] = [
 ] // Ready
 
 /* ----- CreationData ----- */
-/* Dependencies */
-for (let index = 0; index < 3; index++) {
-  dependencies.push({
-    id: `dependency-${index}`,
-    name: `Dependency ${index}`,
-    users
-  })
-}
 
 /* States */
 for (let index = 0; index < 3; index++) {
@@ -133,31 +121,12 @@ for (let index = 0; index < 50; index++) {
   })
 }
 
-/* User */
-for (let index = 0; index < 10; index++) {
-  users.push({
-    id: `user-${index}`,
-    approved_by_id: `aproved-user-${index}`,
-    approved_by: {} as any,
-    approved_users: [],
-    accepted: true,
-    active: true,
-    email: `user${index}@email.com`,
-    password: 'password',
-    password_changed: false,
-    dependency: dependencies[1],
-    dependency_id: dependencies[1].id,
-    role: Role.WRITER,
-    chunks
-  })
-}
-
 /* Chunks */
 for (let index = 0; index < 20; index++) {
   chunks.push({
     id: `chunk-${index}`,
-    creator: users[1],
-    creator_id: users[1].id,
+    creator: 'super',
+    creator_id: 'super',
     pins
   })
 }

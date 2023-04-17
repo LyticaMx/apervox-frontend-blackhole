@@ -27,7 +27,7 @@ const SignIn = (): ReactElement => {
   const { actions } = useAuth()
 
   const validationSchema = yup.object({
-    user: yup.string().email().required(formatMessage(formMessages.required)),
+    user: yup.string().required(formatMessage(formMessages.required)),
     password: yup.string().required(formatMessage(formMessages.required))
   })
 
@@ -38,7 +38,7 @@ const SignIn = (): ReactElement => {
     },
     onSubmit: async (values) => {
       const successLogin = await actions?.signIn({
-        email: values.user,
+        user: values.user,
         password: values.password
       })
 

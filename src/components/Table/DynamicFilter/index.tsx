@@ -8,7 +8,6 @@ import Typography from 'components/Typography'
 import { actionsMessages, generalMessages } from 'globalMessages'
 import { ReactElement, useEffect, useRef, useState } from 'react'
 import { useIntl } from 'react-intl'
-import { PageInfo } from 'types/api'
 import { OnChangeTableFilter } from 'types/table'
 import { useDebounce } from 'usehooks-ts'
 // import useApi from 'hooks/useApi'
@@ -24,24 +23,32 @@ interface Props {
   apiBackend: string
 }
 
+interface Pagination {
+  page: number
+  size: number
+  limit: number
+}
+
 const DynamicFilter = (props: Props): ReactElement => {
   const { optionsTitle } = props
   const [openFilter, setOpenFilter] = useState<boolean>(false)
   const { formatMessage } = useIntl()
   const [fieldFilter, setFieldFilter] = useState<string>('')
   // const getFilterService = useApi({ endpoint: props.apiBackend, method: 'get' })
-  const [pageInfo, setPageInfo] = useState<PageInfo>({
-    current_page: 1,
-    has_next_page: true,
-    has_previous_page: false,
-    total_records: 0
+  const [pageInfo, setPageInfo] = useState<Pagination>({
+    page: 1,
+    size: 0,
+    limit: 10
   })
   const [allRows, setAllRows] = useState<any[]>([])
   const listRef = useRef<HTMLDivElement>(null)
   const debouncedValue = useDebounce(fieldFilter, 300)
 
   const rowVirtualizer = useVirtualizer({
-    count: pageInfo.has_next_page ? allRows.length + 1 : allRows.length,
+    count:
+      pageInfo.page * pageInfo.limit < pageInfo.size
+        ? allRows.length + 1
+        : allRows.length,
     getScrollElement: () => listRef.current,
     estimateSize: () => 30,
     overscan: 5
@@ -79,7 +86,6 @@ const DynamicFilter = (props: Props): ReactElement => {
       }))
     })()
   }, [
-    pageInfo.has_next_page,
     allRows.length,
     fetchNextPage,
     rowVirtualizer.getVirtualItems(),
@@ -164,7 +170,7 @@ const DynamicFilter = (props: Props): ReactElement => {
                       }}
                     >
                       {isLoaderRow ? (
-                        pageInfo.has_next_page ? (
+                        pageInfo.page * pageInfo.limit < pageInfo.size ? (
                           'Loading more...'
                         ) : (
                           'Nothing more to load'

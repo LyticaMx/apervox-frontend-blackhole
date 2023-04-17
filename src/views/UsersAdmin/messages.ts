@@ -34,6 +34,11 @@ export const usersDeleteMessages = defineMessages({
     id: 'views.users.delete.passwordConfirm',
     defaultMessage:
       'Ingresa tu contraseña para validar la eliminación {selectedUsers, plural, one {del usuario seleccionado} other {de los # usuarios seleccionados}}'
+  },
+  success: {
+    id: 'views.users.delete.success',
+    defaultMessage:
+      '{users, plural, one {Usuario eliminado} other {Usuarios eliminados}} correctamente'
   }
 })
 
@@ -47,6 +52,11 @@ export const usersDisableMessages = defineMessages({
     id: 'views.users.disable.message',
     defaultMessage:
       '{selectedUsers, plural, one {El usuario seleccionado se encuentra habilitado} other {Los # usuarios seleccionados se encuentran habilitados}}'
+  },
+  success: {
+    id: 'views.users.disable.success',
+    defaultMessage:
+      '{users, plural, one{Usuario {enabled, select, true{habilitado} other{deshabilitado}} correctamente} other {Usuarios {enabled, select, true{habilitados} other{deshabilitados}} correctamente}}'
   }
 })
 
@@ -59,6 +69,10 @@ export const usersRemoteLogOffMessages = defineMessages({
     id: 'views.users.remoteLogOff.message',
     defaultMessage:
       'Se procederá al cierre de sesión {selectedUsers, plural, one {del usuario seleccionado} other {de los # usuarios seleccionados}}'
+  },
+  success: {
+    id: 'views.users.remoteLogOff.success',
+    defaultMessage: 'Sesiones cerradas correctamente'
   }
 })
 
@@ -95,6 +109,10 @@ export const usersCreateMessages = defineMessages({
     id: 'views.users.create.message',
     defaultMessage:
       'Completa los siguientes campos para agregar un nuevo usuario.'
+  },
+  success: {
+    id: 'views.users.create.success',
+    defaultMessage: 'Usuario registrado correctamente'
   }
 })
 
@@ -104,8 +122,22 @@ export const usersEditMessages = defineMessages({
     defaultMessage: 'Datos del usuario'
   },
   message: {
-    id: 'views.users.create.message',
-    defaultMessage:
-      'Completa los siguientes campos para agregar un nuevo usuario.'
+    id: 'views.users.edit.message',
+    defaultMessage: 'Datos actuales del usuario'
+  },
+  success: {
+    id: 'views.users.edit.success',
+    defaultMessage: 'Usuario editado correctamente'
+  }
+})
+
+export const newPasswordMessages = defineMessages({
+  title: {
+    id: 'views.users.newPassword.title',
+    defaultMessage: 'Nueva contraseña'
+  },
+  message: {
+    id: 'views.users.newPassword.message',
+    defaultMessage: 'La nueva contraseña para el usuario es: {password}'
   }
 })

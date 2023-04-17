@@ -6,13 +6,14 @@ export interface FormProfile {
 }
 
 export interface Profile {
-  email: string
-  profile_id: string
-  name: string
-  fathers_name: string
-  mothers_name: string
+  id: string
+  names: string
+  lastName: string
+  username: string
   since: string
-  activated: string
-  dependency?: string
-  pic?: string
+  email: string
+  phone: string
+  position: string
+  groups: string[]
+  role: string
 }

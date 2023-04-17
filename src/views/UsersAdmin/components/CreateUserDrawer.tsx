@@ -4,6 +4,8 @@ import Typography from 'components/Typography'
 import { useFormatMessage } from 'hooks/useIntl'
 import { usersCreateMessages } from '../messages'
 import UserForm from './UserForm'
+import { useUsers } from 'context/Users'
+import useToast from 'hooks/useToast'
 
 interface Props {
   open: boolean
@@ -11,6 +13,33 @@ interface Props {
 }
 const CreateUserDrawer = ({ open, onClose }: Props): ReactElement => {
   const getMessage = useFormatMessage(usersCreateMessages)
+  const { actions } = useUsers()
+  const { launchToast } = useToast()
+
+  const handleSubmit = async (values, helpers): Promise<void> => {
+    try {
+      const created = await actions?.createUser({
+        username: values.username,
+        email: values.email,
+        name: values.name,
+        lastName: values.lastname,
+        position: values.position,
+        phone: values.extension,
+        groups: values.groups,
+        roleId: values.role,
+        closeSession: values.automaticSessionExpiration
+      })
+      if (created) {
+        actions?.getUsers()
+        onClose?.()
+        launchToast({
+          type: 'Success',
+          title: getMessage('success')
+        })
+        helpers.resetForm()
+      }
+    } catch {}
+  }
 
   return (
     <Drawer
@@ -25,11 +54,7 @@ const CreateUserDrawer = ({ open, onClose }: Props): ReactElement => {
         </Typography>
         <p className="text-sm leading-tight mb-4">{getMessage('message')}</p>
 
-        <UserForm
-          onSubmit={async (values) => {
-            console.log('Create user', values)
-          }}
-        />
+        <UserForm onSubmit={handleSubmit} />
       </div>
     </Drawer>
   )

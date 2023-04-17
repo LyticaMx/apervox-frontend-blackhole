@@ -1,7 +1,5 @@
-import { useState, useEffect, ReactElement } from 'react'
-import { SortingState } from '@tanstack/react-table'
+import { useEffect, ReactElement } from 'react'
 import { format } from 'date-fns'
-import { sortBy } from 'lodash'
 import { useFormatMessage } from 'hooks/useIntl'
 import useTableColumns from 'hooks/useTableColumns'
 import FloatingActions from 'components/FloatingActions'
@@ -14,149 +12,19 @@ import {
   NoSymbolIcon,
   ArrowLeftOnRectangleIcon
 } from '@heroicons/react/24/outline'
-
-export interface Group {
-  value: string
-  text: string
-}
-
-export interface User {
-  id: string
-  name: string
-  surnames: string
-  username: string
-  email: string
-  groups: Group[]
-  position: string
-  userRol: string
-  extension: string
-  createdOn: Date
-  createdBy: string
-  session: SessionInfo
-}
-
-export interface SessionInfo {
-  activeSessions: Number
-  status: string
-}
+import { useUsers } from 'context/Users'
+import { User } from 'types/user'
+import clsx from 'clsx'
 
 const colorByStatus = {
-  active: 'green-600',
-  inactive: 'red-600',
-  banned: 'gray-600'
+  enabled: 'bg-green-600',
+  disabled: 'bg-red-600',
+  banned: 'bg-gray-600'
 }
 
-const mockData: User[] = [
-  {
-    id: '001',
-    name: 'Armando',
-    surnames: 'Albor Chavez',
-    username: 'armandoalbor',
-    email: 'armandoalbor@gmail.com',
-    groups: [
-      {
-        value: 'g1',
-        text: 'Grupo 1'
-      },
-      {
-        value: 'g2',
-        text: 'Grupo 2'
-      },
-      {
-        value: 'g3',
-        text: 'Grupo 3'
-      }
-    ],
-    position: '',
-    userRol: 'Administrador',
-    extension: '',
-    createdOn: new Date('2023-02-14T18:58:02.626Z'),
-    createdBy: 'Fulanito',
-    session: {
-      activeSessions: 2,
-      status: 'active' // active inactive banned
-    }
-  },
-  {
-    id: '002',
-    name: 'Javier Alejandro',
-    surnames: 'Albor Chavez',
-    username: 'javieralbor',
-    email: 'javieralbor@gmail.com',
-    groups: [
-      {
-        value: 'g1',
-        text: 'Grupo 1'
-      },
-      {
-        value: 'g3',
-        text: 'Grupo 3'
-      }
-    ],
-    position: '',
-    userRol: 'Administrador',
-    extension: '',
-    createdOn: new Date('2023-02-14T18:58:02.626Z'),
-    createdBy: 'Armando Albor',
-    session: {
-      activeSessions: 0,
-      status: 'inactive' // active inactive banned
-    }
-  },
-  {
-    id: '003',
-    name: 'Efraín',
-    surnames: 'Cuadras Gonzalez',
-    username: 'efracuadras',
-    email: 'efrain.cuadras@octopy.com',
-    groups: [
-      {
-        value: 'g1',
-        text: 'Grupo 1'
-      }
-    ],
-    position: '',
-    userRol: 'Administrador',
-    extension: '',
-    createdOn: new Date('2023-02-14T18:58:02.626Z'),
-    createdBy: 'Armando Albor',
-    session: {
-      activeSessions: 0,
-      status: 'banned' // active inactive banned
-    }
-  },
-  {
-    id: '004',
-    name: 'Alfredo Rafael',
-    surnames: 'González Rodríguez',
-    username: 'gosthramses',
-    email: 'alfredo.gonzales@octopy.com',
-    groups: [
-      {
-        value: 'g1',
-        text: 'Grupo 1'
-      },
-      {
-        value: 'g3',
-        text: 'Grupo 3'
-      }
-    ],
-    position: '',
-    userRol: 'Administrador',
-    extension: '',
-    createdOn: new Date('2023-02-14T18:58:02.626Z'),
-    createdBy: 'Armando Albor',
-    session: {
-      activeSessions: 4,
-      status: 'active' // active inactive banned
-    }
-  }
-]
-
 interface Props {
-  setTotalSelectedUsers: (totalUsers: Number) => void
   onSelectUser: (user: User) => void
-  onDeleteUser: (ids: string[]) => void
+  onDeleteUser: (ids: string[]) => Promise<boolean>
   onDisableUser: (ids: string[]) => void
   onRemoteLogOffUser: (ids: string[]) => void
   onUnlockUser: (id: string) => void
@@ -169,35 +37,22 @@ const UserList = ({
   onDisableUser,
   onRemoteLogOffUser,
   onUnlockUser,
-  onResetPasswordUser,
-  setTotalSelectedUsers
+  onResetPasswordUser
 }: Props): ReactElement => {
   const getMessage = useFormatMessage(generalMessages)
-  const [sortingState, setSortingState] = useState<SortingState>([])
-  const [data, setData] = useState<User[]>(mockData)
+  const { listOfUsers, usersPagination, actions } = useUsers()
 
   useEffect(() => {
-    // TODO: remove this when backend is ready
-    if (sortingState.length > 0) {
-      if (sortingState[0].desc) {
-        setData(sortBy(data, [sortingState[0].id]).reverse())
-      } else {
-        setData(sortBy(data, [sortingState[0].id]))
-      }
-    }
-  }, [sortingState])
+    actions?.getUsers()
+  }, [])
 
   const columns = useTableColumns<User>(() => [
-    {
-      accessorKey: 'id',
-      header: 'ID'
-    },
     {
       accessorKey: 'name',
       header: getMessage('name')
     },
     {
-      accessorKey: 'surnames',
+      accessorKey: 'lastName',
       header: getMessage('surnames')
     },
     {
@@ -207,13 +62,10 @@ const UserList = ({
     {
       accessorKey: 'groups',
       header: getMessage('groups'),
-      cell: ({ getValue }) =>
-        getValue<Group[]>()
-          .map((group) => group.text)
-          .join(', ')
+      cell: ({ getValue }) => getValue<string[]>().join(', ')
     },
     {
-      accessorKey: 'userRol',
+      accessorKey: 'role',
       header: getMessage('profile')
     },
     {
@@ -221,10 +73,10 @@ const UserList = ({
       header: getMessage('registeredBy')
     },
     {
-      accessorKey: 'session',
+      accessorKey: 'sessions',
       header: getMessage('session'),
       cell: ({ getValue }) => {
-        const sessions = getValue<SessionInfo>().activeSessions
+        const sessions = getValue<number>()
         const hasSessions = sessions > 0
 
         return (
@@ -246,15 +98,18 @@ const UserList = ({
       }
     },
     {
-      accessorKey: 'session',
+      id: 'status',
+      accessorKey: 'status',
       header: getMessage('status'),
       cell: ({ getValue }) => {
-        const status = getValue<SessionInfo>().status
-
+        const status = getValue<string>()
         return (
           <Tag
             label={getMessage(status)}
-            className={`px-4 py-1 bg-${colorByStatus[status]} w-32 justify-center`}
+            className={clsx(
+              'px-4 py-1 w-32 justify-center',
+              colorByStatus[status]
+            )}
             labelColorClassName="text-white"
             variant="caption"
           />
@@ -269,9 +124,10 @@ const UserList = ({
     {
       accessorKey: 'id',
       header: getMessage('action'),
+      enableSorting: false,
       cell: ({ getValue, cell }) => {
         const id = getValue<string>()
-        const status = cell.row.original.session.status
+        const status = cell.row.original.status
 
         return (
           <FloatingActions
@@ -291,7 +147,7 @@ const UserList = ({
               },
               {
                 label: 'Deshabilitar usuario',
-                disabled: status === 'inactive' ?? status === 'banned',
+                disabled: status === 'banned',
                 onClick: () => {
                   onDisableUser([id])
                 }
@@ -317,44 +173,56 @@ const UserList = ({
   ])
 
   return (
-    <Table
-      columns={columns}
-      data={data}
-      className="overflow-x-auto shadow"
-      manualSorting={{
-        onSortingChange: setSortingState,
-        sorting: sortingState
-      }}
-      onRowClicked={(row) => onSelectUser(row)}
-      maxHeight={500}
-      withCheckbox
-      actionsForSelectedItems={[
-        {
-          name: 'Eliminar',
-          action: (items) => {
-            setTotalSelectedUsers(items.length)
-            onDeleteUser(items.map((user) => user.id))
+    <div className="flex-1">
+      <Table
+        columns={columns}
+        data={listOfUsers}
+        className="overflow-x-auto shadow"
+        manualSorting={{
+          onSortingChange: (sort) => actions?.getUsers({ sort }),
+          sorting: usersPagination.sort
+        }}
+        onRowClicked={(row) => onSelectUser(row)}
+        maxHeight={500}
+        manualLimit={{
+          options: [15, 25, 50, 100],
+          onChangeLimit: (page, limit) =>
+            actions?.getUsers({
+              page: page + 1,
+              limit
+            })
+        }}
+        pageSize={usersPagination.limit}
+        manualPagination={{
+          currentPage: usersPagination.page,
+          totalRecords: usersPagination.totalRecords,
+          onChange: (page) => actions?.getUsers({ page: page + 1 })
+        }}
+        withCheckbox
+        actionsForSelectedItems={[
+          {
+            name: 'Eliminar',
+            action: async (items) =>
+              await onDeleteUser(items.map((user) => user.id ?? '')),
+            Icon: TrashIcon
           },
-          Icon: TrashIcon
-        },
-        {
-          name: 'Deshabilitar',
-          action: (items) => {
-            setTotalSelectedUsers(items.length)
-            onDisableUser(items.map((user) => user.id))
+          {
+            name: 'Deshabilitar',
+            action: (items) => {
+              onDisableUser(items.map((user) => user.id ?? ''))
+            },
+            Icon: NoSymbolIcon
           },
-          Icon: NoSymbolIcon
-        },
-        {
-          name: 'Cerrar sesión',
-          action: (items) => {
-            setTotalSelectedUsers(items.length)
-            onRemoteLogOffUser(items.map((user) => user.id))
-          },
-          Icon: ArrowLeftOnRectangleIcon
-        }
-      ]}
-    />
+          {
+            name: 'Cerrar sesión',
+            action: (items) => {
+              onRemoteLogOffUser(items.map((user) => user.id ?? ''))
+            },
+            Icon: ArrowLeftOnRectangleIcon
+          }
+        ]}
+      />
+    </div>
   )
 }
 

@@ -28,7 +28,7 @@ const SelectPaginate = (): ReactElement => {
 
     return {
       options: res?.data.map((pin) => ({ value: pin.id, label: pin.number })),
-      hasMore: res?.page_info.has_next_page
+      hasMore: false // res?.page_info.has_next_page
     }
   }
   return (

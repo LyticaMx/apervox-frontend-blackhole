@@ -5,6 +5,11 @@ export interface DateFilter {
   end_time?: Date
 }
 
+export interface SearchFilter {
+  query?: string
+  filters?: string[]
+}
+
 export interface PaginationFilter {
   page: number
   limit: number

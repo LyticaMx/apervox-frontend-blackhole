@@ -269,16 +269,17 @@ const Table = <DataType,>({
               {selectedItems !== 'none' && actionsForSelectedItems
                 ? actionsForSelectedItems.map((item, index) => (
                     <button
-                      onClick={async () =>
-                        await item.action(
+                      onClick={async () => {
+                        const unselect = await item.action(
                           data.filter((datum, index) =>
                             selectedKeys.includes(index)
                           )
                         )
-                      }
+                        if (unselect) setRowSelection({})
+                      }}
                       key={`${item.name}-${index}`}
                       disabled={item.disabled}
-                      className=" transition-colors text-secondary-gray hover:text-primary  mr-2"
+                      className="transition-colors text-secondary-gray hover:text-primary  mr-2"
                     >
                       <item.Icon className="w-4 h-4" />
                     </button>
