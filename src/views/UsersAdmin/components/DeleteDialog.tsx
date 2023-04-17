@@ -5,25 +5,24 @@ import Button from 'components/Button'
 import TextField from 'components/Form/Textfield'
 import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
 import { usersDeleteMessages } from '../messages'
+import { useUsers } from 'context/Users'
+import useToast from 'hooks/useToast'
 
 interface Props {
-  open?: boolean
-  selectedUsers?: Number
+  ids: string[]
   onClose?: (event?: any) => void
-  onAccept?: () => void
 }
 
-const DeleteDialog = ({
-  open = true,
-  onClose = () => {},
-  onAccept = () => {},
-  selectedUsers = 1
-}: Props): ReactElement => {
+const DeleteDialog = ({ onClose = () => {}, ids }: Props): ReactElement => {
   const getMessage = useFormatMessage(usersDeleteMessages)
   const getGlobalMessage = useGlobalMessage()
   const [firstConfirmation, setFirstConfirmation] = useState(false)
   const [passwordError, setPasswordError] = useState(false)
   const [password, setPassword] = useState('')
+  const { actions } = useUsers()
+  const { launchToast } = useToast()
+
+  const open = ids.length > 0
 
   useEffect(() => {
     if (!open) {
@@ -35,17 +34,37 @@ const DeleteDialog = ({
     }
   }, [open])
 
+  const handleDelete = async (): Promise<void> => {
+    try {
+      let deleted = false
+      if (ids.length === 1) {
+        deleted = Boolean(await actions?.deleteUser(ids[0]))
+      } else {
+        deleted = Boolean(await actions?.deleteUsers(ids))
+      }
+
+      if (deleted) {
+        onClose()
+        launchToast({
+          title: getMessage('success', { users: ids.length }),
+          type: 'Success'
+        })
+        actions?.getUsers()
+      }
+    } catch {}
+  }
+
   return (
     <Dialog open={open} onClose={onClose} size="sm" padding="none">
       <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
         <div className="text-center sm:mt-0">
           <ExclamationTriangleIcon className="h-6 w-6 text-red-600 m-auto mb-2" />
           <h3 className="text-lg font-medium leading-6 text-gray-900">
-            {getMessage('title', { selectedUsers })}
+            {getMessage('title', { selectedUsers: ids.length })}
           </h3>
           <p className="text-sm text-gray-500 mt-1 mb-2">
             {getMessage(firstConfirmation ? 'passwordConfirm' : 'message', {
-              selectedUsers
+              selectedUsers: ids.length
             })}
           </p>
         </div>
@@ -81,7 +100,7 @@ const DeleteDialog = ({
               if (!password) {
                 setPasswordError(true)
               } else {
-                onAccept()
+                handleDelete()
               }
             }}
           >

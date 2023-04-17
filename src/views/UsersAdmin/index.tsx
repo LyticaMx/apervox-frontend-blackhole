@@ -12,17 +12,18 @@ import UnlockDialog from './components/UnlockDialog'
 import CreateUserDrawer from './components/CreateUserDrawer'
 import EditUserDrawer from './components/EditUserDrawer'
 import { usersMessages } from './messages'
+import NewPasswordDialog from './components/NewPasswordDialog'
 
 const UsersAdmin = (): ReactElement => {
   const getMessage = useFormatMessage(usersMessages)
   const [openCreateDrawer, toggleOpenCreateDrawer] = useToggle(false)
-  const [openDeleteDialog, toggleDeleteDialog] = useToggle(false)
-  const [openDisableDialog, toggleDisableDialog] = useToggle(false)
-  const [openRemoteLogOffDialog, toggleRemoteLogOffDialog] = useToggle(false)
-  const [openResetPasswordDialog, toggleResetPasswordDialog] = useToggle(false)
+  const [disableIds, setDisableIds] = useState<string[]>([])
+  const [logOutIds, setLogOutIds] = useState<string[]>([])
+  const [deleteIds, setDeleteIds] = useState<string[]>([])
+  const [resetPasswordId, setResetPasswordId] = useState<string>('')
+  const [newPassword, setNewPassword] = useState<string>('')
   const [openUnlockDialog, toggleUnlockDialog] = useToggle(false)
   const [selectedUser, setSelectedUser] = useState<any>(null)
-  const [totalSelectedUsers, setTotalSelectedUsers] = useState<Number>(1)
 
   return (
     <>
@@ -49,24 +50,20 @@ const UsersAdmin = (): ReactElement => {
           />
         )}
 
-        <DeleteDialog
-          selectedUsers={totalSelectedUsers}
-          open={openDeleteDialog}
-          onClose={toggleDeleteDialog}
-        />
-        <DisableDialog
-          selectedUsers={totalSelectedUsers}
-          open={openDisableDialog}
-          onClose={toggleDisableDialog}
-        />
-        <RemoteLogOffDialog
-          selectedUsers={totalSelectedUsers}
-          open={openRemoteLogOffDialog}
-          onClose={toggleRemoteLogOffDialog}
-        />
+        <DeleteDialog ids={deleteIds} onClose={() => setDeleteIds([])} />
+        <DisableDialog ids={disableIds} onClose={() => setDisableIds([])} />
+        <RemoteLogOffDialog ids={logOutIds} onClose={() => setLogOutIds([])} />
         <ResetPasswordDialog
-          open={openResetPasswordDialog}
-          onClose={toggleResetPasswordDialog}
+          id={resetPasswordId}
+          onClose={() => setResetPasswordId('')}
+          onAccept={(password) => {
+            setResetPasswordId('')
+            setNewPassword(password)
+          }}
+        />
+        <NewPasswordDialog
+          newPassword={newPassword}
+          onClose={() => setNewPassword('')}
         />
         <UnlockDialog open={openUnlockDialog} onClose={toggleUnlockDialog} />
       </div>
@@ -74,12 +71,11 @@ const UsersAdmin = (): ReactElement => {
       <div className="flex gap-4 mt-2">
         <UserList
           onSelectUser={setSelectedUser}
-          setTotalSelectedUsers={setTotalSelectedUsers}
-          onDeleteUser={toggleDeleteDialog}
-          onDisableUser={toggleDisableDialog}
-          onRemoteLogOffUser={toggleRemoteLogOffDialog}
+          onDeleteUser={setDeleteIds}
+          onDisableUser={setDisableIds}
+          onRemoteLogOffUser={setLogOutIds}
           onUnlockUser={toggleUnlockDialog}
-          onResetPasswordUser={toggleResetPasswordDialog}
+          onResetPasswordUser={setResetPasswordId}
         />
       </div>
     </>

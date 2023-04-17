@@ -23,7 +23,6 @@ const colorByStatus = {
 }
 
 interface Props {
-  setTotalSelectedUsers: (totalUsers: Number) => void
   onSelectUser: (user: User) => void
   onDeleteUser: (ids: string[]) => void
   onDisableUser: (ids: string[]) => void
@@ -38,8 +37,7 @@ const UserList = ({
   onDisableUser,
   onRemoteLogOffUser,
   onUnlockUser,
-  onResetPasswordUser,
-  setTotalSelectedUsers
+  onResetPasswordUser
 }: Props): ReactElement => {
   const getMessage = useFormatMessage(generalMessages)
   const { listOfUsers, usersPagination, actions } = useUsers()
@@ -149,7 +147,7 @@ const UserList = ({
               },
               {
                 label: 'Deshabilitar usuario',
-                disabled: status === 'disabled' ?? status === 'banned',
+                disabled: status === 'banned',
                 onClick: () => {
                   onDisableUser([id])
                 }
@@ -205,7 +203,6 @@ const UserList = ({
           {
             name: 'Eliminar',
             action: (items) => {
-              setTotalSelectedUsers(items.length)
               onDeleteUser(items.map((user) => user.id ?? ''))
             },
             Icon: TrashIcon
@@ -213,7 +210,6 @@ const UserList = ({
           {
             name: 'Deshabilitar',
             action: (items) => {
-              setTotalSelectedUsers(items.length)
               onDisableUser(items.map((user) => user.id ?? ''))
             },
             Icon: NoSymbolIcon
@@ -221,7 +217,6 @@ const UserList = ({
           {
             name: 'Cerrar sesión',
             action: (items) => {
-              setTotalSelectedUsers(items.length)
               onRemoteLogOffUser(items.map((user) => user.id ?? ''))
             },
             Icon: ArrowLeftOnRectangleIcon

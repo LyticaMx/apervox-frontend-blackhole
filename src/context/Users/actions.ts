@@ -10,9 +10,10 @@ import {
 import { actions } from './constants'
 
 const orderByMapper = {
-  name: 'profile',
+  name: 'names',
   createdBy: 'created_by',
-  createdOn: 'created_at'
+  createdOn: 'created_at',
+  lastName: 'last_name'
 }
 
 export const useActions = (
@@ -53,8 +54,6 @@ export const useActions = (
             return old
           }, {})
         )
-
-        console.log(mappedFilters)
       }
 
       // TODO: cambiar el response data
@@ -183,6 +182,17 @@ export const useActions = (
     }
   }
 
+  const deleteUsers = async (ids: string[]): Promise<boolean> => {
+    try {
+      await deleteUserService({
+        body: { ids }
+      })
+      return true
+    } catch {
+      return false
+    }
+  }
+
   const toggleDisable = async (
     id: string,
     enabled: boolean
@@ -191,11 +201,30 @@ export const useActions = (
       await updateUserService({
         queryString: id,
         body: {
-          status: !enabled
+          status: enabled
         }
       })
 
+      return true
+    } catch {
       return false
+    }
+  }
+
+  const multipleDisable = async (
+    ids: string[],
+    enabled = false
+  ): Promise<boolean> => {
+    try {
+      await updateUserService({
+        body: {
+          ids,
+          payload: {
+            status: enabled
+          }
+        }
+      })
+      return true
     } catch {
       return false
     }
@@ -212,6 +241,30 @@ export const useActions = (
     }
   }
 
+  const closeMultipleSessions = async (ids: string[]): Promise<boolean> => {
+    try {
+      return !(
+        await Promise.all(
+          ids.map(async (id): Promise<boolean> => await closeSession(id))
+        )
+      ).some((item) => !item)
+    } catch {
+      return false
+    }
+  }
+
+  const resetPassword = async (id: string): Promise<string> => {
+    try {
+      const response: ResponseData = await updateUserService({
+        queryString: `${id}/password-reset`
+      })
+
+      return response.data.password
+    } catch {
+      return ''
+    }
+  }
+
   const exportTable = async (): Promise<void> => {}
 
   return {
@@ -219,8 +272,12 @@ export const useActions = (
     createUser,
     updateUser,
     deleteUser,
+    deleteUsers,
     toggleDisable,
+    multipleDisable,
     closeSession,
+    closeMultipleSessions,
+    resetPassword,
     exportTable
   }
 }

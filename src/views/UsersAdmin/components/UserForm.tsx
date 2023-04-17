@@ -1,5 +1,5 @@
 import { ReactElement, useMemo } from 'react'
-import { FormikConfig } from 'formik'
+import { FormikConfig, FormikHelpers } from 'formik'
 import * as yup from 'yup'
 import Form from 'components/Form'
 import { Field } from 'types/form'
@@ -20,7 +20,10 @@ interface FormValues {
 
 interface Props {
   initialValues?: FormValues
-  onSubmit: (values: FormValues) => Promise<void>
+  onSubmit: (
+    values: FormValues,
+    formikHelpers?: FormikHelpers<FormValues>
+  ) => Promise<void>
 }
 
 const UserForm = ({ initialValues, onSubmit }: Props): ReactElement => {

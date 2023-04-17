@@ -16,7 +16,7 @@ const CreateUserDrawer = ({ open, onClose }: Props): ReactElement => {
   const { actions } = useUsers()
   const { launchToast } = useToast()
 
-  const handleSubmit = async (values): Promise<void> => {
+  const handleSubmit = async (values, helpers): Promise<void> => {
     try {
       const created = await actions?.createUser({
         username: values.username,
@@ -36,6 +36,7 @@ const CreateUserDrawer = ({ open, onClose }: Props): ReactElement => {
           type: 'Success',
           title: getMessage('success')
         })
+        helpers.resetForm()
       }
     } catch {}
   }

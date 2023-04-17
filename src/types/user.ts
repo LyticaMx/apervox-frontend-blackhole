@@ -43,8 +43,12 @@ export interface UserContextActions {
   createUser: (user: User) => Promise<boolean>
   updateUser: (user: User) => Promise<boolean>
   deleteUser: (id: string) => Promise<boolean>
+  deleteUsers: (ids: string[]) => Promise<boolean>
   toggleDisable: (id: string, enabled: boolean) => Promise<boolean>
+  multipleDisable: (ids: string[], enabled: boolean) => Promise<boolean>
   closeSession: (id: string) => Promise<boolean>
+  closeMultipleSessions: (ids: string[]) => Promise<boolean>
+  resetPassword: (id: string) => Promise<string>
   exportTable: () => Promise<void>
 }
 
