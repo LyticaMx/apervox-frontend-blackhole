@@ -9,7 +9,7 @@ import { AdjustmentsVerticalIcon } from '@heroicons/react/24/outline'
 import { actionsMessages, generalMessages } from 'globalMessages'
 
 import TextField from 'components/Form/Textfield'
-import Checkbox from 'components/Form/Checkbox'
+import Radio from 'components/Form/Radio'
 
 export type InputType =
   | 'datepicker'
@@ -75,7 +75,8 @@ const FilterByField = ({
     },
     onSubmit: (values) => {
       if (onSubmit) {
-        onSubmit(values)
+        // TODO: Revertir este cambio cuando los filtros sean OR y no AND
+        onSubmit({ search: values.search, fields: [values.fields] })
       }
       if (handleClose) {
         handleClose()
@@ -151,7 +152,7 @@ const FilterByField = ({
             </div>
 
             <div className="p-4">
-              <form>
+              <form onSubmit={formik.handleSubmit} onReset={formik.handleReset}>
                 <TextField
                   id="search"
                   name="search"
@@ -162,7 +163,8 @@ const FilterByField = ({
                 <p className="mt-3 mb-2">Campos</p>
                 <div className="flex flex-col gap-1">
                   {items.map((item, index) => (
-                    <Checkbox
+                    // TODO: Revertir este cambio cuando los filtros sean OR y no AND
+                    <Radio
                       label={item.label}
                       key={index}
                       name="fields"
