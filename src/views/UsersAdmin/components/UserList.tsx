@@ -95,6 +95,27 @@ const UserList = ({
             )}
           </div>
         )
+      },
+      meta: {
+        columnFilters: {
+          onChange: async (values) => {
+            await actions?.getUsers({ sessions: values })
+          },
+          options: [
+            {
+              name: 'Logueado',
+              value: 'logged'
+            },
+            {
+              name: 'No logueado',
+              value: 'not logged'
+            },
+            {
+              name: 'Ambos',
+              value: 'both'
+            }
+          ]
+        }
       }
     },
     {
@@ -114,6 +135,26 @@ const UserList = ({
             variant="caption"
           />
         )
+      },
+      meta: {
+        columnFilters: {
+          onChange: async (values) =>
+            await actions?.getUsers({ status: values }),
+          options: [
+            {
+              name: 'Habilitado',
+              value: 'enabled'
+            },
+            {
+              name: 'Deshabilitado',
+              value: 'disabled'
+            },
+            {
+              name: 'Ambos',
+              value: 'both'
+            }
+          ]
+        }
       }
     },
     {

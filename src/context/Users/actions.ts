@@ -5,6 +5,7 @@ import {
   User,
   UserContextActions,
   UserContextState,
+  UserStaticFilter,
   UsersPaginationParams
 } from 'types/user'
 import { actions } from './constants'
@@ -27,7 +28,10 @@ export const useActions = (
   const deleteUserService = useApi({ endpoint: 'users', method: 'delete' })
 
   const getUsers = async (
-    params?: UsersPaginationParams & SearchParams & DateFilter
+    params?: UsersPaginationParams &
+      SearchParams &
+      DateFilter &
+      UserStaticFilter
   ): Promise<void> => {
     try {
       const sort = {
@@ -35,7 +39,10 @@ export const useActions = (
         order: 'desc'
       }
 
-      const mappedFilters = {}
+      const mappedFilters: {
+        sessions?: boolean
+        status?: boolean
+      } = {}
 
       if (params?.sort && params.sort.length > 0) {
         const [sortBy] = params.sort
@@ -55,6 +62,20 @@ export const useActions = (
           }, {})
         )
       }
+
+      mappedFilters.sessions =
+        params?.sessions?.[0] === 'logged'
+          ? true
+          : params?.sessions?.[0] === 'not logged'
+          ? false
+          : undefined
+
+      mappedFilters.status =
+        params?.status?.[0] === 'enabled'
+          ? true
+          : params?.status?.[0] === 'disabled'
+          ? false
+          : undefined
 
       // TODO: cambiar el response data
       const response: ResponseData = await getUsersService({

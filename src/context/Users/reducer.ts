@@ -24,6 +24,12 @@ export const reducer = (
         ...state,
         usersPagination: { ...state.usersPagination, ...action.payload }
       }
+    case Types.SET_STATIC_FILTERS:
+      return {
+        ...state,
+        // TODO: Cambiar cuando los filtros sean OR en lugar de AND
+        staticFilter: { /* ...state.staticFilter, */ ...action.payload }
+      }
     default:
       return state
   }

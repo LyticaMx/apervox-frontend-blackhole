@@ -11,6 +11,7 @@ export const initialState: UserContextState = {
     totalRecords: 0
   },
   searchFilter: {},
+  staticFilter: {},
   dateFilter: {}
 }
 
