@@ -120,8 +120,8 @@ const TechniqueList = (): ReactElement => {
       }
     },
     {
-      accessorKey: 'total_objective',
-      header: getMessage('totalObjective')
+      accessorKey: 'total_target',
+      header: getMessage('totalTarget')
     },
     {
       accessorKey: 'id',

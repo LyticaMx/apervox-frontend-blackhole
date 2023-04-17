@@ -14,7 +14,7 @@ import TextField from 'components/Form/Textfield'
 import Button from 'components/Button'
 import { PlusCircleIcon } from '@heroicons/react/24/outline'
 import { Target } from 'types/technique'
-import CreateObjectiveDialog from './CreateObjectiveDialog'
+import CreateTargetDialog from './CreateTargetDialog'
 import { techniqueFormMessages } from '../messages'
 
 type AdvanceTimeType = 'days' | 'hours'
@@ -38,12 +38,12 @@ const TechniqueForm = ({ initialValues, onSubmit }: Props): ReactElement => {
   const getGlobalMessage = useGlobalMessage()
 
   const [selectedGroups, setSelectedGroups] = useState([])
-  const [objectivesLinked, setObjectivesLinked] = useState<Target[]>([])
+  const [targetsLinked, setTargetsLinked] = useState<Target[]>([])
   const [advanceTimeType, setAdvanceTimeType] =
     useState<AdvanceTimeType>('days')
   const [advanceTime, setAdvanceTime] = useState('')
   const [priority, setPriority] = useState<PriorityType>('urgent')
-  const [openObjectiveForm, setOpenObjectiveForm] = useState(false)
+  const [openTargetForm, setOpenTargetForm] = useState(false)
 
   const fields: Array<Field<FormValues>> = [
     {
@@ -238,18 +238,18 @@ const TechniqueForm = ({ initialValues, onSubmit }: Props): ReactElement => {
             {getMessage('associatedTargets')}
           </Typography>
           <div className="my-2">
-            {objectivesLinked.map((objective, index) => (
-              <Typography key={`new-objective-${index}`}>
-                {objective.phone_number}
+            {targetsLinked.map((target, index) => (
+              <Typography key={`new-target-${index}`}>
+                {target.phone_number}
               </Typography>
             ))}
           </div>
           <Button
             className="!bg-transparent !text-slate-700 !font-medium group"
-            onClick={() => setOpenObjectiveForm(true)}
+            onClick={() => setOpenTargetForm(true)}
           >
             <PlusCircleIcon className="group-hover:text-indigo-500 w-5 mr-1" />
-            {getMessage('addObjectives')}
+            {getMessage('addTargets')}
           </Button>
         </div>
       ),
@@ -294,13 +294,13 @@ const TechniqueForm = ({ initialValues, onSubmit }: Props): ReactElement => {
           className: 'mt-6 mb-2'
         }}
       />
-      <CreateObjectiveDialog
-        open={openObjectiveForm}
-        onClose={() => setOpenObjectiveForm(false)}
-        onAccept={(objective: Target) => {
-          const newObjectiveLinkedList = [...objectivesLinked, objective]
-          setObjectivesLinked(newObjectiveLinkedList)
-          setOpenObjectiveForm(false)
+      <CreateTargetDialog
+        open={openTargetForm}
+        onClose={() => setOpenTargetForm(false)}
+        onAccept={(target: Target) => {
+          const newTargetLinkedList = [...targetsLinked, target]
+          setTargetsLinked(newTargetLinkedList)
+          setOpenTargetForm(false)
         }}
       />
     </div>

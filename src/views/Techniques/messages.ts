@@ -56,27 +56,27 @@ export const createTechniqueDrawerMessages = defineMessages({
   }
 })
 
-export const createObjectiveDialogMessages = defineMessages({
-  addObjective: {
-    id: 'views.techniques.CreateObjectiveDialog.addObjective',
+export const createTargetDialogMessages = defineMessages({
+  addTarget: {
+    id: 'views.techniques.CreateTargetDialog.addTarget',
     defaultMessage: 'Agregar objetivo'
   },
-  selectObjectiveType: {
-    id: 'views.techniques.CreateObjectiveDialog.selectObjectiveType',
+  selectTargetType: {
+    id: 'views.techniques.CreateTargetDialog.selectTargetType',
     defaultMessage:
       'Selecciona el tipo de objetivo que será agregado a la técnica y completa los datos del formulario.'
   }
 })
 
-export const deleteObjectiveDialogMessages = defineMessages({
-  deleteObjective: {
-    id: 'views.techniques.DeleteObjectiveDialog.deleteObjective',
+export const deleteTargetDialogMessages = defineMessages({
+  deleteTarget: {
+    id: 'views.techniques.DeleteTargetDialog.deleteTarget',
     defaultMessage: 'Quitar objetivo'
   },
   wantToRemove: {
-    id: 'views.techniques.DeleteObjectiveDialog.wantToRemove',
+    id: 'views.techniques.DeleteTargetDialog.wantToRemove',
     defaultMessage:
-      '¿Quieres remover el objetivo {objectivePhone} asignado a esta técnica?'
+      '¿Quieres remover el objetivo {targetPhone} asignado a esta técnica?'
   }
 })
 
@@ -143,84 +143,84 @@ export const evidenceListMessages = defineMessages({
   }
 })
 
-export const objectiveCardMessages = defineMessages({
+export const targetCardMessages = defineMessages({
   creation: {
-    id: 'views.techniques.ObjectiveCard.creation',
+    id: 'views.techniques.TargetCard.creation',
     defaultMessage: 'Creación'
   },
   finalization: {
-    id: 'views.techniques.ObjectiveCard.finalization',
+    id: 'views.techniques.TargetCard.finalization',
     defaultMessage: 'Finalización'
   },
   activity: {
-    id: 'views.techniques.ObjectiveCard.activity',
+    id: 'views.techniques.TargetCard.activity',
     defaultMessage: 'Actividad del objetivo'
   },
   forms: {
-    id: 'views.techniques.ObjectiveCard.forms',
+    id: 'views.techniques.TargetCard.forms',
     defaultMessage: 'Formularios'
   },
   history: {
-    id: 'views.techniques.ObjectiveCard.history',
+    id: 'views.techniques.TargetCard.history',
     defaultMessage: 'Historial'
   }
 })
 
-export const objectiveFormMessages = defineMessages({
+export const targetFormMessages = defineMessages({
   etsiTargets: {
-    id: 'views.techniques.ObjectiveForm.etsiTargets',
+    id: 'views.techniques.TargetForm.etsiTargets',
     defaultMessage: 'Objetivos ETSI'
   },
   conventionalTargets: {
-    id: 'views.techniques.ObjectiveForm.conventionalTargets',
+    id: 'views.techniques.TargetForm.conventionalTargets',
     defaultMessage: 'Objetivos convencionales'
   },
   targetName: {
-    id: 'views.techniques.ObjectiveForm.targetName',
+    id: 'views.techniques.TargetForm.targetName',
     defaultMessage: 'Alias / Nombre del objetivo'
   },
   targetNamePlaceholder: {
-    id: 'views.techniques.ObjectiveForm.targetNamePlaceholder',
+    id: 'views.techniques.TargetForm.targetNamePlaceholder',
     defaultMessage: 'Ej. El chapo'
   },
   targetNumber: {
-    id: 'views.techniques.ObjectiveForm.targetNumber',
+    id: 'views.techniques.TargetForm.targetNumber',
     defaultMessage: 'Número del objetivo'
   },
   targetNumberPlaceholder: {
-    id: 'views.techniques.ObjectiveForm.targetNumberPlaceholder',
+    id: 'views.techniques.TargetForm.targetNumberPlaceholder',
     defaultMessage: 'Ej. número a 10 dígitos'
   },
   endDate: {
-    id: 'views.techniques.ObjectiveForm.endDate',
+    id: 'views.techniques.TargetForm.endDate',
     defaultMessage: 'Fecha de finalización'
   },
   endDateWarning: {
-    id: 'views.techniques.ObjectiveForm.endDateWarning',
+    id: 'views.techniques.TargetForm.endDateWarning',
     defaultMessage:
       'Si habilitas este campo deberás ingresar una fecha de finalización diferente y anterior a la fecha de vigencia de la técnica.'
   },
   carrier: {
-    id: 'views.techniques.ObjectiveForm.carrier',
+    id: 'views.techniques.TargetForm.carrier',
     defaultMessage: 'Compañia telefónica'
   },
   derivationLine: {
-    id: 'views.techniques.ObjectiveForm.derivationLine',
+    id: 'views.techniques.TargetForm.derivationLine',
     defaultMessage: 'Línea de derivación'
   },
   phoneExample: {
-    id: 'views.techniques.ObjectiveForm.phoneExample',
+    id: 'views.techniques.TargetForm.phoneExample',
     defaultMessage: 'Ej. 0000000000'
   }
 })
 
-export const objectiveFormsGeneralMessages = defineMessages({
+export const targetFormsGeneralMessages = defineMessages({
   comments: {
-    id: 'views.techniques.ObjectiveForms.generalMessages.comments',
+    id: 'views.techniques.TargetForms.generalMessages.comments',
     defaultMessage: 'Comentarios'
   },
   commentsPlaceholder: {
-    id: 'views.techniques.ObjectiveForms.generalMessages.commentsPlaceholder',
+    id: 'views.techniques.TargetForms.generalMessages.commentsPlaceholder',
     defaultMessage: 'Escribe un comentario aquí'
   },
   emailPlaceholder: {
@@ -900,13 +900,13 @@ export const useAddressMessages = defineMessages({
   }
 })
 
-export const objectiveListMessages = defineMessages({
-  totalObjectives: {
-    id: 'views.techniques.ObjectiveList.totalObjectives',
+export const targetListMessages = defineMessages({
+  totalTargets: {
+    id: 'views.techniques.TargetList.totalTargets',
     defaultMessage: '{total} Objetivos existentes en la ténica de investigación'
   },
-  addObjective: {
-    id: 'views.techniques.ObjectiveList.addObjective',
+  addTarget: {
+    id: 'views.techniques.TargetList.addTarget',
     defaultMessage: 'Agregar objetivo'
   }
 })
@@ -992,8 +992,8 @@ export const techniqueFormMessages = defineMessages({
     id: 'views.techniques.TechniqueForm.associatedTargets',
     defaultMessage: 'Objetivos asociados'
   },
-  addObjectives: {
-    id: 'views.techniques.TechniqueForm.addObjectives',
+  addTargets: {
+    id: 'views.techniques.TechniqueForm.addTargets',
     defaultMessage: 'Agregar objetivos'
   },
   startEndDate: {

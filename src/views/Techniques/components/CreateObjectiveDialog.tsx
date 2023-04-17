@@ -3,18 +3,18 @@ import { ReactElement } from 'react'
 import Dialog from 'components/Dialog'
 import { Target } from 'types/technique'
 import Typography from 'components/Typography'
-import ObjectiveForm from './ObjectiveForm'
+import TargetForm from './TargetForm'
 import { useIntl } from 'react-intl'
-import { createObjectiveDialogMessages } from '../messages'
+import { createTargetDialogMessages } from '../messages'
 
 interface Props {
   open?: boolean
   selected?: Number
   onClose?: (event?: any) => void
-  onAccept?: (objective: Target) => void
+  onAccept?: (target: Target) => void
 }
 
-const CreateObjectiveDialog = ({
+const CreateTargetDialog = ({
   open = true,
   onClose = () => {},
   onAccept
@@ -25,15 +25,15 @@ const CreateObjectiveDialog = ({
     <Dialog open={open} onClose={onClose} size="md" padding="none">
       <div className="bg-white px-8 py-5">
         <Typography variant="title" style="bold" className="uppercase">
-          {formatMessage(createObjectiveDialogMessages.addObjective)}
+          {formatMessage(createTargetDialogMessages.addTarget)}
         </Typography>
         <Typography className="leading-tight my-2">
-          {formatMessage(createObjectiveDialogMessages.selectObjectiveType)}
+          {formatMessage(createTargetDialogMessages.selectTargetType)}
         </Typography>
-        <ObjectiveForm onSubmit={onAccept as any} />
+        <TargetForm onSubmit={onAccept as any} />
       </div>
     </Dialog>
   )
 }
 
-export default CreateObjectiveDialog
+export default CreateTargetDialog

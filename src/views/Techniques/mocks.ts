@@ -11,7 +11,7 @@ export const techniquesData: Technique[] = [
     expires_at: new Date(Date.now() + 2 * (3600 * 1000 * 24)).toISOString(),
     registered_by: 'armandoalbor',
     time_on_platform: '1 día',
-    total_objective: 3,
+    total_target: 3,
     priority: Priority.HIGH,
     turn_of_attention: Turn.MORNING,
     status: Status.TO_COMPLETE
@@ -23,7 +23,7 @@ export const techniquesData: Technique[] = [
     expires_at: new Date(Date.now() + 6 * (3600 * 1000 * 24)).toISOString(),
     registered_by: 'armandoalbor',
     time_on_platform: '25 días',
-    total_objective: 24,
+    total_target: 24,
     priority: Priority.HIGH,
     turn_of_attention: Turn.EVENING,
     status: Status.TO_COMPLETE
@@ -35,7 +35,7 @@ export const techniquesData: Technique[] = [
     expires_at: new Date(Date.now() + 4 * (3600 * 1000 * 24)).toISOString(),
     registered_by: 'efracuadras',
     time_on_platform: '10 días',
-    total_objective: 10,
+    total_target: 10,
     priority: Priority.LOW,
     turn_of_attention: Turn.NIGHTNING,
     status: Status.CURRENT
@@ -47,7 +47,7 @@ export const techniquesData: Technique[] = [
     expires_at: new Date(Date.now() + 1 * (3600 * 1000 * 24)).toISOString(),
     registered_by: 'javieralbor',
     time_on_platform: '1 mes',
-    total_objective: 20,
+    total_target: 20,
     priority: Priority.LOW,
     turn_of_attention: Turn.EVENING,
     status: Status.CURRENT
@@ -59,14 +59,14 @@ export const techniquesData: Technique[] = [
     expires_at: new Date(Date.now() + 16 * (3600 * 1000 * 24)).toISOString(),
     registered_by: 'alfredogonzalez',
     time_on_platform: '12 días',
-    total_objective: 44,
+    total_target: 44,
     priority: Priority.MEDIUM,
     turn_of_attention: Turn.MORNING,
     status: Status.COMPLETED
   }
 ]
 
-export const objectiveData: Target[] = [
+export const targetData: Target[] = [
   {
     id: 'obtv_1',
     name: 'Jorge Jimenez',
@@ -103,7 +103,7 @@ export const evidencesData: Evidence[] = [
   {
     id: 'ev_1',
     number_event: '00_1',
-    number_objective: '55-35674518',
+    number_target: '55-35674518',
     number_origin: '55-31234565',
     created_at: new Date().toISOString(),
     expires_at: new Date(Date.now() + 2 * (3600 * 1000 * 24)).toISOString(),
@@ -124,7 +124,7 @@ export const evidencesData: Evidence[] = [
   {
     id: 'ev_2',
     number_event: '00_1',
-    number_objective: '55-35674518',
+    number_target: '55-35674518',
     number_origin: '55-31234565',
     created_at: new Date().toISOString(),
     expires_at: new Date(Date.now() + 2 * (3600 * 1000 * 24)).toISOString(),
@@ -145,7 +145,7 @@ export const evidencesData: Evidence[] = [
   {
     id: 'ev_3',
     number_event: '00_1',
-    number_objective: '55-35674518',
+    number_target: '55-35674518',
     number_origin: '55-31234565',
     created_at: new Date().toISOString(),
     expires_at: new Date(Date.now() + 2 * (3600 * 1000 * 24)).toISOString(),
@@ -166,7 +166,7 @@ export const evidencesData: Evidence[] = [
   {
     id: 'ev_4',
     number_event: '00_1',
-    number_objective: '55-35674518',
+    number_target: '55-35674518',
     number_origin: '55-31234565',
     created_at: new Date().toISOString(),
     expires_at: new Date(Date.now() + 2 * (3600 * 1000 * 24)).toISOString(),

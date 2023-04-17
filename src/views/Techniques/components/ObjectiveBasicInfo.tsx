@@ -20,7 +20,7 @@ const BasicInfo = ({
       width={50}
       className="border border-slate-200 rounded-md p-1 bg-slate-100"
       src={avatar ?? defaultAvatar}
-      alt={`objective_${name}_avatar`}
+      alt={`target_${name}_avatar`}
     />
     <div className="ml-2 flex flex-col items-start">
       <Typography style="semibold">{name}</Typography>
