@@ -174,26 +174,8 @@ const EvidenceList = ({ data, onSelectItem }: Props): ReactElement => {
       accessorKey: 'type',
       header: formatMessage(evidenceListMessages.type).toUpperCase(),
       cell: ({ getValue }) => {
-        let type = ''
-
-        switch (getValue()) {
-          case 0:
-            type = 'Audio'
-            break
-          case 1:
-            type = 'Video'
-            break
-          case 2:
-            type = 'Imagen'
-            break
-          case 3:
-            type = 'Documento'
-            break
-
-          default:
-            type = 'Audio'
-            break
-        }
+        const types = ['Audio', 'Video', 'Imagen', 'Documento']
+        const type = types[getValue<number>()] ?? types[0]
 
         return type
       }
