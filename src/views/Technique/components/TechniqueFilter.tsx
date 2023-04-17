@@ -1,7 +1,8 @@
 import { ReactElement } from 'react'
-import ViewFilter from 'components/ViewFilter'
 import { useFormatMessage } from 'hooks/useIntl'
 import { generalMessages } from 'globalMessages'
+
+import ViewFilter from 'components/ViewFilter'
 
 const TechniqueFilter = (): ReactElement => {
   const getGeneralMessage = useFormatMessage(generalMessages)

@@ -1,21 +1,21 @@
 import { ReactElement, useRef } from 'react'
-
+import { useIntl } from 'react-intl'
 import { Editor } from '@ghostramses/ckeditor5-blackhole-custom-build/build/ckeditor'
+import { ArrowDownTrayIcon } from '@heroicons/react/24/outline'
+
+import { useTabs } from 'hooks/useTabs'
+import { useTechnique } from 'context/Technique'
+import { actionsMessages } from 'globalMessages'
 
 import Typography from 'components/Typography'
 import RichTextEditor from 'components/RichTextEditor'
+import Button from 'components/Button'
 
 import ObjectiveList from './ObjectiveList'
 import CustomTabs from './CustomTabs'
 import { techiniqueInfoTabs, TECHNIQUE_INFO_TABS } from '../constants'
-import Button from 'components/Button'
-import { ArrowDownTrayIcon } from '@heroicons/react/24/outline'
 import TechniqueUpdateForm from './TechniqueUpdateForm'
-import { useIntl } from 'react-intl'
 import { techniqueInfoMessages } from '../messages'
-import { actionsMessages } from 'globalMessages'
-import { useTabs } from 'hooks/useTabs'
-import { useTechnique } from 'context/Technique'
 
 const TechniqueInfo = (): ReactElement => {
   const { targets, actions } = useTechnique()

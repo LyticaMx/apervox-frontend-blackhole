@@ -1,10 +1,12 @@
 import { ReactElement } from 'react'
+import { useIntl } from 'react-intl'
+
+import { Target } from 'types/technique'
 
 import Dialog from 'components/Dialog'
-import { Target } from 'types/technique'
 import Typography from 'components/Typography'
+
 import ObjectiveForm from './ObjectiveForm'
-import { useIntl } from 'react-intl'
 import { createObjectiveDialogMessages } from '../messages'
 
 interface Props {

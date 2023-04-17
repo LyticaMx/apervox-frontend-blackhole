@@ -1,5 +1,6 @@
-import Typography from 'components/Typography'
 import { ReactElement } from 'react'
+
+import Typography from 'components/Typography'
 
 const defaultAvatar =
   'https://www.eventfulnigeria.com/wp-content/uploads/2021/04/Avatar-PNG-Free-Download.png'

@@ -1,8 +1,8 @@
 import { ReactElement } from 'react'
-
-import Button from 'components/Button'
 import clsx from 'clsx'
 import { useIntl } from 'react-intl'
+
+import Button from 'components/Button'
 
 interface ClassNames {
   container: string

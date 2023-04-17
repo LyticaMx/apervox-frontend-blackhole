@@ -1,8 +1,9 @@
 import { ReactElement } from 'react'
 import { useHistory } from 'react-router-dom'
-
 import { pathRoute } from 'router/routes'
+
 // import { useTechnique } from 'context/Technique'
+import { useTabs } from 'hooks/useTabs'
 
 import CustomTabs from './CustomTabs'
 import { objectiveInfoTabs, OBJECTIVE_INFO_TABS } from '../constants'
@@ -10,7 +11,6 @@ import EvidenceList from './EvidenceList'
 import ObjectiveForms from './ObjectiveForms'
 import GeneralDataForm from './ObjectiveForms/GeneralDataForm'
 import { evidencesData } from 'views/Techniques/mocks'
-import { useTabs } from 'hooks/useTabs'
 
 const evidenceTypes = ['audio', 'video', 'image', 'doc']
 

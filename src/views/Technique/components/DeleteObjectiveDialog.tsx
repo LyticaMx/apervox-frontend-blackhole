@@ -1,12 +1,13 @@
 import { ReactElement } from 'react'
-
+import { useIntl } from 'react-intl'
 import { InformationCircleIcon } from '@heroicons/react/24/outline'
+
+import { useGlobalMessage } from 'hooks/useIntl'
 
 import Dialog from 'components/Dialog'
 import Button from 'components/Button'
 import Typography from 'components/Typography'
-import { useGlobalMessage } from 'hooks/useIntl'
-import { useIntl } from 'react-intl'
+
 import { deleteObjectiveDialogMessages } from '../messages'
 
 interface Props {

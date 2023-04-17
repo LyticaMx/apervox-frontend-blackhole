@@ -1,18 +1,16 @@
 import { useState, ReactElement } from 'react'
 import { SortingState } from '@tanstack/react-table'
 import { format } from 'date-fns'
+import { useIntl } from 'react-intl'
 import clsx from 'clsx'
-
 import { StarIcon, TrashIcon } from '@heroicons/react/24/outline'
 
+import { useGlobalMessage } from 'hooks/useIntl'
+import useTableColumns from 'hooks/useTableColumns'
+import { Evidence, EvidenceClasification, EvidenceTag } from 'types/technique'
 import Table from 'components/Table'
 
-import { Evidence, EvidenceClasification, EvidenceTag } from 'types/technique'
-
-import useTableColumns from 'hooks/useTableColumns'
-import { useIntl } from 'react-intl'
 import { evidenceListMessages } from '../messages'
-import { useGlobalMessage } from 'hooks/useIntl'
 
 interface Props {
   data: Evidence[]

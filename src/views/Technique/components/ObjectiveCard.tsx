@@ -1,5 +1,6 @@
 import { ReactElement, useState } from 'react'
 import { format } from 'date-fns'
+import { useIntl } from 'react-intl'
 
 import {
   ClipboardDocumentIcon,
@@ -8,17 +9,17 @@ import {
   TrashIcon
 } from '@heroicons/react/24/outline'
 
+import { Target } from 'types/technique'
+
+import { useGlobalMessage } from 'hooks/useIntl'
 import IconButton from 'components/Button/IconButton'
 import Checkbox from 'components/Form/Checkbox'
 import Typography from 'components/Typography'
-import { Target } from 'types/technique'
+import Tooltip from 'components/Tooltip'
 
 import BasicInfo from './ObjectiveBasicInfo'
 import DeleteObjectiveDialog from './DeleteObjectiveDialog'
-import Tooltip from 'components/Tooltip'
-import { useIntl } from 'react-intl'
 import { objectiveCardMessages } from '../messages'
-import { useGlobalMessage } from 'hooks/useIntl'
 
 interface Props {
   data: Target

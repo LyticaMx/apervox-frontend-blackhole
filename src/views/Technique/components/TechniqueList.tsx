@@ -1,8 +1,8 @@
 import { ReactElement, useEffect } from 'react'
+import clsx from 'clsx'
 
 import Typography from 'components/Typography'
 import Scroller from 'components/Scroller'
-import clsx from 'clsx'
 import { useTechnique } from 'context/Technique'
 import { useTechniques } from 'context/Techniques'
 import { useGlobalMessage } from 'hooks/useIntl'

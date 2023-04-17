@@ -2,9 +2,11 @@ import { ReactElement, useMemo, useState } from 'react'
 import { FormikConfig } from 'formik'
 import * as yup from 'yup'
 
-import Form from 'components/Form'
 import { Field } from 'types/form'
 import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
+import { useToggle } from 'usehooks-ts'
+
+import Form from 'components/Form'
 import Grid from 'components/Grid'
 import Radio from 'components/Form/Radio'
 import SelectField from 'components/Form/Select'
@@ -12,7 +14,7 @@ import TextField from 'components/Form/Textfield'
 import Switch from 'components/Form/Switch'
 import Datepicker from 'components/Form/Datepicker'
 import Typography from 'components/Typography'
-import { useToggle } from 'usehooks-ts'
+
 import { objectiveFormMessages } from '../messages'
 
 type ObjectiveType = 'etsi' | 'conventional'

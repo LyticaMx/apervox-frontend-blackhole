@@ -1,9 +1,10 @@
-import GoBackButton from 'components/GoBackButton'
-import Title from 'components/Title'
 import { useTechnique } from 'context/Technique'
 import { ReactElement } from 'react'
 import { useHistory } from 'react-router-dom'
 import { pathRoute } from 'router/routes'
+
+import GoBackButton from 'components/GoBackButton'
+import Title from 'components/Title'
 
 import TechniqueFilter from './TechniqueFilter'
 
