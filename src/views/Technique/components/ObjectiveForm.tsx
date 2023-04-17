@@ -25,7 +25,7 @@ interface FormValues {
 
 interface Props {
   initialValues?: FormValues
-  onSubmit: (values: FormValues) => Promise<void>
+  onSubmit: (values: FormValues) => Promise<void> | void
 }
 
 const ObjectiveForm = ({ initialValues, onSubmit }: Props): ReactElement => {

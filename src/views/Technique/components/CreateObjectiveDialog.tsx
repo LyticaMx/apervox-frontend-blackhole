@@ -11,13 +11,13 @@ interface Props {
   open?: boolean
   selected?: Number
   onClose?: (event?: any) => void
-  onAccept?: (objective: Target) => void
+  onAccept?: (objective: Partial<Target>) => void
 }
 
 const CreateObjectiveDialog = ({
   open = true,
   onClose = () => {},
-  onAccept
+  onAccept = () => {}
 }: Props): ReactElement => {
   const { formatMessage } = useIntl()
 
@@ -30,7 +30,9 @@ const CreateObjectiveDialog = ({
         <Typography className="leading-tight my-2">
           {formatMessage(createObjectiveDialogMessages.selectObjectiveType)}
         </Typography>
-        <ObjectiveForm onSubmit={onAccept as any} />
+        <ObjectiveForm
+          onSubmit={(values: Partial<Target>) => onAccept(values)}
+        />
       </div>
     </Dialog>
   )
