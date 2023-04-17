@@ -6,7 +6,7 @@ import { Field } from 'types/form'
 import AccordionForm from './AccordionForm'
 import {
   accountBankFormMessages,
-  objectiveFormsGeneralMessages
+  targetFormsGeneralMessages
 } from 'views/Techniques/messages'
 
 interface FormValues {
@@ -85,9 +85,9 @@ const AccountBankForm = (): ReactElement => {
       name: 'comments',
       options: {
         id: 'social-media-comments',
-        label: formatMessage(objectiveFormsGeneralMessages.comments),
+        label: formatMessage(targetFormsGeneralMessages.comments),
         placeholder: formatMessage(
-          objectiveFormsGeneralMessages.commentsPlaceholder
+          targetFormsGeneralMessages.commentsPlaceholder
         ),
         multiline: true,
         rows: 4

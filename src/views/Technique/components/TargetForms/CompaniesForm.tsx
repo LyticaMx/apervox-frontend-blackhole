@@ -7,7 +7,7 @@ import AccordionForm from './AccordionForm'
 import { useAddressForm, AddressFormValues } from './useAddressForm'
 import {
   companiesFormMessages,
-  objectiveFormsGeneralMessages
+  targetFormsGeneralMessages
 } from 'views/Techniques/messages'
 
 interface FormValues extends AddressFormValues {
@@ -38,9 +38,9 @@ const CompaniesForm = (): ReactElement => {
       section: 'comments',
       options: {
         id: 'company-comments',
-        label: formatMessage(objectiveFormsGeneralMessages.comments),
+        label: formatMessage(targetFormsGeneralMessages.comments),
         placeholder: formatMessage(
-          objectiveFormsGeneralMessages.commentsPlaceholder
+          targetFormsGeneralMessages.commentsPlaceholder
         ),
         multiline: true,
         rows: 4

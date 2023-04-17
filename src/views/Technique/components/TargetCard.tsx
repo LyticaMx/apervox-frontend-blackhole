@@ -17,9 +17,9 @@ import Checkbox from 'components/Form/Checkbox'
 import Typography from 'components/Typography'
 import Tooltip from 'components/Tooltip'
 
-import BasicInfo from './ObjectiveBasicInfo'
-import DeleteObjectiveDialog from './DeleteObjectiveDialog'
-import { objectiveCardMessages } from '../messages'
+import BasicInfo from './TargetBasicInfo'
+import DeleteTargetDialog from './DeleteTargetDialog'
+import { targetCardMessages } from '../messages'
 
 interface Props {
   data: Target
@@ -28,7 +28,7 @@ interface Props {
   onCheck: (item: Target) => void
 }
 
-const ObjectiveCard = ({
+const TargetCard = ({
   data,
   isChecked,
   onClick,
@@ -44,8 +44,8 @@ const ObjectiveCard = ({
   }
   const handleCloseDeleteDialog = (): void => setOpenDeleteDialog(false)
 
-  const handleRemoveObjective = (): void => {
-    /* Filter or call API for update objective list */
+  const handleRemoveTarget = (): void => {
+    /* Filter or call API for update target list */
     handleCloseDeleteDialog()
   }
 
@@ -58,13 +58,13 @@ const ObjectiveCard = ({
         <BasicInfo name={data.name} phoneNumber={data.phone_number} />
         <div className="flex flex-col items-start">
           <Typography variant="body2" style="semibold">
-            {`${formatMessage(objectiveCardMessages.creation)}:`}
+            {`${formatMessage(targetCardMessages.creation)}:`}
             <span className="font-normal ml-1">
               {format(new Date(data.created_at), 'dd/mm/yyyy - HH:mm:ss')}
             </span>
           </Typography>
           <Typography variant="body2" style="semibold">
-            {`${formatMessage(objectiveCardMessages.finalization)}:`}
+            {`${formatMessage(targetCardMessages.finalization)}:`}
             <span className="font-normal ml-1">
               {format(new Date(data.expires_at), 'dd/mm/yyyy - HH:mm:ss')}
             </span>
@@ -78,7 +78,7 @@ const ObjectiveCard = ({
           />
           <div className="flex">
             <Tooltip
-              content={formatMessage(objectiveCardMessages.activity)}
+              content={formatMessage(targetCardMessages.activity)}
               floatProps={{ offset: 10, arrow: true }}
               classNames={{
                 panel:
@@ -95,7 +95,7 @@ const ObjectiveCard = ({
               </IconButton>
             </Tooltip>
             <Tooltip
-              content={formatMessage(objectiveCardMessages.forms)}
+              content={formatMessage(targetCardMessages.forms)}
               floatProps={{ offset: 10, arrow: true }}
               classNames={{
                 panel:
@@ -112,7 +112,7 @@ const ObjectiveCard = ({
               </IconButton>
             </Tooltip>
             <Tooltip
-              content={formatMessage(objectiveCardMessages.history)}
+              content={formatMessage(targetCardMessages.history)}
               floatProps={{ offset: 10, arrow: true }}
               classNames={{
                 panel:
@@ -145,14 +145,14 @@ const ObjectiveCard = ({
           </div>
         </div>
       </div>
-      <DeleteObjectiveDialog
+      <DeleteTargetDialog
         open={openDeleteDialog}
-        objectivePhone={data.phone_number}
+        targetPhone={data.phone_number}
         onClose={handleCloseDeleteDialog}
-        onAccept={handleRemoveObjective}
+        onAccept={handleRemoveTarget}
       />
     </div>
   )
 }
 
-export default ObjectiveCard
+export default TargetCard

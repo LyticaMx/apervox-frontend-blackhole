@@ -8,18 +8,18 @@ import Dialog from 'components/Dialog'
 import Button from 'components/Button'
 import Typography from 'components/Typography'
 
-import { deleteObjectiveDialogMessages } from '../messages'
+import { deleteTargetDialogMessages } from '../messages'
 
 interface Props {
   open: boolean
-  objectivePhone: string
+  targetPhone: string
   onClose?: (event?: any) => void
   onAccept?: () => void
 }
 
-const DeleteObjectiveDialog = ({
+const DeleteTargetDialog = ({
   open = true,
-  objectivePhone,
+  targetPhone,
   onClose = () => {},
   onAccept = () => {}
 }: Props): ReactElement => {
@@ -32,11 +32,11 @@ const DeleteObjectiveDialog = ({
         <div className="text-center sm:mt-0">
           <InformationCircleIcon className="h-6 w-6 text-indigo-500 m-auto mb-2" />
           <Typography variant="subtitle" style="semibold">
-            {formatMessage(deleteObjectiveDialogMessages.deleteObjective)}
+            {formatMessage(deleteTargetDialogMessages.deleteTarget)}
           </Typography>
           <Typography className="mt-1 mb-2">
-            {formatMessage(deleteObjectiveDialogMessages.wantToRemove, {
-              objectivePhone
+            {formatMessage(deleteTargetDialogMessages.wantToRemove, {
+              targetPhone
             })}
           </Typography>
         </div>
@@ -55,4 +55,4 @@ const DeleteObjectiveDialog = ({
   )
 }
 
-export default DeleteObjectiveDialog
+export default DeleteTargetDialog

@@ -6,32 +6,32 @@ import { pathRoute } from 'router/routes'
 import { useTabs } from 'hooks/useTabs'
 
 import CustomTabs from './CustomTabs'
-import { objectiveInfoTabs, OBJECTIVE_INFO_TABS } from '../constants'
+import { targetInfoTabs, TARGET_INFO_TABS } from '../constants'
 import EvidenceList from './EvidenceList'
-import ObjectiveForms from './ObjectiveForms'
-import GeneralDataForm from './ObjectiveForms/GeneralDataForm'
+import TargetForms from './TargetForms'
+import GeneralDataForm from './TargetForms/GeneralDataForm'
 import { evidencesData } from 'views/Techniques/mocks'
 
 const evidenceTypes = ['audio', 'video', 'image', 'doc']
 
 const FormSection = (): ReactElement => {
   const history = useHistory()
-  const [active, setActive, Tab] = useTabs(OBJECTIVE_INFO_TABS.EVIDENCE)
-  // const { technique, objective } = useTechnique()
+  const [active, setActive, Tab] = useTabs(TARGET_INFO_TABS.EVIDENCE)
+  // const { technique, target } = useTechnique()
 
   return (
     <div id="technique-objetive-forms" className="h-full">
       <div>
         <CustomTabs
           classNames={{ container: 'my-2' }}
-          items={objectiveInfoTabs}
+          items={targetInfoTabs}
           onChange={(tabClicked) => {
-            setActive(tabClicked as OBJECTIVE_INFO_TABS)
+            setActive(tabClicked as TARGET_INFO_TABS)
           }}
           active={active}
         />
 
-        <Tab value={OBJECTIVE_INFO_TABS.EVIDENCE}>
+        <Tab value={TARGET_INFO_TABS.EVIDENCE}>
           <EvidenceList
             data={evidencesData}
             onSelectItem={(evidence) =>
@@ -42,12 +42,12 @@ const FormSection = (): ReactElement => {
           />
         </Tab>
 
-        <Tab value={OBJECTIVE_INFO_TABS.GENERAL_DATA}>
+        <Tab value={TARGET_INFO_TABS.GENERAL_DATA}>
           <GeneralDataForm />
         </Tab>
 
-        <Tab value={OBJECTIVE_INFO_TABS.FORMS}>
-          <ObjectiveForms />
+        <Tab value={TARGET_INFO_TABS.FORMS}>
+          <TargetForms />
         </Tab>
       </div>
     </div>

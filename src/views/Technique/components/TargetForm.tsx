@@ -15,9 +15,9 @@ import Switch from 'components/Form/Switch'
 import Datepicker from 'components/Form/Datepicker'
 import Typography from 'components/Typography'
 
-import { objectiveFormMessages } from '../messages'
+import { targetFormMessages } from '../messages'
 
-type ObjectiveType = 'etsi' | 'conventional'
+type TargetType = 'etsi' | 'conventional'
 
 interface FormValues {
   name: string
@@ -30,12 +30,12 @@ interface Props {
   onSubmit: (values: FormValues) => Promise<void> | void
 }
 
-const ObjectiveForm = ({ initialValues, onSubmit }: Props): ReactElement => {
-  const getMessage = useFormatMessage(objectiveFormMessages)
+const TargetForm = ({ initialValues, onSubmit }: Props): ReactElement => {
+  const getMessage = useFormatMessage(targetFormMessages)
   const getGlobalMessage = useGlobalMessage()
   const [state, toggle] = useToggle(false)
 
-  const [objectiveType, setObjectiveType] = useState<ObjectiveType>('etsi')
+  const [targetType, setTargetType] = useState<TargetType>('etsi')
   const [derivationLine, setDerivationLine] = useState<string>('')
   const [endDate, setEndDate] = useState<string>('')
   const [etsiLiid, setEtsiLiid] = useState({
@@ -58,16 +58,16 @@ const ObjectiveForm = ({ initialValues, onSubmit }: Props): ReactElement => {
               <Radio
                 label={getMessage('etsiTargets')}
                 value="etsi"
-                checked={objectiveType === 'etsi'}
-                onChange={() => setObjectiveType('etsi')}
+                checked={targetType === 'etsi'}
+                onChange={() => setTargetType('etsi')}
               />
             </Grid>
             <Grid item xs={6}>
               <Radio
                 label={getMessage('conventionalTargets')}
                 value="conventional"
-                checked={objectiveType === 'conventional'}
-                onChange={() => setObjectiveType('conventional')}
+                checked={targetType === 'conventional'}
+                onChange={() => setTargetType('conventional')}
               />
             </Grid>
           </Grid>
@@ -79,7 +79,7 @@ const ObjectiveForm = ({ initialValues, onSubmit }: Props): ReactElement => {
       type: 'text',
       name: 'name',
       options: {
-        id: 'objective-name',
+        id: 'target-name',
         label: getMessage('targetName'),
         placeholder: getMessage('targetNamePlaceholder'),
         labelSpacing: '1'
@@ -90,7 +90,7 @@ const ObjectiveForm = ({ initialValues, onSubmit }: Props): ReactElement => {
       type: 'text',
       name: 'number',
       options: {
-        id: 'objective-number',
+        id: 'target-number',
         label: getMessage('targetNumber'),
         placeholder: getMessage('targetNumberPlaceholder'),
         labelSpacing: '1'
@@ -134,10 +134,10 @@ const ObjectiveForm = ({ initialValues, onSubmit }: Props): ReactElement => {
     },
     {
       type: 'custom',
-      name: 'objectiveTypeValues',
+      name: 'targetTypeValues',
       children: (
         <div className="mt-2">
-          {objectiveType === 'etsi' ? (
+          {targetType === 'etsi' ? (
             <div className="w-full">
               <TextField
                 label="LIID"
@@ -224,4 +224,4 @@ const ObjectiveForm = ({ initialValues, onSubmit }: Props): ReactElement => {
   )
 }
 
-export default ObjectiveForm
+export default TargetForm

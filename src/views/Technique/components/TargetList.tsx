@@ -11,52 +11,52 @@ import IconButton from 'components/Button/IconButton'
 import { Target } from 'types/technique'
 import { actionsMessages } from 'globalMessages'
 
-import ObjectiveCard from './ObjectiveCard'
-import CreateObjectiveDialog from './CreateObjectiveDialog'
-import { objectiveListMessages } from '../messages'
+import TargetCard from './TargetCard'
+import CreateTargetDialog from './CreateTargetDialog'
+import { targetListMessages } from '../messages'
 
 interface Props {
   onSelectItem: (item: Target) => void
   data: Target[]
 }
 
-const ObjectiveList = ({ data, onSelectItem }: Props): ReactElement => {
+const TargetList = ({ data, onSelectItem }: Props): ReactElement => {
   let timer
 
   const [searchValue, setSearchValue] = useState<string>('')
-  const [objectivesChecked, setObjectivesChecked] = useState<string[]>([]) // Multi selección de objetivos
-  const [openObjectiveForm, setOpenObjectiveForm] = useState(false)
+  const [targetsChecked, setTargetsChecked] = useState<string[]>([]) // Multi selección de objetivos
+  const [openTargetForm, setOpenTargetForm] = useState(false)
   const { formatMessage } = useIntl()
 
   const filteredSpeakers = useMemo(() => {
     const matches = data.filter(
-      (objective) =>
-        objective.name
+      (target) =>
+        target.name
           .toUpperCase()
           .includes(searchValue.toLocaleUpperCase()) ||
-        objective.phone_number.toUpperCase().includes(searchValue.toUpperCase())
+        target.phone_number.toUpperCase().includes(searchValue.toUpperCase())
     )
 
     return matches
   }, [searchValue, data])
 
-  const handleCheckObjective = (objective: Target): void => {
+  const handleCheckTarget = (target: Target): void => {
     let newList: string[] = []
-    const alreadyChecked = objectivesChecked.some((id) => id === objective.id)
+    const alreadyChecked = targetsChecked.some((id) => id === target.id)
 
     if (alreadyChecked) {
-      newList = objectivesChecked.filter((id) => id !== objective.id)
+      newList = targetsChecked.filter((id) => id !== target.id)
     } else {
-      newList = [...objectivesChecked, objective.id]
+      newList = [...targetsChecked, target.id]
     }
 
-    setObjectivesChecked(newList)
+    setTargetsChecked(newList)
   }
 
   return (
     <div className="flex flex-col h-full">
       <Typography variant="body2" style="semibold" className="uppercase">
-        {formatMessage(objectiveListMessages.totalObjectives, {
+        {formatMessage(targetListMessages.totalTargets, {
           total: data.length
         })}
       </Typography>
@@ -76,7 +76,7 @@ const ObjectiveList = ({ data, onSelectItem }: Props): ReactElement => {
         <IconButton
           variant="contained"
           color="indigo"
-          tooltip={formatMessage(objectiveListMessages.addObjective)}
+          tooltip={formatMessage(targetListMessages.addTarget)}
         >
           <PlusCircleIcon className="h-5 w-5" />
         </IconButton>
@@ -84,32 +84,32 @@ const ObjectiveList = ({ data, onSelectItem }: Props): ReactElement => {
           variant="contained"
           color="indigo"
           className="w-5/12"
-          onClick={() => setOpenObjectiveForm(true)}
+          onClick={() => setOpenTargetForm(true)}
         >
-          {formatMessage(objectiveListMessages.addObjective)}
+          {formatMessage(targetListMessages.addTarget)}
         </Button> */}
       </div>
       <Scroller className="flex flex-col gap-2 py-2">
-        {filteredSpeakers.map((objective) => (
-          <ObjectiveCard
-            key={objective.id}
-            data={objective}
-            isChecked={objectivesChecked.some((id) => objective.id === id)}
+        {filteredSpeakers.map((target) => (
+          <TargetCard
+            key={target.id}
+            data={target}
+            isChecked={targetsChecked.some((id) => target.id === id)}
             onClick={onSelectItem}
-            onCheck={handleCheckObjective}
+            onCheck={handleCheckTarget}
           />
         ))}
       </Scroller>
-      <CreateObjectiveDialog
-        open={openObjectiveForm}
-        onClose={() => setOpenObjectiveForm(false)}
-        onAccept={(objective: Target) => {
-          console.log(objective)
-          setOpenObjectiveForm(false)
+      <CreateTargetDialog
+        open={openTargetForm}
+        onClose={() => setOpenTargetForm(false)}
+        onAccept={(target: Target) => {
+          console.log(target)
+          setOpenTargetForm(false)
         }}
       />
     </div>
   )
 }
 
-export default ObjectiveList
+export default TargetList

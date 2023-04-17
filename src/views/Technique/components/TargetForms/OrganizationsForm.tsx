@@ -6,52 +6,41 @@ import { Field, Section } from 'types/form'
 import AccordionForm from './AccordionForm'
 import { useAddressForm, AddressFormValues } from './useAddressForm'
 import {
-  laborFormMessages,
-  objectiveFormsGeneralMessages
+  targetFormsGeneralMessages,
+  organizationFormMessages
 } from 'views/Techniques/messages'
 
 interface FormValues extends AddressFormValues {
   name: string
-  job: string
   phone: string
   email: string
 }
 
-const LaborForm = (): ReactElement => {
+const OrganizationsForm = (): ReactElement => {
   const { formatMessage } = useIntl()
   const { addressFields, addressValidationSchema } = useAddressForm('address')
 
   const fields: Array<Field<FormValues | AddressFormValues>> = [
     {
       type: 'text',
-      name: 'organizationName',
+      name: 'name',
       options: {
-        id: 'labor-organization-name',
-        label: formatMessage(laborFormMessages.organizationName),
+        id: 'organization-name',
+        label: formatMessage(organizationFormMessages.organizationName),
         placeholder: formatMessage(
-          laborFormMessages.organizationNamePlaceholder
+          organizationFormMessages.organizationNamePlaceholder
         )
       },
       breakpoints: { xs: 6 }
     },
     {
       type: 'text',
-      name: 'job',
-      options: {
-        id: 'labor-company-job',
-        label: formatMessage(laborFormMessages.job),
-        placeholder: formatMessage(laborFormMessages.jobPlaceholder)
-      },
-      breakpoints: { xs: 3 }
-    },
-    {
-      type: 'text',
       name: 'email',
       options: {
-        id: 'labor-company-email',
+        id: 'organization-email',
         label: formatMessage(formMessages.email),
         placeholder: formatMessage(
-          objectiveFormsGeneralMessages.emailPlaceholder
+          targetFormsGeneralMessages.emailPlaceholder
         )
       },
       breakpoints: { xs: 3 }
@@ -60,21 +49,21 @@ const LaborForm = (): ReactElement => {
       type: 'text',
       name: 'phone',
       options: {
-        id: 'labor-company-phone',
-        label: formatMessage(objectiveFormsGeneralMessages.phone),
+        id: 'organization-phone',
+        label: formatMessage(targetFormsGeneralMessages.phone),
         placeholder: formatMessage(
-          objectiveFormsGeneralMessages.phonePlaceholder
+          targetFormsGeneralMessages.phonePlaceholder
         )
       },
       breakpoints: { xs: 3 }
     },
+
     ...addressFields
   ]
 
   const validationSchema = yup
     .object({
       name: yup.string().required(formatMessage(formMessages.required)),
-      job: yup.string().required(formatMessage(formMessages.required)),
       email: yup
         .string()
         .trim()
@@ -88,7 +77,7 @@ const LaborForm = (): ReactElement => {
     {
       name: 'address',
       title: {
-        text: formatMessage(laborFormMessages.organizationAddress),
+        text: formatMessage(organizationFormMessages.organizationAddress),
         className: 'text-primary uppercase mt-2'
       }
     }
@@ -99,8 +88,8 @@ const LaborForm = (): ReactElement => {
       <AccordionForm<FormValues | AddressFormValues>
         fields={fields}
         validationSchema={validationSchema}
-        title={formatMessage(laborFormMessages.title)}
-        itemTitle={formatMessage(laborFormMessages.itemTitle)}
+        title={formatMessage(organizationFormMessages.title).toUpperCase()}
+        itemTitle={formatMessage(organizationFormMessages.itemTitle)}
         withSections={{
           renderMainSection: true,
           sections
@@ -110,4 +99,4 @@ const LaborForm = (): ReactElement => {
   )
 }
 
-export default LaborForm
+export default OrganizationsForm

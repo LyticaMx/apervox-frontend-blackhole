@@ -5,7 +5,7 @@ import { formMessages } from 'globalMessages'
 import { Field } from 'types/form'
 import AccordionForm from './AccordionForm'
 import {
-  objectiveFormsGeneralMessages,
+  targetFormsGeneralMessages,
   vehiclesFormMessages
 } from 'views/Techniques/messages'
 
@@ -99,9 +99,9 @@ const VehiclesForm = (): ReactElement => {
       name: 'comments',
       options: {
         id: 'vehicle-comments',
-        label: formatMessage(objectiveFormsGeneralMessages.comments),
+        label: formatMessage(targetFormsGeneralMessages.comments),
         placeholder: formatMessage(
-          objectiveFormsGeneralMessages.commentsPlaceholder
+          targetFormsGeneralMessages.commentsPlaceholder
         ),
         multiline: true,
         rows: 4

@@ -8,7 +8,7 @@ import { generalDataFormMessages } from 'views/Techniques/messages'
 
 interface FormValues {
   name: string
-  objectiveNumber: string
+  targetNumber: string
   derivationLine: string
   phoneCompany: string
   endDate: string
@@ -125,7 +125,7 @@ const GeneralDataForm = ({ initialValues }: Props): ReactElement => {
 
   const validationSchema = yup.object({
     name: yup.string().required(getMessage('required')),
-    objectiveNumber: yup.string().required(getMessage('required')),
+    targetNumber: yup.string().required(getMessage('required')),
     derivationLine: yup.string().required(getMessage('required')),
     phoneCompany: yup.string().required(getMessage('required')),
     endDate: yup.string().required(getMessage('required'))
@@ -135,7 +135,7 @@ const GeneralDataForm = ({ initialValues }: Props): ReactElement => {
     () => ({
       initialValues: {
         name: initialValues?.name ?? '',
-        objectiveNumber: initialValues?.name ?? '',
+        targetNumber: initialValues?.name ?? '',
         derivationLine: initialValues?.name ?? '',
         phoneCompany: initialValues?.name ?? '',
         endDate: initialValues?.name ?? ''

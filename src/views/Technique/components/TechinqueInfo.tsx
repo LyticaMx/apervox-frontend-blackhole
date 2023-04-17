@@ -11,7 +11,7 @@ import Typography from 'components/Typography'
 import RichTextEditor from 'components/RichTextEditor'
 import Button from 'components/Button'
 
-import ObjectiveList from './ObjectiveList'
+import TargetList from './TargetList'
 import CustomTabs from './CustomTabs'
 import { techiniqueInfoTabs, TECHNIQUE_INFO_TABS } from '../constants'
 import TechniqueUpdateForm from './TechniqueUpdateForm'
@@ -20,7 +20,7 @@ import { techniqueInfoMessages } from '../messages'
 const TechniqueInfo = (): ReactElement => {
   const { targets, actions } = useTechnique()
   const descriptionRef = useRef<Editor>(null)
-  const [active, setActive, Tab] = useTabs(TECHNIQUE_INFO_TABS.OBJECTIVE)
+  const [active, setActive, Tab] = useTabs(TECHNIQUE_INFO_TABS.TARGET)
 
   const { formatMessage } = useIntl()
 
@@ -35,8 +35,8 @@ const TechniqueInfo = (): ReactElement => {
         active={active}
       />
 
-      <Tab className="flex-1 h-0" value={TECHNIQUE_INFO_TABS.OBJECTIVE}>
-        <ObjectiveList
+      <Tab className="flex-1 h-0" value={TECHNIQUE_INFO_TABS.TARGET}>
+        <TargetList
           data={targets}
           onSelectItem={(item) => {
             actions?.setTarget(item)

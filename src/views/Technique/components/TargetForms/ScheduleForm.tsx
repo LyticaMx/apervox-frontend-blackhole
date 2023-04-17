@@ -6,7 +6,7 @@ import { Field, Section } from 'types/form'
 import AccordionForm from './AccordionForm'
 import { useAddressForm, AddressFormValues } from './useAddressForm'
 import {
-  objectiveFormsGeneralMessages,
+  targetFormsGeneralMessages,
   scheduleFormMessages
 } from 'views/Techniques/messages'
 
@@ -36,9 +36,9 @@ const ScheduleForm = (): ReactElement => {
       name: 'contactPhoneNumber',
       options: {
         id: 'contact-number',
-        label: formatMessage(objectiveFormsGeneralMessages.phone),
+        label: formatMessage(targetFormsGeneralMessages.phone),
         placeholder: formatMessage(
-          objectiveFormsGeneralMessages.phonePlaceholder
+          targetFormsGeneralMessages.phonePlaceholder
         )
       },
       breakpoints: { xs: 3 }

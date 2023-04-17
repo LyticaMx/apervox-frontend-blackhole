@@ -28,7 +28,7 @@ const EvidenceList = ({ data, onSelectItem }: Props): ReactElement => {
       header: formatMessage(evidenceListMessages.eventNumber).toUpperCase()
     },
     {
-      accessorKey: 'number_objective',
+      accessorKey: 'number_target',
       header: formatMessage(evidenceListMessages.targetNumber).toUpperCase()
     },
     {

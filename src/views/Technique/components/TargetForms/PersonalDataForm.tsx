@@ -7,14 +7,14 @@ import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
 import Typography from 'components/Typography'
 import { useAddressForm, AddressFormValues } from './useAddressForm'
 import {
-  objectiveFormsGeneralMessages,
+  targetFormsGeneralMessages,
   personalDataFormMessages
 } from 'views/Techniques/messages'
 import { useIntl } from 'react-intl'
 
 interface FormValues extends AddressFormValues {
   name: string
-  objectiveNumber: string
+  targetNumber: string
   gender: string
   birthdate: string
   age: string
@@ -51,7 +51,7 @@ const PersonalDataForm = ({ initialValues }: Props): ReactElement => {
         id: 'personal-data-phone',
         label: getMessage('targetPhone'),
         placeholder: formatMessage(
-          objectiveFormsGeneralMessages.phonePlaceholder
+          targetFormsGeneralMessages.phonePlaceholder
         )
       },
       breakpoints: { xs: 3 }
@@ -148,7 +148,7 @@ const PersonalDataForm = ({ initialValues }: Props): ReactElement => {
     () => ({
       initialValues: {
         name: initialValues?.name ?? '',
-        objectiveNumber: initialValues?.objectiveNumber ?? '',
+        targetNumber: initialValues?.targetNumber ?? '',
         gender: initialValues?.gender ?? '',
         birthdate: initialValues?.birthdate ?? '',
         age: initialValues?.age ?? '',
