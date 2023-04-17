@@ -21,7 +21,7 @@ export const useActions = (
   state: UserContextState,
   dispatch
 ): UserContextActions => {
-  const { usersPagination, dateFilter, searchFilter } = state
+  const { usersPagination, dateFilter, searchFilter, staticFilter } = state
   const getUsersService = useApi({ endpoint: 'users', method: 'get' })
   const createUserService = useApi({ endpoint: 'users', method: 'post' })
   const updateUserService = useApi({ endpoint: 'users', method: 'put' })
@@ -132,6 +132,13 @@ export const useActions = (
         actions.setDateFilters({
           start_time: params?.start_time ?? dateFilter.start_time,
           end_time: params?.end_time ?? dateFilter.end_time
+        })
+      )
+
+      dispatch(
+        actions.setStaticFilters({
+          sessions: params?.sessions ?? staticFilter.sessions,
+          status: params?.status ?? staticFilter.status
         })
       )
     } catch (e) {
