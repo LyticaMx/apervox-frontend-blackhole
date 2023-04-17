@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ReactElement } from 'react'
 
 import TechniqueList from './components/TechniqueList'
