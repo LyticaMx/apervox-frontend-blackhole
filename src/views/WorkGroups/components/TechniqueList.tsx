@@ -22,7 +22,7 @@ import useTableColumns from 'hooks/useTableColumns'
 import { generalMessages } from 'globalMessages'
 
 interface Props {
-  data: Technique[]
+  data: any[]
   onClick?: (item: Technique) => void
   onDelete?: (item: Technique) => void
 }

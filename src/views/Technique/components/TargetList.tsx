@@ -31,9 +31,7 @@ const TargetList = ({ data, onSelectItem }: Props): ReactElement => {
   const filteredSpeakers = useMemo(() => {
     const matches = data.filter(
       (target) =>
-        target.name
-          .toUpperCase()
-          .includes(searchValue.toLocaleUpperCase()) ||
+        target.name.toUpperCase().includes(searchValue.toLocaleUpperCase()) ||
         target.phone_number.toUpperCase().includes(searchValue.toUpperCase())
     )
 
@@ -103,8 +101,7 @@ const TargetList = ({ data, onSelectItem }: Props): ReactElement => {
       <CreateTargetDialog
         open={openTargetForm}
         onClose={() => setOpenTargetForm(false)}
-        onAccept={(target: Target) => {
-          console.log(target)
+        onAccept={() => {
           setOpenTargetForm(false)
         }}
       />

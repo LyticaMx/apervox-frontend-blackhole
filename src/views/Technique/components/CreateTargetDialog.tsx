@@ -13,7 +13,7 @@ interface Props {
   open?: boolean
   selected?: Number
   onClose?: (event?: any) => void
-  onAccept?: (target: Partial<Target>) => void
+  onAccept?: (target: Partial<Target> | Target) => void
 }
 
 const CreateTargetDialog = ({

@@ -2,7 +2,7 @@ import { Actions, State } from './types'
 
 import { actions } from './constants'
 import { Target, Technique } from 'types/technique'
-import { objectiveData } from 'views/Techniques/mocks'
+import { targetData } from 'views/Techniques/mocks'
 
 const useActions = (state: State, dispatch): Actions => {
   const setTechnique = (payload: Technique): void => {
@@ -13,7 +13,7 @@ const useActions = (state: State, dispatch): Actions => {
     dispatch(actions.setTarget(payload))
   }
   const getTargets = (): void => {
-    dispatch(actions.getTargets(objectiveData))
+    dispatch(actions.getTargets(targetData))
   }
 
   return {
