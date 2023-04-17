@@ -296,115 +296,121 @@ const Table = <DataType,>({
           style={{ maxHeight }}
           className="overflow-auto transition-[max-height] duration-300"
         >
-          {table.getRowModel().rows.length ? (
-            <table className="min-w-full divide-y divide-gray-300">
-              <thead className="bg-gray-50 sticky top-0">
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <tr key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => {
-                      return (
-                        <th
-                          className="py-3.5 px-3 text-left text-sm font-semibold text-gray-900 whitespace-nowrap uppercase"
-                          key={header.id}
-                          colSpan={header.colSpan}
-                        >
-                          {header.isPlaceholder ? null : (
-                            <div
-                              onClick={header.column.getToggleSortingHandler()}
-                              className={clsx(
-                                (!!manualSorting ||
-                                  !!header.column.columnDef.meta) &&
-                                  'cursor-pointer flex select-none items-center'
-                              )}
-                            >
-                              {flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )}
-                              {header.column.columnDef.header !== ' ' &&
-                              header.column.columnDef.header !== '' &&
-                              header.column.columnDef.enableSorting !== false
-                                ? getOrderIcon(
-                                    header.column.getIsSorted() as string
-                                  )
-                                : ''}
-                              {header.column.columnDef.meta?.columnFilters ? (
-                                <ColumnFilter
-                                  onChange={
-                                    header.column.columnDef.meta.columnFilters
-                                      .onChange
-                                  }
-                                  options={
-                                    header.column.columnDef.meta.columnFilters
-                                      .options
-                                  }
-                                  optionsTitle={
-                                    header.column.columnDef.meta.columnFilters
-                                      .optionsName
-                                  }
-                                />
-                              ) : null}
-                            </div>
-                          )}
-                        </th>
-                      )
-                    })}
-                  </tr>
-                ))}
-              </thead>
-              <tbody className="divide-y divide-gray-200 bg-white">
-                {paddingTop > 0 && (
-                  <tr>
-                    <td style={{ height: `${paddingTop}px` }} />
-                  </tr>
-                )}
-                {virtualRows.map((virtualRow) => {
-                  const row = rows[virtualRow.index]
-
-                  return (
-                    <tr
-                      key={row.id}
-                      ref={virtualRow.measureRef}
-                      className={clsx(
-                        onRowClicked && 'cursor-pointer hover:bg-slate-100'
-                      )}
-                      onClick={(event: any) => {
-                        event.stopPropagation()
-                        if (onRowClicked) {
-                          onRowClicked(row.original, event)
-                        }
-                      }}
-                    >
-                      {row.getVisibleCells().map((cell) => {
-                        return (
-                          <td
-                            key={cell.id}
+          <table className="min-w-full divide-y divide-gray-300">
+            <thead className="bg-gray-50 sticky top-0">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <th
+                        className="py-3.5 px-3 text-left text-sm font-semibold text-gray-900 whitespace-nowrap uppercase"
+                        key={header.id}
+                        colSpan={header.colSpan}
+                      >
+                        {header.isPlaceholder ? null : (
+                          <div
+                            onClick={header.column.getToggleSortingHandler()}
                             className={clsx(
-                              'whitespace-nowrap py-4 px-3 text-sm font-medium text-gray-900',
-                              rowPadding[rowConfig?.paddingSize ?? 'md'],
-                              rowConfig?.className
+                              (!!manualSorting ||
+                                !!header.column.columnDef.meta) &&
+                                'cursor-pointer flex select-none items-center'
                             )}
                           >
                             {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext()
+                              header.column.columnDef.header,
+                              header.getContext()
                             )}
-                          </td>
-                        )
-                      })}
+                            {header.column.columnDef.header !== ' ' &&
+                            header.column.columnDef.header !== '' &&
+                            header.column.columnDef.enableSorting !== false
+                              ? getOrderIcon(
+                                  header.column.getIsSorted() as string
+                                )
+                              : ''}
+                            {header.column.columnDef.meta?.columnFilters ? (
+                              <ColumnFilter
+                                onChange={
+                                  header.column.columnDef.meta.columnFilters
+                                    .onChange
+                                }
+                                options={
+                                  header.column.columnDef.meta.columnFilters
+                                    .options
+                                }
+                                optionsTitle={
+                                  header.column.columnDef.meta.columnFilters
+                                    .optionsName
+                                }
+                              />
+                            ) : null}
+                          </div>
+                        )}
+                      </th>
+                    )
+                  })}
+                </tr>
+              ))}
+            </thead>
+            <tbody className="divide-y divide-gray-200 bg-white">
+              {table.getRowModel().rows.length ? (
+                <>
+                  {paddingTop > 0 && (
+                    <tr>
+                      <td style={{ height: `${paddingTop}px` }} />
                     </tr>
-                  )
-                })}
-                {paddingBottom > 0 && (
-                  <tr>
-                    <td style={{ height: `${paddingBottom}px` }} />
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          ) : (
-            <NoData />
-          )}
+                  )}
+                  {virtualRows.map((virtualRow) => {
+                    const row = rows[virtualRow.index]
+
+                    return (
+                      <tr
+                        key={row.id}
+                        ref={virtualRow.measureRef}
+                        className={clsx(
+                          onRowClicked && 'cursor-pointer hover:bg-slate-100'
+                        )}
+                        onClick={(event: any) => {
+                          event.stopPropagation()
+                          if (onRowClicked) {
+                            onRowClicked(row.original, event)
+                          }
+                        }}
+                      >
+                        {row.getVisibleCells().map((cell) => {
+                          return (
+                            <td
+                              key={cell.id}
+                              className={clsx(
+                                'whitespace-nowrap py-4 px-3 text-sm font-medium text-gray-900',
+                                rowPadding[rowConfig?.paddingSize ?? 'md'],
+                                rowConfig?.className
+                              )}
+                            >
+                              {flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext()
+                              )}
+                            </td>
+                          )
+                        })}
+                      </tr>
+                    )
+                  })}
+                  {paddingBottom > 0 && (
+                    <tr>
+                      <td style={{ height: `${paddingBottom}px` }} />
+                    </tr>
+                  )}
+                </>
+              ) : (
+                <tr>
+                  <td colSpan={enhancedColumns.length}>
+                    <NoData />
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
       <Pagination
