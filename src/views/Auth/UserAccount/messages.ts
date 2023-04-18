@@ -51,6 +51,10 @@ export const userInfoMessages = defineMessages({
   submitButton: {
     id: 'views.Auth.UserAccount.UserInfo.submitButton',
     defaultMessage: 'Actualizar datos'
+  },
+  success: {
+    id: 'views.Auth.UserAccount.UserInfo.success',
+    defaultMessage: 'Datos actualizados correctamente'
   }
 })
 
@@ -83,5 +87,9 @@ export const changePasswordMessages = defineMessages({
   submitButton: {
     id: 'views.Auth.UserAccount.ChangePassword.submitButton',
     defaultMessage: 'Actualizar contraseña'
+  },
+  success: {
+    id: 'views.Auth.UserAccount.ChangePassword.success',
+    defaultMessage: 'Contraseña actualizada correctamente'
   }
 })

@@ -38,7 +38,7 @@ const AuthProvider = ({ children }: Props): ReactElement => {
     method: 'post'
   })
 
-  const changePasswordService = useApi({
+  const updateProfileService = useApi({
     endpoint: 'me',
     method: 'put'
   })
@@ -64,8 +64,6 @@ const AuthProvider = ({ children }: Props): ReactElement => {
     method: 'post'
   })
   */
-
-  const updateProfileService = useApi({ endpoint: '/profile', method: 'put' })
 
   const signIn = async (params: SignIn): Promise<SignedIn> => {
     try {
@@ -95,7 +93,7 @@ const AuthProvider = ({ children }: Props): ReactElement => {
           profile: {
             id,
             names: resProfile.data?.profile?.names ?? '',
-            lastName: resProfile.data?.profile?.last_names ?? '',
+            lastName: resProfile.data?.profile?.last_name ?? '',
             username: resProfile.data?.username ?? '',
             since: `${String(
               format(
@@ -173,7 +171,7 @@ const AuthProvider = ({ children }: Props): ReactElement => {
 
       if (!id) return false
 
-      await changePasswordService({
+      await updateProfileService({
         body: {
           password: newPassword,
           has_logged: true
@@ -225,31 +223,36 @@ const AuthProvider = ({ children }: Props): ReactElement => {
     }
   }
 
-  const updateProfile = async (newProfile: FormProfile): Promise<void> => {
+  const updateProfile = async (newProfile: FormProfile): Promise<boolean> => {
     try {
       const res: any = await updateProfileService({
-        queryString: `?id=${String(auth.profile.id)}`,
         body: {
-          first_name: newProfile.name,
-          fathers_name: newProfile.fathersName,
-          mothers_name: newProfile.mothersName
+          company: {
+            position: newProfile.position,
+            phone_extension: newProfile.phoneExtension
+          },
+          email: newProfile.email
         }
       })
 
       if (res.data) {
         const profile = {
           ...auth.profile,
-          name: res.data.first_name,
-          fathers_name: res.data.fathers_name,
-          mothers_name: res.data.mothers_name
+          position: res.data.company.position,
+          phone: res.data.company.phone_extension,
+          email: res.data.email
         }
 
         const newAuth = { ...auth, profile }
 
         setAuth(newAuth)
         setItem('profile', profile)
+        return true
       }
-    } catch {}
+      return false
+    } catch {
+      return false
+    }
   }
 
   const killSession = (hideNotification?: boolean): void => {

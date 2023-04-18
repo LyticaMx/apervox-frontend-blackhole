@@ -79,7 +79,8 @@ const RestorePassword = (): ReactElement => {
         label: formatMessage(messages.newPassword),
         placeholder: formatMessage(messages.passwordPlaceholder),
         labelClassname: 'text-white',
-        passwordStrength: true
+        passwordStrength: true,
+        passwordStrengthScoreWordClassName: '!text-white'
       }
     },
     {

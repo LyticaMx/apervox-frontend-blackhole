@@ -26,6 +26,7 @@ export interface Props {
   inputProps?: InputHTMLAttributes<HTMLInputElement>
   labelClassname?: string
   passwordStrength?: boolean
+  passwordStrengthScoreWordClassName?: string
 }
 
 const PasswordField = ({
@@ -39,6 +40,7 @@ const PasswordField = ({
   labelClassname,
   inputProps = {},
   passwordStrength,
+  passwordStrengthScoreWordClassName = '',
   ...props
 }: Props): ReactElement => {
   const [toggleView, setToggleView] = useState<boolean>(false)
@@ -89,7 +91,7 @@ const PasswordField = ({
               formatMessage(passwordFieldMessages.good),
               formatMessage(passwordFieldMessages.strong)
             ]}
-            scoreWordClassName="!text-white"
+            scoreWordClassName={clsx(passwordStrengthScoreWordClassName)}
             shortScoreWord={null}
           />
         )}
