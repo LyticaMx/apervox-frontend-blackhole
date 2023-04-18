@@ -13,6 +13,7 @@ import Form from 'components/Form'
 import ForgotPasswordDialog from './components/ForgotPasswordDialog'
 import CountdownRing from 'components/CountdownRing'
 import WindowControl from 'components/Layout/WindowControl'
+import { pathRoute } from 'router/routes'
 
 interface FormValues {
   user: string
@@ -42,8 +43,14 @@ const SignIn = (): ReactElement => {
         password: values.password
       })
 
-      if (successLogin) {
-        history.push('/tablero-de-hablantes')
+      if (successLogin?.successLogin) {
+        if (successLogin.firstLogin) {
+          history.push(pathRoute.auth.userAccount)
+          // TODO: Cambiar cuando David libere los cambios de hasLogged
+          // history.push(pathRoute.auth.restorePassword, { hasLogged: false })
+        } else {
+          history.push(pathRoute.auth.userAccount)
+        }
       } else {
         setLockLogin(true)
       }

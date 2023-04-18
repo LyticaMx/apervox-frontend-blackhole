@@ -1,5 +1,9 @@
 import { FormProfile, Profile } from './profile'
 
+export interface SignedIn {
+  successLogin: boolean
+  firstLogin: boolean
+}
 export interface Role {
   id: number
   name: string
@@ -45,10 +49,13 @@ export interface RestorePassword {
 export interface AuthContextType {
   auth: Auth
   actions?: {
-    signIn: (params: SignIn) => Promise<boolean>
+    signIn: (params: SignIn) => Promise<SignedIn>
     signUp: (params: SignUp) => Promise<boolean>
-    forgotPassword: (email: string) => Promise<boolean>
-    restorePassword: (params: RestorePassword) => Promise<boolean>
+    verifyPassword: (password: string) => Promise<boolean>
+    changePassword: (
+      oldPassword: string,
+      newPassword: string
+    ) => Promise<boolean>
     signOut: () => Promise<boolean>
     updateProfile: (profile: FormProfile) => Promise<void>
     refreshToken: () => Promise<boolean>
