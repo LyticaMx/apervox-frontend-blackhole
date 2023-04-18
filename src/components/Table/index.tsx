@@ -66,7 +66,7 @@ interface Props<T> {
   manualLimit?: PaginationLimit
   actionsForSelectedItems?: Array<ActionForSelectedItems<T>>
   rowConfig?: {
-    paddingSize?: 'sm' | 'md'
+    paddingSize?: 'xs' | 'sm' | 'md'
     className?: string
   }
 }
@@ -377,14 +377,15 @@ const Table = <DataType,>({
                           }
                         }}
                       >
-                        {row.getVisibleCells().map((cell) => {
+                        {row.getVisibleCells().map((cell, index) => {
                           return (
                             <td
                               key={cell.id}
                               className={clsx(
                                 'whitespace-nowrap py-4 px-3 text-sm font-medium text-gray-900',
                                 rowPadding[rowConfig?.paddingSize ?? 'xs'],
-                                rowConfig?.className
+                                rowConfig?.className,
+                                index === 0 && withCheckbox && 'text-center'
                               )}
                             >
                               {flexRender(
