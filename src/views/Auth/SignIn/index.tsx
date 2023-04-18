@@ -45,9 +45,7 @@ const SignIn = (): ReactElement => {
 
       if (successLogin?.successLogin) {
         if (successLogin.firstLogin) {
-          history.push(pathRoute.auth.userAccount)
-          // TODO: Cambiar cuando David libere los cambios de hasLogged
-          // history.push(pathRoute.auth.restorePassword, { hasLogged: false })
+          history.push(pathRoute.auth.restorePassword, { hasLogged: false })
         } else {
           history.push(pathRoute.auth.userAccount)
         }

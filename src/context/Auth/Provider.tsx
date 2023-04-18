@@ -16,6 +16,7 @@ import { apiMessages } from 'globalMessages'
 import { useLoader } from 'context/Loader'
 import { AuthContext, initialState } from './context'
 import { format } from 'date-fns'
+import { ResponseData } from 'types/api'
 
 interface Props {
   children: ReactNode
@@ -148,9 +149,11 @@ const AuthProvider = ({ children }: Props): ReactElement => {
 
   const verifyPassword = async (password: string): Promise<boolean> => {
     try {
-      await verifyPasswordService({ body: { password } })
+      const response: ResponseData = await verifyPasswordService({
+        body: { password }
+      })
 
-      return true
+      return response.data.success
     } catch {
       return false
     }

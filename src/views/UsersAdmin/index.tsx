@@ -45,6 +45,10 @@ const UsersAdmin = (): ReactElement => {
 
         <CreateUserDrawer
           open={openCreateDrawer}
+          onCreated={(password) => {
+            setNewPassword(password)
+            toggleOpenCreateDrawer()
+          }}
           onClose={toggleOpenCreateDrawer}
         />
 
