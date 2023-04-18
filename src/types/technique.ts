@@ -38,13 +38,13 @@ export interface Technique {
   expires_at: string
   registered_by: string
   time_on_platform: string
-  total_objective: number
+  total_target: number
   priority: Priority
   turn_of_attention: Turn
   status: Status
 }
 
-export interface Objective {
+export interface Target {
   id: string
   name: string
   phone_number: string
@@ -58,7 +58,7 @@ export interface Objective {
 export interface Evidence {
   id: string
   number_event: string
-  number_objective: string
+  number_target: string
   number_origin: string
   created_at: string
   expires_at: string

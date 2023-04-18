@@ -1,21 +1,15 @@
 import { useState, ReactElement } from 'react'
-import { useHistory } from 'react-router-dom'
+
 import { format } from 'date-fns'
 import { SortingState, ColumnDef } from '@tanstack/react-table'
 
 import { TrashIcon } from '@heroicons/react/24/outline'
-
-import { pathRoute } from 'router/routes'
-
-import { useTechniques } from 'context/Techniques'
-import { useTechnique } from 'context/Technique'
 
 import Table from 'components/Table'
 import Tooltip from 'components/Tooltip'
 import PriorityLabel from 'components/Priority/PriorityLabel'
 import StatusTag from 'components/Status/StatusTag'
 import IconButton from 'components/Button/IconButton'
-import ActionNotification from 'components/Dialog/ActionNotification'
 
 import { NonEmptyArray } from 'types/utils'
 import { Technique, Turn } from 'types/technique'
@@ -27,42 +21,22 @@ import useTableColumns from 'hooks/useTableColumns'
 
 import { generalMessages } from 'globalMessages'
 
-import DeleteTechinqueDialog, { EliminationType } from './DeleteTechinqueDialog'
-import { techniquesDeleteDialogMessages } from '../messages'
-
-const TechniqueList = (): ReactElement => {
-  const history = useHistory()
-  const { techniques } = useTechniques()
-  const { actions } = useTechnique()
+interface Props {
+  data: any[]
+  onClick?: (item: Technique) => void
+  onDelete?: (item: Technique) => void
+}
+const TechniqueList = (props: Props): ReactElement => {
   const getMessage = useFormatMessage(generalMessages)
-  const getDeleteMessage = useFormatMessage(techniquesDeleteDialogMessages)
 
   const [sortingState, setSortingState] = useState<SortingState>([])
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
-  const [openActionNotification, setOpenActionNotification] = useState(false)
-  const [techinqueToDelete, setTechinqueToDelete] = useState<string | null>(
-    null
-  )
-
-  const handleOpenDeleteDialog = (e): void => {
-    e.preventDefault()
-    setOpenDeleteDialog(true)
-  }
-  const handleCloseDeleteDialog = (): void => {
-    setOpenDeleteDialog(false)
-    setTechinqueToDelete(null)
-  }
-
-  const handleDeleteTechinque = (eliminationType: EliminationType): void => {
-    setOpenDeleteDialog(false)
-    setOpenActionNotification(true)
-    console.log('techinque_id: ', techinqueToDelete, eliminationType)
-  }
 
   const handleClick = (item: Technique): void => {
-    actions?.setTechnique(item)
-    history.push(pathRoute.technique)
+    if (props.onClick) {
+      props.onClick(item)
+    }
   }
+
   const normalModeColumns: NonEmptyArray<ColumnDef<Technique>> = [
     {
       accessorKey: 'id',
@@ -120,15 +94,13 @@ const TechniqueList = (): ReactElement => {
       }
     },
     {
-      accessorKey: 'total_target',
-      header: getMessage('totalTarget')
+      accessorKey: 'total_objective',
+      header: getMessage('totalObjective')
     },
     {
       accessorKey: 'id',
       header: getMessage('action'),
-      cell: ({ getValue }) => {
-        const id = getValue<string>()
-
+      cell: ({ row }) => {
         return (
           <div className="flex items-center justify-center">
             <Tooltip
@@ -144,8 +116,9 @@ const TechniqueList = (): ReactElement => {
               <IconButton
                 onClick={(e) => {
                   e?.stopPropagation()
-                  handleOpenDeleteDialog(e)
-                  setTechinqueToDelete(id)
+                  if (props.onDelete) {
+                    props.onDelete(row.original)
+                  }
                 }}
                 className="text-muted hover:text-primary"
               >
@@ -164,7 +137,7 @@ const TechniqueList = (): ReactElement => {
     <>
       <Table
         columns={columns}
-        data={techniques}
+        data={props.data}
         className="overflow-x-auto shadow rounded-lg"
         manualSorting={{
           onSortingChange: setSortingState,
@@ -186,16 +159,6 @@ const TechniqueList = (): ReactElement => {
           }
         ]}
         onRowClicked={handleClick}
-      />
-      <DeleteTechinqueDialog
-        open={openDeleteDialog}
-        onClose={handleCloseDeleteDialog}
-        onAccept={handleDeleteTechinque}
-      />
-      <ActionNotification
-        open={openActionNotification}
-        title={getDeleteMessage('title')}
-        onAccept={() => setOpenActionNotification(false)}
       />
     </>
   )
