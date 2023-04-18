@@ -31,7 +31,7 @@ const PriorityLabel = ({
       <div
         className={clsx(
           badgeClassName,
-          'rounded-full mr-2 w-4 h-4',
+          'rounded-full mr-2 w-3 h-3',
           `bg-${colorByPriority[value]}`
         )}
       />

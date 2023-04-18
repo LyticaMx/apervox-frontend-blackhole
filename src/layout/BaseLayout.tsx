@@ -67,10 +67,8 @@ const BaseLayout = ({ children }: Layout): ReactElement => {
         <div className="absolute inset-0 ml-14 mt-11 flex flex-col flex-1 overflow-y-auto">
           <main className="flex-1 bg-background">
             <div className="py-6">
-              <div className="mx-auto px-4 sm:px-6 md:px-8">
-                <div className="py-4">
-                  <div className="rounded-lg">{children}</div>
-                </div>
+              <div className="mx-auto px-4 sm:px-6 md:px-8 py-4">
+                {children}
               </div>
             </div>
           </main>

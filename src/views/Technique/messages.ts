@@ -1,61 +1,5 @@
 import { defineMessages } from 'react-intl'
 
-export const techniquesMessages = defineMessages({
-  title: {
-    id: 'views.Techniques.title',
-    defaultMessage: 'Técnicas'
-  },
-  subtitle: {
-    id: 'views.Techniques.subtitle',
-    defaultMessage: 'Técnicas existentes en la plataforma'
-  },
-  button: {
-    id: 'views.Techniques.button',
-    defaultMessage: 'Agregar técnica'
-  }
-})
-
-export const techniquesDeleteDialogMessages = defineMessages({
-  title: {
-    id: 'views.techniques.deleteDialog.title',
-    defaultMessage: 'Eliminar técnica'
-  },
-  message: {
-    id: 'views.techniques.deleteDialog.message',
-    defaultMessage:
-      '¿Qué tipo de eliminación te gustaría realizar a esta técnica?'
-  },
-  removeCompletely: {
-    id: 'views.techniques.deleteDialog.removeCompletely',
-    defaultMessage: 'Eliminar completamente la técnica'
-  },
-  removeOnlyFiles: {
-    id: 'views.techniques.deleteDialog.removeOnlyFiles',
-    defaultMessage: 'Eliminar únicamente archivos'
-  },
-  hazardConfirmation: {
-    id: 'views.techniques.deleteDialog.hazardConfirmation',
-    defaultMessage:
-      'Acepto y comprendo los riesgos legales y de autorías derivados de la acción de eliminar el registro.'
-  },
-  passwordConfirmMessage: {
-    id: 'views.techniques.deleteDialog.passwordConfirmMessage',
-    defaultMessage: 'Ingresa tu contraseña para validar la eliminación.'
-  }
-})
-
-export const createTechniqueDrawerMessages = defineMessages({
-  addTechnique: {
-    id: 'views.techniques.CreateTechniqueDrawer.addTechnique',
-    defaultMessage: 'Agregar técnica'
-  },
-  completeFields: {
-    id: 'views.techniques.CreateTechniqueDrawer.completeFields',
-    defaultMessage:
-      'Completa los siguientes campos para crear una nueva técnica.'
-  }
-})
-
 export const createTargetDialogMessages = defineMessages({
   addTarget: {
     id: 'views.techniques.CreateTargetDialog.addTarget',
@@ -234,25 +178,6 @@ export const targetFormsGeneralMessages = defineMessages({
   phonePlaceholder: {
     id: 'views.techniques.LaborForm.phonePlaceholder',
     defaultMessage: 'Ej. número a 10 dígitos'
-  }
-})
-
-export const biometricFormMessages = defineMessages({
-  title: {
-    id: 'views.techniques.BiometricForm.title',
-    defaultMessage: 'Datos biométricos'
-  },
-  photos: {
-    id: 'views.techniques.BiometricForm.photos',
-    defaultMessage: 'Fotografías'
-  },
-  fingerprints: {
-    id: 'views.techniques.BiometricForm.fingerprints',
-    defaultMessage: 'Huellas dactilares'
-  },
-  voiceprints: {
-    id: 'views.techniques.BiometricForm.voiceprints',
-    defaultMessage: 'Huellas de voz'
   }
 })
 
@@ -523,7 +448,7 @@ export const organizationFormMessages = defineMessages({
 export const personalDataFormMessages = defineMessages({
   title: {
     id: 'views.techniques.PersonalDataForm.title',
-    defaultMessage: 'Datos personales y domicilio'
+    defaultMessage: 'Datos personales, biométricos y domicilio'
   },
   targetName: {
     id: 'views.techniques.PersonalDataForm.targetName',
@@ -728,37 +653,6 @@ export const socialMediaFormMessages = defineMessages({
   }
 })
 
-export const socialCircleFormMessages = defineMessages({
-  title: {
-    id: 'views.techniques.SocialCircleForm.title',
-    defaultMessage: 'Circulo social'
-  },
-  itemTitle: {
-    id: 'views.techniques.SocialCircleForm.itemTitle',
-    defaultMessage: 'Persona'
-  },
-  name: {
-    id: 'views.techniques.SocialCircleForm.name',
-    defaultMessage: 'Nombre'
-  },
-  namePlaceholder: {
-    id: 'views.techniques.SocialCircleForm.namePlaceholder',
-    defaultMessage: 'Ej. Pedro Picapiedra'
-  },
-  activity: {
-    id: 'views.techniques.SocialCircleForm.activity',
-    defaultMessage: 'Actividad'
-  },
-  activityPlaceholder: {
-    id: 'views.techniques.SocialCircleForm.activityPlaceholder',
-    defaultMessage: 'Ej. Extracción de cantera'
-  },
-  address: {
-    id: 'views.techniques.SocialCircleForm.address',
-    defaultMessage: 'Dirección'
-  }
-})
-
 export const scheduleFormMessages = defineMessages({
   title: {
     id: 'views.techniques.ScheduleForm.title',
@@ -918,11 +812,11 @@ export const techniqueInfoMessages = defineMessages({
   },
   subtitle: {
     id: 'views.techniques.TechniqueInfo.subtitle',
-    defaultMessage: 'Espacio que indica de que trata la técnica en curso-'
+    defaultMessage: 'Espacio que indica de que trata la técnica en curso.'
   },
   saveDescription: {
     id: 'views.techniques.TechniqueInfo.saveDescription',
-    defaultMessage: 'Guardar descripción'
+    defaultMessage: 'Guardar'
   },
   configuration: {
     id: 'views.techniques.TechniqueInfo.configuration',

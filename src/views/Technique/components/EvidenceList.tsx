@@ -1,18 +1,16 @@
 import { useState, ReactElement } from 'react'
 import { SortingState } from '@tanstack/react-table'
 import { format } from 'date-fns'
+import { useIntl } from 'react-intl'
 import clsx from 'clsx'
-
 import { StarIcon, TrashIcon } from '@heroicons/react/24/outline'
 
+import { useGlobalMessage } from 'hooks/useIntl'
+import useTableColumns from 'hooks/useTableColumns'
+import { Evidence, EvidenceClasification, EvidenceTag } from 'types/technique'
 import Table from 'components/Table'
 
-import { Evidence, EvidenceClasification, EvidenceTag } from 'types/technique'
-
-import useTableColumns from 'hooks/useTableColumns'
-import { useIntl } from 'react-intl'
 import { evidenceListMessages } from '../messages'
-import { useGlobalMessage } from 'hooks/useIntl'
 
 interface Props {
   data: Evidence[]
@@ -174,26 +172,8 @@ const EvidenceList = ({ data, onSelectItem }: Props): ReactElement => {
       accessorKey: 'type',
       header: formatMessage(evidenceListMessages.type).toUpperCase(),
       cell: ({ getValue }) => {
-        let type = ''
-
-        switch (getValue()) {
-          case 0:
-            type = 'Audio'
-            break
-          case 1:
-            type = 'Video'
-            break
-          case 2:
-            type = 'Imagen'
-            break
-          case 3:
-            type = 'Documento'
-            break
-
-          default:
-            type = 'Audio'
-            break
-        }
+        const types = ['Audio', 'Video', 'Imagen', 'Documento']
+        const type = types[getValue<number>()] ?? types[0]
 
         return type
       }
