@@ -1,5 +1,4 @@
-import { useState, useEffect, ReactElement } from 'react'
-import { SortingState } from '@tanstack/react-table'
+import { ReactElement } from 'react'
 import { format } from 'date-fns'
 import { useFormatMessage } from 'hooks/useIntl'
 import useTableColumns from 'hooks/useTableColumns'
@@ -18,7 +17,7 @@ import Switch from 'components/Form/Switch'
 import Tooltip from 'components/Tooltip'
 import StatusTag from 'components/Status/StatusTag'
 import { Status } from 'types/status'
-import { WorkGroup, WorkGroupTechniques } from 'types/workgroup'
+import { WorkGroup } from 'types/workgroup'
 import * as helpers from './helpers'
 
 interface Props {
@@ -27,21 +26,9 @@ interface Props {
 
 const WorkGroupList = ({ handleClickOnHistory }: Props): ReactElement => {
   const getMessage = useFormatMessage(generalMessages)
-  const [sortingState, setSortingState] = useState<SortingState>([])
-  const { workGroups, actions } = useWorkGroups()
-
-  useEffect(() => {
-    // TODO: remove this when backend is ready
-    if (sortingState.length > 0) {
-      actions?.getWorkGroups(sortingState)
-    }
-  }, [sortingState])
+  const { workGroups, actions, workGroupsPagination } = useWorkGroups()
 
   const columns = useTableColumns<WorkGroup>(() => [
-    {
-      accessorKey: 'id',
-      header: 'ID'
-    },
     {
       accessorKey: 'name',
       header: getMessage('name')
@@ -65,10 +52,9 @@ const WorkGroupList = ({ handleClickOnHistory }: Props): ReactElement => {
       header: getMessage('users')
     },
     {
-      accessorKey: 'techniques',
       header: getMessage('techniques'),
-      cell: ({ getValue }) => {
-        const techniques = getValue<WorkGroupTechniques>()
+      cell: () => {
+        const techniques = []
 
         return (
           <div className="flex items-center justify-start">
@@ -188,8 +174,8 @@ const WorkGroupList = ({ handleClickOnHistory }: Props): ReactElement => {
       data={workGroups}
       className="overflow-x-auto shadow rounded-lg flex-1"
       manualSorting={{
-        onSortingChange: setSortingState,
-        sorting: sortingState
+        onSortingChange: (sort) => actions?.getWorkGroups({ sort }),
+        sorting: workGroupsPagination.sort
       }}
       onRowClicked={(row) => {
         console.log(`onSelectWorkGroup(${row.id})`)
@@ -197,6 +183,17 @@ const WorkGroupList = ({ handleClickOnHistory }: Props): ReactElement => {
         actions?.selectWorkGroup(row)
       }}
       maxHeight={500}
+      pageSize={workGroupsPagination.limit}
+      manualPagination={{
+        currentPage: workGroupsPagination.page,
+        totalRecords: workGroupsPagination.totalRecords,
+        onChange: (page) => actions?.getWorkGroups({ page: page + 1 })
+      }}
+      manualLimit={{
+        options: [15, 25, 50, 100],
+        onChangeLimit: (page, limit) =>
+          actions?.getWorkGroups({ page: page + 1, limit })
+      }}
       withCheckbox
       actionsForSelectedItems={[
         {

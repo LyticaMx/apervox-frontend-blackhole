@@ -1,7 +1,8 @@
 import { SortingState } from '@tanstack/react-table'
 import { Priority } from './priority'
-import { PaginationFilter } from './filters'
+import { DateFilter, PaginationFilter, SearchFilter } from './filters'
 import { Status } from './status'
+import { PaginationParams, SearchParams } from './api'
 
 export enum TechiniqueStatus {
   ACTIVE,
@@ -18,16 +19,18 @@ export enum Turn {
 }
 
 export interface WorkGroup {
-  id: string
+  id?: string
   name: string
   description: string
-  registered_by: string
+  registered_by?: string
   updated_by?: string
-  total_users: number
-  created_at: string
+  total_users?: number
+  created_at?: string
   updated_at?: string
-  techniques: WorkGroupTechniques
-  status: Status
+  techniques?: WorkGroupTechniques
+  techniquesIds?: string[]
+  userIds?: string[]
+  status?: boolean | Status
 }
 
 export interface WorkGroupTechniques {
@@ -68,8 +71,9 @@ export interface WorkGroupTechnique {
   status: Status
 }
 
-export interface Pagination extends Partial<PaginationFilter> {
-  totalRecords?: number
+export interface Pagination extends PaginationFilter {
+  totalRecords: number
+  sort: SortingState
 }
 
 export interface GenericItem {
@@ -77,7 +81,7 @@ export interface GenericItem {
   name: string
 }
 
-export interface State {
+export interface WorkgroupState {
   selected: WorkGroup
   workGroups: WorkGroup[]
   history: WorkGroupHistory[]
@@ -85,10 +89,13 @@ export interface State {
   techniques: GenericItem[]
   associatedUsers: WorkGroupUser[]
   associatedTechniques: WorkGroupTechnique[]
+  dateFilter: DateFilter
+  searchFilter: SearchFilter
   workGroupsPagination: {
     limit: number
     page: number
     totalRecords: number
+    sort: SortingState
   }
   usersPagination: {
     limit: number
@@ -102,14 +109,17 @@ export interface State {
   }
 }
 
-export interface Actions {
+export interface WorkgroupPaginationParams extends PaginationParams {
+  sort?: SortingState
+}
+
+export interface WorkgroupActions {
   getUsers: () => Promise<boolean>
   getTechniques: () => Promise<boolean>
   getHistory: (id: string) => Promise<boolean>
   getWorkGroups: (
-    filters?: SortingState,
-    params?: Partial<PaginationFilter>
-  ) => Promise<boolean>
+    params?: WorkgroupPaginationParams & SearchParams & DateFilter
+  ) => Promise<void>
   getWorkGroupUsers: (
     id: string,
     params?: Partial<PaginationFilter>
@@ -122,11 +132,11 @@ export interface Actions {
   deleteWorkGroup?: (id: string) => Promise<boolean>
   deleteUserOfWorkGroup?: (id: string) => Promise<boolean>
   deleteTechniqueOfWorkGroup?: (id: string) => Promise<boolean>
-  createWorkGroup?: (params: WorkGroup) => Promise<boolean>
+  createWorkGroup: (params: WorkGroup) => Promise<boolean>
   updateWorkGroup?: (params: WorkGroup) => Promise<boolean>
   selectWorkGroup: (params?: WorkGroup) => void
 }
 
-export interface ContextType extends State {
-  actions?: Actions
+export interface ContextType extends WorkgroupState {
+  actions?: WorkgroupActions
 }

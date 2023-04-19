@@ -38,7 +38,10 @@ const EditWorkGroupDrawer = ({ open, onClose }: Props): ReactElement => {
         <div className="mb-4">
           <Typography variant="caption">
             {formatMessage(generalMessages.createdOn, {
-              date: format(new Date(workGroup.created_at), 'dd/MM/yyyy - hh:mm')
+              date: format(
+                new Date(workGroup.created_at ?? ''),
+                'dd/MM/yyyy - hh:mm'
+              )
             })}
 
             <span className="ml-2">{workGroup.registered_by}</span>

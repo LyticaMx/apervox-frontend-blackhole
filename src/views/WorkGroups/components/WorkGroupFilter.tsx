@@ -3,6 +3,7 @@ import ViewFilter from 'components/ViewFilter'
 import { useFormatMessage } from 'hooks/useIntl'
 import { generalMessages } from 'globalMessages'
 import { workGroupsMessages } from '../messages'
+import { useWorkGroups } from 'context/WorkGroups'
 
 interface Props {
   toggleOpen: () => void
@@ -11,12 +12,9 @@ interface Props {
 const WorkGroupFilter = ({ toggleOpen }: Props): ReactElement => {
   const getMessage = useFormatMessage(workGroupsMessages)
   const getGeneralMessage = useFormatMessage(generalMessages)
+  const { actions } = useWorkGroups()
 
   const filterItems = [
-    {
-      name: 'id',
-      label: 'ID'
-    },
     {
       name: 'name',
       label: getGeneralMessage('name')
@@ -26,16 +24,8 @@ const WorkGroupFilter = ({ toggleOpen }: Props): ReactElement => {
       label: getGeneralMessage('description')
     },
     {
-      name: 'registeredBy',
+      name: 'created_by',
       label: getGeneralMessage('registeredBy')
-    },
-    {
-      name: 'techniques',
-      label: getGeneralMessage('techniques')
-    },
-    {
-      name: 'status',
-      label: getGeneralMessage('status')
     }
   ]
 
@@ -44,7 +34,14 @@ const WorkGroupFilter = ({ toggleOpen }: Props): ReactElement => {
       fields={filterItems}
       action={{ label: getMessage('button'), onClick: toggleOpen }}
       download={(document) => alert(document)}
-      onChange={(data) => console.log('workGroupsViewFilter', data)}
+      onChange={(data) =>
+        actions?.getWorkGroups({
+          start_time: data.dateRange[0],
+          end_time: data.dateRange[1],
+          filters: data.filterByField.fields,
+          query: data.filterByField.search
+        })
+      }
     />
   )
 }

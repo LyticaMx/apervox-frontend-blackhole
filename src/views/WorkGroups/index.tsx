@@ -28,16 +28,14 @@ const WorkGroups = (): ReactElement => {
     useWorkGroups()
 
   useEffect(() => {
-    actions?.getUsers()
-    actions?.getTechniques()
     actions?.getWorkGroups()
   }, [])
 
   useEffect(() => {
     if (tab === 'users') {
-      actions?.getWorkGroupUsers(selected.id)
+      actions?.getWorkGroupUsers(selected.id ?? '')
     } else {
-      actions?.getWorkGroupTechniques(selected.id)
+      actions?.getWorkGroupTechniques(selected.id ?? '')
     }
   }, [tab])
 

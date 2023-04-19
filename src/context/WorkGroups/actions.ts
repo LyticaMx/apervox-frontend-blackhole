@@ -1,21 +1,28 @@
-import { sortBy } from 'lodash'
-import { SortingState } from '@tanstack/react-table'
 import {
-  Actions,
-  State,
+  WorkgroupActions,
+  WorkgroupState,
   WorkGroup,
   WorkGroupUser,
   Turn,
   WorkGroupTechnique,
-  WorkGroupHistory
+  WorkGroupHistory,
+  WorkgroupPaginationParams
 } from 'types/workgroup'
 import { Status } from 'types/status'
 import { Priority } from 'types/priority'
-import { PaginationFilter } from 'types/filters'
+import { DateFilter, PaginationFilter } from 'types/filters'
 import { actions } from './constants'
 import { initialState } from './context'
+import useApi from 'hooks/useApi'
+import { ResponseData, SearchParams } from 'types/api'
 
-const useActions = (state: State, dispatch): Actions => {
+const orderByMapper = { registered_by: 'created_by', total_users: 'users' }
+
+const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
+  const { workGroupsPagination, dateFilter, searchFilter } = state
+  const getWorkgroupsService = useApi({ endpoint: 'groups', method: 'get' })
+  const createWorkgroupService = useApi({ endpoint: 'groups', method: 'post' })
+
   const getUsers = async (): Promise<boolean> => {
     try {
       const data = [
@@ -137,91 +144,85 @@ const useActions = (state: State, dispatch): Actions => {
     }
   }
 
-  const getWorkGroups = async (filters?: SortingState): Promise<boolean> => {
+  const getWorkGroups = async (
+    params?: WorkgroupPaginationParams & SearchParams & DateFilter
+  ): Promise<void> => {
     try {
-      const data = [
-        {
-          id: '001',
-          name: 'Grupo 1',
-          description: 'Monitoreo de datos',
-          registered_by: 'armandoalbor',
-          updated_by: 'efracuadras',
-          total_users: 3,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          techniques: {
-            assigned: 7,
-            current: 2,
-            to_conclude: 3,
-            concluded: 1
-          },
-          status: Status.ACTIVE
-        },
-        {
-          id: '002',
-          name: 'Grupo 2',
-          description: 'Gestión de datos',
-          registered_by: 'armandoalbor',
-          total_users: 2,
-          created_at: new Date().toISOString(),
-          updated_at: '',
-          techniques: {
-            assigned: 2,
-            current: 1,
-            to_conclude: 1,
-            concluded: 0
-          },
-          status: Status.ACTIVE
-        },
-        {
-          id: '003',
-          name: 'Auditoria',
-          description: 'Auditoria de datos',
-          registered_by: 'efracuadras',
-          total_users: 13,
-          created_at: new Date().toISOString(),
-          updated_at: '',
-          techniques: {
-            assigned: 10,
-            current: 7,
-            to_conclude: 1,
-            concluded: 2
-          },
-          status: Status.INACTIVE
-        },
-        {
-          id: '004',
-          name: 'Criminología',
-          description: 'Redes criminales',
-          registered_by: 'javieralbor',
-          total_users: 23,
-          created_at: new Date().toISOString(),
-          updated_at: '',
-          techniques: {
-            assigned: 12,
-            current: 6,
-            to_conclude: 1,
-            concluded: 5
-          },
-          status: Status.ACTIVE
-        }
-      ]
+      const sort = { by: 'created_at', order: 'desc' }
+      const mappedFilters = {}
 
-      let sorteredData = data
-
-      if (filters && filters.length > 0) {
-        sorteredData = filters[0].desc
-          ? sortBy(data, [filters[0].id]).reverse()
-          : sortBy(data, [filters[0].id])
+      if (params?.sort && params.sort.length > 0) {
+        const [sortBy] = params.sort
+        sort.by = orderByMapper[sortBy.id] ?? sortBy.id
+        sort.order = sortBy.desc ? 'desc' : 'asc'
       }
 
-      dispatch(actions.setWorkGroups(sorteredData ?? initialState.workGroups))
+      const query = params?.query ?? searchFilter.query
+      const filters = params?.filters ?? searchFilter.filters
 
-      return Boolean(data)
+      if (filters && filters.length > 0 && query) {
+        Object.assign(
+          mappedFilters,
+          filters.reduce((old, key) => {
+            old[key] = query
+            return old
+          }, {})
+        )
+      }
+      const response: ResponseData = await getWorkgroupsService({
+        urlParams: {
+          ...sort,
+          ...mappedFilters,
+          page: params?.page ?? workGroupsPagination.page,
+          limit: params?.limit ?? workGroupsPagination.limit,
+          start_time: params?.start_time ?? dateFilter.start_time,
+          end_time: params?.end_time ?? dateFilter.end_time
+        }
+      })
+
+      // para acceder a las funciones de array
+      const data: any[] = response.data
+
+      dispatch(
+        actions.setWorkGroups(
+          data.map<WorkGroup>((item) => ({
+            id: item.id,
+            name: item.name,
+            description: item.description,
+            status: item.status,
+            created_at: item.created_at,
+            registered_by: item.created_by,
+            userIds: item.users,
+            total_users: item.users.length
+          }))
+        )
+      )
+
+      // Reducir estos dispatch
+      dispatch(
+        actions.setWorkGroupPagination({
+          page: response.page,
+          limit: params?.limit ?? workGroupsPagination.limit,
+          totalRecords: response.size,
+          sort: params?.sort ?? workGroupsPagination.sort
+        })
+      )
+
+      dispatch(
+        actions.setWorkGroupFilters({
+          query: params?.query ?? searchFilter.query,
+          filters: params?.filters ?? searchFilter.filters
+        })
+      )
+
+      dispatch(
+        actions.setWorkGroupDateFilters({
+          start_time: params?.start_time ?? dateFilter.start_time,
+          end_time: params?.end_time ?? dateFilter.end_time
+        })
+      )
     } catch (error) {
-      dispatch(actions.setWorkGroups(initialState.workGroups))
-
-      return false
+      console.error(error)
     }
   }
 
@@ -421,6 +422,23 @@ const useActions = (state: State, dispatch): Actions => {
     }
   }
 
+  const createWorkGroup = async (workgroup: WorkGroup): Promise<boolean> => {
+    try {
+      await createWorkgroupService({
+        body: {
+          name: workgroup.name,
+          description: workgroup.description,
+          users: workgroup.userIds,
+          techniques: workgroup.techniques
+        }
+      })
+
+      return true
+    } catch {
+      return false
+    }
+  }
+
   return {
     getUsers,
     getTechniques,
@@ -428,7 +446,8 @@ const useActions = (state: State, dispatch): Actions => {
     getWorkGroups,
     getWorkGroupUsers,
     getWorkGroupTechniques,
-    selectWorkGroup
+    selectWorkGroup,
+    createWorkGroup
   }
 }
 

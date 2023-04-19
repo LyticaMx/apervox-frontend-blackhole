@@ -4,6 +4,8 @@ import Typography from 'components/Typography'
 import { useFormatMessage } from 'hooks/useIntl'
 import { workGroupsCreateDrawerMessages } from '../messages'
 import WorkGroupForm from './WorkGroupForm'
+import { useWorkGroups } from 'context/WorkGroups'
+import useToast from 'hooks/useToast'
 
 interface Props {
   open: boolean
@@ -11,6 +13,8 @@ interface Props {
 }
 const CreateWorkGroupDrawer = ({ open, onClose }: Props): ReactElement => {
   const getMessage = useFormatMessage(workGroupsCreateDrawerMessages)
+  const { actions } = useWorkGroups()
+  const { launchToast } = useToast()
 
   return (
     <Drawer
@@ -28,7 +32,18 @@ const CreateWorkGroupDrawer = ({ open, onClose }: Props): ReactElement => {
 
         <WorkGroupForm
           onSubmit={async (values) => {
-            console.log('Create workgroup', values)
+            const created = await actions?.createWorkGroup({
+              name: values.name,
+              description: values.description
+            })
+            if (created) {
+              launchToast({
+                title: 'Grupo creado correctamente',
+                type: 'Success'
+              })
+              onClose?.()
+              actions?.getWorkGroups()
+            }
           }}
         />
       </div>

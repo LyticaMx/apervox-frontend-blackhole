@@ -1,5 +1,5 @@
 import { ReactElement, useMemo, useState } from 'react'
-import { FormikConfig } from 'formik'
+import { FormikConfig, FormikHelpers } from 'formik'
 import * as yup from 'yup'
 import Form from 'components/Form'
 import Button from 'components/Button'
@@ -19,7 +19,10 @@ interface FormValues {
 
 interface Props {
   initialValues?: FormValues | any
-  onSubmit: (values: FormValues) => Promise<void>
+  onSubmit: (
+    values: FormValues,
+    helpers: FormikHelpers<FormValues>
+  ) => Promise<void>
 }
 
 const WorkGroupForm = ({ initialValues, onSubmit }: Props): ReactElement => {
@@ -174,11 +177,7 @@ const WorkGroupForm = ({ initialValues, onSubmit }: Props): ReactElement => {
         description: initialValues?.description ?? ''
       },
       validationSchema,
-      onSubmit: (values) => {
-        console.log(values)
-
-        onSubmit(values)
-      }
+      onSubmit
     }),
     [initialValues]
   )
