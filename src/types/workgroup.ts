@@ -133,7 +133,7 @@ export interface WorkgroupActions {
   deleteUserOfWorkGroup?: (id: string) => Promise<boolean>
   deleteTechniqueOfWorkGroup?: (id: string) => Promise<boolean>
   createWorkGroup: (params: WorkGroup) => Promise<boolean>
-  updateWorkGroup?: (params: WorkGroup) => Promise<boolean>
+  updateWorkGroup: (params: WorkGroup) => Promise<boolean>
   selectWorkGroup: (params?: WorkGroup) => void
 }
 

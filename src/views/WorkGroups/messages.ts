@@ -36,6 +36,10 @@ export const workGroupsCreateDrawerMessages = defineMessages({
     id: 'views.workGroups.createDrawer.message',
     defaultMessage:
       'Completa los siguientes campos para crear un nuevo grupo de trabajo.'
+  },
+  success: {
+    id: 'views.workGroups.createDrawer.success',
+    defaultMessage: 'Grupo creado correctamente'
   }
 })
 
@@ -47,6 +51,10 @@ export const workGroupsEditDrawerMessages = defineMessages({
   subtitle: {
     id: 'views.workGroups.editDrawer.message',
     defaultMessage: 'Datos actuales del grupo de trabajo seleccionado.'
+  },
+  success: {
+    id: 'views.workGroups.editDrawer.success',
+    defaultMessage: 'Grupo actualizado correctamente'
   }
 })
 

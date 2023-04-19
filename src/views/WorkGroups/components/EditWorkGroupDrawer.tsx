@@ -8,6 +8,7 @@ import Drawer from 'components/Drawer'
 import Typography from 'components/Typography'
 import WorkGroupForm from './WorkGroupForm'
 import { workGroupsEditDrawerMessages } from '../messages'
+import useToast from 'hooks/useToast'
 
 interface Props {
   open: boolean
@@ -16,8 +17,8 @@ interface Props {
 const EditWorkGroupDrawer = ({ open, onClose }: Props): ReactElement => {
   const getMessage = useFormatMessage(workGroupsEditDrawerMessages)
   const { formatMessage } = useIntl()
-
-  const { selected: workGroup } = useWorkGroups()
+  const { launchToast } = useToast()
+  const { actions, selected: workGroup } = useWorkGroups()
 
   return !workGroup.id ? (
     <></>
@@ -68,7 +69,19 @@ const EditWorkGroupDrawer = ({ open, onClose }: Props): ReactElement => {
             description: workGroup.description
           }}
           onSubmit={async (values) => {
-            console.log('Update workGroup', values)
+            const updated = await actions?.updateWorkGroup({
+              id: workGroup.id,
+              name: values.name,
+              description: values.description
+            })
+            if (updated) {
+              launchToast({
+                title: getMessage('success'),
+                type: 'Success'
+              })
+              onClose?.()
+              actions?.getWorkGroups()
+            }
           }}
         />
       </div>

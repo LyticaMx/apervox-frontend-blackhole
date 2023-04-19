@@ -38,7 +38,7 @@ const CreateWorkGroupDrawer = ({ open, onClose }: Props): ReactElement => {
             })
             if (created) {
               launchToast({
-                title: 'Grupo creado correctamente',
+                title: getMessage('success'),
                 type: 'Success'
               })
               onClose?.()
