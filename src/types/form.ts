@@ -14,6 +14,7 @@ import { Props as SelectPropsOrigin } from 'components/Form/Select'
 import { Props as SelectMultiplePropsOrigin } from 'components/Form/Selectmultiple'
 import { Props as MultiChipSelectPropsOrigin } from 'components/Form/Selectmultiple/MultiChip'
 import { Props as SwitchPropsOrigin } from 'components/Form/Switch'
+import { Props as AsyncSelectPropsOrigin } from 'components/Form/SelectPaginate'
 
 export type TextFieldProps = Omit<
   TextFieldPropsOrigin,
@@ -65,6 +66,11 @@ export type SelectMultipleProps = Omit<
 export type MultiChipSelectProps = Omit<
   MultiChipSelectPropsOrigin,
   'value' | 'selected' | 'onChange'
+>
+
+export type AsyncSelectProps = Omit<
+  AsyncSelectPropsOrigin,
+  'value' | 'onChange'
 >
 
 export type SwitchProps = Omit<SwitchPropsOrigin, 'value' | 'onChange'> & {
@@ -120,6 +126,10 @@ export declare type FieldTypes<T> =
   | {
       readonly type: 'select'
       options: SelectProps
+    }
+  | {
+      readonly type: 'async-select'
+      options: AsyncSelectProps
     }
   | {
       readonly type: 'select-multiple'

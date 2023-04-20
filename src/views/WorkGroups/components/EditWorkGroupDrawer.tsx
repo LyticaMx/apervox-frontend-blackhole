@@ -63,6 +63,7 @@ const EditWorkGroupDrawer = ({ open, onClose }: Props): ReactElement => {
         </div>
 
         <WorkGroupForm
+          open={open}
           initialValues={{
             id: workGroup.id,
             name: workGroup.name,

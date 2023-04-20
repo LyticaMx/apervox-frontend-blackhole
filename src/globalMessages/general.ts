@@ -612,5 +612,13 @@ export const generalMessages = defineMessages({
   forms: {
     id: 'global.general.forms',
     defaultMessage: 'Formularios'
+  },
+  loading: {
+    id: 'global.general.loading',
+    defaultMessage: 'Cargando'
+  },
+  noOptions: {
+    id: 'global.general.noOptions',
+    defaultMessage: 'Sin opciones'
   }
 })

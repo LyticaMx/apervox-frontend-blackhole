@@ -12,7 +12,7 @@ const SelectPaginate = (): ReactElement => {
   })
 
   const getPinsService = useApi({
-    endpoint: 'pins',
+    endpoint: 'users',
     method: 'get'
   })
 
@@ -27,8 +27,9 @@ const SelectPaginate = (): ReactElement => {
     }
 
     return {
-      options: res?.data.map((pin) => ({ value: pin.id, label: pin.number })),
-      hasMore: false // res?.page_info.has_next_page
+      options: res?.data.map((pin) => ({ value: pin.id, label: pin.username })),
+      hasMore:
+        res && (res.page - 1) * res.limit + Number(res.data.length) < res.size
     }
   }
   return (

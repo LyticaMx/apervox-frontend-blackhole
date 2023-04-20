@@ -31,10 +31,12 @@ const CreateWorkGroupDrawer = ({ open, onClose }: Props): ReactElement => {
         <p className="text-sm leading-tight mb-4">{getMessage('subtitle')}</p>
 
         <WorkGroupForm
+          open={open}
           onSubmit={async (values) => {
             const created = await actions?.createWorkGroup({
               name: values.name,
-              description: values.description
+              description: values.description,
+              userIds: values.users.map((item) => item.value)
             })
             if (created) {
               launchToast({

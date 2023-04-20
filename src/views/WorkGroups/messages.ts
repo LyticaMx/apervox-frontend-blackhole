@@ -117,12 +117,16 @@ export const workGroupsHistoryDrawerMessages = defineMessages({
 
 export const workGroupsFormMessages = defineMessages({
   usersMessage: {
-    id: 'views.workGroups.historyDrawer.usersMessage',
+    id: 'views.workGroups.workGroupsForm.usersMessage',
     defaultMessage:
       'Selecciona los usuarios que quieras asignar a este grupo de trabajo.'
   },
   techniquesMessage: {
-    id: 'views.workGroups.historyDrawer.techniquesMessage',
+    id: 'views.workGroups.workGroupsForm.techniquesMessage',
     defaultMessage: 'Selecciona las técnicas que quieras asignar a este grupo.'
+  },
+  selectUsersPlaceholder: {
+    id: 'views.workGroups.workGroupsForm.selectUsersPlaceholder',
+    defaultMessage: 'Selecciona los usuarios'
   }
 })
