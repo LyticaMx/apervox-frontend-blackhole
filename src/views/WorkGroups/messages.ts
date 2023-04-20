@@ -27,6 +27,18 @@ export const workGroupsMessages = defineMessages({
   }
 })
 
+export const workGroupListMessages = defineMessages({
+  updatedGroupStatus: {
+    id: 'views.WorkGroups.WorkGroupList.updatedGroupStatus',
+    defaultMessage:
+      'Grupo {enabled, select, true{habilitado} other{deshabilitado}} correctamente'
+  },
+  deletedWorkGroup: {
+    id: 'views.WorkGroups.WorkGroupList.deletedWorkGroup',
+    defaultMessage: 'Grupo eliminado correctamente'
+  }
+})
+
 export const workGroupsCreateDrawerMessages = defineMessages({
   title: {
     id: 'views.workGroups.createDrawer.title',

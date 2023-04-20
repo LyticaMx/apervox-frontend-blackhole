@@ -23,6 +23,10 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
   const getWorkgroupsService = useApi({ endpoint: 'groups', method: 'get' })
   const createWorkgroupService = useApi({ endpoint: 'groups', method: 'post' })
   const updateWorkGroupService = useApi({ endpoint: 'groups', method: 'put' })
+  const deleteWorkGroupService = useApi({
+    endpoint: 'groups',
+    method: 'delete'
+  })
 
   const getUsers = async (): Promise<boolean> => {
     try {
@@ -456,6 +460,36 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
     }
   }
 
+  const updateStatusWorkGroup = async (
+    id: string,
+    status: boolean
+  ): Promise<boolean> => {
+    try {
+      await updateWorkGroupService({
+        queryString: id,
+        body: {
+          status
+        }
+      })
+
+      return true
+    } catch {
+      return false
+    }
+  }
+
+  const deleteWorkGroup = async (id: string): Promise<boolean> => {
+    try {
+      await deleteWorkGroupService({
+        queryString: id
+      })
+
+      return true
+    } catch {
+      return false
+    }
+  }
+
   return {
     getUsers,
     getTechniques,
@@ -465,7 +499,9 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
     getWorkGroupTechniques,
     selectWorkGroup,
     createWorkGroup,
-    updateWorkGroup
+    updateWorkGroup,
+    updateStatusWorkGroup,
+    deleteWorkGroup
   }
 }
 

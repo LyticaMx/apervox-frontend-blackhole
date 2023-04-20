@@ -128,8 +128,8 @@ export interface WorkgroupActions {
     id: string,
     params?: Partial<PaginationFilter>
   ) => Promise<boolean>
-  updateStatusWorkGroup?: (id: string, active: boolean) => Promise<boolean>
-  deleteWorkGroup?: (id: string) => Promise<boolean>
+  updateStatusWorkGroup: (id: string, status: boolean) => Promise<boolean>
+  deleteWorkGroup: (id: string) => Promise<boolean>
   deleteUserOfWorkGroup?: (id: string) => Promise<boolean>
   deleteTechniqueOfWorkGroup?: (id: string) => Promise<boolean>
   createWorkGroup: (params: WorkGroup) => Promise<boolean>

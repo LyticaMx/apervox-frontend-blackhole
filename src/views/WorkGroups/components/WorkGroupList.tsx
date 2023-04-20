@@ -6,7 +6,7 @@ import { useWorkGroups } from 'context/WorkGroups'
 
 import Table from 'components/Table'
 import Tag from 'components/Tag'
-import { generalMessages } from 'globalMessages'
+import { workGroupListMessages } from '../messages'
 import {
   TrashIcon,
   RectangleGroupIcon,
@@ -19,13 +19,15 @@ import StatusTag from 'components/Status/StatusTag'
 import { Status } from 'types/status'
 import { WorkGroup } from 'types/workgroup'
 import * as helpers from './helpers'
+import useToast from 'hooks/useToast'
 
 interface Props {
   handleClickOnHistory: (id: string) => void
 }
 
 const WorkGroupList = ({ handleClickOnHistory }: Props): ReactElement => {
-  const getMessage = useFormatMessage(generalMessages)
+  const getMessage = useFormatMessage(workGroupListMessages)
+  const { launchToast } = useToast()
   const { workGroups, actions, workGroupsPagination } = useWorkGroups()
 
   const columns = useTableColumns<WorkGroup>(() => [
@@ -105,10 +107,12 @@ const WorkGroupList = ({ handleClickOnHistory }: Props): ReactElement => {
       header: getMessage('action'),
       cell: ({ getValue, cell }) => {
         const id = getValue<string>()
-        const isActive = cell.row.original.status === 'active'
+        const isActive =
+          cell.row.original.status === 'active' ||
+          cell.row.original.status === true
 
         return (
-          <div className="flex pt-1">
+          <div className="flex pt-1" onClick={(e) => e.stopPropagation()}>
             <Tooltip
               content={getMessage(isActive ? 'disable' : 'enable')}
               floatProps={{ offset: 10, arrow: true }}
@@ -121,8 +125,22 @@ const WorkGroupList = ({ handleClickOnHistory }: Props): ReactElement => {
             >
               <Switch
                 size="sm"
-                value={true}
-                onChange={(x) => console.log(`onDisableGroup(${id})`, x)}
+                value={isActive}
+                onChange={async (status) => {
+                  const updated = await actions?.updateStatusWorkGroup(
+                    id,
+                    status
+                  )
+                  if (updated) {
+                    launchToast({
+                      title: getMessage('updatedGroupStatus', {
+                        enabled: status
+                      }),
+                      type: 'Success'
+                    })
+                    await actions?.getWorkGroups()
+                  }
+                }}
                 color="blue"
               />
             </Tooltip>
@@ -159,7 +177,17 @@ const WorkGroupList = ({ handleClickOnHistory }: Props): ReactElement => {
             >
               <TrashIcon
                 className="h-5 w-5 mx-1 text-muted hover:text-primary cursor-pointer"
-                onClick={() => console.log(`onDeleteGroup(${id})`)}
+                onClick={async () => {
+                  const deleted = await actions?.deleteWorkGroup(id)
+                  if (deleted) {
+                    launchToast({
+                      title: getMessage('deletedWorkGroup'),
+                      type: 'Success'
+                    })
+
+                    await actions?.getWorkGroups()
+                  }
+                }}
               />
             </Tooltip>
           </div>

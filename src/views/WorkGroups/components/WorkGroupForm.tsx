@@ -177,7 +177,8 @@ const WorkGroupForm = ({ initialValues, onSubmit }: Props): ReactElement => {
         description: initialValues?.description ?? ''
       },
       validationSchema,
-      onSubmit
+      onSubmit,
+      enableReinitialize: true
     }),
     [initialValues]
   )
