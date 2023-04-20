@@ -21,7 +21,8 @@ interface Props {
 }
 
 interface FormValues {
-  filters: string[]
+  // TODO: Cambiar cuando los filtros de back sean OR y no AND
+  filters: string
 }
 
 const StaticFilter = (props: Props): ReactElement => {
@@ -41,7 +42,8 @@ const StaticFilter = (props: Props): ReactElement => {
             normalizeString(option.name).includes(query)
           )
     return newOptions.map<Field<FormValues>>((option, index) => ({
-      type: 'checkbox' as any,
+      // TODO: Cambiar cuando los filtros de back sean OR y no AND
+      type: 'radio' as any,
       name: 'filters',
       options: {
         label: option.name,
@@ -55,12 +57,13 @@ const StaticFilter = (props: Props): ReactElement => {
 
   const formikConfig: FormikConfig<FormValues> = {
     // se utilizan los últimos valores de los formularios como valores iniciales
-    initialValues: { filters: formikRef.current?.values.filters ?? [] },
+    initialValues: { filters: formikRef.current?.values.filters ?? '' },
     onSubmit: async (values) => {
       formikRef.current?.resetForm({
         values
       })
-      await onChange(values.filters)
+      // TODO: Cambiar cuando los filtros de back sean OR y no AND
+      await onChange([values.filters])
     }
   }
 
@@ -105,13 +108,14 @@ const StaticFilter = (props: Props): ReactElement => {
                 {formatMessage(generalMessages.filters)}
               </Typography>
             </Grid>
-            <Grid item cols={5} className="flex max-h-6 items-start">
+            <Grid item cols={5} className="flex max-h-6 items-center">
               <button
                 className="text-primary mr-2 flex-none"
                 onClick={() => {
                   formikRef.current?.resetForm({
                     values: {
-                      filters: []
+                      // TODO: Cambiar cuando los filtros de back sean OR y no AND
+                      filters: ''
                     }
                   })
                 }}
@@ -119,7 +123,7 @@ const StaticFilter = (props: Props): ReactElement => {
               >
                 {formatMessage(actionsMessages.clean)}
               </button>
-              <div className="w-1 inline h-6 bg-[#00000029] rounded-md" />
+              <div className="border border-gray-400 rounded-lg h-4"></div>
               <button
                 className="text-primary ml-2"
                 onClick={() => {

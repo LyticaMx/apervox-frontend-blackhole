@@ -5,6 +5,7 @@ import {
   User,
   UserContextActions,
   UserContextState,
+  UserStaticFilter,
   UsersPaginationParams
 } from 'types/user'
 import { actions } from './constants'
@@ -20,14 +21,17 @@ export const useActions = (
   state: UserContextState,
   dispatch
 ): UserContextActions => {
-  const { usersPagination, dateFilter, searchFilter } = state
+  const { usersPagination, dateFilter, searchFilter, staticFilter } = state
   const getUsersService = useApi({ endpoint: 'users', method: 'get' })
   const createUserService = useApi({ endpoint: 'users', method: 'post' })
   const updateUserService = useApi({ endpoint: 'users', method: 'put' })
   const deleteUserService = useApi({ endpoint: 'users', method: 'delete' })
 
   const getUsers = async (
-    params?: UsersPaginationParams & SearchParams & DateFilter
+    params?: UsersPaginationParams &
+      SearchParams &
+      DateFilter &
+      UserStaticFilter
   ): Promise<void> => {
     try {
       const sort = {
@@ -35,7 +39,10 @@ export const useActions = (
         order: 'desc'
       }
 
-      const mappedFilters = {}
+      const mappedFilters: {
+        sessions?: boolean
+        status?: boolean
+      } = {}
 
       if (params?.sort && params.sort.length > 0) {
         const [sortBy] = params.sort
@@ -55,6 +62,20 @@ export const useActions = (
           }, {})
         )
       }
+
+      mappedFilters.sessions =
+        params?.sessions?.[0] === 'logged'
+          ? true
+          : params?.sessions?.[0] === 'not logged'
+          ? false
+          : undefined
+
+      mappedFilters.status =
+        params?.status?.[0] === 'enabled'
+          ? true
+          : params?.status?.[0] === 'disabled'
+          ? false
+          : undefined
 
       // TODO: cambiar el response data
       const response: ResponseData = await getUsersService({
@@ -113,8 +134,15 @@ export const useActions = (
           end_time: params?.end_time ?? dateFilter.end_time
         })
       )
+
+      dispatch(
+        actions.setStaticFilters({
+          sessions: params?.sessions ?? staticFilter.sessions,
+          status: params?.status ?? staticFilter.status
+        })
+      )
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
   }
 

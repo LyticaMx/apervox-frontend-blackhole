@@ -8,6 +8,8 @@ import Form from 'components/Form'
 import { Field } from 'types/form'
 import { formMessages } from 'globalMessages'
 import { changePasswordMessages } from '../messages'
+import { useAuth } from 'context/Auth'
+import useToast from 'hooks/useToast'
 
 interface FormValues {
   currentPassword: string
@@ -17,6 +19,8 @@ interface FormValues {
 
 const ChangePassword = (): ReactElement => {
   const { formatMessage } = useIntl()
+  const { actions } = useAuth()
+  const { launchToast } = useToast()
 
   const fields: Array<Field<FormValues>> = [
     {
@@ -34,7 +38,8 @@ const ChangePassword = (): ReactElement => {
       options: {
         id: 'newPassword',
         label: formatMessage(changePasswordMessages.newPassword),
-        placeholder: formatMessage(changePasswordMessages.passwordPlaceholder)
+        placeholder: formatMessage(changePasswordMessages.passwordPlaceholder),
+        passwordStrength: true
       }
     },
     {
@@ -55,11 +60,11 @@ const ChangePassword = (): ReactElement => {
     newPassword: yup.string().required(formatMessage(formMessages.required)),
     confirmPassword: yup
       .string()
-      .required(formatMessage(formMessages.required))
-      .oneOf(
+      .equals(
         [yup.ref('newPassword')],
         formatMessage(formMessages.passwordsNotMatches)
       )
+      .required(formatMessage(formMessages.required))
   })
 
   const formikConfig: FormikConfig<FormValues> = {
@@ -69,8 +74,18 @@ const ChangePassword = (): ReactElement => {
       confirmPassword: ''
     },
     validationSchema,
-    onSubmit: (values) => {
-      console.log(values)
+    onSubmit: async (values, { resetForm }) => {
+      const updated = await actions?.changePassword(
+        values.currentPassword,
+        values.newPassword
+      )
+      if (updated) {
+        launchToast({
+          title: formatMessage(changePasswordMessages.success),
+          type: 'Success'
+        })
+        resetForm()
+      }
     }
   }
 

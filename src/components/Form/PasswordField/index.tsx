@@ -4,6 +4,9 @@ import IconButton from 'components/Button/IconButton'
 import Label from 'components/Label'
 import { InputHTMLAttributes, ReactElement, useState } from 'react'
 import { formClasses } from 'utils/classes'
+import PasswordStrengthBar from 'react-password-strength-bar'
+import { useIntl } from 'react-intl'
+import { passwordFieldMessages } from '../messages'
 
 export interface Props {
   id: string
@@ -22,6 +25,8 @@ export interface Props {
   labelSpacing?: '1' | '2' | '3' | '4' | '5'
   inputProps?: InputHTMLAttributes<HTMLInputElement>
   labelClassname?: string
+  passwordStrength?: boolean
+  passwordStrengthScoreWordClassName?: string
 }
 
 const PasswordField = ({
@@ -34,9 +39,12 @@ const PasswordField = ({
   labelSpacing,
   labelClassname,
   inputProps = {},
+  passwordStrength,
+  passwordStrengthScoreWordClassName = '',
   ...props
 }: Props): ReactElement => {
   const [toggleView, setToggleView] = useState<boolean>(false)
+  const { formatMessage } = useIntl()
 
   return (
     <div className={className}>
@@ -73,6 +81,20 @@ const PasswordField = ({
             })}
           />
         </div>
+        {passwordStrength && (
+          <PasswordStrengthBar
+            password={props.value}
+            scoreWords={[
+              formatMessage(passwordFieldMessages.veryWeak),
+              formatMessage(passwordFieldMessages.weak),
+              formatMessage(passwordFieldMessages.okay),
+              formatMessage(passwordFieldMessages.good),
+              formatMessage(passwordFieldMessages.strong)
+            ]}
+            scoreWordClassName={clsx(passwordStrengthScoreWordClassName)}
+            shortScoreWord={null}
+          />
+        )}
         {helperText && (
           <label className="text-xs text-red-500" id={`helper-${id}`}>
             {helperText}

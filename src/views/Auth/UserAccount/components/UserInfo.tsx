@@ -11,6 +11,7 @@ import { useAuth } from 'context/Auth'
 import { Field } from 'types/form'
 import { formMessages } from 'globalMessages'
 import { userInfoMessages } from '../messages'
+import useToast from 'hooks/useToast'
 
 interface FormValues {
   name: string
@@ -40,7 +41,8 @@ const mockGroups = [
 
 const UserInfo = (): ReactElement => {
   const { formatMessage } = useIntl()
-  const { auth } = useAuth()
+  const { auth, actions } = useAuth()
+  const { launchToast } = useToast()
 
   const fields: Array<Field<FormValues>> = [
     {
@@ -49,7 +51,8 @@ const UserInfo = (): ReactElement => {
       options: {
         id: 'name',
         label: formatMessage(userInfoMessages.name),
-        placeholder: formatMessage(userInfoMessages.name)
+        placeholder: formatMessage(userInfoMessages.name),
+        inputProps: { disabled: true }
       },
       breakpoints: { xs: 12, md: 6 }
     },
@@ -69,7 +72,8 @@ const UserInfo = (): ReactElement => {
       options: {
         id: 'lastname',
         label: formatMessage(userInfoMessages.lastname),
-        placeholder: formatMessage(userInfoMessages.lastname)
+        placeholder: formatMessage(userInfoMessages.lastname),
+        inputProps: { disabled: true }
       },
       breakpoints: { xs: 12, md: 6 }
     },
@@ -89,7 +93,8 @@ const UserInfo = (): ReactElement => {
       options: {
         id: 'username',
         label: formatMessage(userInfoMessages.username),
-        placeholder: formatMessage(userInfoMessages.username)
+        placeholder: formatMessage(userInfoMessages.username),
+        inputProps: { disabled: true }
       },
       breakpoints: { xs: 12, md: 6 }
     },
@@ -133,17 +138,13 @@ const UserInfo = (): ReactElement => {
   ]
 
   const validationSchema = yup.object({
-    name: yup.string().required(formatMessage(formMessages.required)),
-    lastname: yup.string().required(formatMessage(formMessages.required)),
-    username: yup.string().required(formatMessage(formMessages.required)),
     email: yup
       .string()
       .trim()
       .email(formatMessage(formMessages.invalidEmail))
       .required(formatMessage(formMessages.required)),
     extension: yup.string().required(formatMessage(formMessages.required)),
-    position: yup.string().required(formatMessage(formMessages.required)),
-    groups: yup.string().required(formatMessage(formMessages.required))
+    position: yup.string().required(formatMessage(formMessages.required))
   })
 
   const formikConfig: FormikConfig<FormValues> = {
@@ -157,8 +158,18 @@ const UserInfo = (): ReactElement => {
       groups: []
     },
     validationSchema,
-    onSubmit: (values) => {
-      console.log(values)
+    onSubmit: async (values) => {
+      const updated = await actions?.updateProfile({
+        email: values.email,
+        phoneExtension: values.extension,
+        position: values.position
+      })
+      if (updated) {
+        launchToast({
+          title: formatMessage(userInfoMessages.success),
+          type: 'Success'
+        })
+      }
     }
   }
 

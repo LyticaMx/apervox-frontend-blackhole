@@ -96,6 +96,10 @@ export const formMessages = defineMessages({
     id: 'global.form.mustBeNumber',
     defaultMessage: 'Debe ser un valor númerico'
   },
+  minLength: {
+    id: 'global.form.minLength',
+    defaultMessage: 'El campo debe tener al menos {length} caracteres'
+  },
   minValue: {
     id: 'global.form.minValue',
     defaultMessage: 'El valor debe ser mayor o igual a {value}'
