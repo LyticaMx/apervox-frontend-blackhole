@@ -1,9 +1,15 @@
 import { FormProfile, Profile } from './profile'
 
 export interface Role {
-  id: number
+  id: string
   name: string
   description: string
+  users?: any[]
+  status: boolean
+  created_by: string
+  created_at: string
+  updated_by: string
+  updated_at: string
 }
 
 export interface UserAuth {

@@ -6,14 +6,34 @@ import Typography from 'components/Typography'
 import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
 import { rolesCreateMessages } from '../messages'
 import AccordionModules from './Accordion'
+import { useFormik } from 'formik'
+import { useRoles } from 'context/Roles'
 
 interface Props {
   open: boolean
   onClose?: () => void
 }
+interface FormValues {
+  name: string
+}
 const StoreDrawer = ({ open, onClose }: Props): ReactElement => {
   const getMessage = useFormatMessage(rolesCreateMessages)
   const getGlobalMessage = useGlobalMessage()
+  const { actions } = useRoles()
+
+  const formik = useFormik<FormValues>({
+    initialValues: {
+      name: ''
+    },
+    onSubmit: (values) => {
+      actions?.createRole({
+        name: values.name,
+        users: [],
+        scopes: []
+      })
+    }
+  })
+
   const items = [
     {
       id: 'config',
@@ -125,7 +145,10 @@ const StoreDrawer = ({ open, onClose }: Props): ReactElement => {
       placement="right"
       className="bg-background-secondary"
     >
-      <div className="w-80 h-full flex flex-col ">
+      <form
+        className="w-80 h-full flex flex-col "
+        onSubmit={formik.handleSubmit}
+      >
         <Typography variant="title" style="bold" className="uppercase">
           {getMessage('title')}
         </Typography>
@@ -133,7 +156,11 @@ const StoreDrawer = ({ open, onClose }: Props): ReactElement => {
 
         <div className="overflow-y-auto min-h-0 flex-1 basis-auto py-2">
           <span className="text-sm italic">{getMessage('name')}</span>
-          <TextField />
+          <TextField
+            name="name"
+            value={formik.values.name}
+            onChange={formik.handleChange}
+          />
 
           <h4 className="text-primary mt-4 mb-2 uppercase">
             {getMessage('modules')}
@@ -152,11 +179,11 @@ const StoreDrawer = ({ open, onClose }: Props): ReactElement => {
           <TextField />
         </div>
         <div className="text-right mt-4">
-          <Button variant="contained" color="primary">
+          <Button variant="contained" color="primary" type="submit">
             {getGlobalMessage('save', 'actionsMessages')}
           </Button>
         </div>
-      </div>
+      </form>
     </Drawer>
   )
 }

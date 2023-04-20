@@ -1,16 +1,21 @@
+import DeleteDialog from 'components/DeleteDialog'
 import Title from 'components/Title'
 import ViewFilter from 'components/ViewFilter'
+import { useRoles } from 'context/Roles'
+
 import { useFormatMessage } from 'hooks/useIntl'
-import { ReactElement } from 'react'
+import { ReactElement, useEffect } from 'react'
 import { useToggle } from 'usehooks-ts'
 import RoleCard from './components/Card'
-import DeleteDialog from './components/DeleteDialog'
+
 import DisableDialog from './components/DisableDialog'
 import StoreDrawer from './components/StoreDrawer'
-import { rolesMessages } from './messages'
+import { rolesMessages, rolesDeleteMessages } from './messages'
 
 const Roles = (): ReactElement => {
+  const { roles, actions } = useRoles()
   const getMessage = useFormatMessage(rolesMessages)
+  const getDeleteMessage = useFormatMessage(rolesDeleteMessages)
   const [open, toggleOpen] = useToggle(false)
   const [openDialog, toggleOpenDialog] = useToggle(false)
   const [openDisabledDialog, toggleOpenDisabledDialog] = useToggle(false)
@@ -18,6 +23,14 @@ const Roles = (): ReactElement => {
     { label: 'Numero de usuarios', name: 'numero_usuarios' },
     { label: 'Usuario', name: 'usuario' }
   ]
+
+  useEffect(() => {
+    actions?.getRoles()
+  }, [])
+
+  const handleDelete = ({ password }: { password: string }): void => {
+    console.log(password)
+  }
 
   return (
     <div>
@@ -34,22 +47,26 @@ const Roles = (): ReactElement => {
       </div>
 
       <div className="grid gap-4 mt-8 xl:mt-12 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        <RoleCard
-          data={{
-            id: '',
-            name: 'Vinculación',
-            created_at: '25/11/2022 - 10:00:00',
-            user_name: 'Efrain Cuadras',
-            total_users: 5
-          }}
-          onBlock={() => toggleOpenDisabledDialog()}
-          onDelete={() => toggleOpenDialog()}
-          onHistory={() => {}}
-        />
+        {roles.map((item, index) => (
+          <RoleCard
+            key={index}
+            data={item}
+            onBlock={() => toggleOpenDisabledDialog()}
+            onDelete={() => toggleOpenDialog()}
+            onHistory={() => {}}
+          />
+        ))}
       </div>
 
       <StoreDrawer open={open} onClose={toggleOpen} />
-      <DeleteDialog open={openDialog} onClose={toggleOpenDialog} />
+      <DeleteDialog
+        title={getDeleteMessage('title')}
+        question={getDeleteMessage('message')}
+        confirmation={getDeleteMessage('confirm')}
+        open={openDialog}
+        onAccept={handleDelete}
+        onClose={toggleOpenDialog}
+      />
       <DisableDialog
         open={openDisabledDialog}
         onClose={toggleOpenDisabledDialog}

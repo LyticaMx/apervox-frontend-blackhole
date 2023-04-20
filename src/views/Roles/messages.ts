@@ -43,7 +43,7 @@ export const rolesDeleteMessages = defineMessages({
   confirm: {
     id: 'views.roles.delete.confirm',
     defaultMessage:
-      '¿Estas seguro de querer eliminar el rol de usuario seleccionado?'
+      'Ingresa tu contraseña para validar la eliminación del rol de usuario seleccionado.'
   }
 })
 

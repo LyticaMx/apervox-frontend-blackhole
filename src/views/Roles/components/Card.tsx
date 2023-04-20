@@ -6,18 +6,20 @@ import {
 } from '@heroicons/react/24/outline'
 import Card from 'components/Card'
 import Typography from 'components/Typography'
+import { format, parseISO } from 'date-fns'
 import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
 import { ReactElement } from 'react'
+import { Role } from 'types/auth'
 import { rolesCardMessages } from '../messages'
 import ActionTooltip from './Tooltip'
 
-interface Role {
-  id: string
-  name: string
-  created_at: string
-  user_name: string
-  total_users: number
-}
+// interface Role {
+//   id: string
+//   name: string
+//   created_at: string
+//   user_name: string
+//   total_users: number
+// }
 
 interface Props {
   data: Role
@@ -33,6 +35,13 @@ const RoleCard = ({
 }: Props): ReactElement => {
   const getMessage = useFormatMessage(rolesCardMessages)
   const getGlobalMessage = useGlobalMessage()
+
+  const formatDate = (createAt?: string): string => {
+    if (!createAt) return ''
+
+    return format(parseISO(createAt), 'dd/MM/yyyy - hh:ss:mm')
+  }
+
   return (
     <Card>
       <Typography variant="subtitle" style="semibold">
@@ -40,15 +49,15 @@ const RoleCard = ({
       </Typography>
       <p className="text-sm">
         <span className="font-semibold">{getMessage('createdAt')}:</span>{' '}
-        {data.created_at}
+        {formatDate(data.created_at)}
       </p>
       <p className="text-sm">
         <span className="font-semibold">{getMessage('createdBy')}:</span>{' '}
-        {data.user_name}
+        {data.created_by ?? ''}
       </p>
       <p className="text-sm mt-1">
         <UsersIcon className="h-6 w-6 text-primary mr-1 inline bg-background-secondary p-1 rounded-md" />{' '}
-        {data.total_users} {getMessage('totalUsers')}
+        {data.users?.length ?? 0} {getMessage('totalUsers')}
       </p>
       <div className="flex justify-end gap-2 mt-2">
         <ActionTooltip content={getGlobalMessage('history', 'generalMessages')}>

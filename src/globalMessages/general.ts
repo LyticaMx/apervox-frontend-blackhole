@@ -612,5 +612,9 @@ export const generalMessages = defineMessages({
   forms: {
     id: 'global.general.forms',
     defaultMessage: 'Formularios'
+  },
+  password: {
+    id: 'global.general.password',
+    defaultMessage: 'Contraseña'
   }
 })

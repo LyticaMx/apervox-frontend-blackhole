@@ -48,9 +48,11 @@ const DeleteDialog = (props: Props): ReactElement => {
 
   useEffect(() => {
     if (!open) {
-      setAccepted(false)
-      formik.resetForm()
-      formik.setFieldTouched('password', false)
+      setTimeout(() => {
+        setAccepted(false)
+        formik.resetForm()
+        formik.setFieldTouched('password', false)
+      }, 300)
     }
   }, [open])
 
