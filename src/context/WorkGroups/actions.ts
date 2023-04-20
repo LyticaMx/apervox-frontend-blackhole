@@ -19,7 +19,7 @@ import { ResponseData, SearchParams } from 'types/api'
 const orderByMapper = { registered_by: 'created_by', total_users: 'users' }
 
 const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
-  const { workGroupsPagination, dateFilter, searchFilter } = state
+  const { workGroupsPagination, dateFilter, searchFilter, selected } = state
   const getWorkgroupsService = useApi({ endpoint: 'groups', method: 'get' })
   const createWorkgroupService = useApi({ endpoint: 'groups', method: 'post' })
   const updateWorkGroupService = useApi({ endpoint: 'groups', method: 'put' })
@@ -197,7 +197,7 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
             status: item.status,
             created_at: item.created_at,
             registered_by: item.created_by,
-            userIds: item.users,
+            users: item.users,
             total_users: item.users.length
           }))
         )
@@ -446,6 +446,7 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
 
   const updateWorkGroup = async (workgroup: WorkGroup): Promise<boolean> => {
     try {
+      if (selected.id === '') return false
       await updateWorkGroupService({
         queryString: workgroup.id ?? '',
         body: {
@@ -453,6 +454,21 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
           description: workgroup.description ?? ''
         }
       })
+
+      const members = selected.users?.map((user) => user.id) ?? []
+      const newMembers = workgroup.userIds ?? []
+
+      const membersAction = {
+        connect: newMembers.filter((user) => !members.includes(user)),
+        disconnect: members.filter((user) => !newMembers.includes(user))
+      }
+
+      const response = await updateWorkGroupService({
+        queryString: `${selected.id}/users`,
+        body: membersAction
+      })
+
+      dispatch(actions.setSelectedWorkGroup(response.data))
 
       return true
     } catch {

@@ -14,15 +14,15 @@ interface Props {
   open: boolean
   onClose?: () => void
 }
-const EditWorkGroupDrawer = ({ open, onClose }: Props): ReactElement => {
+const EditWorkGroupDrawer = ({ open, onClose }: Props): ReactElement | null => {
   const getMessage = useFormatMessage(workGroupsEditDrawerMessages)
   const { formatMessage } = useIntl()
   const { launchToast } = useToast()
   const { actions, selected: workGroup } = useWorkGroups()
 
-  return !workGroup.id ? (
-    <></>
-  ) : (
+  if (workGroup.id === '') return null
+
+  return (
     <Drawer
       open={open}
       onClose={onClose}
@@ -67,13 +67,18 @@ const EditWorkGroupDrawer = ({ open, onClose }: Props): ReactElement => {
           initialValues={{
             id: workGroup.id,
             name: workGroup.name,
-            description: workGroup.description
+            description: workGroup.description,
+            users: workGroup.users?.map((item) => ({
+              value: item.id,
+              label: item.username
+            }))
           }}
           onSubmit={async (values) => {
             const updated = await actions?.updateWorkGroup({
               id: workGroup.id,
               name: values.name,
-              description: values.description
+              description: values.description,
+              userIds: values.users.map((item) => item.value)
             })
             if (updated) {
               launchToast({

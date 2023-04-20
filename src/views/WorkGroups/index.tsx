@@ -16,6 +16,7 @@ import EditWorkGroupDrawer from './components/EditWorkGroupDrawer'
 import HistoryDrawer from './components/HistoryDrawer'
 import { workGroupsMessages } from './messages'
 import Typography from 'components/Typography'
+import Button from 'components/Button'
 
 const WorkGroups = (): ReactElement => {
   const getMessage = useFormatMessage(workGroupsMessages)
@@ -94,10 +95,23 @@ const WorkGroups = (): ReactElement => {
 
       {selected.id && (
         <Card className="px-4 py-2">
-          <Title className="uppercase">
-            {getMessage('assignedSectionTitle', { groupName: selected.name })}
-          </Title>
-          <Typography variant="subtitle">{selected.description}</Typography>
+          <div className="flex items-center justify-between">
+            <div>
+              <Title className="uppercase">
+                {getMessage('assignedSectionTitle', {
+                  groupName: selected.name
+                })}
+              </Title>
+              <Typography variant="subtitle">{selected.description}</Typography>
+            </div>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={toggleOpenEditDrawer}
+            >
+              {getMessage('editGroup')}
+            </Button>
+          </div>
 
           <Tabs
             actualTab={tab}

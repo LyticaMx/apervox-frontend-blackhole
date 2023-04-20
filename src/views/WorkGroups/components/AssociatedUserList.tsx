@@ -4,7 +4,6 @@ import { TrashIcon } from '@heroicons/react/24/outline'
 import { generalMessages } from 'globalMessages'
 import { useFormatMessage } from 'hooks/useIntl'
 import useTableColumns from 'hooks/useTableColumns'
-import { useWorkGroups } from 'context/WorkGroups'
 import { WorkGroupUser } from 'types/workgroup'
 import { Status } from 'types/status'
 import Table from 'components/Table'
@@ -14,7 +13,7 @@ import StatusTag from 'components/Status/StatusTag'
 const AssociatedUserList = (): ReactElement => {
   const getMessage = useFormatMessage(generalMessages)
   const [sortingState, setSortingState] = useState<SortingState>([])
-  const { associatedUsers } = useWorkGroups()
+  // const { associatedUsers } = useWorkGroups()
 
   const columns = useTableColumns<WorkGroupUser>(() => [
     {
@@ -82,7 +81,7 @@ const AssociatedUserList = (): ReactElement => {
   return (
     <Table
       columns={columns}
-      data={associatedUsers}
+      data={[]}
       className="overflow-x-auto shadow rounded-lg"
       manualSorting={{
         onSortingChange: setSortingState,

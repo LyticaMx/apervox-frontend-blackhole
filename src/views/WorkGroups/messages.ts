@@ -24,6 +24,10 @@ export const workGroupsMessages = defineMessages({
   assignedTechniquesSubtitle: {
     id: 'views.workGroups.assignedTechniquesSubtitle',
     defaultMessage: 'Técnicas asignadas al grupo'
+  },
+  editGroup: {
+    id: 'views.workGroups.editGr',
+    defaultMessage: 'Editar grupo'
   }
 })
 

@@ -18,6 +18,11 @@ export enum Turn {
   NIGHTNING = 'nightning'
 }
 
+export interface InnerWorkgroupUser {
+  id: string
+  username: string
+}
+
 export interface WorkGroup {
   id?: string
   name: string
@@ -29,6 +34,7 @@ export interface WorkGroup {
   updated_at?: string
   techniques?: WorkGroupTechniques
   techniquesIds?: string[]
+  users?: InnerWorkgroupUser[]
   userIds?: string[]
   status?: boolean | Status
 }
