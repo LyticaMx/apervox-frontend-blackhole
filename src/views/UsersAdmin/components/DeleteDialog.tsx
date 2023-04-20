@@ -7,6 +7,7 @@ import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
 import { usersDeleteMessages } from '../messages'
 import { useUsers } from 'context/Users'
 import useToast from 'hooks/useToast'
+import { useAuth } from 'context/Auth'
 
 interface Props {
   ids: string[]
@@ -27,6 +28,7 @@ const DeleteDialog = ({
   const [passwordError, setPasswordError] = useState(false)
   const [password, setPassword] = useState('')
   const { actions } = useUsers()
+  const { actions: authActions } = useAuth()
   const { launchToast } = useToast()
 
   const open = ids.length > 0
@@ -43,6 +45,16 @@ const DeleteDialog = ({
 
   const handleDelete = async (): Promise<void> => {
     try {
+      const isCorrectPassword =
+        (await authActions?.verifyPassword(password)) ?? false
+      if (!isCorrectPassword) {
+        launchToast({
+          title: getMessage('incorrectPassword'),
+          type: 'Danger'
+        })
+
+        return
+      }
       let deleted = false
       if (ids.length === 1) {
         deleted = Boolean(await actions?.deleteUser(ids[0]))

@@ -38,6 +38,7 @@ const RemoteLogOffDialog = ({
           type: 'Success',
           title: getMessage('success')
         })
+        actions?.getUsers()
       }
     } catch {}
   }

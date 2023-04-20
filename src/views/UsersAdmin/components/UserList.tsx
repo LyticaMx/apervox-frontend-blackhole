@@ -95,6 +95,27 @@ const UserList = ({
             )}
           </div>
         )
+      },
+      meta: {
+        columnFilters: {
+          onChange: async (values) => {
+            await actions?.getUsers({ sessions: values })
+          },
+          options: [
+            {
+              name: 'Logueado',
+              value: 'logged'
+            },
+            {
+              name: 'No logueado',
+              value: 'not logged'
+            },
+            {
+              name: 'Ambos',
+              value: 'both'
+            }
+          ]
+        }
       }
     },
     {
@@ -114,6 +135,26 @@ const UserList = ({
             variant="caption"
           />
         )
+      },
+      meta: {
+        columnFilters: {
+          onChange: async (values) =>
+            await actions?.getUsers({ status: values }),
+          options: [
+            {
+              name: 'Habilitado',
+              value: 'enabled'
+            },
+            {
+              name: 'Deshabilitado',
+              value: 'disabled'
+            },
+            {
+              name: 'Ambos',
+              value: 'both'
+            }
+          ]
+        }
       }
     },
     {
@@ -125,7 +166,7 @@ const UserList = ({
       accessorKey: 'id',
       header: getMessage('action'),
       enableSorting: false,
-      cell: ({ getValue, cell }) => {
+      cell: ({ getValue, cell, table }) => {
         const id = getValue<string>()
         const status = cell.row.original.status
 
@@ -140,20 +181,29 @@ const UserList = ({
               },
               {
                 label: 'Desbloquear usuario',
-                disabled: status !== 'banned',
+                disabled:
+                  status !== 'banned' ||
+                  table.getIsSomePageRowsSelected() ||
+                  table.getIsAllRowsSelected(),
                 onClick: () => {
                   onUnlockUser(id)
                 }
               },
               {
                 label: 'Deshabilitar usuario',
-                disabled: status === 'banned',
+                disabled:
+                  status === 'banned' ||
+                  table.getIsSomePageRowsSelected() ||
+                  table.getIsAllRowsSelected(),
                 onClick: () => {
                   onDisableUser([id])
                 }
               },
               {
                 label: 'Cerrar sesión',
+                disabled:
+                  table.getIsSomePageRowsSelected() ||
+                  table.getIsAllRowsSelected(),
                 onClick: () => {
                   onRemoteLogOffUser([id])
                 }
@@ -161,6 +211,9 @@ const UserList = ({
               {
                 label: 'Eliminar',
                 className: 'text-red-500',
+                disabled:
+                  table.getIsSomePageRowsSelected() ||
+                  table.getIsAllRowsSelected(),
                 onClick: () => {
                   onDeleteUser([id])
                 }

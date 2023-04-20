@@ -39,6 +39,10 @@ export const usersDeleteMessages = defineMessages({
     id: 'views.users.delete.success',
     defaultMessage:
       '{users, plural, one {Usuario eliminado} other {Usuarios eliminados}} correctamente'
+  },
+  incorrectPassword: {
+    id: 'views.users.delete.incorrectPassword',
+    defaultMessage: 'Contraseña incorrecta'
   }
 })
 
