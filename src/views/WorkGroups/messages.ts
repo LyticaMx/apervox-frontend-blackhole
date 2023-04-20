@@ -15,7 +15,7 @@ export const workGroupsMessages = defineMessages({
   },
   assignedSectionTitle: {
     id: 'views.workGroups.assignedSectionTitle',
-    defaultMessage: 'Datos de grupo de trabajo'
+    defaultMessage: 'Datos de grupo de trabajo - {groupName}'
   },
   assignedUsersSubtitle: {
     id: 'views.workGroups.assignedUsersSubtitle',

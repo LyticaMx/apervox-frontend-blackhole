@@ -448,7 +448,7 @@ export const organizationFormMessages = defineMessages({
 export const personalDataFormMessages = defineMessages({
   title: {
     id: 'views.techniques.PersonalDataForm.title',
-    defaultMessage: 'Datos personales, biométricos y domicilio'
+    defaultMessage: 'Datos personales y domicilio'
   },
   targetName: {
     id: 'views.techniques.PersonalDataForm.targetName',
@@ -879,7 +879,7 @@ export const techniqueFormMessages = defineMessages({
     defaultMessage: 'Corte'
   },
   courtPlaceholder: {
-    id: 'views.techniques.TechniqueForm.court',
+    id: 'views.techniques.TechniqueForm.courtPlaceholder',
     defaultMessage: 'Ej. Cada 2 horas'
   },
   associatedTargets: {

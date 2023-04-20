@@ -15,6 +15,7 @@ import CreateWorkGroupDrawer from './components/CreateWorkGroupDrawer'
 import EditWorkGroupDrawer from './components/EditWorkGroupDrawer'
 import HistoryDrawer from './components/HistoryDrawer'
 import { workGroupsMessages } from './messages'
+import Typography from 'components/Typography'
 
 const WorkGroups = (): ReactElement => {
   const getMessage = useFormatMessage(workGroupsMessages)
@@ -44,7 +45,7 @@ const WorkGroups = (): ReactElement => {
       setTab('users')
       actions?.getWorkGroupUsers(selected.id)
 
-      toggleOpenEditDrawer()
+      // toggleOpenEditDrawer()
     }
   }, [selected])
 
@@ -94,8 +95,9 @@ const WorkGroups = (): ReactElement => {
       {selected.id && (
         <Card className="px-4 py-2">
           <Title className="uppercase">
-            {getMessage('assignedSectionTitle')}
+            {getMessage('assignedSectionTitle', { groupName: selected.name })}
           </Title>
+          <Typography variant="subtitle">{selected.description}</Typography>
 
           <Tabs
             actualTab={tab}

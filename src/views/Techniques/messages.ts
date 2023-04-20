@@ -916,14 +916,6 @@ export const techniqueInfoMessages = defineMessages({
     id: 'views.techniques.TechniqueInfo.title',
     defaultMessage: 'Descripción de la técnica'
   },
-  subtitle: {
-    id: 'views.techniques.TechniqueInfo.subtitle',
-    defaultMessage: 'Espacio que indica de que trata la técnica en curso-'
-  },
-  saveDescription: {
-    id: 'views.techniques.TechniqueInfo.saveDescription',
-    defaultMessage: 'Guardar descripción'
-  },
   configuration: {
     id: 'views.techniques.TechniqueInfo.configuration',
     defaultMessage: 'Configuración de la técnica'
@@ -985,7 +977,7 @@ export const techniqueFormMessages = defineMessages({
     defaultMessage: 'Corte'
   },
   courtPlaceholder: {
-    id: 'views.techniques.TechniqueForm.court',
+    id: 'views.techniques.TechniqueForm.courtPlaceholder',
     defaultMessage: 'Ej. Cada 2 horas'
   },
   associatedTargets: {
