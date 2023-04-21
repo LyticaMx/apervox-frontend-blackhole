@@ -301,7 +301,7 @@ const Table = <DataType,>({
             <thead className="bg-gray-50 sticky top-0">
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
+                  {headerGroup.headers.map((header, index) => {
                     return (
                       <th
                         className="py-3.5 px-3 text-left text-sm font-semibold text-gray-900 whitespace-nowrap uppercase"
@@ -314,7 +314,8 @@ const Table = <DataType,>({
                             className={clsx(
                               (!!manualSorting ||
                                 !!header.column.columnDef.meta) &&
-                                'cursor-pointer flex select-none items-center'
+                                'cursor-pointer flex select-none items-center',
+                              index === 0 && withCheckbox && 'justify-center'
                             )}
                           >
                             {flexRender(

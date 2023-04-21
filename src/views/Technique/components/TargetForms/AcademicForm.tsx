@@ -6,7 +6,7 @@ import { Field, Section } from 'types/form'
 import AccordionForm from './AccordionForm'
 import { useAddressForm, AddressFormValues } from './useAddressForm'
 import { useGlobalMessage } from 'hooks/useIntl'
-import { academicFormMessages } from 'views/Techniques/messages'
+import { academicFormMessages } from 'views/Technique/messages'
 
 interface FormValues extends AddressFormValues {
   name: string

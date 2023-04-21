@@ -1,110 +1,72 @@
-import { ReactElement, useState, useEffect } from 'react'
-import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
-import Dialog from 'components/Dialog'
-import Button from 'components/Button'
-import TextField from 'components/Form/Textfield'
-import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
+import { ReactElement } from 'react'
+import { useFormatMessage } from 'hooks/useIntl'
 import { workGroupsDeleteDialogMessages } from '../messages'
+import { useWorkGroups } from 'context/WorkGroups'
+import { useAuth } from 'context/Auth'
+import useToast from 'hooks/useToast'
+import DeleteDialogTemplate from 'components/DeleteDialog'
 
 interface Props {
-  open?: boolean
+  ids: string[]
   selectedGroups?: Number
+  onConfirm?: () => void
   onClose?: (event?: any) => void
-  onAccept?: () => void
+  resolve: (value: boolean | PromiseLike<boolean>) => void
 }
 
 const DeleteDialog = ({
-  open = true,
+  ids,
+  onConfirm = () => {},
   onClose = () => {},
-  onAccept = () => {},
-  selectedGroups = 1
+  resolve
 }: Props): ReactElement => {
   const getMessage = useFormatMessage(workGroupsDeleteDialogMessages)
-  const getGlobalMessage = useGlobalMessage()
-  const [firstConfirmation, setFirstConfirmation] = useState(false)
-  const [passwordError, setPasswordError] = useState(false)
-  const [password, setPassword] = useState('')
+  const { actions } = useWorkGroups()
+  const { actions: authActions } = useAuth()
+  const { launchToast } = useToast()
 
-  useEffect(() => {
-    if (!open) {
-      setTimeout(() => {
-        setFirstConfirmation(false)
-        setPasswordError(false)
-        setPassword('')
-      }, 300)
+  const handleDelete = async (password: string): Promise<void> => {
+    try {
+      const isValidPassword = await authActions?.verifyPassword(password)
+      if (!isValidPassword) resolve(false)
+      let deleted = false
+      if (ids.length === 1) {
+        deleted = (await actions?.deleteWorkGroup(ids[0])) ?? false
+      } else {
+        deleted = (await actions?.deleteWorkGroups(ids)) ?? false
+      }
+      if (!deleted) {
+        resolve(false)
+        return
+      }
+
+      onConfirm()
+
+      launchToast({
+        type: 'Success',
+        title: getMessage('successDelete', { groups: ids.length })
+      })
+
+      actions?.getWorkGroups({ page: 1 })
+      resolve(true)
+    } catch {
+      resolve(false)
     }
-  }, [open])
+  }
 
   return (
-    <Dialog open={open} onClose={onClose} size="sm" padding="none">
-      <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-        <div className="text-center sm:mt-0">
-          <ExclamationTriangleIcon className="h-6 w-6 text-red-600 m-auto mb-2" />
-          <h3 className="text-lg font-medium leading-6 text-gray-900">
-            {getMessage('title', { selectedGroups })}
-          </h3>
-          <p className="text-sm text-gray-500 mt-1 mb-2">
-            {getMessage(
-              firstConfirmation ? 'passwordConfirmMessage' : 'message',
-              {
-                selectedGroups
-              }
-            )}
-          </p>
-        </div>
-
-        {firstConfirmation && (
-          <div className="w-full">
-            <TextField
-              id="password"
-              name="password"
-              type="password"
-              label={getGlobalMessage('password', 'formMessages')}
-              value={password}
-              onChange={(e) => {
-                setPasswordError(false)
-                setPassword(e.target.value)
-              }}
-              helperText={
-                passwordError
-                  ? getGlobalMessage('required', 'formMessages')
-                  : undefined
-              }
-            />
-          </div>
-        )}
-      </div>
-
-      <div className=" px-4 pb-8 sm:flex gap-2 justify-center">
-        {firstConfirmation ? (
-          <Button
-            variant="contained"
-            color="red"
-            onClick={() => {
-              if (!password) {
-                setPasswordError(true)
-              } else {
-                onAccept()
-              }
-            }}
-          >
-            {getGlobalMessage('accept', 'actionsMessages')}
-          </Button>
-        ) : (
-          <Button
-            variant="contained"
-            color="red"
-            onClick={() => setFirstConfirmation(true)}
-          >
-            {getGlobalMessage('accept', 'actionsMessages')}
-          </Button>
-        )}
-
-        <Button variant="contained" color="secondary" onClick={onClose}>
-          {getGlobalMessage('cancel', 'actionsMessages')}
-        </Button>
-      </div>
-    </Dialog>
+    <DeleteDialogTemplate
+      title={getMessage('title')}
+      confirmation={getMessage('passwordConfirmMessage', {
+        selectedGroups: ids.length
+      })}
+      question={getMessage('message', {
+        selectedGroups: ids.length
+      })}
+      open={ids.length > 0}
+      onAccept={async ({ password }) => await handleDelete(password)}
+      onClose={onClose}
+    />
   )
 }
 

@@ -16,6 +16,7 @@ interface Props {
   method: 'post' | 'put' | 'get' | 'delete' | 'patch'
   base?: BaseURL
   acceptNulls?: boolean
+  withLoader?: boolean
 }
 
 interface UrlParams extends GeneralParams {
@@ -34,7 +35,8 @@ const useApi = ({
   endpoint,
   method,
   base = 'default',
-  acceptNulls = false
+  acceptNulls = false,
+  withLoader = true
 }: Props) => {
   const intl = useIntl()
   const { actions: loaderActions } = useLoader()
@@ -49,7 +51,7 @@ const useApi = ({
     const url: string = `${endpoint}${queryString ? `/${queryString}` : ''}`
 
     try {
-      loaderActions?.showLoader()
+      if (withLoader) loaderActions?.showLoader()
 
       const response = await instance({
         method,
@@ -118,7 +120,7 @@ const useApi = ({
 
       throw { error: 1, description: error } as any
     } finally {
-      loaderActions?.hideLoader()
+      if (withLoader) loaderActions?.hideLoader()
     }
   }
 

@@ -8,20 +8,26 @@ import Drawer from 'components/Drawer'
 import Typography from 'components/Typography'
 import WorkGroupForm from './WorkGroupForm'
 import { workGroupsEditDrawerMessages } from '../messages'
+import useToast from 'hooks/useToast'
 
 interface Props {
   open: boolean
   onClose?: () => void
+  actualTab: string
 }
-const EditWorkGroupDrawer = ({ open, onClose }: Props): ReactElement => {
+const EditWorkGroupDrawer = ({
+  open,
+  onClose,
+  actualTab
+}: Props): ReactElement | null => {
   const getMessage = useFormatMessage(workGroupsEditDrawerMessages)
   const { formatMessage } = useIntl()
+  const { launchToast } = useToast()
+  const { actions, selected: workGroup } = useWorkGroups()
 
-  const { selected: workGroup } = useWorkGroups()
+  if (workGroup.id === '') return null
 
-  return !workGroup.id ? (
-    <></>
-  ) : (
+  return (
     <Drawer
       open={open}
       onClose={onClose}
@@ -38,7 +44,10 @@ const EditWorkGroupDrawer = ({ open, onClose }: Props): ReactElement => {
         <div className="mb-4">
           <Typography variant="caption">
             {formatMessage(generalMessages.createdOn, {
-              date: format(new Date(workGroup.created_at), 'dd/MM/yyyy - hh:mm')
+              date: format(
+                new Date(workGroup.created_at ?? ''),
+                'dd/MM/yyyy - hh:mm'
+              )
             })}
 
             <span className="ml-2">{workGroup.registered_by}</span>
@@ -59,13 +68,36 @@ const EditWorkGroupDrawer = ({ open, onClose }: Props): ReactElement => {
         </div>
 
         <WorkGroupForm
+          open={open}
           initialValues={{
             id: workGroup.id,
             name: workGroup.name,
-            description: workGroup.description
+            description: workGroup.description,
+            users: workGroup.users?.map((item) => ({
+              value: item.id,
+              label: item.username
+            }))
           }}
           onSubmit={async (values) => {
-            console.log('Update workGroup', values)
+            const updated = await actions?.updateWorkGroup({
+              id: workGroup.id,
+              name: values.name,
+              description: values.description,
+              userIds: values.users.map((item) => item.value)
+            })
+            if (updated) {
+              launchToast({
+                title: getMessage('success'),
+                type: 'Success'
+              })
+              onClose?.()
+              actions?.getWorkGroups()
+              if (actualTab === 'users') {
+                actions?.getWorkGroupUsers({
+                  page: 1
+                })
+              }
+            }
           }}
         />
       </div>

@@ -9,7 +9,7 @@ import { useAddressForm, AddressFormValues } from './useAddressForm'
 import {
   targetFormsGeneralMessages,
   personalDataFormMessages
-} from 'views/Techniques/messages'
+} from 'views/Technique/messages'
 import { useIntl } from 'react-intl'
 
 interface FormValues extends AddressFormValues {
@@ -50,9 +50,7 @@ const PersonalDataForm = ({ initialValues }: Props): ReactElement => {
       options: {
         id: 'personal-data-phone',
         label: getMessage('targetPhone'),
-        placeholder: formatMessage(
-          targetFormsGeneralMessages.phonePlaceholder
-        )
+        placeholder: formatMessage(targetFormsGeneralMessages.phonePlaceholder)
       },
       breakpoints: { xs: 3 }
     },

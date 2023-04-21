@@ -15,6 +15,13 @@ import CreateWorkGroupDrawer from './components/CreateWorkGroupDrawer'
 import EditWorkGroupDrawer from './components/EditWorkGroupDrawer'
 import HistoryDrawer from './components/HistoryDrawer'
 import { workGroupsMessages } from './messages'
+import Typography from 'components/Typography'
+import Button from 'components/Button'
+
+interface SynchroEditIds {
+  ids: string[]
+  resolve: ((value: boolean | PromiseLike<boolean>) => void) | null
+}
 
 const WorkGroups = (): ReactElement => {
   const getMessage = useFormatMessage(workGroupsMessages)
@@ -22,31 +29,31 @@ const WorkGroups = (): ReactElement => {
   const [openHistoryDrawer, toggleOpenHistoryDrawer] = useToggle(false)
   const [openCreateDrawer, toggleOpenCreateDrawer] = useToggle(false)
   const [openEditDrawer, toggleOpenEditDrawer] = useToggle(false)
-  const [openDeleteDialog, toggleDeleteDialog] = useToggle(false)
   const [openDisableDialog, toggleDisableDialog] = useToggle(false)
+  const [deletedWorkgroups, setDeletedWorkgroups] = useState<SynchroEditIds>({
+    ids: [],
+    resolve: null
+  })
   const { actions, selected, associatedUsers, associatedTechniques } =
     useWorkGroups()
 
   useEffect(() => {
-    actions?.getUsers()
-    actions?.getTechniques()
+    actions?.selectWorkGroup()
     actions?.getWorkGroups()
   }, [])
 
   useEffect(() => {
-    if (tab === 'users') {
-      actions?.getWorkGroupUsers(selected.id)
+    if (tab === 'users' && selected.id) {
+      actions?.getWorkGroupUsers({ page: 1 })
     } else {
-      actions?.getWorkGroupTechniques(selected.id)
+      actions?.getWorkGroupTechniques(selected.id ?? '')
     }
   }, [tab])
 
   useEffect(() => {
     if (selected.id) {
       setTab('users')
-      actions?.getWorkGroupUsers(selected.id)
-
-      toggleOpenEditDrawer()
+      actions?.getWorkGroupUsers({ page: 1 })
     }
   }, [selected])
 
@@ -80,24 +87,57 @@ const WorkGroups = (): ReactElement => {
           onClose={toggleOpenHistoryDrawer}
         />
 
-        <DeleteDialog open={openDeleteDialog} onClose={toggleDeleteDialog} />
+        <DeleteDialog
+          ids={deletedWorkgroups.ids}
+          resolve={deletedWorkgroups.resolve ?? (() => {})}
+          onConfirm={() => setDeletedWorkgroups({ ids: [], resolve: null })}
+          onClose={() => {
+            if (deletedWorkgroups.resolve) deletedWorkgroups.resolve(false)
+            setDeletedWorkgroups({ ids: [], resolve: null })
+          }}
+        />
         <DisableDialog open={openDisableDialog} onClose={toggleDisableDialog} />
 
         <EditWorkGroupDrawer
           open={openEditDrawer}
+          actualTab={tab}
           onClose={toggleOpenEditDrawer}
         />
       </div>
 
       <div className="flex gap-4 mt-2 mb-4">
-        <WorkGroupList handleClickOnHistory={handleGetHistory} />
+        <WorkGroupList
+          handleClickOnHistory={handleGetHistory}
+          handleDelete={async (ids) =>
+            await new Promise<boolean>((resolve) =>
+              setDeletedWorkgroups({
+                ids,
+                resolve
+              })
+            )
+          }
+        />
       </div>
 
       {selected.id && (
         <Card className="px-4 py-2">
-          <Title className="uppercase">
-            {getMessage('assignedSectionTitle')}
-          </Title>
+          <div className="flex items-center justify-between">
+            <div>
+              <Title className="uppercase">
+                {getMessage('assignedSectionTitle', {
+                  groupName: selected.name
+                })}
+              </Title>
+              <Typography variant="subtitle">{selected.description}</Typography>
+            </div>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={toggleOpenEditDrawer}
+            >
+              {getMessage('editGroup')}
+            </Button>
+          </div>
 
           <Tabs
             actualTab={tab}

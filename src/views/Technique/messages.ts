@@ -448,7 +448,7 @@ export const organizationFormMessages = defineMessages({
 export const personalDataFormMessages = defineMessages({
   title: {
     id: 'views.techniques.PersonalDataForm.title',
-    defaultMessage: 'Datos personales, biométricos y domicilio'
+    defaultMessage: 'Datos personales y domicilio'
   },
   targetName: {
     id: 'views.techniques.PersonalDataForm.targetName',
@@ -743,6 +743,56 @@ export const vehiclesFormMessages = defineMessages({
   }
 })
 
+export const biometricFormMessages = defineMessages({
+  title: {
+    id: 'views.techniques.BiometricForm.title',
+    defaultMessage: 'Datos biométricos'
+  },
+  photos: {
+    id: 'views.techniques.BiometricForm.photos',
+    defaultMessage: 'Fotografías'
+  },
+  fingerprints: {
+    id: 'views.techniques.BiometricForm.fingerprints',
+    defaultMessage: 'Huellas dactilares'
+  },
+  voiceprints: {
+    id: 'views.techniques.BiometricForm.voiceprints',
+    defaultMessage: 'Huellas de voz'
+  }
+})
+
+export const socialCircleFormMessages = defineMessages({
+  title: {
+    id: 'views.techniques.SocialCircleForm.title',
+    defaultMessage: 'Circulo social'
+  },
+  itemTitle: {
+    id: 'views.techniques.SocialCircleForm.itemTitle',
+    defaultMessage: 'Persona'
+  },
+  name: {
+    id: 'views.techniques.SocialCircleForm.name',
+    defaultMessage: 'Nombre'
+  },
+  namePlaceholder: {
+    id: 'views.techniques.SocialCircleForm.namePlaceholder',
+    defaultMessage: 'Ej. Pedro Picapiedra'
+  },
+  activity: {
+    id: 'views.techniques.SocialCircleForm.activity',
+    defaultMessage: 'Actividad'
+  },
+  activityPlaceholder: {
+    id: 'views.techniques.SocialCircleForm.activityPlaceholder',
+    defaultMessage: 'Ej. Extracción de cantera'
+  },
+  address: {
+    id: 'views.techniques.SocialCircleForm.address',
+    defaultMessage: 'Dirección'
+  }
+})
+
 export const useAddressMessages = defineMessages({
   state: {
     id: 'views.techniques.useAddress.state',
@@ -879,7 +929,7 @@ export const techniqueFormMessages = defineMessages({
     defaultMessage: 'Corte'
   },
   courtPlaceholder: {
-    id: 'views.techniques.TechniqueForm.court',
+    id: 'views.techniques.TechniqueForm.courtPlaceholder',
     defaultMessage: 'Ej. Cada 2 horas'
   },
   associatedTargets: {

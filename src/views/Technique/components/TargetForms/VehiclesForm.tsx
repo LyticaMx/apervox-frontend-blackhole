@@ -7,7 +7,7 @@ import AccordionForm from './AccordionForm'
 import {
   targetFormsGeneralMessages,
   vehiclesFormMessages
-} from 'views/Techniques/messages'
+} from 'views/Technique/messages'
 
 interface FormValues {
   brand: string

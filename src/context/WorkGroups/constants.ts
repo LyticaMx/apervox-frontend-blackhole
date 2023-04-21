@@ -1,4 +1,5 @@
 import { createAction } from 'types/contextReducer'
+import { DateFilter, SearchFilter } from 'types/filters'
 import {
   Pagination,
   WorkGroup,
@@ -18,7 +19,9 @@ export enum Types {
   SET_SELECTED_WORKGROUP = 'workGroups/setSelectedWorkGroup',
   SET_WORKGROUP_PAGINATION = 'workGroups/setWorkGroupPagination',
   SET_WORKGROUP_USERS_PAGINATION = 'workGroups/setWorkGroupUsersPagination',
-  SET_WORKGROUP_TECHNIQUES_PAGINATION = 'workGroups/setWorkGroupTechniquesPagination'
+  SET_WORKGROUP_TECHNIQUES_PAGINATION = 'workGroups/setWorkGroupTechniquesPagination',
+  SET_WORKGROUP_FILTERS = 'workGroups/setWorkGroupFilters',
+  SET_WORKGROUP_DATE_FILTERS = 'workGroups/setWorkGroupDateFilters'
 }
 
 export const actions = {
@@ -37,6 +40,12 @@ export const actions = {
   ),
   setWorkGroupPagination: createAction<Types, Pagination>(
     Types.SET_WORKGROUP_PAGINATION
+  ),
+  setWorkGroupFilters: createAction<Types, SearchFilter>(
+    Types.SET_WORKGROUP_FILTERS
+  ),
+  setWorkGroupDateFilters: createAction<Types, DateFilter>(
+    Types.SET_WORKGROUP_DATE_FILTERS
   ),
   setWorkGroupUsersPagination: createAction<Types, Pagination>(
     Types.SET_WORKGROUP_USERS_PAGINATION

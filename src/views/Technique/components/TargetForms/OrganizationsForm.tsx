@@ -8,7 +8,7 @@ import { useAddressForm, AddressFormValues } from './useAddressForm'
 import {
   targetFormsGeneralMessages,
   organizationFormMessages
-} from 'views/Techniques/messages'
+} from 'views/Technique/messages'
 
 interface FormValues extends AddressFormValues {
   name: string
@@ -39,9 +39,7 @@ const OrganizationsForm = (): ReactElement => {
       options: {
         id: 'organization-email',
         label: formatMessage(formMessages.email),
-        placeholder: formatMessage(
-          targetFormsGeneralMessages.emailPlaceholder
-        )
+        placeholder: formatMessage(targetFormsGeneralMessages.emailPlaceholder)
       },
       breakpoints: { xs: 3 }
     },
@@ -51,9 +49,7 @@ const OrganizationsForm = (): ReactElement => {
       options: {
         id: 'organization-phone',
         label: formatMessage(targetFormsGeneralMessages.phone),
-        placeholder: formatMessage(
-          targetFormsGeneralMessages.phonePlaceholder
-        )
+        placeholder: formatMessage(targetFormsGeneralMessages.phonePlaceholder)
       },
       breakpoints: { xs: 3 }
     },

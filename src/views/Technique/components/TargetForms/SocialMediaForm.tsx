@@ -4,7 +4,7 @@ import { ReactElement } from 'react'
 import { formMessages } from 'globalMessages'
 import { Field } from 'types/form'
 import AccordionForm from './AccordionForm'
-import { socialMediaFormMessages } from 'views/Techniques/messages'
+import { socialMediaFormMessages } from 'views/Technique/messages'
 
 interface FormValues {
   name: string
