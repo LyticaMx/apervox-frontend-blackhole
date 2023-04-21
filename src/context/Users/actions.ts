@@ -188,7 +188,7 @@ export const useActions = (
             phone_extension: user.phone,
             position: user.position
           },
-          group_ids: user.groups,
+          group_ids: user.groupsIds,
           role_id: user.roleId,
           close_session: user.closeSession ?? true
         }

@@ -2,9 +2,9 @@ import { ReactElement, useMemo } from 'react'
 import { FormikConfig, FormikHelpers } from 'formik'
 import * as yup from 'yup'
 import Form from 'components/Form'
-import { Field } from 'types/form'
+import { Field, Section } from 'types/form'
 import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
-import { formMessages } from 'globalMessages'
+import { userFormMessages } from '../messages'
 
 interface FormValues {
   name: string
@@ -14,7 +14,7 @@ interface FormValues {
   extension: string
   position: string
   role: string
-  groups: string[]
+  groups: any[]
   automaticSessionExpiration: boolean
 }
 
@@ -27,7 +27,7 @@ interface Props {
 }
 
 const UserForm = ({ initialValues, onSubmit }: Props): ReactElement => {
-  const getMessage = useFormatMessage(formMessages)
+  const getMessage = useFormatMessage(userFormMessages)
   const getGlobalMessage = useGlobalMessage()
 
   const fields: Array<Field<FormValues>> = [
@@ -94,8 +94,8 @@ const UserForm = ({ initialValues, onSubmit }: Props): ReactElement => {
     {
       name: 'role',
       type: 'select',
+      section: 'roles',
       options: {
-        label: getMessage('role'),
         clearable: false,
         items: [
           {
@@ -109,16 +109,22 @@ const UserForm = ({ initialValues, onSubmit }: Props): ReactElement => {
     },
     {
       name: 'groups',
-      type: 'multi-chip-select',
+      type: 'async-select',
+      section: 'groups',
       options: {
-        label: getMessage('groups'),
-        items: [
-          { value: 1, text: 'g-uno' },
-          { value: 2, text: 'g-dos' },
-          { value: 3, text: 'g-tres' },
-          { value: 4, text: 'g-cuatro' },
-          { value: 5, text: 'g-cinco' }
-        ]
+        asyncProps: {
+          api: {
+            endpoint: 'groups',
+            method: 'get'
+          },
+          value: 'id',
+          label: 'name',
+          searchField: 'name'
+        },
+        debounceTimeout: 300,
+        placeholder: getMessage('selectGroupsPlaceholder'),
+        loadingMessage: () => `${getMessage('loading')}...`,
+        noOptionsMessage: () => getMessage('noOptions')
       }
     },
     {
@@ -171,6 +177,25 @@ const UserForm = ({ initialValues, onSubmit }: Props): ReactElement => {
     [initialValues]
   )
 
+  const sections: Section[] = [
+    {
+      name: 'roles',
+      title: {
+        text: getMessage('role'),
+        className: 'uppercase text-primary-500',
+        style: 'medium'
+      }
+    },
+    {
+      name: 'groups',
+      title: {
+        text: getMessage('groups'),
+        className: 'uppercase text-primary-500',
+        style: 'medium'
+      }
+    }
+  ]
+
   return (
     <div>
       <Form
@@ -184,6 +209,10 @@ const UserForm = ({ initialValues, onSubmit }: Props): ReactElement => {
           className: 'mt-6 mb-2'
         }}
         className="user-account-data-form"
+        withSections={{
+          sections,
+          renderMainSection: true
+        }}
       />
     </div>
   )
