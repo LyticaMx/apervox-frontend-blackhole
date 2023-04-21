@@ -12,6 +12,11 @@ export const rolesMessages = defineMessages({
   button: {
     id: 'views.roles.button',
     defaultMessage: 'Crear role de usario'
+  },
+  deleteSuccess: {
+    id: 'views.roles.deleteSuccess',
+    defaultMessage:
+      'El rol de usuario ha sido eliminado del sistema correctamente.'
   }
 })
 
@@ -47,26 +52,53 @@ export const rolesDeleteMessages = defineMessages({
   }
 })
 
-export const rolesCreateMessages = defineMessages({
+export const rolesDisableMessages = defineMessages({
   title: {
-    id: 'views.roles.create.title',
+    id: 'views.roles.disable.title',
+    defaultMessage:
+      '{enabled, select, true{Deshabilitar} other {Habilitar}} rol de usuario'
+  },
+  message: {
+    id: 'views.roles.disable.message',
+    defaultMessage:
+      'El rol de usuario seleccionado se encuentra {enabled, select, true{habilitado} other{deshabilitado}}.'
+  },
+  success: {
+    id: 'views.roles.disable.success',
+    defaultMessage:
+      'Rol de usuario {enabled, select, true{habilitado} other{deshabilitado}} correctamente'
+  }
+})
+
+export const rolesDrawerMessages = defineMessages({
+  title: {
+    id: 'views.roles.drawer.title',
     defaultMessage: 'Crear rol de usuario'
   },
   message: {
-    id: 'views.roles.create.message',
+    id: 'views.roles.drawer.message',
     defaultMessage:
       'Completa los siguientes campos y asigna los permisos que tendrá el un nuevo rol de usuario.'
   },
+  titleUpdate: {
+    id: 'views.roles.drawer.title.update',
+    defaultMessage: 'Datos del rol de usuario'
+  },
+  messageUpdate: {
+    id: 'views.roles.drawer.message.update',
+    defaultMessage:
+      'Datos actualizados pertenecientes al rol de usuario seleccionado.'
+  },
   name: {
-    id: 'views.roles.create.name',
+    id: 'views.roles.drawer.name',
     defaultMessage: 'Nombre del perfil o rol de usuario'
   },
   modules: {
-    id: 'views.roles.create.modules',
+    id: 'views.roles.drawer.modules',
     defaultMessage: 'Visualización de módulos y permisos'
   },
   usersMessage: {
-    id: 'views.roles.create.usersMessage',
+    id: 'views.roles.drawer.usersMessage',
     defaultMessage: 'Selecciona usuarios para asignarlos a este perfil.'
   }
 })

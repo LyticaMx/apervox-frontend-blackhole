@@ -1,9 +1,16 @@
 import { useService } from 'hooks/useApi'
+import { omit } from 'lodash'
 import { ResponseData, SearchParams } from 'types/api'
-import { Role } from 'types/auth'
+// import { Role } from 'types/auth'
 import { DateFilter } from 'types/filters'
 import { actions } from './constants'
-import { Actions, RoleCreate, RolesPaginationParams, State } from './types'
+import {
+  Actions,
+  RoleCreate,
+  RolesPaginationParams,
+  RoleUpdate,
+  State
+} from './types'
 
 const orderByMapper = {
   name: 'names',
@@ -101,11 +108,11 @@ export const useActions = (state: State, dispatch): Actions => {
     }
   }
 
-  const updateRole = async (payload: Role): Promise<boolean> => {
+  const updateRole = async (payload: RoleUpdate): Promise<boolean> => {
     try {
       await resource.put({
         queryString: payload.id,
-        body: {}
+        body: omit(payload, ['id'])
       })
       return true
     } catch {
@@ -142,25 +149,6 @@ export const useActions = (state: State, dispatch): Actions => {
     }
   }
 
-  const multipleDisable = async (
-    ids: string[],
-    enabled = false
-  ): Promise<boolean> => {
-    try {
-      await resource.put({
-        body: {
-          ids,
-          payload: {
-            status: enabled
-          }
-        }
-      })
-      return true
-    } catch {
-      return false
-    }
-  }
-
   const exportTable = async (): Promise<void> => {}
 
   return {
@@ -169,7 +157,6 @@ export const useActions = (state: State, dispatch): Actions => {
     updateRole,
     deleteRole,
     toggleDisable,
-    multipleDisable,
     exportTable
   }
 }

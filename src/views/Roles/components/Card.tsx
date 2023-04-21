@@ -26,12 +26,14 @@ interface Props {
   onHistory: (item?: Role) => void
   onBlock: (item?: Role) => void
   onDelete: (item?: Role) => void
+  onClick: (item?: Role) => void
 }
 const RoleCard = ({
   data,
   onHistory,
   onBlock,
-  onDelete
+  onDelete,
+  onClick
 }: Props): ReactElement => {
   const getMessage = useFormatMessage(rolesCardMessages)
   const getGlobalMessage = useGlobalMessage()
@@ -43,7 +45,7 @@ const RoleCard = ({
   }
 
   return (
-    <Card>
+    <Card onClick={() => onClick(data)} className="cursor-pointer">
       <Typography variant="subtitle" style="semibold">
         {data.name}
       </Typography>
@@ -66,7 +68,12 @@ const RoleCard = ({
             onClick={() => onHistory(data)}
           />
         </ActionTooltip>
-        <ActionTooltip content={getGlobalMessage('disable', 'actionsMessages')}>
+        <ActionTooltip
+          content={getGlobalMessage(
+            data.status ? 'disable' : 'enable',
+            'actionsMessages'
+          )}
+        >
           <NoSymbolIcon
             className="h-5 w-5 text-muted hover:text-primary cursor-pointer"
             onClick={() => onBlock(data)}

@@ -25,16 +25,16 @@ export interface RoleCreate {
   scopes: Scope[]
   users: string[]
 }
+export interface RoleUpdate extends Pick<Role, 'id' | 'name'> {}
 
 export interface Actions {
   getRoles: (
     params?: RolesPaginationParams & SearchParams & DateFilter
   ) => Promise<void>
   createRole: (payload: RoleCreate) => Promise<boolean>
-  updateRole: (payload: Role) => Promise<boolean>
+  updateRole: (payload: RoleUpdate) => Promise<boolean>
   deleteRole: (id: string) => Promise<boolean>
   toggleDisable: (id: string, enabled: boolean) => Promise<boolean>
-  multipleDisable: (ids: string[], enabled: boolean) => Promise<boolean>
   exportTable: () => Promise<void>
 }
 

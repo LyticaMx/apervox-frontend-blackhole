@@ -62,7 +62,9 @@ const DeleteDialog = (props: Props): ReactElement => {
         <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
           <div className="text-center sm:mt-0">
             <ExclamationTriangleIcon className="h-6 w-6 text-red-600 m-auto mb-2" />
-            <h3>{title}</h3>
+            <h3 className="text-lg font-medium leading-6 text-gray-900">
+              {title}
+            </h3>
             <p className="text-sm text-gray-500 mb-2">
               {accepted ? confirmation : question}
             </p>

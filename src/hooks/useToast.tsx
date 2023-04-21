@@ -20,6 +20,10 @@ interface Params {
 
 interface ReturnType {
   launchToast: (params: Params) => void
+  success: (title: string, params?: Params) => void
+  warning: (title: string, params?: Params) => void
+  danger: (title: string, params?: Params) => void
+  info: (title: string, params?: Params) => void
 }
 
 const useToast = (): ReturnType => {
@@ -71,7 +75,21 @@ const useToast = (): ReturnType => {
     })
   }
 
-  return { launchToast }
+  return {
+    launchToast,
+    success: (title, params?: Params) => {
+      launchToast({ ...params, type: 'Success', title })
+    },
+    warning: (title, params?: Params) => {
+      launchToast({ ...params, type: 'Warning', title })
+    },
+    danger: (title, params?: Params) => {
+      launchToast({ ...params, type: 'Danger', title })
+    },
+    info: (title, params?: Params) => {
+      launchToast({ ...params, type: 'Info', title })
+    }
+  }
 }
 
 export default useToast
