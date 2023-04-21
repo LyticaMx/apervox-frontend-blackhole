@@ -1,8 +1,7 @@
 export interface FormProfile {
-  name: string
-  fathersName: string
-  mothersName: string
-  since: string
+  phoneExtension: string
+  position: string
+  email: string
 }
 
 export interface Profile {

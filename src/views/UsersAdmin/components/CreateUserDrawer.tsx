@@ -9,9 +9,14 @@ import useToast from 'hooks/useToast'
 
 interface Props {
   open: boolean
+  onCreated?: (password: string) => void
   onClose?: () => void
 }
-const CreateUserDrawer = ({ open, onClose }: Props): ReactElement => {
+const CreateUserDrawer = ({
+  open,
+  onClose,
+  onCreated
+}: Props): ReactElement => {
   const getMessage = useFormatMessage(usersCreateMessages)
   const { actions } = useUsers()
   const { launchToast } = useToast()
@@ -31,14 +36,16 @@ const CreateUserDrawer = ({ open, onClose }: Props): ReactElement => {
       })
       if (created) {
         actions?.getUsers()
-        onClose?.()
+        onCreated?.(`${values.name.trim().split(' ').join('')}123`)
         launchToast({
           type: 'Success',
           title: getMessage('success')
         })
         helpers.resetForm()
       }
-    } catch {}
+    } catch {
+      onClose?.()
+    }
   }
 
   return (

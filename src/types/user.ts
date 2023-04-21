@@ -29,16 +29,25 @@ export interface UsersPaginationParams extends PaginationParams {
   sort?: SortingState
 }
 
+export interface UserStaticFilter {
+  sessions?: string[]
+  status?: string[]
+}
+
 export interface UserContextState {
   listOfUsers: User[]
   usersPagination: UsersPagination
   dateFilter: DateFilter
   searchFilter: SearchFilter
+  staticFilter: UserStaticFilter
 }
 
 export interface UserContextActions {
   getUsers: (
-    params?: UsersPaginationParams & SearchParams & DateFilter
+    params?: UsersPaginationParams &
+      SearchParams &
+      DateFilter &
+      UserStaticFilter
   ) => Promise<void>
   createUser: (user: User) => Promise<boolean>
   updateUser: (user: User) => Promise<boolean>

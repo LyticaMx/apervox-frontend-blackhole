@@ -4,7 +4,7 @@ import { useIntl } from 'react-intl'
 import jwtDecode from 'jwt-decode'
 import { toast } from 'react-toastify'
 
-import { Auth, RestorePassword, SignIn, SignUp } from 'types/auth'
+import { Auth, SignIn, SignUp, SignedIn } from 'types/auth'
 import { FormProfile } from 'types/profile'
 
 import { getItem, removeItem, setItem } from 'utils/persistentStorage'
@@ -16,6 +16,7 @@ import { apiMessages } from 'globalMessages'
 import { useLoader } from 'context/Loader'
 import { AuthContext, initialState } from './context'
 import { format } from 'date-fns'
+import { ResponseData } from 'types/api'
 
 interface Props {
   children: ReactNode
@@ -38,8 +39,13 @@ const AuthProvider = ({ children }: Props): ReactElement => {
     method: 'post'
   })
 
-  const forgotPasswordService = useApi({
-    endpoint: '/auth/forgot-password',
+  const updateProfileService = useApi({
+    endpoint: 'me',
+    method: 'put'
+  })
+
+  const verifyPasswordService = useApi({
+    endpoint: 'auth/verify-password',
     method: 'post'
   })
 
@@ -53,11 +59,6 @@ const AuthProvider = ({ children }: Props): ReactElement => {
     method: 'get'
   })
 
-  const restorePasswordService = useApi({
-    endpoint: '/auth/reset-password',
-    method: 'post'
-  })
-
   /*
   const refreshTokenService = useApi({
     endpoint: '/auth/refresh-token',
@@ -65,9 +66,7 @@ const AuthProvider = ({ children }: Props): ReactElement => {
   })
   */
 
-  const updateProfileService = useApi({ endpoint: '/profile', method: 'put' })
-
-  const signIn = async (params: SignIn): Promise<boolean> => {
+  const signIn = async (params: SignIn): Promise<SignedIn> => {
     try {
       setItem('errorsAuthRegistered', 0)
 
@@ -95,7 +94,7 @@ const AuthProvider = ({ children }: Props): ReactElement => {
           profile: {
             id,
             names: resProfile.data?.profile?.names ?? '',
-            lastName: resProfile.data?.profile?.last_names ?? '',
+            lastName: resProfile.data?.profile?.last_name ?? '',
             username: resProfile.data?.username ?? '',
             since: `${String(
               format(
@@ -114,12 +113,21 @@ const AuthProvider = ({ children }: Props): ReactElement => {
         setAuth(authData)
         setItem('profile', authData.profile)
 
-        return true
+        return {
+          successLogin: true,
+          firstLogin: !res.data.has_logged
+        }
       }
 
-      return false
+      return {
+        successLogin: false,
+        firstLogin: true
+      }
     } catch (error) {
-      return false
+      return {
+        successLogin: false,
+        firstLogin: true
+      }
     }
   }
 
@@ -139,35 +147,41 @@ const AuthProvider = ({ children }: Props): ReactElement => {
     }
   }
 
-  const forgotPassword = async (email: string): Promise<boolean> => {
+  const verifyPassword = async (password: string): Promise<boolean> => {
     try {
-      const responseDataSignIn = await forgotPasswordService({
-        body: { email }
+      const response: ResponseData = await verifyPasswordService({
+        body: { password }
       })
 
-      if (responseDataSignIn.data) {
-        return true
-      } else {
-        return false
-      }
-    } catch (error) {
+      return response.data.success
+    } catch {
       return false
     }
   }
 
-  const restorePassword = async (params: RestorePassword): Promise<boolean> => {
+  const changePassword = async (
+    oldPassword: string,
+    newPassword: string
+  ): Promise<boolean> => {
     try {
-      const { password, confirmPassword, secureCode, token } = params
-      const response = await restorePasswordService({
+      const isActualPassword = await verifyPassword(oldPassword)
+
+      if (!isActualPassword) return false
+
+      const profile = JSON.parse(localStorage.getItem('profile') ?? '')
+
+      const id = (auth.profile.id || profile?.id) ?? ''
+
+      if (!id) return false
+
+      await updateProfileService({
         body: {
-          password,
-          token,
-          confirm_password: confirmPassword,
-          code: secureCode
+          password: newPassword,
+          has_logged: true
         }
       })
 
-      return !!response.data
+      return true
     } catch {
       return false
     }
@@ -212,31 +226,36 @@ const AuthProvider = ({ children }: Props): ReactElement => {
     }
   }
 
-  const updateProfile = async (newProfile: FormProfile): Promise<void> => {
+  const updateProfile = async (newProfile: FormProfile): Promise<boolean> => {
     try {
       const res: any = await updateProfileService({
-        queryString: `?id=${String(auth.profile.id)}`,
         body: {
-          first_name: newProfile.name,
-          fathers_name: newProfile.fathersName,
-          mothers_name: newProfile.mothersName
+          company: {
+            position: newProfile.position,
+            phone_extension: newProfile.phoneExtension
+          },
+          email: newProfile.email
         }
       })
 
       if (res.data) {
         const profile = {
           ...auth.profile,
-          name: res.data.first_name,
-          fathers_name: res.data.fathers_name,
-          mothers_name: res.data.mothers_name
+          position: res.data.company.position,
+          phone: res.data.company.phone_extension,
+          email: res.data.email
         }
 
         const newAuth = { ...auth, profile }
 
         setAuth(newAuth)
         setItem('profile', profile)
+        return true
       }
-    } catch {}
+      return false
+    } catch {
+      return false
+    }
   }
 
   const killSession = (hideNotification?: boolean): void => {
@@ -281,9 +300,9 @@ const AuthProvider = ({ children }: Props): ReactElement => {
       actions: {
         signIn,
         signUp,
-        forgotPassword,
+        changePassword,
+        verifyPassword,
         signOut,
-        restorePassword,
         updateProfile,
         refreshToken,
         killSession

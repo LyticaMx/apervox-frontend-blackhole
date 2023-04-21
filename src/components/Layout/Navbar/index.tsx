@@ -1,5 +1,4 @@
-import { ReactElement, useMemo } from 'react'
-
+import { ReactElement } from 'react'
 import { ArrowRightOnRectangleIcon } from '@heroicons/react/20/solid'
 import { Cog6ToothIcon } from '@heroicons/react/24/outline'
 import Notifications from '../Notifications'
@@ -11,10 +10,6 @@ import { pathRoute } from 'router/routes'
 
 const Navbar = (): ReactElement => {
   const { auth, actions } = useAuth()
-  const fullName = useMemo(
-    () => `${String(auth.profile.names)} ${String(auth.profile.lastName)}`,
-    [auth.profile]
-  )
 
   const handleClick = async (): Promise<void> => {
     await actions?.signOut()
@@ -35,7 +30,9 @@ const Navbar = (): ReactElement => {
 
           <div className="absolute inset-x-0 z-20 w-full h-full px-6 py-4 transition-all duration-300 ease-in-out bg-white dark:bg-secondary lg:mt-0 lg:p-0 lg:top-0 lg:relative lg:bg-transparent lg:w-auto lg:opacity-100 lg:translate-x-0 lg:flex lg:items-center">
             <div className="flex items-center mt-4 lg:mt-0 h-full">
-              <span className="text-white text-sm font-light">{fullName}</span>
+              <span className="text-white text-sm font-light">
+                {auth.profile.username ?? ''}
+              </span>
               <Notifications />
               <NavLink
                 to={pathRoute.config.general}

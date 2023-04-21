@@ -4,12 +4,19 @@ import Grid from 'components/Grid'
 import WindowControl from 'components/Layout/WindowControl'
 import Typography from 'components/Typography'
 import { FormikConfig } from 'formik'
-import { generalMessages } from 'globalMessages'
+import { formMessages, generalMessages } from 'globalMessages'
 import { ReactElement } from 'react'
 import { useIntl } from 'react-intl'
 import { Field } from 'types/form'
 import { messages } from './messages'
+import { Redirect, useHistory, useLocation } from 'react-router-dom'
+import * as yup from 'yup'
+import { useAuth } from 'context/Auth'
+import { pathRoute } from 'router/routes'
 
+interface LocationState {
+  hasLogged: boolean
+}
 interface FormValues {
   oldPassword: string
   newPassword: string
@@ -17,7 +24,25 @@ interface FormValues {
 }
 
 const RestorePassword = (): ReactElement => {
+  const { state } = useLocation<LocationState>()
   const { formatMessage } = useIntl()
+  const { actions } = useAuth()
+  const history = useHistory()
+
+  const validationSchema = yup.object({
+    oldPassword: yup.string().required(formatMessage(formMessages.required)),
+    newPassword: yup
+      .string()
+      .required(formatMessage(formMessages.required))
+      .min(4, formatMessage(formMessages.minLength, { length: 4 })),
+    confirmPassword: yup
+      .string()
+      .equals(
+        [yup.ref('newPassword')],
+        formatMessage(formMessages.passwordsNotMatches)
+      )
+      .required(formatMessage(formMessages.required))
+  })
 
   const formikConfig: FormikConfig<FormValues> = {
     initialValues: {
@@ -25,8 +50,13 @@ const RestorePassword = (): ReactElement => {
       newPassword: '',
       oldPassword: ''
     },
-    onSubmit: (values) => {
-      console.log(values)
+    validationSchema,
+    onSubmit: async (values) => {
+      const changed = await actions?.changePassword(
+        values.oldPassword,
+        values.newPassword
+      )
+      if (changed) history.push(pathRoute.auth.userAccount)
     }
   }
 
@@ -48,7 +78,9 @@ const RestorePassword = (): ReactElement => {
         id: 'newPassword',
         label: formatMessage(messages.newPassword),
         placeholder: formatMessage(messages.passwordPlaceholder),
-        labelClassname: 'text-white'
+        labelClassname: 'text-white',
+        passwordStrength: true,
+        passwordStrengthScoreWordClassName: '!text-white'
       }
     },
     {
@@ -62,6 +94,8 @@ const RestorePassword = (): ReactElement => {
       }
     }
   ]
+
+  if (state.hasLogged) return <Redirect to={'/'} />
 
   return (
     <div className="bg-blackhole w-screen h-screen bg-no-repeat bg-center bg-cover overflow-hidden relative before:absolute before:top-0 before:left-0 before:right-0 before:bottom-0 before:bg-[#131B28] before:bg-opacity-[85%] flex items-center justify-center">
