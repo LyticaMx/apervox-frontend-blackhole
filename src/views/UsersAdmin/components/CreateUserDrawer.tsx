@@ -30,7 +30,7 @@ const CreateUserDrawer = ({
         lastName: values.lastname,
         position: values.position,
         phone: values.extension,
-        groups: values.groups,
+        groupsIds: values.groups.map((item) => item.value),
         roleId: values.role,
         closeSession: values.automaticSessionExpiration
       })
