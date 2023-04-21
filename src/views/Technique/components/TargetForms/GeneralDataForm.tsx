@@ -4,7 +4,7 @@ import * as yup from 'yup'
 import Form from 'components/Form'
 import { Field } from 'types/form'
 import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
-import { generalDataFormMessages } from 'views/Techniques/messages'
+import { generalDataFormMessages } from 'views/Technique/messages'
 
 interface FormValues {
   name: string

@@ -14,6 +14,7 @@ import Selectmultiple from './Selectmultiple'
 import MultiChip from './Selectmultiple/MultiChip'
 import Switch from './Switch'
 import TextField from './Textfield'
+import SelectPaginate from './SelectPaginate'
 
 interface Params<T> {
   field: Field<T>
@@ -83,6 +84,14 @@ export const fieldMapper = <T,>({ field, formik }: Params<T>): ReactNode => {
               ? formik.errors[name]
               : ''
           }
+        />
+      )
+    case 'async-select':
+      return (
+        <SelectPaginate
+          {...field.options}
+          value={formik.values[name]}
+          onChange={(val) => formik.setFieldValue(name, val)}
         />
       )
     case 'select-multiple':

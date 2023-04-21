@@ -5,7 +5,7 @@ import Form from 'components/Form'
 import { Field } from 'types/form'
 import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
 import Typography from 'components/Typography'
-import { physicalDescriptionFormMessages } from 'views/Techniques/messages'
+import { physicalDescriptionFormMessages } from 'views/Technique/messages'
 
 interface FormValues {
   height: string

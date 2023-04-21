@@ -8,7 +8,7 @@ import { useAddressForm, AddressFormValues } from './useAddressForm'
 import {
   companiesFormMessages,
   targetFormsGeneralMessages
-} from 'views/Techniques/messages'
+} from 'views/Technique/messages'
 
 interface FormValues extends AddressFormValues {
   name: string

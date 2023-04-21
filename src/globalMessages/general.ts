@@ -628,5 +628,13 @@ export const generalMessages = defineMessages({
   incorrectPassword: {
     id: 'global.general.incorrectPassword',
     defaultMessage: 'Contraseña incorrecta'
+  },
+  loading: {
+    id: 'global.general.loading',
+    defaultMessage: 'Cargando'
+  },
+  noOptions: {
+    id: 'global.general.noOptions',
+    defaultMessage: 'Sin opciones'
   }
 })

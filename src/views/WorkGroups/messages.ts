@@ -15,7 +15,7 @@ export const workGroupsMessages = defineMessages({
   },
   assignedSectionTitle: {
     id: 'views.workGroups.assignedSectionTitle',
-    defaultMessage: 'Datos de grupo de trabajo'
+    defaultMessage: 'Datos de grupo de trabajo - {groupName}'
   },
   assignedUsersSubtitle: {
     id: 'views.workGroups.assignedUsersSubtitle',
@@ -24,6 +24,22 @@ export const workGroupsMessages = defineMessages({
   assignedTechniquesSubtitle: {
     id: 'views.workGroups.assignedTechniquesSubtitle',
     defaultMessage: 'Técnicas asignadas al grupo'
+  },
+  editGroup: {
+    id: 'views.workGroups.editGr',
+    defaultMessage: 'Editar grupo'
+  }
+})
+
+export const workGroupListMessages = defineMessages({
+  updatedGroupStatus: {
+    id: 'views.WorkGroups.WorkGroupList.updatedGroupStatus',
+    defaultMessage:
+      'Grupo {enabled, select, true{habilitado} other{deshabilitado}} correctamente'
+  },
+  deletedWorkGroup: {
+    id: 'views.WorkGroups.WorkGroupList.deletedWorkGroup',
+    defaultMessage: 'Grupo eliminado correctamente'
   }
 })
 
@@ -36,6 +52,10 @@ export const workGroupsCreateDrawerMessages = defineMessages({
     id: 'views.workGroups.createDrawer.message',
     defaultMessage:
       'Completa los siguientes campos para crear un nuevo grupo de trabajo.'
+  },
+  success: {
+    id: 'views.workGroups.createDrawer.success',
+    defaultMessage: 'Grupo creado correctamente'
   }
 })
 
@@ -47,6 +67,10 @@ export const workGroupsEditDrawerMessages = defineMessages({
   subtitle: {
     id: 'views.workGroups.editDrawer.message',
     defaultMessage: 'Datos actuales del grupo de trabajo seleccionado.'
+  },
+  success: {
+    id: 'views.workGroups.editDrawer.success',
+    defaultMessage: 'Grupo actualizado correctamente'
   }
 })
 
@@ -76,6 +100,11 @@ export const workGroupsDeleteDialogMessages = defineMessages({
     id: 'views.workGroups.deleteDialog.passwordConfirmMessage',
     defaultMessage:
       'Ingresa tu contraseña para validar la eliminación {selectedGroups, plural, one {del grupo de trabajo seleccionado} other {de los # grupos de trabajo seleccionados}}'
+  },
+  successDelete: {
+    id: 'views.workGroups.deleteDialog.successDelete',
+    defaultMessage:
+      '{groups, plural, one{Grupo eliminado} other{Grupos eliminados}} correctamente.'
   }
 })
 
@@ -97,12 +126,24 @@ export const workGroupsHistoryDrawerMessages = defineMessages({
 
 export const workGroupsFormMessages = defineMessages({
   usersMessage: {
-    id: 'views.workGroups.historyDrawer.usersMessage',
+    id: 'views.workGroups.workGroupsForm.usersMessage',
     defaultMessage:
       'Selecciona los usuarios que quieras asignar a este grupo de trabajo.'
   },
   techniquesMessage: {
-    id: 'views.workGroups.historyDrawer.techniquesMessage',
+    id: 'views.workGroups.workGroupsForm.techniquesMessage',
     defaultMessage: 'Selecciona las técnicas que quieras asignar a este grupo.'
+  },
+  selectUsersPlaceholder: {
+    id: 'views.workGroups.workGroupsForm.selectUsersPlaceholder',
+    defaultMessage: 'Selecciona los usuarios'
+  }
+})
+
+export const workGroupsUsersListMessages = defineMessages({
+  deletedUsersSuccess: {
+    id: 'views.workGroups.workGroupsForm.deletedUsersSuccess',
+    defaultMessage:
+      '{total, select, one{Usuario eliminado} other{Usuarios eliminados}} correctamente'
   }
 })

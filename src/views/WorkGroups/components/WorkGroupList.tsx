@@ -1,5 +1,4 @@
-import { useState, useEffect, ReactElement } from 'react'
-import { SortingState } from '@tanstack/react-table'
+import { ReactElement } from 'react'
 import { format } from 'date-fns'
 import { useFormatMessage } from 'hooks/useIntl'
 import useTableColumns from 'hooks/useTableColumns'
@@ -7,7 +6,7 @@ import { useWorkGroups } from 'context/WorkGroups'
 
 import Table from 'components/Table'
 import Tag from 'components/Tag'
-import { generalMessages } from 'globalMessages'
+import { workGroupListMessages } from '../messages'
 import {
   TrashIcon,
   RectangleGroupIcon,
@@ -18,30 +17,24 @@ import Switch from 'components/Form/Switch'
 import Tooltip from 'components/Tooltip'
 import StatusTag from 'components/Status/StatusTag'
 import { Status } from 'types/status'
-import { WorkGroup, WorkGroupTechniques } from 'types/workgroup'
+import { WorkGroup } from 'types/workgroup'
 import * as helpers from './helpers'
+import useToast from 'hooks/useToast'
 
 interface Props {
   handleClickOnHistory: (id: string) => void
+  handleDelete: (ids: string[]) => Promise<boolean>
 }
 
-const WorkGroupList = ({ handleClickOnHistory }: Props): ReactElement => {
-  const getMessage = useFormatMessage(generalMessages)
-  const [sortingState, setSortingState] = useState<SortingState>([])
-  const { workGroups, actions } = useWorkGroups()
-
-  useEffect(() => {
-    // TODO: remove this when backend is ready
-    if (sortingState.length > 0) {
-      actions?.getWorkGroups(sortingState)
-    }
-  }, [sortingState])
+const WorkGroupList = ({
+  handleClickOnHistory,
+  handleDelete
+}: Props): ReactElement => {
+  const getMessage = useFormatMessage(workGroupListMessages)
+  const { launchToast } = useToast()
+  const { workGroups, actions, workGroupsPagination } = useWorkGroups()
 
   const columns = useTableColumns<WorkGroup>(() => [
-    {
-      accessorKey: 'id',
-      header: 'ID'
-    },
     {
       accessorKey: 'name',
       header: getMessage('name')
@@ -65,10 +58,9 @@ const WorkGroupList = ({ handleClickOnHistory }: Props): ReactElement => {
       header: getMessage('users')
     },
     {
-      accessorKey: 'techniques',
       header: getMessage('techniques'),
-      cell: ({ getValue }) => {
-        const techniques = getValue<WorkGroupTechniques>()
+      cell: () => {
+        const techniques = []
 
         return (
           <div className="flex items-center justify-start">
@@ -117,12 +109,14 @@ const WorkGroupList = ({ handleClickOnHistory }: Props): ReactElement => {
     {
       accessorKey: 'id',
       header: getMessage('action'),
-      cell: ({ getValue, cell }) => {
+      cell: ({ getValue, cell, table }) => {
         const id = getValue<string>()
-        const isActive = cell.row.original.status === 'active'
+        const isActive =
+          cell.row.original.status === 'active' ||
+          cell.row.original.status === true
 
         return (
-          <div className="flex pt-1">
+          <div className="flex pt-1" onClick={(e) => e.stopPropagation()}>
             <Tooltip
               content={getMessage(isActive ? 'disable' : 'enable')}
               floatProps={{ offset: 10, arrow: true }}
@@ -135,8 +129,22 @@ const WorkGroupList = ({ handleClickOnHistory }: Props): ReactElement => {
             >
               <Switch
                 size="sm"
-                value={true}
-                onChange={(x) => console.log(`onDisableGroup(${id})`, x)}
+                value={isActive}
+                onChange={async (status) => {
+                  const updated = await actions?.updateStatusWorkGroup(
+                    id,
+                    status
+                  )
+                  if (updated) {
+                    launchToast({
+                      title: getMessage('updatedGroupStatus', {
+                        enabled: status
+                      }),
+                      type: 'Success'
+                    })
+                    await actions?.getWorkGroups()
+                  }
+                }}
                 color="blue"
               />
             </Tooltip>
@@ -171,10 +179,15 @@ const WorkGroupList = ({ handleClickOnHistory }: Props): ReactElement => {
               }}
               placement="top"
             >
-              <TrashIcon
-                className="h-5 w-5 mx-1 text-muted hover:text-primary cursor-pointer"
-                onClick={() => console.log(`onDeleteGroup(${id})`)}
-              />
+              <button
+                className="mx-1 text-muted hover:text-primary"
+                onClick={async () => await handleDelete([id])}
+                disabled={
+                  table.getIsSomeRowsSelected() || table.getIsAllRowsSelected()
+                }
+              >
+                <TrashIcon className="h-5 w-5  " />
+              </button>
             </Tooltip>
           </div>
         )
@@ -188,8 +201,8 @@ const WorkGroupList = ({ handleClickOnHistory }: Props): ReactElement => {
       data={workGroups}
       className="overflow-x-auto shadow rounded-lg flex-1"
       manualSorting={{
-        onSortingChange: setSortingState,
-        sorting: sortingState
+        onSortingChange: (sort) => actions?.getWorkGroups({ sort }),
+        sorting: workGroupsPagination.sort
       }}
       onRowClicked={(row) => {
         console.log(`onSelectWorkGroup(${row.id})`)
@@ -197,15 +210,23 @@ const WorkGroupList = ({ handleClickOnHistory }: Props): ReactElement => {
         actions?.selectWorkGroup(row)
       }}
       maxHeight={500}
+      pageSize={workGroupsPagination.limit}
+      manualPagination={{
+        currentPage: workGroupsPagination.page,
+        totalRecords: workGroupsPagination.totalRecords,
+        onChange: (page) => actions?.getWorkGroups({ page: page + 1 })
+      }}
+      manualLimit={{
+        options: [15, 25, 50, 100],
+        onChangeLimit: (page, limit) =>
+          actions?.getWorkGroups({ page: page + 1, limit })
+      }}
       withCheckbox
       actionsForSelectedItems={[
         {
           name: 'Eliminar',
-          action: (items) => {
-            console.log(
-              `onDeleteWorkGroups(${items.map((workgroup) => workgroup.id)})`
-            )
-          },
+          action: async (items) =>
+            await handleDelete(items.map((item) => item.id ?? '')),
           Icon: TrashIcon
         },
         {

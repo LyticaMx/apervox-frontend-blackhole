@@ -13,7 +13,7 @@ import {
   ArrowLeftOnRectangleIcon
 } from '@heroicons/react/24/outline'
 import { useUsers } from 'context/Users'
-import { User } from 'types/user'
+import { User, UserGroup } from 'types/user'
 import clsx from 'clsx'
 
 const colorByStatus = {
@@ -62,7 +62,10 @@ const UserList = ({
     {
       accessorKey: 'groups',
       header: getMessage('groups'),
-      cell: ({ getValue }) => getValue<string[]>().join(', ')
+      cell: ({ getValue }) =>
+        getValue<UserGroup[]>()
+          .map((item) => item.name)
+          .join(', ')
     },
     {
       accessorKey: 'role',

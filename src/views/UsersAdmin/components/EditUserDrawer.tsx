@@ -32,7 +32,7 @@ const EditUserDrawer = ({ user, open, onClose }: Props): ReactElement => {
         lastName: values.lastname,
         position: values.position,
         phone: values.extension,
-        groups: values.groups,
+        groupsIds: values.groups.map((item) => item.value),
         roleId: values.role,
         closeSession: values.automaticSessionExpiration
       })
@@ -72,7 +72,11 @@ const EditUserDrawer = ({ user, open, onClose }: Props): ReactElement => {
             automaticSessionExpiration: user.closeSession ?? false,
             email: user.email ?? '',
             extension: user.phone ?? '',
-            groups: user.groups ?? [],
+            groups:
+              user.groups?.map((item) => ({
+                value: item.id,
+                label: item.name
+              })) ?? [],
             lastname: user.lastName ?? '',
             name: user.name ?? '',
             position: user.position ?? '',

@@ -1,6 +1,6 @@
 import { ReactElement } from 'react'
 import { targetFormsTabs, TARGET_FORMS_TABS } from '../../constants'
-import CustomTabs from '../../../Techniques/components/CustomTabs'
+import CustomTabs from 'views/Technique/components/CustomTabs'
 import LanguagesForm from './LanguagesForm'
 import SocialMediaForm from './SocialMediaForm'
 import AccountBankForm from './AccountBankForm'

@@ -1,5 +1,5 @@
 import { BaseURL } from 'providers/api'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { PaginationFilter } from 'types/filters'
 import useApi from './useApi'
 import { get } from 'lodash'
@@ -13,18 +13,21 @@ interface Api {
   endpoint: string
   method: 'post' | 'put' | 'get' | 'delete' | 'patch'
   base?: BaseURL
+  acceptNulls?: boolean
+  withLoader?: boolean
 }
 
 interface URLParams {
   [param: string]: any
 }
-interface Props {
+export interface Props {
   api: Api
   value: string
   label?: string
   customLabel?: (item: any) => string
   extraParams?: URLParams
   fullObject?: boolean
+  searchField?: string
 }
 
 const useAsyncSelect = (props: Props): AsyncOptions => {
@@ -34,18 +37,26 @@ const useAsyncSelect = (props: Props): AsyncOptions => {
     label = '',
     customLabel,
     extraParams = {},
-    fullObject = false
+    fullObject = false,
+    searchField
   } = props
   const [pagination, setPagination] = useState<PaginationFilter>({
     limit: 20,
     page: 1
   })
+  const queryRef = useRef<string>('')
   const getService = useApi(api)
 
   const loadOptions = async (search, loadedOptions): Promise<any> => {
     try {
+      const newPagination = Object.assign({}, pagination)
+      if (queryRef.current !== search) {
+        newPagination.page = 1
+        queryRef.current = search
+      }
+      if (searchField && search) extraParams[searchField] = search
       const response = await getService({
-        urlParams: { ...pagination, ...extraParams }
+        urlParams: { ...newPagination, ...extraParams }
       })
       if (response) {
         setPagination((prev) => ({ ...prev, page: prev.page + 1 }))
@@ -56,8 +67,9 @@ const useAsyncSelect = (props: Props): AsyncOptions => {
           label: customLabel ? customLabel(item) : get(item, label, ''),
           data: fullObject ? item : undefined
         })),
-        // TODO: corregir el async select
-        hasMore: false //response?.page_info.has_next_page
+        hasMore:
+          (response.page - 1) * response.limit + Number(response.data.length) <
+          response.size
       }
     } catch {
       return {

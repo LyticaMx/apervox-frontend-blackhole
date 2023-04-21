@@ -1,26 +1,22 @@
-import { useState, ReactElement } from 'react'
-import { SortingState } from '@tanstack/react-table'
+import { ReactElement } from 'react'
 import { TrashIcon } from '@heroicons/react/24/outline'
-import { generalMessages } from 'globalMessages'
 import { useFormatMessage } from 'hooks/useIntl'
 import useTableColumns from 'hooks/useTableColumns'
-import { useWorkGroups } from 'context/WorkGroups'
 import { WorkGroupUser } from 'types/workgroup'
 import { Status } from 'types/status'
 import Table from 'components/Table'
 import Tooltip from 'components/Tooltip'
 import StatusTag from 'components/Status/StatusTag'
+import { useWorkGroups } from 'context/WorkGroups'
+import useToast from 'hooks/useToast'
+import { workGroupsUsersListMessages } from '../messages'
 
 const AssociatedUserList = (): ReactElement => {
-  const getMessage = useFormatMessage(generalMessages)
-  const [sortingState, setSortingState] = useState<SortingState>([])
-  const { associatedUsers } = useWorkGroups()
+  const getMessage = useFormatMessage(workGroupsUsersListMessages)
+  const { associatedUsers, actions, usersPagination } = useWorkGroups()
+  const { launchToast } = useToast()
 
   const columns = useTableColumns<WorkGroupUser>(() => [
-    {
-      accessorKey: 'id',
-      header: 'ID'
-    },
     {
       accessorKey: 'name',
       header: getMessage('name')
@@ -53,7 +49,8 @@ const AssociatedUserList = (): ReactElement => {
     {
       accessorKey: 'id',
       header: getMessage('action'),
-      cell: ({ getValue }) => {
+      enableSorting: false,
+      cell: ({ getValue, table }) => {
         const id = getValue<string>()
 
         return (
@@ -68,10 +65,28 @@ const AssociatedUserList = (): ReactElement => {
               }}
               placement="top"
             >
-              <TrashIcon
-                className="h-5 w-5 mx-1 text-muted hover:text-primary cursor-pointer"
-                onClick={() => console.log(`onDeleteUserFromWorkGroup(${id})`)}
-              />
+              <button
+                onClick={async () => {
+                  const deleted = await actions?.deleteUsersOfWorkGroup([id])
+                  if (deleted) {
+                    await actions?.getWorkGroupUsers({ page: 1 })
+                    await actions?.getWorkGroups()
+                    launchToast({
+                      title: getMessage('deletedUsersSuccess', {
+                        total: 1
+                      }),
+                      type: 'Success'
+                    })
+                    return true
+                  }
+                }}
+                className="text-muted enabled:hover:text-primary mx-1"
+                disabled={
+                  table.getIsSomeRowsSelected() || table.getIsAllRowsSelected()
+                }
+              >
+                <TrashIcon className="h-5 w-5" />
+              </button>
             </Tooltip>
           </div>
         )
@@ -85,18 +100,40 @@ const AssociatedUserList = (): ReactElement => {
       data={associatedUsers}
       className="overflow-x-auto shadow rounded-lg"
       manualSorting={{
-        onSortingChange: setSortingState,
-        sorting: sortingState
+        onSortingChange: (sort) => actions?.getWorkGroupUsers({ sort }),
+        sorting: usersPagination.sort
       }}
       maxHeight={500}
       withCheckbox
+      pageSize={usersPagination.limit}
+      manualPagination={{
+        currentPage: usersPagination.page,
+        totalRecords: usersPagination.totalRecords,
+        onChange: (page) => actions?.getWorkGroups({ page: page + 1 })
+      }}
+      manualLimit={{
+        options: [15, 25, 50, 100],
+        onChangeLimit: (page, limit) =>
+          actions?.getWorkGroupUsers({ page: page + 1, limit })
+      }}
       actionsForSelectedItems={[
         {
           name: 'Eliminar',
-          action: (items) => {
-            console.log(
-              `onDeleteUsersFromWorkGroup(${items.map((user) => user.id)})`
+          action: async (items) => {
+            const deleted = await actions?.deleteUsersOfWorkGroup(
+              items.map((datum) => datum.id)
             )
+            if (deleted) {
+              await actions?.getWorkGroupUsers({ page: 1 })
+              await actions?.getWorkGroups()
+              launchToast({
+                title: getMessage('deletedUsersSuccess', {
+                  total: items.length
+                }),
+                type: 'Success'
+              })
+              return true
+            }
           },
           Icon: TrashIcon
         }

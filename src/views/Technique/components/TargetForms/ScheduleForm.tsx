@@ -8,7 +8,7 @@ import { useAddressForm, AddressFormValues } from './useAddressForm'
 import {
   targetFormsGeneralMessages,
   scheduleFormMessages
-} from 'views/Techniques/messages'
+} from 'views/Technique/messages'
 
 interface FormValues extends AddressFormValues {
   name: string
@@ -37,9 +37,7 @@ const ScheduleForm = (): ReactElement => {
       options: {
         id: 'contact-number',
         label: formatMessage(targetFormsGeneralMessages.phone),
-        placeholder: formatMessage(
-          targetFormsGeneralMessages.phonePlaceholder
-        )
+        placeholder: formatMessage(targetFormsGeneralMessages.phonePlaceholder)
       },
       breakpoints: { xs: 3 }
     },

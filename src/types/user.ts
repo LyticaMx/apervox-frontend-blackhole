@@ -2,11 +2,16 @@ import { SortingState } from '@tanstack/react-table'
 import { DateFilter, PaginationFilter, SearchFilter } from './filters'
 import { PaginationParams, SearchParams } from './api'
 
+export interface UserGroup {
+  name: string
+  id: string
+}
 export interface User {
   name: string
   lastName: string
   username: string
-  groups: string[]
+  groups?: UserGroup[]
+  groupsIds?: string[]
   role?: string
   roleId?: string
   id?: string

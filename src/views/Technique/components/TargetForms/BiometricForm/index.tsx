@@ -5,7 +5,7 @@ import { ReactElement, useMemo } from 'react'
 import { Field, Section } from 'types/form'
 import Biometrics from './Biometrics'
 import { useIntl } from 'react-intl'
-import { biometricFormMessages } from 'views/Techniques/messages'
+import { biometricFormMessages } from 'views/Technique/messages'
 
 export interface FormValues {
   fingerprints: File[]
