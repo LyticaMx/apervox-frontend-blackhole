@@ -5,7 +5,7 @@ import { formMessages } from 'globalMessages'
 import { Field, Section } from 'types/form'
 import AccordionForm from './AccordionForm'
 import { useAddressForm, AddressFormValues } from './useAddressForm'
-import { propertiesFormMessages } from 'views/Techniques/messages'
+import { propertiesFormMessages } from 'views/Technique/messages'
 
 interface FormValues extends AddressFormValues {
   type: string

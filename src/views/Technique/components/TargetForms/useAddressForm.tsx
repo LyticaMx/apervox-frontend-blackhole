@@ -2,7 +2,7 @@ import * as yup from 'yup'
 import { useIntl } from 'react-intl'
 import { formMessages } from 'globalMessages'
 import { Field } from 'types/form'
-import { useAddressMessages } from 'views/Techniques/messages'
+import { useAddressMessages } from 'views/Technique/messages'
 
 export interface AddressFormValues {
   state: string

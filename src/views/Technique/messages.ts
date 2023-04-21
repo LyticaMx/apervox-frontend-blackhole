@@ -743,6 +743,56 @@ export const vehiclesFormMessages = defineMessages({
   }
 })
 
+export const biometricFormMessages = defineMessages({
+  title: {
+    id: 'views.techniques.BiometricForm.title',
+    defaultMessage: 'Datos biométricos'
+  },
+  photos: {
+    id: 'views.techniques.BiometricForm.photos',
+    defaultMessage: 'Fotografías'
+  },
+  fingerprints: {
+    id: 'views.techniques.BiometricForm.fingerprints',
+    defaultMessage: 'Huellas dactilares'
+  },
+  voiceprints: {
+    id: 'views.techniques.BiometricForm.voiceprints',
+    defaultMessage: 'Huellas de voz'
+  }
+})
+
+export const socialCircleFormMessages = defineMessages({
+  title: {
+    id: 'views.techniques.SocialCircleForm.title',
+    defaultMessage: 'Circulo social'
+  },
+  itemTitle: {
+    id: 'views.techniques.SocialCircleForm.itemTitle',
+    defaultMessage: 'Persona'
+  },
+  name: {
+    id: 'views.techniques.SocialCircleForm.name',
+    defaultMessage: 'Nombre'
+  },
+  namePlaceholder: {
+    id: 'views.techniques.SocialCircleForm.namePlaceholder',
+    defaultMessage: 'Ej. Pedro Picapiedra'
+  },
+  activity: {
+    id: 'views.techniques.SocialCircleForm.activity',
+    defaultMessage: 'Actividad'
+  },
+  activityPlaceholder: {
+    id: 'views.techniques.SocialCircleForm.activityPlaceholder',
+    defaultMessage: 'Ej. Extracción de cantera'
+  },
+  address: {
+    id: 'views.techniques.SocialCircleForm.address',
+    defaultMessage: 'Dirección'
+  }
+})
+
 export const useAddressMessages = defineMessages({
   state: {
     id: 'views.techniques.useAddress.state',

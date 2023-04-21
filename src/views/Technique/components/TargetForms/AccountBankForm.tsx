@@ -7,7 +7,7 @@ import AccordionForm from './AccordionForm'
 import {
   accountBankFormMessages,
   targetFormsGeneralMessages
-} from 'views/Techniques/messages'
+} from 'views/Technique/messages'
 
 interface FormValues {
   bankname: string
