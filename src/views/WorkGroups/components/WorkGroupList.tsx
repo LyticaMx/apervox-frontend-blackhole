@@ -23,9 +23,13 @@ import useToast from 'hooks/useToast'
 
 interface Props {
   handleClickOnHistory: (id: string) => void
+  handleDelete: (ids: string[]) => Promise<boolean>
 }
 
-const WorkGroupList = ({ handleClickOnHistory }: Props): ReactElement => {
+const WorkGroupList = ({
+  handleClickOnHistory,
+  handleDelete
+}: Props): ReactElement => {
   const getMessage = useFormatMessage(workGroupListMessages)
   const { launchToast } = useToast()
   const { workGroups, actions, workGroupsPagination } = useWorkGroups()
@@ -105,7 +109,7 @@ const WorkGroupList = ({ handleClickOnHistory }: Props): ReactElement => {
     {
       accessorKey: 'id',
       header: getMessage('action'),
-      cell: ({ getValue, cell }) => {
+      cell: ({ getValue, cell, table }) => {
         const id = getValue<string>()
         const isActive =
           cell.row.original.status === 'active' ||
@@ -175,20 +179,15 @@ const WorkGroupList = ({ handleClickOnHistory }: Props): ReactElement => {
               }}
               placement="top"
             >
-              <TrashIcon
-                className="h-5 w-5 mx-1 text-muted hover:text-primary cursor-pointer"
-                onClick={async () => {
-                  const deleted = await actions?.deleteWorkGroup(id)
-                  if (deleted) {
-                    launchToast({
-                      title: getMessage('deletedWorkGroup'),
-                      type: 'Success'
-                    })
-
-                    await actions?.getWorkGroups()
-                  }
-                }}
-              />
+              <button
+                className="mx-1 text-muted hover:text-primary"
+                onClick={async () => await handleDelete([id])}
+                disabled={
+                  table.getIsSomeRowsSelected() || table.getIsAllRowsSelected()
+                }
+              >
+                <TrashIcon className="h-5 w-5  " />
+              </button>
             </Tooltip>
           </div>
         )
@@ -226,11 +225,8 @@ const WorkGroupList = ({ handleClickOnHistory }: Props): ReactElement => {
       actionsForSelectedItems={[
         {
           name: 'Eliminar',
-          action: (items) => {
-            console.log(
-              `onDeleteWorkGroups(${items.map((workgroup) => workgroup.id)})`
-            )
-          },
+          action: async (items) =>
+            await handleDelete(items.map((item) => item.id ?? '')),
           Icon: TrashIcon
         },
         {

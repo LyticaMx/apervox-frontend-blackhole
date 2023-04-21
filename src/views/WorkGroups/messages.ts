@@ -100,6 +100,11 @@ export const workGroupsDeleteDialogMessages = defineMessages({
     id: 'views.workGroups.deleteDialog.passwordConfirmMessage',
     defaultMessage:
       'Ingresa tu contraseña para validar la eliminación {selectedGroups, plural, one {del grupo de trabajo seleccionado} other {de los # grupos de trabajo seleccionados}}'
+  },
+  successDelete: {
+    id: 'views.workGroups.deleteDialog.successDelete',
+    defaultMessage:
+      '{groups, plural, one{Grupo eliminado} other{Grupos eliminados}} correctamente.'
   }
 })
 

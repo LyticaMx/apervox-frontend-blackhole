@@ -509,6 +509,16 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
     }
   }
 
+  const deleteWorkGroups = async (ids: string[]): Promise<boolean> => {
+    try {
+      return !(
+        await Promise.all(ids.map(async (id) => await deleteWorkGroup(id)))
+      ).some((item) => !item)
+    } catch {
+      return false
+    }
+  }
+
   return {
     getUsers,
     getTechniques,
@@ -521,7 +531,8 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
     updateWorkGroup,
     updateStatusWorkGroup,
     deleteWorkGroup,
-    deleteUsersOfWorkGroup
+    deleteUsersOfWorkGroup,
+    deleteWorkGroups
   }
 }
 

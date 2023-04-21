@@ -137,6 +137,7 @@ export interface WorkgroupActions {
   ) => Promise<boolean>
   updateStatusWorkGroup: (id: string, status: boolean) => Promise<boolean>
   deleteWorkGroup: (id: string) => Promise<boolean>
+  deleteWorkGroups: (id: string[]) => Promise<boolean>
   deleteUsersOfWorkGroup: (ids: string[]) => Promise<boolean>
   deleteTechniqueOfWorkGroup?: (id: string) => Promise<boolean>
   createWorkGroup: (params: WorkGroup) => Promise<boolean>
