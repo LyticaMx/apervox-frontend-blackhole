@@ -30,12 +30,13 @@ const WorkGroups = (): ReactElement => {
     useWorkGroups()
 
   useEffect(() => {
+    actions?.selectWorkGroup()
     actions?.getWorkGroups()
   }, [])
 
   useEffect(() => {
-    if (tab === 'users') {
-      actions?.getWorkGroupUsers(selected.id ?? '')
+    if (tab === 'users' && selected.id) {
+      actions?.getWorkGroupUsers({ page: 1 })
     } else {
       actions?.getWorkGroupTechniques(selected.id ?? '')
     }
@@ -44,9 +45,7 @@ const WorkGroups = (): ReactElement => {
   useEffect(() => {
     if (selected.id) {
       setTab('users')
-      actions?.getWorkGroupUsers(selected.id)
-
-      // toggleOpenEditDrawer()
+      actions?.getWorkGroupUsers({ page: 1 })
     }
   }, [selected])
 
@@ -85,6 +84,7 @@ const WorkGroups = (): ReactElement => {
 
         <EditWorkGroupDrawer
           open={openEditDrawer}
+          actualTab={tab}
           onClose={toggleOpenEditDrawer}
         />
       </div>

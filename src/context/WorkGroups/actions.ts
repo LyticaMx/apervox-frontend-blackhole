@@ -17,9 +17,16 @@ import useApi from 'hooks/useApi'
 import { ResponseData, SearchParams } from 'types/api'
 
 const orderByMapper = { registered_by: 'created_by', total_users: 'users' }
+const orderByMapperUsers = {}
 
 const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
-  const { workGroupsPagination, dateFilter, searchFilter, selected } = state
+  const {
+    workGroupsPagination,
+    dateFilter,
+    searchFilter,
+    selected,
+    usersPagination
+  } = state
   const getWorkgroupsService = useApi({ endpoint: 'groups', method: 'get' })
   const createWorkgroupService = useApi({ endpoint: 'groups', method: 'post' })
   const updateWorkGroupService = useApi({ endpoint: 'groups', method: 'put' })
@@ -232,74 +239,50 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
   }
 
   const getWorkGroupUsers = async (
-    id: string,
-    params?: Partial<PaginationFilter>
-  ): Promise<boolean> => {
+    params?: WorkgroupPaginationParams & SearchParams
+  ): Promise<void> => {
     try {
-      const mockedData = [
-        {
-          id: '001',
-          name: 'Armando',
-          surnames: 'Albor',
-          username: 'armandoalbor',
-          groups: '3',
-          role: 'Administrator',
-          status: Status.ACTIVE
-        },
-        {
-          id: '002',
-          name: 'Javier',
-          surnames: 'Albor',
-          username: 'javieralbor',
-          groups: 'Todos',
-          role: 'Administrator',
-          status: Status.ACTIVE
-        },
-        {
-          id: '003',
-          name: 'Efraín',
-          surnames: 'Cuadras',
-          username: 'efracuadras',
-          groups: '1',
-          role: 'Administrator',
-          status: Status.INACTIVE
-        },
-        {
-          id: '004',
-          name: 'Alfredo',
-          surnames: 'González',
-          username: 'alfredogonzalez',
-          groups: '4',
-          role: 'Administrator',
-          status: Status.ACTIVE
+      const sort = { by: 'created_at', order: 'desc' }
+      if (params?.sort && params.sort.length > 0) {
+        const [sortBy] = params.sort
+        sort.by = orderByMapperUsers[sortBy.id] ?? sortBy.id
+        sort.order = sortBy.desc ? 'desc' : 'asc'
+      }
+
+      const response = await getWorkgroupsService({
+        queryString: `${selected.id}/users`,
+        urlParams: {
+          ...sort,
+          page: params?.page ?? usersPagination.page,
+          limit: params?.limit ?? usersPagination.limit
         }
-      ]
+      })
 
-      let data: WorkGroupUser[] = []
+      const list: any[] = response.data
 
-      if (id === '001') {
-        data = [...mockedData]
-      }
+      dispatch(
+        actions.setWorkGroupUsers(
+          list.map<WorkGroupUser>((datum) => ({
+            id: datum.id,
+            groups: datum.groups.map((item) => item.name),
+            name: datum.profile.names,
+            surnames: datum.profile.last_name,
+            role: datum.role.name,
+            status: datum.status ? Status.ACTIVE : Status.INACTIVE,
+            username: datum.username
+          }))
+        )
+      )
 
-      if (id === '003') {
-        data.push(mockedData[1])
-        data.push(mockedData[3])
-      }
-
-      if (id === '004') {
-        data.push(mockedData[1])
-        data.push(mockedData[2])
-        data.push(mockedData[3])
-      }
-
-      dispatch(actions.setWorkGroupUsers(data ?? initialState.associatedUsers))
-
-      return Boolean(data)
-    } catch (error) {
-      dispatch(actions.setWorkGroupUsers(initialState.associatedUsers))
-
-      return false
-    }
+      dispatch(
+        actions.setWorkGroupUsersPagination({
+          page: response.page,
+          limit: params?.limit ?? usersPagination.limit,
+          totalRecords: response.size,
+          sort: params?.sort ?? usersPagination.sort
+        })
+      )
+    } catch (error) {}
   }
 
   const getWorkGroupTechniques = async (
@@ -476,6 +459,25 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
     }
   }
 
+  const deleteUsersOfWorkGroup = async (ids: string[]): Promise<boolean> => {
+    try {
+      if (selected.id === '') return false
+
+      const response = await updateWorkGroupService({
+        queryString: `${selected.id}/users`,
+        body: {
+          disconnect: ids
+        }
+      })
+
+      actions.setSelectedWorkGroup(response.data)
+
+      return true
+    } catch {
+      return false
+    }
+  }
+
   const updateStatusWorkGroup = async (
     id: string,
     status: boolean
@@ -496,6 +498,7 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
 
   const deleteWorkGroup = async (id: string): Promise<boolean> => {
     try {
+      if (selected.id === id) actions.setSelectedWorkGroup()
       await deleteWorkGroupService({
         queryString: id
       })
@@ -517,7 +520,8 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
     createWorkGroup,
     updateWorkGroup,
     updateStatusWorkGroup,
-    deleteWorkGroup
+    deleteWorkGroup,
+    deleteUsersOfWorkGroup
   }
 }
 

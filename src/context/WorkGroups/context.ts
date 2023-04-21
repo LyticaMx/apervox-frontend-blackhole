@@ -36,12 +36,14 @@ export const initialState: WorkgroupState = {
   usersPagination: {
     page: 1,
     limit: 15,
-    totalRecords: 0
+    totalRecords: 0,
+    sort: []
   },
   techniquesPagination: {
     page: 1,
     limit: 15,
-    totalRecords: 0
+    totalRecords: 0,
+    sort: []
   }
 }
 

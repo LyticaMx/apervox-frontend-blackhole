@@ -13,8 +13,13 @@ import useToast from 'hooks/useToast'
 interface Props {
   open: boolean
   onClose?: () => void
+  actualTab: string
 }
-const EditWorkGroupDrawer = ({ open, onClose }: Props): ReactElement | null => {
+const EditWorkGroupDrawer = ({
+  open,
+  onClose,
+  actualTab
+}: Props): ReactElement | null => {
   const getMessage = useFormatMessage(workGroupsEditDrawerMessages)
   const { formatMessage } = useIntl()
   const { launchToast } = useToast()
@@ -87,6 +92,11 @@ const EditWorkGroupDrawer = ({ open, onClose }: Props): ReactElement | null => {
               })
               onClose?.()
               actions?.getWorkGroups()
+              if (actualTab === 'users') {
+                actions?.getWorkGroupUsers({
+                  page: 1
+                })
+              }
             }
           }}
         />

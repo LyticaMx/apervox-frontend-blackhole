@@ -107,11 +107,13 @@ export interface WorkgroupState {
     limit: number
     page: number
     totalRecords: number
+    sort: SortingState
   }
   techniquesPagination: {
     limit: number
     page: number
     totalRecords: number
+    sort: SortingState
   }
 }
 
@@ -127,16 +129,15 @@ export interface WorkgroupActions {
     params?: WorkgroupPaginationParams & SearchParams & DateFilter
   ) => Promise<void>
   getWorkGroupUsers: (
-    id: string,
-    params?: Partial<PaginationFilter>
-  ) => Promise<boolean>
+    params?: WorkgroupPaginationParams & SearchParams
+  ) => Promise<void>
   getWorkGroupTechniques: (
     id: string,
     params?: Partial<PaginationFilter>
   ) => Promise<boolean>
   updateStatusWorkGroup: (id: string, status: boolean) => Promise<boolean>
   deleteWorkGroup: (id: string) => Promise<boolean>
-  deleteUserOfWorkGroup?: (id: string) => Promise<boolean>
+  deleteUsersOfWorkGroup: (ids: string[]) => Promise<boolean>
   deleteTechniqueOfWorkGroup?: (id: string) => Promise<boolean>
   createWorkGroup: (params: WorkGroup) => Promise<boolean>
   updateWorkGroup: (params: WorkGroup) => Promise<boolean>
