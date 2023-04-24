@@ -1,15 +1,14 @@
 import { ReactElement, useEffect } from 'react'
 
-import Dialog from 'components/DeleteDialog'
-
 import { useAuth } from 'context/Auth'
 import { useRoles } from 'context/Roles'
 
 import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
 import useToast from 'hooks/useToast'
+import { Role } from 'types/auth'
+import Dialog from 'components/DeleteDialog'
 
 import { rolesMessages, rolesDeleteMessages } from '../messages'
-import { Role } from 'types/auth'
 
 interface Props {
   open: boolean

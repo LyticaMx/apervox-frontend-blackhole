@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ReactElement, useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import * as yup from 'yup'

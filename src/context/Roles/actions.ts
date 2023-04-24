@@ -1,7 +1,6 @@
 import { useService } from 'hooks/useApi'
 import { get, omit } from 'lodash'
 import { ResponseData, SearchParams } from 'types/api'
-// import { Role } from 'types/auth'
 import { DateFilter } from 'types/filters'
 import { Scope } from 'types/scope'
 import { actions } from './constants'
@@ -167,6 +166,7 @@ export const useActions = (state: State, dispatch): Actions => {
       return []
     }
   }
+
   const exportTable = async (): Promise<void> => {}
 
   return {

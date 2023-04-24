@@ -1,14 +1,15 @@
 import { ReactElement, useEffect, useState } from 'react'
 import { InformationCircleIcon } from '@heroicons/react/24/outline'
 
+import { useRoles } from 'context/Roles'
+import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
+import useToast from 'hooks/useToast'
+import { Role } from 'types/auth'
+
 import Dialog from 'components/Dialog'
 import Button from 'components/Button'
 import Switch from 'components/Form/Switch'
-import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
 import { rolesDisableMessages } from '../messages'
-import { useRoles } from 'context/Roles'
-import { Role } from 'types/auth'
-import useToast from 'hooks/useToast'
 
 interface Props {
   open?: boolean

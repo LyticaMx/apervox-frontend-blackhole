@@ -2,14 +2,13 @@ import { ReactElement, useEffect, useState } from 'react'
 import { useToggle } from 'usehooks-ts'
 
 import { useFormatMessage } from 'hooks/useIntl'
+import { useRoles } from 'context/Roles'
 import { Role } from 'types/auth'
 
 import Title from 'components/Title'
 import ViewFilter from 'components/ViewFilter'
-import { useRoles } from 'context/Roles'
 
 import RoleCard from './components/Card'
-
 import DisableDialog from './components/DisableDialog'
 import StoreDrawer from './components/StoreDrawer'
 import DeleteDialog from './components/DeleteDialog'

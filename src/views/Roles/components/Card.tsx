@@ -1,25 +1,20 @@
+import { ReactElement } from 'react'
+import { format, parseISO } from 'date-fns'
 import {
   NoSymbolIcon,
   RectangleGroupIcon,
   TrashIcon,
   UsersIcon
 } from '@heroicons/react/24/outline'
+
+import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
+import { Role } from 'types/auth'
+
 import Card from 'components/Card'
 import Typography from 'components/Typography'
-import { format, parseISO } from 'date-fns'
-import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
-import { ReactElement } from 'react'
-import { Role } from 'types/auth'
-import { rolesCardMessages } from '../messages'
-import ActionTooltip from './Tooltip'
 
-// interface Role {
-//   id: string
-//   name: string
-//   created_at: string
-//   user_name: string
-//   total_users: number
-// }
+import ActionTooltip from './Tooltip'
+import { rolesCardMessages } from '../messages'
 
 interface Props {
   data: Role
