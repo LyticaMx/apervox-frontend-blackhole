@@ -42,7 +42,13 @@ const Roles = (): ReactElement => {
         </div>
         <ViewFilter
           fields={items}
-          action={{ label: getMessage('button'), onClick: toggleOpen }}
+          action={{
+            label: getMessage('button'),
+            onClick: () => {
+              setRole(undefined)
+              toggleOpen()
+            }
+          }}
           download={(document) => alert(document)}
           onChange={(data) =>
             actions?.getRoles({

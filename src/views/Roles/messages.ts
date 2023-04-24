@@ -70,6 +70,29 @@ export const rolesDisableMessages = defineMessages({
   }
 })
 
+export const rolesPermissionsMessages = defineMessages({
+  general: {
+    id: 'views.roles.permissions.general',
+    defaultMessage: 'Permisos generales'
+  },
+  create: {
+    id: 'views.roles.permissions.create',
+    defaultMessage: 'Creación'
+  },
+  update: {
+    id: 'views.roles.permissions.update',
+    defaultMessage: 'Edición'
+  },
+  delete: {
+    id: 'views.roles.permissions.delete',
+    defaultMessage: 'Eliminación'
+  },
+  export: {
+    id: 'views.roles.permissions.export',
+    defaultMessage: 'Exportación'
+  }
+})
+
 export const rolesDrawerMessages = defineMessages({
   title: {
     id: 'views.roles.drawer.title',

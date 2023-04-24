@@ -1,5 +1,7 @@
-import { ReactElement, useEffect } from 'react'
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { ReactElement, useEffect, useState } from 'react'
 import { useFormik } from 'formik'
+import * as yup from 'yup'
 import { format, parseISO } from 'date-fns'
 
 import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
@@ -13,7 +15,10 @@ import Typography from 'components/Typography'
 
 import AccordionModules from './Accordion'
 import { rolesDrawerMessages } from '../messages'
-import { scopes } from '../constants'
+import { Module, scopes } from '../constants'
+import { Scope } from 'types/scope'
+import SelectPaginate from 'components/Form/SelectPaginate'
+import { omit } from 'lodash'
 
 interface Props {
   open: boolean
@@ -22,28 +27,50 @@ interface Props {
 }
 interface FormValues {
   name: string
+  users: any[]
 }
 const StoreDrawer = ({ open, role, onClose }: Props): ReactElement => {
+  const [openDrawer, setOpenDrawer] = useState<boolean>(open)
   const getMessage = useFormatMessage(rolesDrawerMessages)
   const getGlobalMessage = useGlobalMessage()
+  const [items, setItems] = useState<Module[]>(scopes)
+  const [roleUsers, setRoleUsers] = useState<any[]>([])
   const { actions } = useRoles()
 
+  const validationSchema = yup.object({
+    name: yup.string().required(getMessage('required')),
+    users: yup.array().required(getMessage('required'))
+  })
   const formik = useFormik<FormValues>({
     initialValues: {
-      name: ''
+      name: '',
+      users: []
     },
+    validationSchema,
     onSubmit: async (values) => {
-      console.log(role)
+      const users = values.users.map((item) => item.value)
+      const scopes: Scope[] = items.map((item) => ({
+        name: item.id,
+        ...item.permissions
+      }))
+
       if (role) {
         await actions?.updateRole({
           id: role.id,
-          name: values.name
+          name: values.name,
+          users: {
+            connect: users,
+            disconnect: roleUsers
+              .filter((item) => !users.includes(item.id))
+              .map((item) => item.id)
+          },
+          scopes
         })
       } else {
         await actions?.createRole({
           name: values.name,
-          users: [],
-          scopes: []
+          users,
+          scopes
         })
       }
       await actions?.getRoles()
@@ -57,15 +84,67 @@ const StoreDrawer = ({ open, role, onClose }: Props): ReactElement => {
     return format(parseISO(date), 'dd/MM/yyyy - hh:ss:mm')
   }
 
+  const setForm = async (): Promise<void> => {
+    try {
+      if (role) {
+        const scopes = await actions?.getScopes(role.id)
+
+        const aux = items.map((item) => {
+          const scope = scopes?.find((value) => value.name === item.id)
+
+          if (!scope) return item
+
+          return {
+            ...item,
+            permissions: omit(scope, ['name'])
+          }
+        })
+
+        setItems(aux)
+
+        const users = role.users ?? []
+        formik.resetForm({
+          values: {
+            name: role.name,
+            users: users.map((item) => ({
+              value: item.id,
+              label: item.username
+            }))
+          }
+        })
+        setRoleUsers(users)
+      } else {
+        formik.resetForm({ values: { name: '', users: [] } })
+        setItems((prev) =>
+          prev.map((item) => ({
+            ...item,
+            permissions: {
+              read: false,
+              update: false,
+              create: false,
+              delete: false,
+              export: false
+            }
+          }))
+        )
+      }
+      setTimeout(() => {
+        setOpenDrawer(true)
+      }, 300)
+    } catch {}
+  }
+
   useEffect(() => {
-    if (open && role) {
-      formik.resetForm({ values: { name: role.name } })
+    if (open) {
+      setForm()
+    } else {
+      setOpenDrawer(open)
     }
   }, [open, role])
 
   return (
     <Drawer
-      open={open}
+      open={openDrawer}
       onClose={onClose}
       placement="right"
       className="bg-background-secondary"
@@ -107,13 +186,19 @@ const StoreDrawer = ({ open, role, onClose }: Props): ReactElement => {
             name="name"
             value={formik.values.name}
             onChange={formik.handleChange}
+            error={!!formik.errors.name && !!formik.touched.name}
+            helperText={
+              !!formik.errors.name && !!formik.touched.name
+                ? formik.errors.name
+                : ''
+            }
           />
 
           <h4 className="text-primary mt-4 mb-2 uppercase">
             {getMessage('modules')}
           </h4>
 
-          <AccordionModules items={scopes} />
+          <AccordionModules items={items} onChange={setItems} />
 
           <h4 className="text-primary mt-4 mb-2 uppercase">
             {getGlobalMessage('users', 'generalMessages')}
@@ -124,6 +209,22 @@ const StoreDrawer = ({ open, role, onClose }: Props): ReactElement => {
             {getGlobalMessage('users', 'generalMessages')}
           </p>
           <TextField />
+          <SelectPaginate
+            asyncProps={{
+              api: {
+                endpoint: 'users',
+                method: 'get'
+              },
+              value: 'id',
+              label: 'username',
+              searchField: 'username'
+            }}
+            debounceTimeout={300}
+            value={formik.values.users}
+            onChange={(val) => {
+              formik.setFieldValue('users', val)
+            }}
+          />
         </div>
         <div className="text-right mt-4">
           <Button variant="contained" color="primary" type="submit">
