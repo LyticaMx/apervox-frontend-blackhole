@@ -1,8 +1,9 @@
 import { useService } from 'hooks/useApi'
-import { omit } from 'lodash'
+import { get, omit } from 'lodash'
 import { ResponseData, SearchParams } from 'types/api'
 // import { Role } from 'types/auth'
 import { DateFilter } from 'types/filters'
+import { Scope } from 'types/scope'
 import { actions } from './constants'
 import {
   Actions,
@@ -112,7 +113,15 @@ export const useActions = (state: State, dispatch): Actions => {
     try {
       await resource.put({
         queryString: payload.id,
-        body: omit(payload, ['id'])
+        body: omit(payload, ['id', 'users', 'scopes'])
+      })
+      await resource.put({
+        queryString: `${payload.id}/users`,
+        body: get(payload, ['users'], [])
+      })
+      await resource.put({
+        queryString: `${payload.id}/scopes`,
+        body: get(payload, ['scopes'], [])
       })
       return true
     } catch {
@@ -149,6 +158,15 @@ export const useActions = (state: State, dispatch): Actions => {
     }
   }
 
+  const getScopes = async (id: string): Promise<Scope[]> => {
+    try {
+      const response = await resource.get({ queryString: `${id}/scopes` })
+
+      return response.data
+    } catch {
+      return []
+    }
+  }
   const exportTable = async (): Promise<void> => {}
 
   return {
@@ -157,6 +175,7 @@ export const useActions = (state: State, dispatch): Actions => {
     updateRole,
     deleteRole,
     toggleDisable,
+    getScopes,
     exportTable
   }
 }
