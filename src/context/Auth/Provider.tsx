@@ -59,12 +59,10 @@ const AuthProvider = ({ children }: Props): ReactElement => {
     method: 'get'
   })
 
-  /*
   const refreshTokenService = useApi({
     endpoint: '/auth/refresh-token',
     method: 'post'
   })
-  */
 
   const signIn = async (params: SignIn): Promise<SignedIn> => {
     try {
@@ -204,9 +202,11 @@ const AuthProvider = ({ children }: Props): ReactElement => {
 
   const refreshToken = async (): Promise<boolean> => {
     try {
-      await signOut()
-      /*
-      const res = await refreshTokenService()
+      const res = await refreshTokenService({
+        urlParams: {
+          refreshT_token: getItem('rToken')
+        }
+      })
       if (res.data) {
         const token: string = res.data.access_token
         const rToken: string = res.data.refresh_token
@@ -218,7 +218,6 @@ const AuthProvider = ({ children }: Props): ReactElement => {
 
         return true
       }
-      */
 
       return false
     } catch (error) {
