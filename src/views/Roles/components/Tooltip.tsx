@@ -1,5 +1,6 @@
-import Tooltip from 'components/Tooltip'
 import { ReactElement, ReactNode } from 'react'
+
+import Tooltip from 'components/Tooltip'
 
 interface Props {
   children: ReactNode

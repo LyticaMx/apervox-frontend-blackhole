@@ -1,47 +1,64 @@
-import { ReactElement } from 'react'
-import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
+import { ReactElement, useEffect } from 'react'
 
-import Dialog from 'components/Dialog'
-import Button from 'components/Button'
+import { useAuth } from 'context/Auth'
+import { useRoles } from 'context/Roles'
+
 import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
-import { rolesDeleteMessages } from '../messages'
+import useToast from 'hooks/useToast'
+import { Role } from 'types/auth'
+import Dialog from 'components/DeleteDialog'
+
+import { rolesMessages, rolesDeleteMessages } from '../messages'
 
 interface Props {
-  open?: boolean
-  audioName?: string
-  groupName?: string
-  onClose?: (event?: any) => void
-  onAccept?: () => void
+  open: boolean
+  role?: Role
+  onClose: () => void
 }
 
-const DeleteDialog = ({
-  open = true,
-  onClose = () => {},
-  onAccept = () => {}
-}: Props): ReactElement => {
-  const getMessage = useFormatMessage(rolesDeleteMessages)
+const DeleteDialog = ({ open, role, onClose }: Props): ReactElement => {
+  const { actions } = useRoles()
+  const { actions: authActions } = useAuth()
+  const toast = useToast()
+
+  const getMessage = useFormatMessage(rolesMessages)
+  const getDeleteMessage = useFormatMessage(rolesDeleteMessages)
   const getGlobalMessage = useGlobalMessage()
 
+  useEffect(() => {
+    actions?.getRoles()
+  }, [])
+
+  const handleDelete = async ({
+    password
+  }: {
+    password: string
+  }): Promise<void> => {
+    try {
+      const isCorrect = (await authActions?.verifyPassword(password)) ?? false
+      if (!isCorrect) {
+        toast.danger(getGlobalMessage('incorrectPassword', 'generalMessages'))
+
+        return
+      }
+
+      if (role) await actions?.deleteRole(role.id)
+
+      toast.success(getMessage('deleteSuccess'))
+      await actions?.getRoles()
+      onClose()
+    } catch {}
+  }
+
   return (
-    <Dialog open={open} onClose={onClose} size="sm" padding="none">
-      <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-        <div className="text-center sm:mt-0">
-          <ExclamationTriangleIcon className="h-6 w-6 text-red-600 m-auto mb-2" />
-          <h3 className="text-lg font-medium leading-6 text-gray-900">
-            {getMessage('title')}
-          </h3>
-          <p className="text-sm text-gray-500 mb-2">{getMessage('message')}</p>
-        </div>
-      </div>
-      <div className=" px-4 pb-8 sm:flex gap-2 justify-center">
-        <Button variant="contained" color="red" onClick={onAccept}>
-          {getGlobalMessage('accept', 'actionsMessages')}
-        </Button>
-        <Button variant="contained" color="secondary" onClick={onClose}>
-          {getGlobalMessage('cancel', 'actionsMessages')}
-        </Button>
-      </div>
-    </Dialog>
+    <Dialog
+      title={getDeleteMessage('title')}
+      question={getDeleteMessage('message')}
+      confirmation={getDeleteMessage('confirm')}
+      open={open}
+      onAccept={handleDelete}
+      onClose={onClose}
+    />
   )
 }
 
