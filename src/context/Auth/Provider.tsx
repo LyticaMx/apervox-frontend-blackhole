@@ -204,7 +204,7 @@ const AuthProvider = ({ children }: Props): ReactElement => {
     try {
       const res = await refreshTokenService({
         urlParams: {
-          refreshT_token: getItem('rToken')
+          'refresh-token': getItem('rToken')
         }
       })
       if (res.data) {
