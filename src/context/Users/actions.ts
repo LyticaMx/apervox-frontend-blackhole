@@ -26,6 +26,10 @@ export const useActions = (
   const createUserService = useApi({ endpoint: 'users', method: 'post' })
   const updateUserService = useApi({ endpoint: 'users', method: 'put' })
   const deleteUserService = useApi({ endpoint: 'users', method: 'delete' })
+  const deleteSessionsService = useApi({
+    endpoint: 'sessions',
+    method: 'delete'
+  })
 
   const getUsers = async (
     params?: UsersPaginationParams &
@@ -160,7 +164,7 @@ export const useActions = (
             phone_extension: user.phone,
             position: user.position
           },
-          group_ids: user.groupsIds,
+          groups: user.groupsIds,
           role_id: user.roleId,
           close_session: user.closeSession ?? true
         }
@@ -188,7 +192,7 @@ export const useActions = (
             phone_extension: user.phone,
             position: user.position
           },
-          group_ids: user.groupsIds,
+          groups: user.groupsIds,
           role_id: user.roleId,
           close_session: user.closeSession ?? true
         }
@@ -271,11 +275,11 @@ export const useActions = (
 
   const closeMultipleSessions = async (ids: string[]): Promise<boolean> => {
     try {
-      return !(
-        await Promise.all(
-          ids.map(async (id): Promise<boolean> => await closeSession(id))
-        )
-      ).some((item) => !item)
+      const response: ResponseData = await deleteSessionsService({
+        body: { users: ids }
+      })
+
+      return response.data.success
     } catch {
       return false
     }

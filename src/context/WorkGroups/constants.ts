@@ -6,7 +6,8 @@ import {
   GenericItem,
   WorkGroupHistory,
   WorkGroupUser,
-  WorkGroupTechnique
+  WorkGroupTechnique,
+  WorkgroupStaticFilter
 } from 'types/workgroup'
 
 export enum Types {
@@ -21,7 +22,8 @@ export enum Types {
   SET_WORKGROUP_USERS_PAGINATION = 'workGroups/setWorkGroupUsersPagination',
   SET_WORKGROUP_TECHNIQUES_PAGINATION = 'workGroups/setWorkGroupTechniquesPagination',
   SET_WORKGROUP_FILTERS = 'workGroups/setWorkGroupFilters',
-  SET_WORKGROUP_DATE_FILTERS = 'workGroups/setWorkGroupDateFilters'
+  SET_WORKGROUP_DATE_FILTERS = 'workGroups/setWorkGroupDateFilters',
+  SET_WORKGROUP_STATIC_FILTERS = 'workGroups/setWorkGroupStaticFilters'
 }
 
 export const actions = {
@@ -46,6 +48,9 @@ export const actions = {
   ),
   setWorkGroupDateFilters: createAction<Types, DateFilter>(
     Types.SET_WORKGROUP_DATE_FILTERS
+  ),
+  setWorkGroupStaticFilters: createAction<Types, WorkgroupStaticFilter>(
+    Types.SET_WORKGROUP_STATIC_FILTERS
   ),
   setWorkGroupUsersPagination: createAction<Types, Pagination>(
     Types.SET_WORKGROUP_USERS_PAGINATION

@@ -87,6 +87,12 @@ export interface GenericItem {
   name: string
 }
 
+export interface WorkgroupStaticFilter {
+  status?: string[]
+  hasUsers?: string[]
+  hasTechniques?: string[]
+}
+
 export interface WorkgroupState {
   selected: WorkGroup
   workGroups: WorkGroup[]
@@ -97,6 +103,7 @@ export interface WorkgroupState {
   associatedTechniques: WorkGroupTechnique[]
   dateFilter: DateFilter
   searchFilter: SearchFilter
+  staticFilter: WorkgroupStaticFilter
   workGroupsPagination: {
     limit: number
     page: number
@@ -122,11 +129,12 @@ export interface WorkgroupPaginationParams extends PaginationParams {
 }
 
 export interface WorkgroupActions {
-  getUsers: () => Promise<boolean>
-  getTechniques: () => Promise<boolean>
   getHistory: (id: string) => Promise<boolean>
   getWorkGroups: (
-    params?: WorkgroupPaginationParams & SearchParams & DateFilter
+    params?: WorkgroupPaginationParams &
+      SearchParams &
+      DateFilter &
+      WorkgroupStaticFilter
   ) => Promise<void>
   getWorkGroupUsers: (
     params?: WorkgroupPaginationParams & SearchParams
@@ -143,6 +151,10 @@ export interface WorkgroupActions {
   createWorkGroup: (params: WorkGroup) => Promise<boolean>
   updateWorkGroup: (params: WorkGroup) => Promise<boolean>
   selectWorkGroup: (params?: WorkGroup) => void
+  toggleDisableWorkGroups: (
+    ids: string[],
+    disable?: boolean
+  ) => Promise<boolean>
 }
 
 export interface ContextType extends WorkgroupState {

@@ -29,7 +29,10 @@ const WorkGroups = (): ReactElement => {
   const [openHistoryDrawer, toggleOpenHistoryDrawer] = useToggle(false)
   const [openCreateDrawer, toggleOpenCreateDrawer] = useToggle(false)
   const [openEditDrawer, toggleOpenEditDrawer] = useToggle(false)
-  const [openDisableDialog, toggleDisableDialog] = useToggle(false)
+  const [disableWorkgroups, setDisableWorkgroups] = useState<SynchroEditIds>({
+    ids: [],
+    resolve: null
+  })
   const [deletedWorkgroups, setDeletedWorkgroups] = useState<SynchroEditIds>({
     ids: [],
     resolve: null
@@ -96,7 +99,15 @@ const WorkGroups = (): ReactElement => {
             setDeletedWorkgroups({ ids: [], resolve: null })
           }}
         />
-        <DisableDialog open={openDisableDialog} onClose={toggleDisableDialog} />
+        <DisableDialog
+          ids={disableWorkgroups.ids}
+          resolve={disableWorkgroups.resolve ?? (() => {})}
+          onConfirm={() => setDisableWorkgroups({ ids: [], resolve: null })}
+          onClose={() => {
+            if (disableWorkgroups.resolve) disableWorkgroups.resolve(false)
+            setDisableWorkgroups({ ids: [], resolve: null })
+          }}
+        />
 
         <EditWorkGroupDrawer
           open={openEditDrawer}
@@ -114,6 +125,11 @@ const WorkGroups = (): ReactElement => {
                 ids,
                 resolve
               })
+            )
+          }
+          handleDisable={async (ids) =>
+            await new Promise<boolean>((resolve) =>
+              setDisableWorkgroups({ ids, resolve })
             )
           }
         />

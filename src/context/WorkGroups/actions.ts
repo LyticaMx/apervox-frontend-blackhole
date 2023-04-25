@@ -6,7 +6,8 @@ import {
   Turn,
   WorkGroupTechnique,
   WorkGroupHistory,
-  WorkgroupPaginationParams
+  WorkgroupPaginationParams,
+  WorkgroupStaticFilter
 } from 'types/workgroup'
 import { Status } from 'types/status'
 import { Priority } from 'types/priority'
@@ -25,7 +26,8 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
     dateFilter,
     searchFilter,
     selected,
-    usersPagination
+    usersPagination,
+    staticFilter
   } = state
   const getWorkgroupsService = useApi({ endpoint: 'groups', method: 'get' })
   const createWorkgroupService = useApi({ endpoint: 'groups', method: 'post' })
@@ -34,64 +36,6 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
     endpoint: 'groups',
     method: 'delete'
   })
-
-  const getUsers = async (): Promise<boolean> => {
-    try {
-      const data = [
-        {
-          id: '001',
-          name: 'Armando Albor'
-        },
-        {
-          id: '002',
-          name: 'Javier Albor'
-        },
-        {
-          id: '003',
-          name: 'Efraín Cuadras'
-        }
-      ]
-
-      dispatch(actions.setUsers(data ?? initialState.users))
-
-      return Boolean(data)
-    } catch (error) {
-      dispatch(actions.setUsers(initialState.users))
-
-      return false
-    }
-  }
-
-  const getTechniques = async (): Promise<boolean> => {
-    try {
-      const data = [
-        {
-          id: '001',
-          name: 'T.i 23/2022-1'
-        },
-        {
-          id: '002',
-          name: 'T.i 23/2022-3'
-        },
-        {
-          id: '003',
-          name: 'T.i 20/2022-12'
-        },
-        {
-          id: '004',
-          name: 'T.i 125/2022-10'
-        }
-      ]
-
-      dispatch(actions.setTechniques(data ?? initialState.techniques))
-
-      return Boolean(data)
-    } catch (error) {
-      dispatch(actions.setTechniques(initialState.techniques))
-
-      return false
-    }
-  }
 
   const getHistory = async (id: string): Promise<boolean> => {
     try {
@@ -157,11 +101,18 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
   }
 
   const getWorkGroups = async (
-    params?: WorkgroupPaginationParams & SearchParams & DateFilter
+    params?: WorkgroupPaginationParams &
+      SearchParams &
+      DateFilter &
+      WorkgroupStaticFilter
   ): Promise<void> => {
     try {
       const sort = { by: 'created_at', order: 'desc' }
-      const mappedFilters = {}
+      const mappedFilters: {
+        has_techniques?: boolean
+        has_users?: boolean
+        status?: boolean
+      } = {}
 
       if (params?.sort && params.sort.length > 0) {
         const [sortBy] = params.sort
@@ -181,6 +132,28 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
           }, {})
         )
       }
+
+      mappedFilters.has_techniques =
+        params?.hasTechniques?.[0] === 'yes'
+          ? true
+          : params?.hasTechniques?.[0] === 'no'
+          ? false
+          : undefined
+
+      mappedFilters.has_users =
+        params?.hasUsers?.[0] === 'yes'
+          ? true
+          : params?.hasUsers?.[0] === 'no'
+          ? false
+          : undefined
+
+      mappedFilters.status =
+        params?.status?.[0] === 'enabled'
+          ? true
+          : params?.status?.[0] === 'disabled'
+          ? false
+          : undefined
+
       const response: ResponseData = await getWorkgroupsService({
         urlParams: {
           ...sort,
@@ -224,7 +197,6 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
         actions.setWorkGroupFilters({
           query: params?.query ?? searchFilter.query,
           filters: params?.filters ?? searchFilter.filters
-          // staticFilters: params?.staticFilters ?? searchFilter.staticFilters
         })
       )
 
@@ -232,6 +204,14 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
         actions.setWorkGroupDateFilters({
           start_time: params?.start_time ?? dateFilter.start_time,
           end_time: params?.end_time ?? dateFilter.end_time
+        })
+      )
+
+      dispatch(
+        actions.setWorkGroupStaticFilters({
+          hasTechniques: params?.hasTechniques ?? staticFilter.hasTechniques,
+          hasUsers: params?.hasUsers ?? staticFilter.hasUsers,
+          status: params?.status ?? staticFilter.status
         })
       )
     } catch (error) {
@@ -512,17 +492,35 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
 
   const deleteWorkGroups = async (ids: string[]): Promise<boolean> => {
     try {
-      return !(
-        await Promise.all(ids.map(async (id) => await deleteWorkGroup(id)))
-      ).some((item) => !item)
+      await deleteWorkGroupService({
+        body: { ids }
+      })
+
+      return true
+    } catch {
+      return false
+    }
+  }
+
+  const toggleDisableWorkGroups = async (
+    ids: string[],
+    disable?: boolean
+  ): Promise<boolean> => {
+    try {
+      const response: ResponseData = await updateWorkGroupService({
+        body: {
+          ids,
+          payload: { status: disable }
+        }
+      })
+
+      return response.data.success ?? true
     } catch {
       return false
     }
   }
 
   return {
-    getUsers,
-    getTechniques,
     getHistory,
     getWorkGroups,
     getWorkGroupUsers,
@@ -533,7 +531,8 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
     updateStatusWorkGroup,
     deleteWorkGroup,
     deleteUsersOfWorkGroup,
-    deleteWorkGroups
+    deleteWorkGroups,
+    toggleDisableWorkGroups
   }
 }
 

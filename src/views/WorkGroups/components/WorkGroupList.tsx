@@ -24,11 +24,13 @@ import useToast from 'hooks/useToast'
 interface Props {
   handleClickOnHistory: (id: string) => void
   handleDelete: (ids: string[]) => Promise<boolean>
+  handleDisable: (ids: string[]) => Promise<boolean>
 }
 
 const WorkGroupList = ({
   handleClickOnHistory,
-  handleDelete
+  handleDelete,
+  handleDisable
 }: Props): ReactElement => {
   const getMessage = useFormatMessage(workGroupListMessages)
   const { launchToast } = useToast()
@@ -204,11 +206,7 @@ const WorkGroupList = ({
         onSortingChange: (sort) => actions?.getWorkGroups({ sort }),
         sorting: workGroupsPagination.sort
       }}
-      onRowClicked={(row) => {
-        console.log(`onSelectWorkGroup(${row.id})`)
-
-        actions?.selectWorkGroup(row)
-      }}
+      onRowClicked={(row) => actions?.selectWorkGroup(row)}
       maxHeight={500}
       pageSize={workGroupsPagination.limit}
       manualPagination={{
@@ -224,18 +222,15 @@ const WorkGroupList = ({
       withCheckbox
       actionsForSelectedItems={[
         {
-          name: 'Eliminar',
+          name: getMessage('delete'),
           action: async (items) =>
             await handleDelete(items.map((item) => item.id ?? '')),
           Icon: TrashIcon
         },
         {
-          name: 'Deshabilitar',
-          action: (items) => {
-            console.log(
-              `onDisableWorkGroups(${items.map((workgroup) => workgroup.id)})`
-            )
-          },
+          name: getMessage('disable'),
+          action: async (items) =>
+            await handleDisable(items.map((item) => item.id ?? '')),
           Icon: NoSymbolIcon
         }
       ]}

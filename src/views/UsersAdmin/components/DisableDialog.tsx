@@ -44,7 +44,7 @@ const DisableDialog = ({ onClose = () => {}, ids }: Props): ReactElement => {
             enabled
           })
         })
-        actions?.getUsers()
+        await actions?.getUsers({ page: 1 })
       }
     } catch {}
   }

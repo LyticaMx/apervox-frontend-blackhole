@@ -77,12 +77,18 @@ export const workGroupsEditDrawerMessages = defineMessages({
 export const workGroupsDisableDialogMessages = defineMessages({
   title: {
     id: 'views.workGroups.disableDialog.title',
-    defaultMessage: 'Habilitar / deshabilitar grupo'
+    defaultMessage:
+      'Habilitar / deshabilitar {total, plural, one{grupo} other{{total} grupos}}'
   },
   message: {
     id: 'views.workGroups.disableDialog.message',
     defaultMessage:
-      'El grupo seleccionado se encuentra {status, select, true {habilitado} other {deshabilitado}}, ¿quieres {status, select, true {deshabilitarlo} other {habilitarlo}}?'
+      '¿Quieres {status, select, false {deshabilitar} other {habilitar}} {total, plural, one{el grupo seleccionado} other{los {total} grupos seleccionados}}?'
+  },
+  success: {
+    id: 'views.workGroups.disableDialog.success',
+    defaultMessage:
+      '{total, plural, one{Grupo {status,select,false{deshabilitado} other{habilitado}}} other {Grupos {status,select,false{deshabilitados}other{habilitados}}}} correctamente'
   }
 })
 
