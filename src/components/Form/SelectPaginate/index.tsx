@@ -25,7 +25,7 @@ const SelectPaginate = (props: Props): ReactElement => {
       noOptionsMessage={props.noOptionsMessage}
       loadingMessage={props.loadingMessage}
       debounceTimeout={props.debounceTimeout}
-      isMulti
+      isMulti={props.isMulti}
     />
   )
 }
