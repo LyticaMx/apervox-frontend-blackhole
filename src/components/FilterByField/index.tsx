@@ -1,4 +1,4 @@
-import { ReactElement, ReactNode, useEffect, useState } from 'react'
+import { ReactElement, ReactNode, useEffect, useMemo, useState } from 'react'
 import { useIntl } from 'react-intl'
 import { useFormik } from 'formik'
 
@@ -10,6 +10,9 @@ import { actionsMessages, generalMessages } from 'globalMessages'
 
 import TextField from 'components/Form/Textfield'
 import Radio from 'components/Form/Radio'
+import StaticFilterComponent from './StaticFilter'
+
+import clsx from 'clsx'
 
 export type InputType =
   | 'datepicker'
@@ -24,10 +27,22 @@ export type InputType =
 interface Values {
   search: string
   fields: string[]
+  staticFilters: Record<string, string | string[]>
 }
+
 export interface FilterItem {
   label: string
   name: string
+}
+
+export interface StaticFilter {
+  name: string
+  label: string
+  options: Array<{
+    name: string
+    value: string
+  }>
+  multiple?: boolean
 }
 
 interface Props {
@@ -41,6 +56,7 @@ interface Props {
   acceptText?: ReactNode
   cancelText?: ReactNode
   disabledEmpty?: boolean
+  staticFilters?: StaticFilter[]
 }
 
 const FilterByField = ({
@@ -53,7 +69,8 @@ const FilterByField = ({
   children,
   acceptText,
   cancelText,
-  disabledEmpty = false
+  disabledEmpty = false,
+  staticFilters = []
 }: Props): ReactElement => {
   const intl = useIntl()
   const [show, setShow] = useState(false)
@@ -67,16 +84,33 @@ const FilterByField = ({
     setShow(false)
   }
 
+  const initialStaticValues = useMemo(() => {
+    return staticFilters.reduce<Record<string, string | string[]>>(
+      (carry, item) => {
+        carry[item.name] = item.multiple ? [] : ''
+
+        return carry
+      },
+      {}
+    )
+  }, [staticFilters])
+
   const formik = useFormik({
     initialValues: {
       search: '',
       fields: [],
+      staticFilters: initialStaticValues,
       ...initialValues
     },
     onSubmit: (values) => {
       if (onSubmit) {
         // TODO: Revertir este cambio cuando los filtros sean OR y no AND
-        onSubmit({ search: values.search, fields: [values.fields] })
+        onSubmit({
+          search: values.search,
+          fields:
+            typeof values.fields === 'string' ? [values.fields] : values.fields,
+          staticFilters: values.staticFilters
+        })
       }
       if (handleClose) {
         handleClose()
@@ -84,12 +118,36 @@ const FilterByField = ({
     }
   })
 
-  const total = values?.fields.length ?? 0
+  const total = useMemo(() => {
+    if (!values) return 0
+
+    const { staticFilters } = values ?? {}
+
+    return (
+      values.fields.length +
+      Object.keys(staticFilters ?? {}).reduce((carry, filter) => {
+        return (
+          carry +
+          Number(
+            typeof staticFilters[filter] === 'string'
+              ? staticFilters[filter] !== ''
+                ? 1
+                : 0
+              : staticFilters[filter].length
+          )
+        )
+      }, 0)
+    )
+  }, [values])
 
   useEffect(() => {
     if (show && values) {
       formik.resetForm({
-        values: values ?? { search: '', fields: [] }
+        values: values ?? {
+          search: '',
+          fields: [],
+          staticFilters: initialStaticValues
+        }
       })
     }
   }, [show, values])
@@ -133,17 +191,19 @@ const FilterByField = ({
               <div className="flex gap-2 items-center">
                 <button
                   onClick={() => {
-                    formik.resetForm({ values: { search: '', fields: [] } })
+                    formik.resetForm({
+                      values: { search: '', fields: [], staticFilters: {} }
+                    })
                     if (onReset) onReset()
                   }}
-                  className="text-sm text-blue-500"
+                  className="text-sm text-primary"
                 >
                   {intl.formatMessage(actionsMessages.clean)}
                 </button>
                 <div className="border border-gray-400 rounded-lg h-3"></div>
                 <button
                   disabled={disabled}
-                  className="text-sm text-blue-500"
+                  className="text-sm text-primary"
                   onClick={() => formik.handleSubmit()}
                 >
                   {acceptText ?? intl.formatMessage(actionsMessages.accept)}
@@ -152,7 +212,13 @@ const FilterByField = ({
             </div>
 
             <div className="p-4">
-              <form onSubmit={formik.handleSubmit} onReset={formik.handleReset}>
+              <form
+                onSubmit={formik.handleSubmit}
+                onReset={formik.handleReset}
+                className={clsx(
+                  staticFilters.length > 0 && 'max-h-96 overflow-auto'
+                )}
+              >
                 <TextField
                   id="search"
                   name="search"
@@ -161,7 +227,7 @@ const FilterByField = ({
                 />
 
                 <p className="mt-3 mb-2">Campos</p>
-                <div className="flex flex-col gap-1">
+                <div className="flex flex-col gap-1 pl-1">
                   {items.map((item, index) => (
                     // TODO: Revertir este cambio cuando los filtros sean OR y no AND
                     <Radio
@@ -172,6 +238,24 @@ const FilterByField = ({
                       onChange={formik.handleChange}
                       value={item.name}
                       checked={formik.values.fields.includes(item.name)}
+                    />
+                  ))}
+                </div>
+                <div className="mt-3">
+                  {staticFilters.map((filter) => (
+                    <StaticFilterComponent
+                      key={filter.name}
+                      onChange={async (value) =>
+                        await formik.setFieldValue('staticFilters', {
+                          ...formik.values.staticFilters,
+                          [filter.name]: value
+                        })
+                      }
+                      title={filter.label}
+                      name={filter.name}
+                      options={filter.options}
+                      value={formik.values.staticFilters[filter.name]}
+                      multiple={filter.multiple}
                     />
                   ))}
                 </div>

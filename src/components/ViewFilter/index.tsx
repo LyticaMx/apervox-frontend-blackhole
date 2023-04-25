@@ -1,6 +1,6 @@
 import Button from 'components/Button'
 import DownloadDialog from 'components/DownloadDialog'
-import FilterByField from 'components/FilterByField'
+import FilterByField, { StaticFilter } from 'components/FilterByField'
 import Daterangepicker from 'components/Form/Daterangepicker'
 import { useDidMountEffect } from 'hooks/useDidMountEffect'
 import { ReactElement, ReactNode, useState } from 'react'
@@ -27,6 +27,7 @@ interface FilterStatus {
 
 interface Props {
   fields: Field[]
+  staticFilters?: StaticFilter[]
   onChange?: (values: FilterStatus) => void
   action?: ActionButton | ActionButton[]
   download?:
@@ -36,7 +37,19 @@ interface Props {
 }
 const ViewFilter = (props: Props): ReactElement => {
   const [dateRange, setDateRange] = useState<[Date?, Date?]>([])
-  const [filterByField, setFilterByField] = useState({ search: '', fields: [] })
+  const [filterByField, setFilterByField] = useState({
+    search: '',
+    fields: [],
+    staticFilters:
+      props.staticFilters?.reduce<Record<string, string | string[]>>(
+        (carry, item) => {
+          carry[item.name] = item.multiple ? [] : ''
+
+          return carry
+        },
+        {}
+      ) ?? {}
+  })
 
   // Revisar si es conveniente que se llame cada vez que entra la persona a la vista
   useDidMountEffect(() => {
@@ -81,6 +94,7 @@ const ViewFilter = (props: Props): ReactElement => {
         items={props.fields}
         values={filterByField}
         onSubmit={setFilterByField}
+        staticFilters={props.staticFilters}
       />
       {props.download && <DownloadDialog onExport={props.download} />}
       {props.action && renderActions()}

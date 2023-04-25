@@ -636,5 +636,9 @@ export const generalMessages = defineMessages({
   noOptions: {
     id: 'global.general.noOptions',
     defaultMessage: 'Sin opciones'
+  },
+  both: {
+    id: 'global.general.both',
+    defaultMessage: 'Ambos'
   }
 })
