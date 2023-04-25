@@ -127,6 +127,10 @@ export const userFormMessages = defineMessages({
   selectGroupsPlaceholder: {
     id: 'views.users.UserForm.selectGroupsPlaceholder',
     defaultMessage: 'Selecciona los grupos'
+  },
+  selectRolePlaceholder: {
+    id: 'views.users.UserForm.selectRolePlaceholder',
+    defaultMessage: 'Selecciona el rol'
   }
 })
 
