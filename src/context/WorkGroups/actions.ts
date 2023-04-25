@@ -224,6 +224,7 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
         actions.setWorkGroupFilters({
           query: params?.query ?? searchFilter.query,
           filters: params?.filters ?? searchFilter.filters
+          // staticFilters: params?.staticFilters ?? searchFilter.staticFilters
         })
       )
 

@@ -4,6 +4,7 @@ import { useFormatMessage } from 'hooks/useIntl'
 import { generalMessages } from 'globalMessages'
 import { workGroupsMessages } from '../messages'
 import { useWorkGroups } from 'context/WorkGroups'
+import { StaticFilter } from 'components/FilterByField'
 
 interface Props {
   toggleOpen: () => void
@@ -29,11 +30,35 @@ const WorkGroupFilter = ({ toggleOpen }: Props): ReactElement => {
     }
   ]
 
+  // TODO: Eliminar despues de ser utilizado como ejemplo
+  const staticFilters: StaticFilter[] = [
+    {
+      label: getMessage('status'),
+      name: 'status',
+      options: [
+        {
+          name: getMessage('active'),
+          value: 'active'
+        },
+        {
+          name: getMessage('inactive'),
+          value: 'inactive'
+        },
+        {
+          name: getMessage('both'),
+          value: 'both'
+        }
+      ]
+      // multiple: true
+    }
+  ]
+
   return (
     <ViewFilter
       fields={filterItems}
       action={{ label: getMessage('button'), onClick: toggleOpen }}
       download={(document) => alert(document)}
+      staticFilters={staticFilters}
       onChange={(data) =>
         actions?.getWorkGroups({
           start_time: data.dateRange[0],
