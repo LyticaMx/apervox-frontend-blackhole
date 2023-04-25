@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import { ReactElement, ReactNode } from 'react'
 
-interface Props {
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
   children: ReactNode
   className?: string
   padding?: 'none' | 'normal'
@@ -10,7 +10,8 @@ interface Props {
 const Card = ({
   children,
   padding = 'normal',
-  className = ''
+  className = '',
+  ...props
 }: Props): ReactElement => {
   const paddingClasses = {
     none: 'p-0',
@@ -19,11 +20,8 @@ const Card = ({
 
   return (
     <div
-      className={clsx(
-        'card',
-        paddingClasses[padding],
-        className
-      )}
+      className={clsx('card', paddingClasses[padding], className)}
+      {...props}
     >
       {children}
     </div>

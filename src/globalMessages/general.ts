@@ -315,6 +315,14 @@ export const generalMessages = defineMessages({
     id: 'global.general.updatedAt',
     defaultMessage: 'Modificado: {date}'
   },
+  created: {
+    id: 'global.general.created',
+    defaultMessage: 'Creado'
+  },
+  updated: {
+    id: 'global.general.updated',
+    defaultMessage: 'Modificado'
+  },
   source: {
     id: 'global.general.source',
     defaultMessage: 'Fuente'
@@ -612,6 +620,14 @@ export const generalMessages = defineMessages({
   forms: {
     id: 'global.general.forms',
     defaultMessage: 'Formularios'
+  },
+  password: {
+    id: 'global.general.password',
+    defaultMessage: 'Contraseña'
+  },
+  incorrectPassword: {
+    id: 'global.general.incorrectPassword',
+    defaultMessage: 'Contraseña incorrecta'
   },
   loading: {
     id: 'global.general.loading',
