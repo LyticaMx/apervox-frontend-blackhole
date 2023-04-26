@@ -124,32 +124,26 @@ export const useActions = (
         })
       )
 
-      // TODO: Revisar como condicionar estos dispatch o reducirlos
       dispatch(
         actions.setUsersFilters({
-          query: params?.query ?? searchFilter.query,
-          filters: params?.filters ?? searchFilter.filters
-        })
-      )
-
-      dispatch(
-        actions.setDateFilters({
-          start_time: params?.start_time ?? dateFilter.start_time,
-          end_time: params?.end_time ?? dateFilter.end_time
-        })
-      )
-
-      dispatch(
-        actions.setStaticFilters({
-          sessions: params?.sessions ?? staticFilter.sessions,
-          status: params?.status ?? staticFilter.status
+          search: {
+            query: params?.query ?? searchFilter.query,
+            filters: params?.filters ?? searchFilter.filters
+          },
+          date: {
+            start_time: params?.start_time ?? dateFilter.start_time,
+            end_time: params?.end_time ?? dateFilter.end_time
+          },
+          static: {
+            sessions: params?.sessions ?? staticFilter.sessions,
+            status: params?.status ?? staticFilter.status
+          }
         })
       )
     } catch (e) {
       console.error(e)
     }
   }
-
   const createUser = async (user: User): Promise<boolean> => {
     try {
       await createUserService({
