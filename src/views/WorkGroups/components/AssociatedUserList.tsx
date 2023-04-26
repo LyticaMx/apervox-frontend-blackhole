@@ -13,86 +13,91 @@ import { workGroupsUsersListMessages } from '../messages'
 
 const AssociatedUserList = (): ReactElement => {
   const getMessage = useFormatMessage(workGroupsUsersListMessages)
-  const { associatedUsers, actions, usersPagination } = useWorkGroups()
+  const { associatedUsers, actions, usersPagination, selected } =
+    useWorkGroups()
   const { launchToast } = useToast()
 
-  const columns = useTableColumns<WorkGroupUser>(() => [
-    {
-      accessorKey: 'name',
-      header: getMessage('name')
-    },
-    {
-      accessorKey: 'surnames',
-      header: getMessage('surnames')
-    },
-    {
-      accessorKey: 'username',
-      header: getMessage('username')
-    },
-    {
-      accessorKey: 'groups',
-      header: getMessage('groups')
-    },
-    {
-      accessorKey: 'role',
-      header: getMessage('profile')
-    },
-    {
-      accessorKey: 'status',
-      header: getMessage('status'),
-      cell: ({ getValue }) => {
-        const status = getValue<Status>()
+  const columns = useTableColumns<WorkGroupUser>(
+    () => [
+      {
+        accessorKey: 'name',
+        header: getMessage('name')
+      },
+      {
+        accessorKey: 'surnames',
+        header: getMessage('surnames')
+      },
+      {
+        accessorKey: 'username',
+        header: getMessage('username')
+      },
+      {
+        accessorKey: 'groups',
+        header: getMessage('groups')
+      },
+      {
+        accessorKey: 'role',
+        header: getMessage('profile')
+      },
+      {
+        accessorKey: 'status',
+        header: getMessage('status'),
+        cell: ({ getValue }) => {
+          const status = getValue<Status>()
 
-        return <StatusTag value={status} />
-      }
-    },
-    {
-      accessorKey: 'id',
-      header: getMessage('action'),
-      enableSorting: false,
-      cell: ({ getValue, table }) => {
-        const id = getValue<string>()
+          return <StatusTag value={status} />
+        }
+      },
+      {
+        accessorKey: 'id',
+        header: getMessage('action'),
+        enableSorting: false,
+        cell: ({ getValue, table }) => {
+          const id = getValue<string>()
 
-        return (
-          <div className="flex items-center justify-center">
-            <Tooltip
-              content={getMessage('delete')}
-              floatProps={{ offset: 10, arrow: true }}
-              classNames={{
-                panel:
-                  'bg-secondary text-white py-1 px-2 rounded-md text-sm whitespace-nowrap',
-                arrow: 'absolute bg-white w-2 h-2 rounded-full bg-secondary'
-              }}
-              placement="top"
-            >
-              <button
-                onClick={async () => {
-                  const deleted = await actions?.deleteUsersOfWorkGroup([id])
-                  if (deleted) {
-                    await actions?.getWorkGroupUsers({ page: 1 })
-                    await actions?.getWorkGroups()
-                    launchToast({
-                      title: getMessage('deletedUsersSuccess', {
-                        total: 1
-                      }),
-                      type: 'Success'
-                    })
-                    return true
-                  }
+          return (
+            <div className="flex items-center justify-center">
+              <Tooltip
+                content={getMessage('delete')}
+                floatProps={{ offset: 10, arrow: true }}
+                classNames={{
+                  panel:
+                    'bg-secondary text-white py-1 px-2 rounded-md text-sm whitespace-nowrap',
+                  arrow: 'absolute bg-white w-2 h-2 rounded-full bg-secondary'
                 }}
-                className="text-muted enabled:hover:text-primary mx-1"
-                disabled={
-                  table.getIsSomeRowsSelected() || table.getIsAllRowsSelected()
-                }
+                placement="top"
               >
-                <TrashIcon className="h-5 w-5" />
-              </button>
-            </Tooltip>
-          </div>
-        )
+                <button
+                  onClick={async (e) => {
+                    const deleted = await actions?.deleteUsersOfWorkGroup([id])
+                    if (deleted) {
+                      await actions?.getWorkGroupUsers({ page: 1 })
+                      await actions?.getWorkGroups()
+                      launchToast({
+                        title: getMessage('deletedUsersSuccess', {
+                          total: 1
+                        }),
+                        type: 'Success'
+                      })
+                      return true
+                    }
+                  }}
+                  className="text-muted enabled:hover:text-primary mx-1"
+                  disabled={
+                    table.getIsSomeRowsSelected() ||
+                    table.getIsAllRowsSelected()
+                  }
+                >
+                  <TrashIcon className="h-5 w-5" />
+                </button>
+              </Tooltip>
+            </div>
+          )
+        }
       }
-    }
-  ])
+    ],
+    [selected] //! Recordar que cada que pases algo a la tabla actualizar las dependencias
+  )
 
   return (
     <Table
