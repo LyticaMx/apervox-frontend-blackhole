@@ -195,23 +195,19 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
 
       dispatch(
         actions.setWorkGroupFilters({
-          query: params?.query ?? searchFilter.query,
-          filters: params?.filters ?? searchFilter.filters
-        })
-      )
-
-      dispatch(
-        actions.setWorkGroupDateFilters({
-          start_time: params?.start_time ?? dateFilter.start_time,
-          end_time: params?.end_time ?? dateFilter.end_time
-        })
-      )
-
-      dispatch(
-        actions.setWorkGroupStaticFilters({
-          hasTechniques: params?.hasTechniques ?? staticFilter.hasTechniques,
-          hasUsers: params?.hasUsers ?? staticFilter.hasUsers,
-          status: params?.status ?? staticFilter.status
+          search: {
+            query: params?.query ?? searchFilter.query,
+            filters: params?.filters ?? searchFilter.filters
+          },
+          date: {
+            start_time: params?.start_time ?? dateFilter.start_time,
+            end_time: params?.end_time ?? dateFilter.end_time
+          },
+          static: {
+            hasTechniques: params?.hasTechniques ?? staticFilter.hasTechniques,
+            hasUsers: params?.hasUsers ?? staticFilter.hasUsers,
+            status: params?.status ?? staticFilter.status
+          }
         })
       )
     } catch (error) {

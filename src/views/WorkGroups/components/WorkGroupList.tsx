@@ -57,7 +57,24 @@ const WorkGroupList = ({
     },
     {
       accessorKey: 'total_users',
-      header: getMessage('users')
+      header: getMessage('users'),
+      meta: {
+        columnFilters: {
+          options: [
+            {
+              name: getMessage('hasUsers'),
+              value: 'yes'
+            },
+            { name: getMessage('hasNoUsers'), value: 'no' },
+            {
+              name: getMessage('both'),
+              value: 'both'
+            }
+          ],
+          onChange: async (values) =>
+            await actions?.getWorkGroups({ hasUsers: values })
+        }
+      }
     },
     {
       header: getMessage('techniques'),
@@ -97,6 +114,23 @@ const WorkGroupList = ({
             })}
           </div>
         )
+      },
+      meta: {
+        columnFilters: {
+          options: [
+            {
+              name: getMessage('hasTechniques'),
+              value: 'yes'
+            },
+            { name: getMessage('hasNoTechniques'), value: 'no' },
+            {
+              name: getMessage('both'),
+              value: 'both'
+            }
+          ],
+          onChange: async (values) =>
+            await actions?.getWorkGroups({ hasTechniques: values })
+        }
       }
     },
     {
@@ -106,6 +140,26 @@ const WorkGroupList = ({
         const status = getValue<Status>()
 
         return <StatusTag value={status} />
+      },
+      meta: {
+        columnFilters: {
+          options: [
+            {
+              name: getMessage('enabled'),
+              value: 'enabled'
+            },
+            {
+              name: getMessage('disabled'),
+              value: 'disabled'
+            },
+            {
+              name: getMessage('both'),
+              value: 'both'
+            }
+          ],
+          onChange: async (values) =>
+            await actions?.getWorkGroups({ status: values })
+        }
       }
     },
     {

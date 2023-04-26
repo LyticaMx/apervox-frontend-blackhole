@@ -40,6 +40,22 @@ export const workGroupListMessages = defineMessages({
   deletedWorkGroup: {
     id: 'views.WorkGroups.WorkGroupList.deletedWorkGroup',
     defaultMessage: 'Grupo eliminado correctamente'
+  },
+  hasUsers: {
+    id: 'views.WorkGroups.WorkGroupList.hasUsers',
+    defaultMessage: 'Tiene usuarios'
+  },
+  hasNoUsers: {
+    id: 'views.WorkGroups.WorkGroupList.hasNoUsers',
+    defaultMessage: 'No tiene usuarios'
+  },
+  hasTechniques: {
+    id: 'views.WorkGroups.WorkGroupList.hasTechniques',
+    defaultMessage: 'Tiene técnicas'
+  },
+  hasNoTechniques: {
+    id: 'views.WorkGroups.WorkGroupList.hasNoTechniques',
+    defaultMessage: 'No tiene técnicas'
   }
 })
 

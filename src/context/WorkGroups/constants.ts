@@ -1,5 +1,4 @@
-import { createAction } from 'types/contextReducer'
-import { DateFilter, SearchFilter } from 'types/filters'
+import { Filters, createAction } from 'types/contextReducer'
 import {
   Pagination,
   WorkGroup,
@@ -43,14 +42,8 @@ export const actions = {
   setWorkGroupPagination: createAction<Types, Pagination>(
     Types.SET_WORKGROUP_PAGINATION
   ),
-  setWorkGroupFilters: createAction<Types, SearchFilter>(
+  setWorkGroupFilters: createAction<Types, Filters<WorkgroupStaticFilter>>(
     Types.SET_WORKGROUP_FILTERS
-  ),
-  setWorkGroupDateFilters: createAction<Types, DateFilter>(
-    Types.SET_WORKGROUP_DATE_FILTERS
-  ),
-  setWorkGroupStaticFilters: createAction<Types, WorkgroupStaticFilter>(
-    Types.SET_WORKGROUP_STATIC_FILTERS
   ),
   setWorkGroupUsersPagination: createAction<Types, Pagination>(
     Types.SET_WORKGROUP_USERS_PAGINATION
