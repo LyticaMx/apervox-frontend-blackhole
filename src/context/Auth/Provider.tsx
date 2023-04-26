@@ -212,7 +212,7 @@ const AuthProvider = ({ children }: Props): ReactElement => {
         }
       )
       if (res.data) {
-        const token: string = res.data.access_token
+        const token: string = res.data.token
         const rToken: string = res.data.refresh_token
 
         setAuth((prev) => ({ ...prev, token, rToken }))
