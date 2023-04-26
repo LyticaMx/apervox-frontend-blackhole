@@ -50,8 +50,6 @@ const useApi = ({
   ): Promise<ResponseData> => {
     const url: string = `${endpoint}${queryString ? `/${queryString}` : ''}`
 
-    console.log({ withLoader })
-
     try {
       if (withLoader) loaderActions?.showLoader()
 
