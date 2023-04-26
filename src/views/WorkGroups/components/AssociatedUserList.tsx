@@ -96,7 +96,7 @@ const AssociatedUserList = (): ReactElement => {
         }
       }
     ],
-    [selected] //! Recordar que cada que pases algo a la tabla actualizar las dependencias
+    [selected.id] //! Recordar que cada que pases algo a la tabla actualizar las dependencias
   )
 
   return (
