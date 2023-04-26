@@ -6,15 +6,11 @@ export const reducer = (state: State, action: Action<Types>): State => {
   switch (action.type) {
     case Types.SET_DATA:
       return { ...state, data: action.payload }
-    case Types.SET_DATE_FILTERS:
-      return {
-        ...state,
-        dateFilter: { ...state.dateFilter, ...action.payload }
-      }
     case Types.SET_FILTERS:
       return {
         ...state,
-        searchFilter: { ...state.searchFilter, ...action.payload }
+        dateFilter: { ...state.dateFilter, ...action.payload.date },
+        searchFilter: { ...state.searchFilter, ...action.payload.search }
       }
     case Types.SET_PAGINATION:
       return {

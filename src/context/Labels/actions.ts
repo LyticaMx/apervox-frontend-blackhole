@@ -26,26 +26,19 @@ export const useActions = (state: State, dispatch): Actions => {
         order: 'desc'
       }
 
-      const mappedFilters = {}
-
       if (params?.sort && params.sort.length > 0) {
         const [sortBy] = params.sort
         sort.by = orderByMapper[sortBy.id] ?? sortBy.id
         sort.order = sortBy.desc ? 'desc' : 'asc'
       }
-
       const query = params?.query ?? searchFilter.query
       const filters = params?.filters ?? searchFilter.filters
+      const mappedFilters = (filters ?? []).reduce((old, key) => {
+        if (!query) return old
 
-      if (filters && filters.length > 0 && query) {
-        Object.assign(
-          mappedFilters,
-          filters.reduce((old, key) => {
-            old[key] = query
-            return old
-          }, {})
-        )
-      }
+        old[key] = query
+        return old
+      }, {})
 
       // TODO: cambiar el response data
       const response: ResponseData = await resource.get({
@@ -70,18 +63,16 @@ export const useActions = (state: State, dispatch): Actions => {
         })
       )
 
-      // TODO: Revisar como condicionar estos dispatch o reducirlos
       dispatch(
         actions.setFilters({
-          query: params?.query ?? searchFilter.query,
-          filters: params?.filters ?? searchFilter.filters
-        })
-      )
-
-      dispatch(
-        actions.setDateFilters({
-          start_time: params?.start_time ?? dateFilter.start_time,
-          end_time: params?.end_time ?? dateFilter.end_time
+          search: {
+            query: params?.query ?? searchFilter.query,
+            filters: params?.filters ?? searchFilter.filters
+          },
+          date: {
+            start_time: params?.start_time ?? dateFilter.start_time,
+            end_time: params?.end_time ?? dateFilter.end_time
+          }
         })
       )
     } catch (e) {
