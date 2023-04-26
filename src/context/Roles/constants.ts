@@ -1,18 +1,15 @@
-import { createAction } from 'types/contextReducer'
-import { DateFilter, SearchFilter } from 'types/filters'
+import { createAction, Filters } from 'types/contextReducer'
 import { RolesPagination } from './types'
 import { Role } from 'types/auth'
 
 export enum Types {
-  SET_ROLES = 'roles/setRoles',
+  SET_DATA = 'roles/setData',
   SET_PAGINATION = 'roles/setPagination',
-  SET_FILTERS = 'roles/setFilters',
-  SET_DATE_FILTERS = 'roles/setDateFilters'
+  SET_FILTERS = 'roles/setFilters'
 }
 
 export const actions = {
-  setRoles: createAction<Types, Role[]>(Types.SET_ROLES),
+  setData: createAction<Types, Role[]>(Types.SET_DATA),
   setPagination: createAction<Types, RolesPagination>(Types.SET_PAGINATION),
-  setFilters: createAction<Types, SearchFilter>(Types.SET_FILTERS),
-  setDateFilters: createAction<Types, DateFilter>(Types.SET_DATE_FILTERS)
+  setFilters: createAction<Types, Filters>(Types.SET_FILTERS)
 }

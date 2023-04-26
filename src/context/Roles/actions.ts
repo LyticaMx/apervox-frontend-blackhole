@@ -6,9 +6,9 @@ import { Scope } from 'types/scope'
 import { actions } from './constants'
 import {
   Actions,
-  RoleCreate,
+  PayloadCreate,
   RolesPaginationParams,
-  RoleUpdate,
+  PayloadUpdate,
   State
 } from './types'
 
@@ -23,7 +23,7 @@ export const useActions = (state: State, dispatch): Actions => {
   const { pagination, dateFilter, searchFilter } = state
   const resource = useService('roles')
 
-  const getRoles = async (
+  const getData = async (
     params?: RolesPaginationParams & SearchParams & DateFilter
   ): Promise<void> => {
     try {
@@ -31,8 +31,6 @@ export const useActions = (state: State, dispatch): Actions => {
         by: 'created_at',
         order: 'desc'
       }
-
-      const mappedFilters = {}
 
       if (params?.sort && params.sort.length > 0) {
         const [sortBy] = params.sort
@@ -43,15 +41,12 @@ export const useActions = (state: State, dispatch): Actions => {
       const query = params?.query ?? searchFilter.query
       const filters = params?.filters ?? searchFilter.filters
 
-      if (filters && filters.length > 0 && query) {
-        Object.assign(
-          mappedFilters,
-          filters.reduce((old, key) => {
-            old[key] = query
-            return old
-          }, {})
-        )
-      }
+      const mappedFilters = (filters ?? []).reduce((old, key) => {
+        if (!query) return old
+
+        old[key] = query
+        return old
+      }, {})
 
       // TODO: cambiar el response data
       const response: ResponseData = await resource.get({
@@ -65,7 +60,7 @@ export const useActions = (state: State, dispatch): Actions => {
         }
       })
 
-      dispatch(actions.setRoles(response.data))
+      dispatch(actions.setData(response.data))
 
       dispatch(
         actions.setPagination({
@@ -76,18 +71,16 @@ export const useActions = (state: State, dispatch): Actions => {
         })
       )
 
-      // TODO: Revisar como condicionar estos dispatch o reducirlos
       dispatch(
         actions.setFilters({
-          query: params?.query ?? searchFilter.query,
-          filters: params?.filters ?? searchFilter.filters
-        })
-      )
-
-      dispatch(
-        actions.setDateFilters({
-          start_time: params?.start_time ?? dateFilter.start_time,
-          end_time: params?.end_time ?? dateFilter.end_time
+          search: {
+            query: params?.query ?? searchFilter.query,
+            filters: params?.filters ?? searchFilter.filters
+          },
+          date: {
+            start_time: params?.start_time ?? dateFilter.start_time,
+            end_time: params?.end_time ?? dateFilter.end_time
+          }
         })
       )
     } catch (e) {
@@ -95,7 +88,7 @@ export const useActions = (state: State, dispatch): Actions => {
     }
   }
 
-  const createRole = async (payload: RoleCreate): Promise<boolean> => {
+  const create = async (payload: PayloadCreate): Promise<boolean> => {
     try {
       await resource.post({
         body: payload
@@ -108,7 +101,7 @@ export const useActions = (state: State, dispatch): Actions => {
     }
   }
 
-  const updateRole = async (payload: RoleUpdate): Promise<boolean> => {
+  const update = async (payload: PayloadUpdate): Promise<boolean> => {
     try {
       await resource.put({
         queryString: payload.id,
@@ -128,7 +121,7 @@ export const useActions = (state: State, dispatch): Actions => {
     }
   }
 
-  const deleteRole = async (id: string): Promise<boolean> => {
+  const deleteOne = async (id: string): Promise<boolean> => {
     try {
       await resource.delete({
         queryString: id
@@ -139,7 +132,7 @@ export const useActions = (state: State, dispatch): Actions => {
     }
   }
 
-  const toggleDisable = async (
+  const toggleStatus = async (
     id: string,
     enabled: boolean
   ): Promise<boolean> => {
@@ -170,11 +163,11 @@ export const useActions = (state: State, dispatch): Actions => {
   const exportTable = async (): Promise<void> => {}
 
   return {
-    getRoles,
-    createRole,
-    updateRole,
-    deleteRole,
-    toggleDisable,
+    getData,
+    create,
+    update,
+    delete: deleteOne,
+    toggleStatus,
     getScopes,
     exportTable
   }

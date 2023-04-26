@@ -30,9 +30,9 @@ const DisableDialog = ({
 
   const handleAccept = async (): Promise<void> => {
     try {
-      if (role) await actions?.toggleDisable(role.id, enabled)
+      if (role) await actions?.toggleStatus(role.id, enabled)
       toast.success(getMessage('success', { enabled }))
-      await actions?.getRoles()
+      await actions?.getData()
       onClose()
     } catch {}
   }

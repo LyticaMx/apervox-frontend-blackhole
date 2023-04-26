@@ -16,7 +16,7 @@ import { rolesMessages } from './messages'
 import Pagination from 'components/Table/Pagination'
 
 const Roles = (): ReactElement => {
-  const { roles, pagination, actions } = useRoles()
+  const { data, pagination, actions } = useRoles()
 
   const getMessage = useFormatMessage(rolesMessages)
 
@@ -27,7 +27,7 @@ const Roles = (): ReactElement => {
   const items = [{ label: 'Usuario', name: 'created_by' }]
 
   useEffect(() => {
-    actions?.getRoles()
+    actions?.getData()
   }, [])
 
   return (
@@ -50,7 +50,7 @@ const Roles = (): ReactElement => {
           }}
           download={(document) => alert(document)}
           onChange={(data) =>
-            actions?.getRoles({
+            actions?.getData({
               start_time: data.dateRange[0],
               end_time: data.dateRange[1],
               filters: data.filterByField.fields,
@@ -61,7 +61,7 @@ const Roles = (): ReactElement => {
       </div>
 
       <div className="grid gap-4 mt-8 xl:mt-12 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {roles.map((item, index) => (
+        {data.map((item, index) => (
           <RoleCard
             onClick={() => {
               setRole(item)
@@ -83,14 +83,14 @@ const Roles = (): ReactElement => {
       </div>
 
       <Pagination
-        onPageChange={(page) => actions?.getRoles({ page: page + 1 })}
+        onPageChange={(page) => actions?.getData({ page: page + 1 })}
         currentPage={pagination.page}
         pageSize={pagination.limit}
         totalCount={pagination.totalRecords}
         manualLimit={{
           options: [15, 25, 50, 100],
           onChangeLimit: (page, limit) =>
-            actions?.getRoles({
+            actions?.getData({
               page: page + 1,
               limit
             })
