@@ -1,29 +1,26 @@
 import { ReactElement, useMemo, useState } from 'react'
+import { useIntl } from 'react-intl'
+import { TrashIcon } from '@heroicons/react/24/outline'
+import { format } from 'date-fns'
+
+import { useDrawer } from 'context/Drawer'
+import { Label } from 'types/label'
+import { generalMessages, platformMessages } from 'globalMessages'
+
+import DeleteDialog from 'components/DeleteDialog'
 import ViewFilter from 'components/ViewFilter'
 import Pagination from 'components/Table/Pagination'
 import IconButton from 'components/Button/IconButton'
-import { TrashIcon } from '@heroicons/react/24/outline'
-import { format } from 'date-fns'
 import Grid from 'components/Grid'
 import Typography from 'components/Typography'
 import Checkbox from 'components/Form/Checkbox'
-import { useIntl } from 'react-intl'
-import { generalMessages, platformMessages } from 'globalMessages'
-import { labelsAdministrationMessages, messages } from '../messages'
 import Button from 'components/Button'
 import IndeterminateCheckbox from 'components/Table/IndeterminateCheckbox'
-import { useDrawer } from 'context/Drawer'
+
 import LabelDrawer from './LabelDrawer'
-import DeleteDialog from 'components/DeleteDialog'
+import { labelsAdministrationMessages, messages } from '../messages'
 
 type SelectedLabels = Record<string, boolean>
-
-interface Label {
-  id: string
-  color: string
-  label: string
-  date: string
-}
 
 const LabelsAdministration = (): ReactElement => {
   const { formatMessage } = useIntl()
@@ -35,32 +32,37 @@ const LabelsAdministration = (): ReactElement => {
       {
         id: '000000',
         color: '#53DC80',
-        label: 'Secuestro',
-        date: '2022-12-02T16:00:00.000Z'
+        name: 'Secuestro',
+        created_at: '2022-12-02T16:00:00.000Z',
+        evidence_type: 'audio'
       },
       {
         id: '000001',
         color: '#E020F5',
-        label: 'BCC',
-        date: '2022-11-28T16:00:00.000Z'
+        name: 'BCC',
+        created_at: '2022-11-28T16:00:00.000Z',
+        evidence_type: 'audio'
       },
       {
         id: '000002',
         color: '#2596BE',
-        label: 'BSC',
-        date: '2022-11-28T16:05:00.000Z'
+        name: 'BSC',
+        created_at: '2022-11-28T16:05:00.000Z',
+        evidence_type: 'audio'
       },
       {
         id: '0000003',
         color: '#E28743',
-        label: 'Evento duplicado',
-        date: '2022-11-28T16:04:00.000Z'
+        name: 'Evento duplicado',
+        created_at: '2022-11-28T16:04:00.000Z',
+        evidence_type: 'audio'
       },
       {
         id: '0000004',
         color: '#EE0000',
-        label: 'Error',
-        date: '2022-11-28T13:04:00.000Z'
+        name: 'Error',
+        created_at: '2022-11-28T13:04:00.000Z',
+        evidence_type: 'audio'
       }
     ],
     []
@@ -96,7 +98,6 @@ const LabelsAdministration = (): ReactElement => {
     <div>
       <DeleteDialog
         onAccept={(data) => {
-          console.log(data)
           setOpenDeleteDrawer(false)
         }}
         open={openDeleteDrawer}
@@ -201,9 +202,9 @@ const LabelsAdministration = (): ReactElement => {
                         )}
                         onAccept={async (data) => {}}
                         initialValues={{
-                          color: item.color,
-                          evidenceType: 'audio',
-                          label: item.label
+                          name: item.name,
+                          evidenceType: item.evidence_type,
+                          color: item.color
                         }}
                       />
                     )
@@ -216,10 +217,10 @@ const LabelsAdministration = (): ReactElement => {
                 />
                 <div>
                   <Typography className="text-secondary leading-4" style="bold">
-                    {item.label}
+                    {item.name}
                   </Typography>
                   <Typography className="text-secondary leading-4">
-                    {format(new Date(item.date), 'dd/MM/yyyy - hh:mm:ss')}
+                    {format(new Date(item.created_at), 'dd/MM/yyyy - hh:mm:ss')}
                   </Typography>
                 </div>
               </div>
