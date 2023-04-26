@@ -24,11 +24,13 @@ import useToast from 'hooks/useToast'
 interface Props {
   handleClickOnHistory: (id: string) => void
   handleDelete: (ids: string[]) => Promise<boolean>
+  handleDisable: (ids: string[]) => Promise<boolean>
 }
 
 const WorkGroupList = ({
   handleClickOnHistory,
-  handleDelete
+  handleDelete,
+  handleDisable
 }: Props): ReactElement => {
   const getMessage = useFormatMessage(workGroupListMessages)
   const { launchToast } = useToast()
@@ -55,7 +57,24 @@ const WorkGroupList = ({
     },
     {
       accessorKey: 'total_users',
-      header: getMessage('users')
+      header: getMessage('users'),
+      meta: {
+        columnFilters: {
+          options: [
+            {
+              name: getMessage('hasUsers'),
+              value: 'yes'
+            },
+            { name: getMessage('hasNoUsers'), value: 'no' },
+            {
+              name: getMessage('both'),
+              value: 'both'
+            }
+          ],
+          onChange: async (values) =>
+            await actions?.getWorkGroups({ hasUsers: values })
+        }
+      }
     },
     {
       header: getMessage('techniques'),
@@ -95,6 +114,23 @@ const WorkGroupList = ({
             })}
           </div>
         )
+      },
+      meta: {
+        columnFilters: {
+          options: [
+            {
+              name: getMessage('hasTechniques'),
+              value: 'yes'
+            },
+            { name: getMessage('hasNoTechniques'), value: 'no' },
+            {
+              name: getMessage('both'),
+              value: 'both'
+            }
+          ],
+          onChange: async (values) =>
+            await actions?.getWorkGroups({ hasTechniques: values })
+        }
       }
     },
     {
@@ -104,6 +140,26 @@ const WorkGroupList = ({
         const status = getValue<Status>()
 
         return <StatusTag value={status} />
+      },
+      meta: {
+        columnFilters: {
+          options: [
+            {
+              name: getMessage('enabled'),
+              value: 'enabled'
+            },
+            {
+              name: getMessage('disabled'),
+              value: 'disabled'
+            },
+            {
+              name: getMessage('both'),
+              value: 'both'
+            }
+          ],
+          onChange: async (values) =>
+            await actions?.getWorkGroups({ status: values })
+        }
       }
     },
     {
@@ -204,11 +260,7 @@ const WorkGroupList = ({
         onSortingChange: (sort) => actions?.getWorkGroups({ sort }),
         sorting: workGroupsPagination.sort
       }}
-      onRowClicked={(row) => {
-        console.log(`onSelectWorkGroup(${row.id})`)
-
-        actions?.selectWorkGroup(row)
-      }}
+      onRowClicked={(row) => actions?.selectWorkGroup(row)}
       maxHeight={500}
       pageSize={workGroupsPagination.limit}
       manualPagination={{
@@ -224,18 +276,15 @@ const WorkGroupList = ({
       withCheckbox
       actionsForSelectedItems={[
         {
-          name: 'Eliminar',
+          name: getMessage('delete'),
           action: async (items) =>
             await handleDelete(items.map((item) => item.id ?? '')),
           Icon: TrashIcon
         },
         {
-          name: 'Deshabilitar',
-          action: (items) => {
-            console.log(
-              `onDisableWorkGroups(${items.map((workgroup) => workgroup.id)})`
-            )
-          },
+          name: getMessage('disable'),
+          action: async (items) =>
+            await handleDisable(items.map((item) => item.id ?? '')),
           Icon: NoSymbolIcon
         }
       ]}

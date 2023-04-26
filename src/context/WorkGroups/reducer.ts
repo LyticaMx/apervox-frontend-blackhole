@@ -32,12 +32,9 @@ export const reducer = (
     case Types.SET_WORKGROUP_FILTERS:
       return {
         ...state,
-        searchFilter: { ...state.searchFilter, ...action.payload }
-      }
-    case Types.SET_WORKGROUP_DATE_FILTERS:
-      return {
-        ...state,
-        dateFilter: { ...state.dateFilter, ...action.payload }
+        searchFilter: { ...state.searchFilter, ...action.payload.search },
+        dateFilter: { ...state.dateFilter, ...action.payload.date },
+        staticFilter: { ...state.staticFilter, ...action.payload.static }
       }
     case Types.SET_WORKGROUP_USERS_PAGINATION:
       return {

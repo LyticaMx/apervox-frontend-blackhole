@@ -14,7 +14,10 @@ const useTableColumns = <DataType>(
     [dependencies, localeI18n]
   )
 
-  const columnsMemo = useMemo(columnsFactory, dependenciesMemo)
+  const columnsMemo = useMemo<NonEmptyArray<ColumnDef<DataType>>>(
+    columnsFactory,
+    dependenciesMemo
+  )
 
   return columnsMemo
 }

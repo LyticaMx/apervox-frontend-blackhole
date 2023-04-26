@@ -1,19 +1,19 @@
-import { ReactElement, useMemo } from 'react'
-import { FormikConfig, FormikHelpers } from 'formik'
+import { MutableRefObject, ReactElement, useMemo } from 'react'
+import { FormikConfig, FormikContextType, FormikHelpers } from 'formik'
 import * as yup from 'yup'
 import Form from 'components/Form'
 import { Field, Section } from 'types/form'
 import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
 import { userFormMessages } from '../messages'
 
-interface FormValues {
+export interface FormValues {
   name: string
   lastname: string
   username: string
   email: string
   extension: string
   position: string
-  role: string
+  role: any
   groups: any[]
   automaticSessionExpiration: boolean
 }
@@ -24,9 +24,14 @@ interface Props {
     values: FormValues,
     formikHelpers?: FormikHelpers<FormValues>
   ) => Promise<void>
+  formikRef?: MutableRefObject<FormikContextType<FormValues> | undefined>
 }
 
-const UserForm = ({ initialValues, onSubmit }: Props): ReactElement => {
+const UserForm = ({
+  initialValues,
+  onSubmit,
+  formikRef
+}: Props): ReactElement => {
   const getMessage = useFormatMessage(userFormMessages)
   const getGlobalMessage = useGlobalMessage()
 
@@ -93,18 +98,19 @@ const UserForm = ({ initialValues, onSubmit }: Props): ReactElement => {
     },
     {
       name: 'role',
-      type: 'select',
+      type: 'async-select',
       section: 'roles',
       options: {
-        clearable: false,
-        items: [
-          {
-            value: '6438832867fc00ea0266b1ee',
-            text: 'root'
-          }
-        ],
-        textField: 'text',
-        valueField: 'value'
+        asyncProps: {
+          api: { endpoint: 'roles', method: 'get' },
+          value: 'id',
+          label: 'name',
+          searchField: 'name'
+        },
+        debounceTimeout: 300,
+        placeholder: getMessage('selectRolePlaceholder'),
+        loadingMessage: () => `${getMessage('loading')}...`,
+        noOptionsMessage: () => getMessage('noOptions')
       }
     },
     {
@@ -122,6 +128,7 @@ const UserForm = ({ initialValues, onSubmit }: Props): ReactElement => {
           searchField: 'name'
         },
         debounceTimeout: 300,
+        isMulti: true,
         placeholder: getMessage('selectGroupsPlaceholder'),
         loadingMessage: () => `${getMessage('loading')}...`,
         noOptionsMessage: () => getMessage('noOptions')
@@ -150,7 +157,7 @@ const UserForm = ({ initialValues, onSubmit }: Props): ReactElement => {
       .required(getMessage('required')),
     extension: yup.string(),
     position: yup.string().required(getMessage('required')),
-    role: yup.string().required(getMessage('required')),
+    role: yup.object().required(getMessage('required')), // revisar validación
     groups: yup.array().required(getMessage('required')),
     automaticSessionExpiration: yup
       .bool()
@@ -213,6 +220,7 @@ const UserForm = ({ initialValues, onSubmit }: Props): ReactElement => {
           sections,
           renderMainSection: true
         }}
+        formikRef={formikRef}
       />
     </div>
   )

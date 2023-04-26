@@ -5,7 +5,6 @@ import useTableColumns from 'hooks/useTableColumns'
 import FloatingActions from 'components/FloatingActions'
 import Table from 'components/Table'
 import Tag from 'components/Tag'
-import { generalMessages } from 'globalMessages'
 import Typography from 'components/Typography'
 import {
   TrashIcon,
@@ -15,6 +14,7 @@ import {
 import { useUsers } from 'context/Users'
 import { User, UserGroup } from 'types/user'
 import clsx from 'clsx'
+import { userListMessages } from '../messages'
 
 const colorByStatus = {
   enabled: 'bg-green-600',
@@ -39,7 +39,7 @@ const UserList = ({
   onUnlockUser,
   onResetPasswordUser
 }: Props): ReactElement => {
-  const getMessage = useFormatMessage(generalMessages)
+  const getMessage = useFormatMessage(userListMessages)
   const { listOfUsers, usersPagination, actions } = useUsers()
 
   useEffect(() => {
@@ -106,15 +106,15 @@ const UserList = ({
           },
           options: [
             {
-              name: 'Logueado',
+              name: getMessage('logged'),
               value: 'logged'
             },
             {
-              name: 'No logueado',
+              name: getMessage('notLogged'),
               value: 'not logged'
             },
             {
-              name: 'Ambos',
+              name: getMessage('both'),
               value: 'both'
             }
           ]
@@ -145,15 +145,15 @@ const UserList = ({
             await actions?.getUsers({ status: values }),
           options: [
             {
-              name: 'Habilitado',
+              name: getMessage('enabled'),
               value: 'enabled'
             },
             {
-              name: 'Deshabilitado',
+              name: getMessage('disabled'),
               value: 'disabled'
             },
             {
-              name: 'Ambos',
+              name: getMessage('both'),
               value: 'both'
             }
           ]
@@ -177,13 +177,13 @@ const UserList = ({
           <FloatingActions
             actions={[
               {
-                label: 'Restablecer contraseña',
+                label: getMessage('restorePassword'),
                 onClick: () => {
                   onResetPasswordUser(id)
                 }
               },
               {
-                label: 'Desbloquear usuario',
+                label: getMessage('unlockUser'),
                 disabled:
                   status !== 'banned' ||
                   table.getIsSomePageRowsSelected() ||
@@ -193,7 +193,7 @@ const UserList = ({
                 }
               },
               {
-                label: 'Deshabilitar usuario',
+                label: getMessage('disableUser'),
                 disabled:
                   status === 'banned' ||
                   table.getIsSomePageRowsSelected() ||
@@ -203,7 +203,7 @@ const UserList = ({
                 }
               },
               {
-                label: 'Cerrar sesión',
+                label: getMessage('closeSession'),
                 disabled:
                   table.getIsSomePageRowsSelected() ||
                   table.getIsAllRowsSelected(),
@@ -212,7 +212,7 @@ const UserList = ({
                 }
               },
               {
-                label: 'Eliminar',
+                label: getMessage('delete'),
                 className: 'text-red-500',
                 disabled:
                   table.getIsSomePageRowsSelected() ||
@@ -257,20 +257,20 @@ const UserList = ({
         withCheckbox
         actionsForSelectedItems={[
           {
-            name: 'Eliminar',
+            name: getMessage('delete'),
             action: async (items) =>
               await onDeleteUser(items.map((user) => user.id ?? '')),
             Icon: TrashIcon
           },
           {
-            name: 'Deshabilitar',
+            name: getMessage('disableUser'),
             action: (items) => {
               onDisableUser(items.map((user) => user.id ?? ''))
             },
             Icon: NoSymbolIcon
           },
           {
-            name: 'Cerrar sesión',
+            name: getMessage('closeSession'),
             action: (items) => {
               onRemoteLogOffUser(items.map((user) => user.id ?? ''))
             },
