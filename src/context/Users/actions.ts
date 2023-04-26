@@ -26,6 +26,10 @@ export const useActions = (
   const createUserService = useApi({ endpoint: 'users', method: 'post' })
   const updateUserService = useApi({ endpoint: 'users', method: 'put' })
   const deleteUserService = useApi({ endpoint: 'users', method: 'delete' })
+  const deleteSessionsService = useApi({
+    endpoint: 'sessions',
+    method: 'delete'
+  })
 
   const getUsers = async (
     params?: UsersPaginationParams &
@@ -120,32 +124,26 @@ export const useActions = (
         })
       )
 
-      // TODO: Revisar como condicionar estos dispatch o reducirlos
       dispatch(
         actions.setUsersFilters({
-          query: params?.query ?? searchFilter.query,
-          filters: params?.filters ?? searchFilter.filters
-        })
-      )
-
-      dispatch(
-        actions.setDateFilters({
-          start_time: params?.start_time ?? dateFilter.start_time,
-          end_time: params?.end_time ?? dateFilter.end_time
-        })
-      )
-
-      dispatch(
-        actions.setStaticFilters({
-          sessions: params?.sessions ?? staticFilter.sessions,
-          status: params?.status ?? staticFilter.status
+          search: {
+            query: params?.query ?? searchFilter.query,
+            filters: params?.filters ?? searchFilter.filters
+          },
+          date: {
+            start_time: params?.start_time ?? dateFilter.start_time,
+            end_time: params?.end_time ?? dateFilter.end_time
+          },
+          static: {
+            sessions: params?.sessions ?? staticFilter.sessions,
+            status: params?.status ?? staticFilter.status
+          }
         })
       )
     } catch (e) {
       console.error(e)
     }
   }
-
   const createUser = async (user: User): Promise<boolean> => {
     try {
       await createUserService({
@@ -160,7 +158,7 @@ export const useActions = (
             phone_extension: user.phone,
             position: user.position
           },
-          group_ids: user.groupsIds,
+          groups: user.groupsIds,
           role_id: user.roleId,
           close_session: user.closeSession ?? true
         }
@@ -188,7 +186,7 @@ export const useActions = (
             phone_extension: user.phone,
             position: user.position
           },
-          group_ids: user.groupsIds,
+          groups: user.groupsIds,
           role_id: user.roleId,
           close_session: user.closeSession ?? true
         }
@@ -271,11 +269,11 @@ export const useActions = (
 
   const closeMultipleSessions = async (ids: string[]): Promise<boolean> => {
     try {
-      return !(
-        await Promise.all(
-          ids.map(async (id): Promise<boolean> => await closeSession(id))
-        )
-      ).some((item) => !item)
+      const response: ResponseData = await deleteSessionsService({
+        body: { users: ids }
+      })
+
+      return response.data.success
     } catch {
       return false
     }

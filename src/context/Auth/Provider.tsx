@@ -1,8 +1,8 @@
-import { useState, useMemo, ReactNode, ReactElement } from 'react'
+import { useState, useMemo, ReactNode, ReactElement, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useIntl } from 'react-intl'
 import jwtDecode from 'jwt-decode'
-import { toast } from 'react-toastify'
+import useToast from 'hooks/useToast'
 
 import { Auth, SignIn, SignUp, SignedIn } from 'types/auth'
 import { FormProfile } from 'types/profile'
@@ -26,8 +26,9 @@ const AuthProvider = ({ children }: Props): ReactElement => {
   const history = useHistory()
   const { actions: loaderActions } = useLoader()
   const intl = useIntl()
-
+  const refreshingToken = useRef<boolean>(false)
   const [auth, setAuth] = useState<Auth>(initialState)
+  const toast = useToast()
 
   const signInService = useApi({
     endpoint: 'auth/login',
@@ -59,12 +60,11 @@ const AuthProvider = ({ children }: Props): ReactElement => {
     method: 'get'
   })
 
-  /*
   const refreshTokenService = useApi({
     endpoint: '/auth/refresh-token',
-    method: 'post'
+    method: 'post',
+    withLoader: false
   })
-  */
 
   const signIn = async (params: SignIn): Promise<SignedIn> => {
     try {
@@ -204,11 +204,15 @@ const AuthProvider = ({ children }: Props): ReactElement => {
 
   const refreshToken = async (): Promise<boolean> => {
     try {
-      await signOut()
-      /*
-      const res = await refreshTokenService()
+      refreshingToken.current = true
+      const res = await refreshTokenService(
+        {},
+        {
+          'refresh-token': getItem('rToken')
+        }
+      )
       if (res.data) {
-        const token: string = res.data.access_token
+        const token: string = res.data.token
         const rToken: string = res.data.refresh_token
 
         setAuth((prev) => ({ ...prev, token, rToken }))
@@ -218,11 +222,12 @@ const AuthProvider = ({ children }: Props): ReactElement => {
 
         return true
       }
-      */
 
       return false
     } catch (error) {
       return false
+    } finally {
+      refreshingToken.current = false
     }
   }
 
@@ -268,9 +273,9 @@ const AuthProvider = ({ children }: Props): ReactElement => {
 
       if (!hideNotification && Number(getItem('errorsAuthRegistered')) === 0) {
         if (tokenHasExpired()) {
-          toast.error(intl.formatMessage(apiMessages.sessionExpired))
+          toast.danger(intl.formatMessage(apiMessages.sessionExpired))
         } else {
-          toast.error(intl.formatMessage(apiMessages.loginElsewhere))
+          toast.danger(intl.formatMessage(apiMessages.loginElsewhere))
         }
       }
 
@@ -297,6 +302,7 @@ const AuthProvider = ({ children }: Props): ReactElement => {
   const contextValue = useMemo(
     () => ({
       auth,
+      refreshingToken,
       actions: {
         signIn,
         signUp,

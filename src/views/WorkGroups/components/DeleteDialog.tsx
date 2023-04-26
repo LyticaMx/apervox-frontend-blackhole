@@ -40,8 +40,6 @@ const DeleteDialog = ({
         return
       }
 
-      onConfirm()
-
       launchToast({
         type: 'Success',
         title: getMessage('successDelete', { groups: ids.length })
@@ -49,6 +47,7 @@ const DeleteDialog = ({
 
       actions?.getWorkGroups({ page: 1 })
       resolve(true)
+      onConfirm()
     } catch {
       resolve(false)
     }

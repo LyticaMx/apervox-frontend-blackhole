@@ -27,6 +27,7 @@ export const initialState: WorkgroupState = {
   associatedTechniques: [],
   dateFilter: {},
   searchFilter: {},
+  staticFilter: {},
   workGroupsPagination: {
     page: 1,
     limit: 15,

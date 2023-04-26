@@ -46,7 +46,7 @@ const useApi = ({
 
   const handleFetch = async (
     { body, queryString, urlParams }: Fetch = {},
-    headers?: AxiosRequestHeaders
+    headers?: Partial<AxiosRequestHeaders>
   ): Promise<ResponseData> => {
     const url: string = `${endpoint}${queryString ? `/${queryString}` : ''}`
 

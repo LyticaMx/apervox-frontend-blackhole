@@ -1,5 +1,4 @@
 import { ReactElement, useEffect } from 'react'
-import { toast } from 'react-toastify'
 import jwtDecode from 'jwt-decode'
 import { useIdleTimer } from 'react-idle-timer'
 import { useIntl } from 'react-intl'
@@ -8,16 +7,18 @@ import { useAuth } from 'context/Auth'
 import Loader from 'components/Loader'
 import Sidebar from 'components/Layout/Sidebar'
 
-import { getDateDiferenceInMinutes } from 'utils/formatTime'
 import { Layout } from 'types/layout'
 import { apiMessages } from 'globalMessages'
 import Navbar from 'components/Layout/Navbar'
 import ContextDrawer from 'components/Drawer/ContextDrawer'
+import useToast from 'hooks/useToast'
+import { isAfter } from 'date-fns'
 
 const BaseLayout = ({ children }: Layout): ReactElement => {
   const intl = useIntl()
-  const { auth, actions } = useAuth()
+  const { auth, actions, refreshingToken } = useAuth()
   const { token } = auth
+  const toast = useToast()
 
   useEffect(() => {
     validateSession(null, true)
@@ -31,14 +32,10 @@ const BaseLayout = ({ children }: Layout): ReactElement => {
     const exp = session.exp
 
     if (exp) {
-      const diffTime = getDateDiferenceInMinutes(
-        new Date(),
-        new Date(exp * 1000)
-      )
-
-      if (diffTime <= 0) {
-        await actions?.killSession()
-      } else if (diffTime < 10) {
+      if (
+        isAfter(new Date(), new Date(exp * 1000 + 1000)) &&
+        !refreshingToken?.current
+      ) {
         const successRefresh = await actions?.refreshToken()
 
         if (!successRefresh) {
@@ -49,7 +46,7 @@ const BaseLayout = ({ children }: Layout): ReactElement => {
   }
 
   const onIdle = (): void => {
-    toast.error(intl.formatMessage(apiMessages.sessionExpired))
+    toast.danger(intl.formatMessage(apiMessages.sessionExpired))
     actions?.killSession(true)
   }
 

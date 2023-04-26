@@ -15,6 +15,25 @@ export const usersMessages = defineMessages({
   }
 })
 
+export const userListMessages = defineMessages({
+  restorePassword: {
+    id: 'views.users.list.restorePassword',
+    defaultMessage: 'Reestablecer contraseña'
+  },
+  unlockUser: {
+    id: 'views.users.list.unlockUser',
+    defaultMessage: 'Desbloquear usuario'
+  },
+  disableUser: {
+    id: 'views.users.list.disableUser',
+    defaultMessage: 'Deshabilitar usuario'
+  },
+  closeSession: {
+    id: 'views.users.list.closeSession',
+    defaultMessage: 'Cerrar sesión'
+  }
+})
+
 export const usersDeleteMessages = defineMessages({
   title: {
     id: 'views.users.delete.title',
@@ -108,6 +127,10 @@ export const userFormMessages = defineMessages({
   selectGroupsPlaceholder: {
     id: 'views.users.UserForm.selectGroupsPlaceholder',
     defaultMessage: 'Selecciona los grupos'
+  },
+  selectRolePlaceholder: {
+    id: 'views.users.UserForm.selectRolePlaceholder',
+    defaultMessage: 'Selecciona el rol'
   }
 })
 

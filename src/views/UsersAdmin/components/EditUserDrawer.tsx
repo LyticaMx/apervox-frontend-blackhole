@@ -33,7 +33,7 @@ const EditUserDrawer = ({ user, open, onClose }: Props): ReactElement => {
         position: values.position,
         phone: values.extension,
         groupsIds: values.groups.map((item) => item.value),
-        roleId: values.role,
+        roleId: values.role.value,
         closeSession: values.automaticSessionExpiration
       })
       if (updated) {
@@ -80,7 +80,10 @@ const EditUserDrawer = ({ user, open, onClose }: Props): ReactElement => {
             lastname: user.lastName ?? '',
             name: user.name ?? '',
             position: user.position ?? '',
-            role: user.roleId ?? '',
+            role:
+              user.roleId !== ''
+                ? { value: user.roleId, label: user.role }
+                : null,
             username: user.username ?? ''
           }}
           onSubmit={handleSubmit}
