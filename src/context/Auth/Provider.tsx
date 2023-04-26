@@ -62,7 +62,8 @@ const AuthProvider = ({ children }: Props): ReactElement => {
 
   const refreshTokenService = useApi({
     endpoint: '/auth/refresh-token',
-    method: 'post'
+    method: 'post',
+    withLoader: false
   })
 
   const signIn = async (params: SignIn): Promise<SignedIn> => {
