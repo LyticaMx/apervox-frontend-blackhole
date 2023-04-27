@@ -41,6 +41,7 @@ export interface UserStaticFilter {
 
 export interface UserContextState {
   listOfUsers: User[]
+  totalUsers: number
   usersPagination: UsersPagination
   dateFilter: DateFilter
   searchFilter: SearchFilter
@@ -52,7 +53,8 @@ export interface UserContextActions {
     params?: UsersPaginationParams &
       SearchParams &
       DateFilter &
-      UserStaticFilter
+      UserStaticFilter,
+    getTotal?: boolean
   ) => Promise<void>
   createUser: (user: User) => Promise<boolean>
   updateUser: (user: User) => Promise<boolean>

@@ -13,6 +13,7 @@ import CreateUserDrawer from './components/CreateUserDrawer'
 import EditUserDrawer from './components/EditUserDrawer'
 import { usersMessages } from './messages'
 import NewPasswordDialog from './components/NewPasswordDialog'
+import { useUsers } from 'context/Users'
 
 interface SynchroDeleteIds {
   ids: string[]
@@ -32,13 +33,16 @@ const UsersAdmin = (): ReactElement => {
   const [newPassword, setNewPassword] = useState<string>('')
   const [openUnlockDialog, toggleUnlockDialog] = useToggle(false)
   const [selectedUser, setSelectedUser] = useState<any>(null)
+  const { totalUsers } = useUsers()
 
   return (
     <>
       <div className="flex justify-between">
         <div>
           <Title className="uppercase">{getMessage('title')}</Title>
-          <p className="uppercase">04 {getMessage('subtitle')}</p>
+          <p className="uppercase">{`${
+            totalUsers < 10 ? `0${totalUsers}` : totalUsers
+          } ${getMessage('subtitle')}`}</p>
         </div>
 
         <UserFilter toggleOpen={toggleOpenCreateDrawer} />

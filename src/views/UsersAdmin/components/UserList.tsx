@@ -43,7 +43,7 @@ const UserList = ({
   const { listOfUsers, usersPagination, actions } = useUsers()
 
   useEffect(() => {
-    actions?.getUsers()
+    actions?.getUsers({}, true)
   }, [])
 
   const columns = useTableColumns<User>(() => [
