@@ -9,10 +9,11 @@ import { useIntl } from 'react-intl'
 import { Field } from 'types/form'
 import { labelsAdministrationMessages } from '../messages'
 import * as yup from 'yup'
+import { EvidenceType } from 'types/label'
 
 interface FormValues {
-  evidenceType: 'audio' | 'video' | 'image' | 'document'
-  label: string
+  evidenceType: EvidenceType
+  name: string
   color: string
 }
 
@@ -26,7 +27,7 @@ const LabelDrawer = (props: Props): ReactElement => {
   const {
     subtitle,
     onAccept,
-    initialValues = { evidenceType: 'audio', label: '', color: '' }
+    initialValues = { evidenceType: 'audio', name: '', color: '' }
   } = props
   const { formatMessage } = useIntl()
   const formikRef = useRef<FormikContextType<FormValues>>()
@@ -136,7 +137,6 @@ const LabelDrawer = (props: Props): ReactElement => {
   const formikConfig: FormikConfig<FormValues> = {
     initialValues,
     onSubmit: async (values) => {
-      console.log(values)
       await onAccept(values)
     },
     validationSchema

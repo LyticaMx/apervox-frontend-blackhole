@@ -14,18 +14,18 @@ export interface RolesPaginationParams extends PaginationParams {
 }
 
 export interface State {
-  roles: Role[]
+  data: Role[]
   pagination: RolesPagination
   dateFilter: DateFilter
   searchFilter: SearchFilter
 }
 
-export interface RoleCreate {
+export interface PayloadCreate {
   name: string
   scopes: Scope[]
   users: string[]
 }
-export interface RoleUpdate {
+export interface PayloadUpdate {
   id: string
   name: string
   scopes: Scope[]
@@ -36,13 +36,13 @@ export interface RoleUpdate {
 }
 
 export interface Actions {
-  getRoles: (
+  getData: (
     params?: RolesPaginationParams & SearchParams & DateFilter
   ) => Promise<void>
-  createRole: (payload: RoleCreate) => Promise<boolean>
-  updateRole: (payload: RoleUpdate) => Promise<boolean>
-  deleteRole: (id: string) => Promise<boolean>
-  toggleDisable: (id: string, enabled: boolean) => Promise<boolean>
+  create: (payload: PayloadCreate) => Promise<boolean>
+  update: (payload: PayloadUpdate) => Promise<boolean>
+  delete: (id: string) => Promise<boolean>
+  toggleStatus: (id: string, enabled: boolean) => Promise<boolean>
   getScopes: (id: string) => Promise<Scope[]>
   exportTable: () => Promise<void>
 }

@@ -14,4 +14,4 @@ export const initialState: State = {
   dateFilter: {}
 }
 
-export const RoleContext: Context<State> = createContext(initialState)
+export const LabelsContext: Context<State> = createContext(initialState)

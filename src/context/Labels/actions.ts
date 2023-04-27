@@ -2,15 +2,9 @@ import { useService } from 'hooks/useApi'
 import { get, omit } from 'lodash'
 import { ResponseData, SearchParams } from 'types/api'
 import { DateFilter } from 'types/filters'
-import { Scope } from 'types/scope'
+import { Label } from 'types/label'
 import { actions } from './constants'
-import {
-  Actions,
-  PayloadCreate,
-  RolesPaginationParams,
-  PayloadUpdate,
-  State
-} from './types'
+import { Actions, LabelsPaginationParams, State } from './types'
 
 const orderByMapper = {
   name: 'names',
@@ -21,10 +15,10 @@ const orderByMapper = {
 
 export const useActions = (state: State, dispatch): Actions => {
   const { pagination, dateFilter, searchFilter } = state
-  const resource = useService('roles')
+  const resource = useService('labels')
 
   const getData = async (
-    params?: RolesPaginationParams & SearchParams & DateFilter
+    params?: LabelsPaginationParams & SearchParams & DateFilter
   ): Promise<void> => {
     try {
       const sort = {
@@ -37,10 +31,8 @@ export const useActions = (state: State, dispatch): Actions => {
         sort.by = orderByMapper[sortBy.id] ?? sortBy.id
         sort.order = sortBy.desc ? 'desc' : 'asc'
       }
-
       const query = params?.query ?? searchFilter.query
       const filters = params?.filters ?? searchFilter.filters
-
       const mappedFilters = (filters ?? []).reduce((old, key) => {
         if (!query) return old
 
@@ -88,7 +80,7 @@ export const useActions = (state: State, dispatch): Actions => {
     }
   }
 
-  const create = async (payload: PayloadCreate): Promise<boolean> => {
+  const create = async (payload: Label): Promise<boolean> => {
     try {
       await resource.post({
         body: payload
@@ -101,7 +93,7 @@ export const useActions = (state: State, dispatch): Actions => {
     }
   }
 
-  const update = async (payload: PayloadUpdate): Promise<boolean> => {
+  const update = async (payload: Label): Promise<boolean> => {
     try {
       await resource.put({
         queryString: payload.id,
@@ -132,6 +124,17 @@ export const useActions = (state: State, dispatch): Actions => {
     }
   }
 
+  const deleteAll = async (ids: string[]): Promise<boolean> => {
+    try {
+      await resource.delete({
+        body: { ids }
+      })
+      return true
+    } catch {
+      return false
+    }
+  }
+
   const toggleStatus = async (
     id: string,
     enabled: boolean
@@ -150,25 +153,12 @@ export const useActions = (state: State, dispatch): Actions => {
     }
   }
 
-  const getScopes = async (id: string): Promise<Scope[]> => {
-    try {
-      const response = await resource.get({ queryString: `${id}/scopes` })
-
-      return response.data
-    } catch {
-      return []
-    }
-  }
-
-  const exportTable = async (): Promise<void> => {}
-
   return {
     getData,
     create,
     update,
     delete: deleteOne,
-    toggleStatus,
-    getScopes,
-    exportTable
+    deleteAll,
+    toggleStatus
   }
 }

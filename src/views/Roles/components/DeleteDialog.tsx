@@ -1,4 +1,4 @@
-import { ReactElement, useEffect } from 'react'
+import { ReactElement } from 'react'
 
 import { useAuth } from 'context/Auth'
 import { useRoles } from 'context/Roles'
@@ -25,10 +25,6 @@ const DeleteDialog = ({ open, role, onClose }: Props): ReactElement => {
   const getDeleteMessage = useFormatMessage(rolesDeleteMessages)
   const getGlobalMessage = useGlobalMessage()
 
-  useEffect(() => {
-    actions?.getRoles()
-  }, [])
-
   const handleDelete = async ({
     password
   }: {
@@ -42,10 +38,10 @@ const DeleteDialog = ({ open, role, onClose }: Props): ReactElement => {
         return
       }
 
-      if (role) await actions?.deleteRole(role.id)
+      if (role) await actions?.delete(role.id)
 
       toast.success(getMessage('deleteSuccess'))
-      await actions?.getRoles()
+      await actions?.getData()
       onClose()
     } catch {}
   }

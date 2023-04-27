@@ -54,7 +54,7 @@ const StoreDrawer = ({ open, role, onClose }: Props): ReactElement => {
       }))
 
       if (role) {
-        await actions?.updateRole({
+        await actions?.update({
           id: role.id,
           name: values.name,
           users: {
@@ -66,13 +66,13 @@ const StoreDrawer = ({ open, role, onClose }: Props): ReactElement => {
           scopes
         })
       } else {
-        await actions?.createRole({
+        await actions?.create({
           name: values.name,
           users,
           scopes
         })
       }
-      await actions?.getRoles()
+      await actions?.getData()
       if (onClose) onClose()
     }
   })
