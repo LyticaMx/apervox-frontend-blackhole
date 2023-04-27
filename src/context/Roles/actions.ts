@@ -49,6 +49,7 @@ export const useActions = (state: State, dispatch): Actions => {
       }, {})
 
       // TODO: cambiar el response data
+      await getTotal()
       const response: ResponseData = await resource.get({
         urlParams: {
           ...sort,
@@ -85,6 +86,18 @@ export const useActions = (state: State, dispatch): Actions => {
       )
     } catch (e) {
       console.log(e)
+    }
+  }
+
+  const getTotal = async (): Promise<void> => {
+    try {
+      const response: ResponseData = await resource.get({
+        urlParams: { page: 1, limit: 1 }
+      })
+
+      dispatch(actions.setTotal(response.size))
+    } catch (error) {
+      dispatch(actions.setTotal(0))
     }
   }
 

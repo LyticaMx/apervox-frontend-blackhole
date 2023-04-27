@@ -24,8 +24,12 @@
 @layer components {
   .text-field {
     @apply block w-full appearance-none rounded-md sm:text-sm;
-    @apply border border-background-secondary bg-white px-3 py-2 text-gray-900 placeholder-gray-400;
+    @apply border border-transparent bg-white px-3 py-2 text-gray-900 placeholder-gray-400;
     @apply focus:border-primary focus:bg-white focus:outline-none;
+  }
+
+  .text-field.outlined {
+    @apply border border-neutral-300;
   }
 }
 

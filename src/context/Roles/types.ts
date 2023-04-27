@@ -15,6 +15,7 @@ export interface RolesPaginationParams extends PaginationParams {
 
 export interface State {
   data: Role[]
+  total: number
   pagination: RolesPagination
   dateFilter: DateFilter
   searchFilter: SearchFilter
