@@ -106,17 +106,20 @@ export const createInstance = ({
 
         if (
           error.response.status === 401 &&
-          isBefore(new Date(session.exp), new Date())
+          error.response.data.message === 'No autorizado.' && // TODO: Definir un mensaje fijo para cuando los tokens se vencen
+          isBefore(new Date(session.exp * 1000), new Date())
         ) {
           originalRequest._retry = true
           instance.defaults.headers.common.Authorization = `Bearer ${token}`
           await new Promise<void>((resolve) => {
-            const max = 2 * 100
+            const max = 4 * 500
             const counter = { actual: 0 }
             interval.resolve = resolve
             interval.id = setInterval(() => {
               if (counter.actual >= max || !refreshingToken?.current) {
-                interval.resolve = null
+                clearInterval(interval?.id)
+                delete interval.id
+                delete interval.resolve
                 resolve()
               }
               counter.actual += 500
