@@ -25,6 +25,7 @@ export const initialState: WorkgroupState = {
   techniques: [],
   associatedUsers: [],
   associatedTechniques: [],
+  totalWorkGroups: 0,
   dateFilter: {},
   searchFilter: {},
   staticFilter: {},

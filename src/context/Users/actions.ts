@@ -21,7 +21,13 @@ export const useActions = (
   state: UserContextState,
   dispatch
 ): UserContextActions => {
-  const { usersPagination, dateFilter, searchFilter, staticFilter } = state
+  const {
+    usersPagination,
+    dateFilter,
+    searchFilter,
+    staticFilter,
+    totalUsers
+  } = state
   const getUsersService = useApi({ endpoint: 'users', method: 'get' })
   const createUserService = useApi({ endpoint: 'users', method: 'post' })
   const updateUserService = useApi({ endpoint: 'users', method: 'put' })
@@ -35,7 +41,8 @@ export const useActions = (
     params?: UsersPaginationParams &
       SearchParams &
       DateFilter &
-      UserStaticFilter
+      UserStaticFilter,
+    getTotal?: boolean
   ): Promise<void> => {
     try {
       const sort = {
@@ -81,21 +88,23 @@ export const useActions = (
           ? false
           : undefined
 
-      // TODO: cambiar el response data
-      const response: ResponseData = await getUsersService({
-        urlParams: {
-          ...sort,
-          ...mappedFilters,
-          page: params?.page ?? usersPagination.page,
-          limit: params?.limit ?? usersPagination.limit,
-          start_time: params?.start_time ?? dateFilter.start_time,
-          end_time: params?.end_time ?? dateFilter.end_time
-        }
-      })
+      const [response, totalResponse] = await Promise.all([
+        getUsersService({
+          urlParams: {
+            ...sort,
+            ...mappedFilters,
+            page: params?.page ?? usersPagination.page,
+            limit: params?.limit ?? usersPagination.limit,
+            start_time: params?.start_time ?? dateFilter.start_time,
+            end_time: params?.end_time ?? dateFilter.end_time
+          }
+        }),
+        getTotal ? getUsersService({ urlParams: { page: 1, limit: 1 } }) : null
+      ])
 
       dispatch(
-        actions.setUsers(
-          response.data.map((item) => ({
+        actions.setUsers({
+          data: response.data.map((item) => ({
             id: item.id,
             name: item.profile.names,
             lastName: item.profile.last_name,
@@ -111,8 +120,9 @@ export const useActions = (
             closeSession: item.close_session,
             phone: item.company?.phone_extension ?? '',
             position: item.company?.position ?? ''
-          }))
-        )
+          })),
+          total: totalResponse?.size ?? totalUsers
+        })
       )
 
       dispatch(

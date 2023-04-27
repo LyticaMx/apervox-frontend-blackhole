@@ -99,6 +99,7 @@ const TechniqueList = (props: Props): ReactElement => {
     },
     {
       accessorKey: 'id',
+      enableSorting: false,
       header: getMessage('action'),
       cell: ({ row }) => {
         return (

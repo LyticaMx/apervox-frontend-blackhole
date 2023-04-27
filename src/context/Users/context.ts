@@ -3,6 +3,7 @@ import { UserContextState } from 'types/user'
 
 export const initialState: UserContextState = {
   listOfUsers: [],
+  totalUsers: 0,
   usersPagination: {
     limit: 15,
     limitOptions: [15, 25, 50, 100],

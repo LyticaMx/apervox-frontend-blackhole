@@ -38,7 +38,7 @@ const CreateUserDrawer = ({
         closeSession: values.automaticSessionExpiration
       })
       if (created) {
-        actions?.getUsers()
+        actions?.getUsers({}, true)
         onCreated?.(`${values.name.trim().split(' ').join('')}123`)
         launchToast({
           type: 'Success',

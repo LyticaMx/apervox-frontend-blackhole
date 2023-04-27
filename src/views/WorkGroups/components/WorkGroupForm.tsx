@@ -76,6 +76,12 @@ const WorkGroupForm = ({
         noOptionsMessage: () => getLocalFormMessage('noOptions'),
         debounceTimeout: 300
       }
+    },
+    {
+      name: 'techniques',
+      section: 'techniques',
+      type: 'text',
+      options: {}
     }
   ]
 

@@ -45,7 +45,7 @@ const DeleteDialog = ({
         title: getMessage('successDelete', { groups: ids.length })
       })
 
-      actions?.getWorkGroups({ page: 1 })
+      actions?.getWorkGroups({ page: 1 }, true)
       resolve(true)
       onConfirm()
     } catch {

@@ -44,7 +44,7 @@ const CreateWorkGroupDrawer = ({ open, onClose }: Props): ReactElement => {
                 type: 'Success'
               })
               onClose?.()
-              actions?.getWorkGroups()
+              await actions?.getWorkGroups({}, true)
             }
           }}
         />
