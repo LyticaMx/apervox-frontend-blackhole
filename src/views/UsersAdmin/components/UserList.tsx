@@ -49,11 +49,13 @@ const UserList = ({
   const columns = useTableColumns<User>(() => [
     {
       accessorKey: 'name',
-      header: getMessage('name')
+      header: getMessage('name'),
+      enableSorting: false
     },
     {
       accessorKey: 'lastName',
-      header: getMessage('surnames')
+      header: getMessage('surnames'),
+      enableSorting: false
     },
     {
       accessorKey: 'username',
@@ -65,15 +67,18 @@ const UserList = ({
       cell: ({ getValue }) =>
         getValue<UserGroup[]>()
           .map((item) => item.name)
-          .join(', ')
+          .join(', '),
+      enableSorting: false
     },
     {
       accessorKey: 'role',
-      header: getMessage('profile')
+      header: getMessage('profile'),
+      enableSorting: false
     },
     {
       accessorKey: 'createdBy',
-      header: getMessage('registeredBy')
+      header: getMessage('registeredBy'),
+      enableSorting: false
     },
     {
       accessorKey: 'sessions',
@@ -99,6 +104,7 @@ const UserList = ({
           </div>
         )
       },
+      enableSorting: false,
       meta: {
         columnFilters: {
           onChange: async (values) => {
