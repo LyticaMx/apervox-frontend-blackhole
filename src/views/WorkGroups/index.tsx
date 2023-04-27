@@ -17,6 +17,7 @@ import HistoryDrawer from './components/HistoryDrawer'
 import { workGroupsMessages } from './messages'
 import Typography from 'components/Typography'
 import Button from 'components/Button'
+import { formatTotal } from 'utils/formatTotal'
 
 interface SynchroEditIds {
   ids: string[]
@@ -37,12 +38,17 @@ const WorkGroups = (): ReactElement => {
     ids: [],
     resolve: null
   })
-  const { actions, selected, associatedUsers, associatedTechniques } =
-    useWorkGroups()
+  const {
+    actions,
+    selected,
+    associatedTechniques,
+    usersPagination,
+    totalWorkGroups
+  } = useWorkGroups()
 
   useEffect(() => {
     actions?.selectWorkGroup()
-    actions?.getWorkGroups()
+    actions?.getWorkGroups({}, true)
   }, [])
 
   useEffect(() => {
@@ -75,7 +81,9 @@ const WorkGroups = (): ReactElement => {
       <div className="flex justify-between">
         <div>
           <Title className="uppercase">{getMessage('title')}</Title>
-          <p className="uppercase">04 {getMessage('subtitle')}</p>
+          <p className="uppercase">
+            {formatTotal(totalWorkGroups, getMessage('subtitle'))}
+          </p>
         </div>
 
         <WorkGroupFilter toggleOpen={toggleOpenCreateDrawer} />
@@ -166,8 +174,10 @@ const WorkGroups = (): ReactElement => {
                 component: (
                   <div className="py-2">
                     <p className="uppercase mb-2">
-                      {associatedUsers.length}{' '}
-                      {getMessage('assignedUsersSubtitle')}
+                      {formatTotal(
+                        usersPagination.totalRecords,
+                        getMessage('assignedUsersSubtitle')
+                      )}
                     </p>
 
                     <AssociatedUserList />

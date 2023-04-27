@@ -29,7 +29,13 @@ export const actions = {
   setUsers: createAction<Types, GenericItem[]>(Types.SET_USERS),
   setTechniques: createAction<Types, GenericItem[]>(Types.SET_TECHNIQUES),
   setHistory: createAction<Types, WorkGroupHistory[]>(Types.SET_HISTORY),
-  setWorkGroups: createAction<Types, WorkGroup[]>(Types.SET_WORKGROUPS),
+  setWorkGroups: createAction<
+    Types,
+    {
+      data: WorkGroup[]
+      total?: number
+    }
+  >(Types.SET_WORKGROUPS),
   setWorkGroupUsers: createAction<Types, WorkGroupUser[]>(
     Types.SET_WORKGROUP_USERS
   ),

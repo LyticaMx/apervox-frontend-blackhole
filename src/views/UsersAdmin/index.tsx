@@ -14,6 +14,7 @@ import EditUserDrawer from './components/EditUserDrawer'
 import { usersMessages } from './messages'
 import NewPasswordDialog from './components/NewPasswordDialog'
 import { useUsers } from 'context/Users'
+import { formatTotal } from 'utils/formatTotal'
 
 interface SynchroDeleteIds {
   ids: string[]
@@ -40,9 +41,9 @@ const UsersAdmin = (): ReactElement => {
       <div className="flex justify-between">
         <div>
           <Title className="uppercase">{getMessage('title')}</Title>
-          <p className="uppercase">{`${
-            totalUsers < 10 ? `0${totalUsers}` : totalUsers
-          } ${getMessage('subtitle')}`}</p>
+          <p className="uppercase">
+            {formatTotal(totalUsers, getMessage('subtitle'))}
+          </p>
         </div>
 
         <UserFilter toggleOpen={toggleOpenCreateDrawer} />

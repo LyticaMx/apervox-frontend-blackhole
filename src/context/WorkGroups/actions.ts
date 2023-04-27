@@ -27,7 +27,8 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
     searchFilter,
     selected,
     usersPagination,
-    staticFilter
+    staticFilter,
+    totalWorkGroups
   } = state
   const getWorkgroupsService = useApi({ endpoint: 'groups', method: 'get' })
   const createWorkgroupService = useApi({ endpoint: 'groups', method: 'post' })
@@ -104,7 +105,8 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
     params?: WorkgroupPaginationParams &
       SearchParams &
       DateFilter &
-      WorkgroupStaticFilter
+      WorkgroupStaticFilter,
+    getTotal?: boolean
   ): Promise<void> => {
     try {
       const sort = { by: 'created_at', order: 'desc' }
@@ -154,23 +156,28 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
           ? false
           : undefined
 
-      const response: ResponseData = await getWorkgroupsService({
-        urlParams: {
-          ...sort,
-          ...mappedFilters,
-          page: params?.page ?? workGroupsPagination.page,
-          limit: params?.limit ?? workGroupsPagination.limit,
-          start_time: params?.start_time ?? dateFilter.start_time,
-          end_time: params?.end_time ?? dateFilter.end_time
-        }
-      })
+      const [response, totalResponse] = await Promise.all([
+        getWorkgroupsService({
+          urlParams: {
+            ...sort,
+            ...mappedFilters,
+            page: params?.page ?? workGroupsPagination.page,
+            limit: params?.limit ?? workGroupsPagination.limit,
+            start_time: params?.start_time ?? dateFilter.start_time,
+            end_time: params?.end_time ?? dateFilter.end_time
+          }
+        }),
+        getTotal
+          ? getWorkgroupsService({ urlParams: { page: 1, limit: 1 } })
+          : null
+      ])
 
       // para acceder a las funciones de array
       const data: any[] = response.data
 
       dispatch(
-        actions.setWorkGroups(
-          data.map<WorkGroup>((item) => ({
+        actions.setWorkGroups({
+          data: data.map<WorkGroup>((item) => ({
             id: item.id,
             name: item.name,
             description: item.description,
@@ -179,8 +186,9 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
             registered_by: item.created_by,
             users: item.users,
             total_users: item.users.length
-          }))
-        )
+          })),
+          total: totalResponse?.size ?? totalWorkGroups
+        })
       )
 
       // Reducir estos dispatch

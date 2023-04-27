@@ -14,7 +14,11 @@ export const reducer = (
     case Types.SET_HISTORY:
       return { ...state, history: action.payload }
     case Types.SET_WORKGROUPS:
-      return { ...state, workGroups: action.payload }
+      return {
+        ...state,
+        workGroups: action.payload.data,
+        totalWorkGroups: action.payload.total
+      }
     case Types.SET_WORKGROUP_USERS:
       return { ...state, associatedUsers: action.payload }
     case Types.SET_WORKGROUP_TECHNIQUES:
