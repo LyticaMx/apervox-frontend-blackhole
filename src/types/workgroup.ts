@@ -104,6 +104,7 @@ export interface WorkgroupState {
   dateFilter: DateFilter
   searchFilter: SearchFilter
   staticFilter: WorkgroupStaticFilter
+  totalWorkGroups: number
   workGroupsPagination: {
     limit: number
     page: number
@@ -134,7 +135,8 @@ export interface WorkgroupActions {
     params?: WorkgroupPaginationParams &
       SearchParams &
       DateFilter &
-      WorkgroupStaticFilter
+      WorkgroupStaticFilter,
+    getTotal?: boolean
   ) => Promise<void>
   getWorkGroupUsers: (
     params?: WorkgroupPaginationParams & SearchParams

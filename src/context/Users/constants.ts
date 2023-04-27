@@ -8,7 +8,13 @@ export enum Types {
 }
 
 export const actions = {
-  setUsers: createAction<Types, User[]>(Types.SET_USERS),
+  setUsers: createAction<
+    Types,
+    {
+      data: User[]
+      total?: number
+    }
+  >(Types.SET_USERS),
   setUsersPagination: createAction<Types, UsersPagination>(
     Types.SET_USERS_PAGINATION
   ),

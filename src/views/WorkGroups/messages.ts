@@ -166,6 +166,6 @@ export const workGroupsUsersListMessages = defineMessages({
   deletedUsersSuccess: {
     id: 'views.workGroups.workGroupsForm.deletedUsersSuccess',
     defaultMessage:
-      '{total, select, one{Usuario eliminado} other{Usuarios eliminados}} correctamente'
+      '{total, plural, one{Usuario eliminado} other{Usuarios eliminados}} correctamente'
   }
 })

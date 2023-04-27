@@ -53,7 +53,8 @@ const WorkGroupList = ({
     },
     {
       accessorKey: 'registered_by',
-      header: getMessage('registeredBy')
+      header: getMessage('registeredBy'),
+      enableSorting: false
     },
     {
       accessorKey: 'total_users',
@@ -74,7 +75,8 @@ const WorkGroupList = ({
           onChange: async (values) =>
             await actions?.getWorkGroups({ hasUsers: values })
         }
-      }
+      },
+      enableSorting: false
     },
     {
       header: getMessage('techniques'),
@@ -115,6 +117,7 @@ const WorkGroupList = ({
           </div>
         )
       },
+      enableSorting: false,
       meta: {
         columnFilters: {
           options: [
@@ -164,6 +167,7 @@ const WorkGroupList = ({
     },
     {
       accessorKey: 'id',
+      enableSorting: false,
       header: getMessage('action'),
       cell: ({ getValue, cell, table }) => {
         const id = getValue<string>()

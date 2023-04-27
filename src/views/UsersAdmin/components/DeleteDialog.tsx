@@ -53,7 +53,7 @@ const DeleteDialog = ({
           title: getMessage('success', { users: ids.length }),
           type: 'Success'
         })
-        await actions?.getUsers({ page: 1 })
+        await actions?.getUsers({ page: 1 }, true)
         return
       }
     } catch {

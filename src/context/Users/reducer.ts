@@ -8,7 +8,11 @@ export const reducer = (
 ): UserContextState => {
   switch (action.type) {
     case Types.SET_USERS:
-      return { ...state, listOfUsers: action.payload }
+      return {
+        ...state,
+        listOfUsers: action.payload.data,
+        totalUsers: action.payload.total
+      }
     case Types.SET_USERS_FILTERS:
       return {
         ...state,

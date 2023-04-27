@@ -43,11 +43,11 @@ export const usersDeleteMessages = defineMessages({
   message: {
     id: 'views.users.delete.message',
     defaultMessage:
-      '¿Estas seguro de querer eliminar {selectedUsers, plural, one {el usuario seleccionado} other {los # usuarios seleccionados}}?'
+      '¿Estás seguro de querer eliminar {selectedUsers, plural, one {el usuario seleccionado} other {los # usuarios seleccionados}}?'
   },
   confirm: {
     id: 'views.users.delete.confirm',
-    defaultMessage: '¿Estas seguro de querer eliminar el usuario seleccionado?'
+    defaultMessage: '¿Estás seguro de querer eliminar el usuario seleccionado?'
   },
   passwordConfirm: {
     id: 'views.users.delete.passwordConfirm',
@@ -107,7 +107,7 @@ export const usersResetPasswordMessages = defineMessages({
   message: {
     id: 'views.users.resetPassword.message',
     defaultMessage:
-      'Se generará una contraseña temporal para el usuario seleccionado. ¿estás de acuerdo?'
+      'Se generará una contraseña temporal para el usuario seleccionado. ¿Estás de acuerdo?'
   }
 })
 
