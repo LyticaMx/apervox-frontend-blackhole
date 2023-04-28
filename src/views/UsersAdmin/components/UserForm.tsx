@@ -2,7 +2,7 @@ import { MutableRefObject, ReactElement, useMemo } from 'react'
 import { FormikConfig, FormikContextType, FormikHelpers } from 'formik'
 import * as yup from 'yup'
 import Form from 'components/Form'
-import { Field, Section } from 'types/form'
+import { Field } from 'types/form'
 import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
 import { userFormMessages } from '../messages'
 
@@ -99,8 +99,8 @@ const UserForm = ({
     {
       name: 'role',
       type: 'async-select',
-      section: 'roles',
       options: {
+        label: getMessage('role'),
         asyncProps: {
           api: { endpoint: 'roles', method: 'get' },
           value: 'id',
@@ -116,8 +116,8 @@ const UserForm = ({
     {
       name: 'groups',
       type: 'async-select',
-      section: 'groups',
       options: {
+        label: getMessage('groups'),
         asyncProps: {
           api: {
             endpoint: 'groups',
@@ -184,25 +184,6 @@ const UserForm = ({
     [initialValues]
   )
 
-  const sections: Section[] = [
-    {
-      name: 'roles',
-      title: {
-        text: getMessage('role'),
-        className: 'uppercase text-primary-500',
-        style: 'medium'
-      }
-    },
-    {
-      name: 'groups',
-      title: {
-        text: getMessage('groups'),
-        className: 'uppercase text-primary-500',
-        style: 'medium'
-      }
-    }
-  ]
-
   return (
     <div>
       <Form
@@ -216,10 +197,6 @@ const UserForm = ({
           className: 'mt-6 mb-2'
         }}
         className="user-account-data-form"
-        withSections={{
-          sections,
-          renderMainSection: true
-        }}
         formikRef={formikRef}
       />
     </div>

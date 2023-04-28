@@ -103,8 +103,8 @@ const AuthProvider = ({ children }: Props): ReactElement => {
               )
             )}`,
             email: resProfile.data?.email ?? '',
-            phone: resProfile.data?.company.phone_extension ?? '',
-            position: resProfile.data?.company.position ?? '',
+            phone: resProfile.data?.company?.phone_extension ?? '',
+            position: resProfile.data?.company?.position ?? '',
             groups: resProfile.data?.groups ?? [],
             role: resProfile.data?.role ?? ''
           }
