@@ -6,6 +6,8 @@ export const reducer = (state: State, action: Action<Types>): State => {
   switch (action.type) {
     case Types.SET_DATA:
       return { ...state, data: action.payload }
+    case Types.SET_TOTAL:
+      return { ...state, total: action.payload }
     case Types.SET_FILTERS:
       return {
         ...state,
