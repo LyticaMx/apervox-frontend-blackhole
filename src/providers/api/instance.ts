@@ -110,6 +110,12 @@ export const createInstance = ({
           isBefore(new Date(session.exp * 1000), new Date())
         ) {
           originalRequest._retry = true
+          //! se debe hacer un parse de la data cuando se envíe un application/json
+          originalRequest.data =
+            originalRequest.data &&
+            originalRequest.headers['Content-Type'] === 'application/json'
+              ? JSON.parse(originalRequest.data)
+              : originalRequest.data
           instance.defaults.headers.common.Authorization = `Bearer ${token}`
           await new Promise<void>((resolve) => {
             const max = 4 * 500
