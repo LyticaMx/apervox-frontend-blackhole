@@ -9,6 +9,7 @@ import {
   PayloadCreate,
   RolesPaginationParams,
   PayloadUpdate,
+  StaticFilters,
   State
 } from './types'
 
@@ -24,7 +25,8 @@ export const useActions = (state: State, dispatch): Actions => {
   const resource = useService('roles')
 
   const getData = async (
-    params?: RolesPaginationParams & SearchParams & DateFilter
+    params?: RolesPaginationParams & SearchParams & DateFilter & StaticFilters,
+    getTotalRows?: boolean
   ): Promise<void> => {
     try {
       const sort = {
@@ -41,25 +43,29 @@ export const useActions = (state: State, dispatch): Actions => {
       const query = params?.query ?? searchFilter.query
       const filters = params?.filters ?? searchFilter.filters
 
-      const mappedFilters = (filters ?? []).reduce((old, key) => {
-        if (!query) return old
+      const mappedFilters = {
+        status: params?.status,
+        ...(filters ?? []).reduce((old, key) => {
+          if (!query) return old
 
-        old[key] = query
-        return old
-      }, {})
+          old[key] = query
+          return old
+        }, {})
+      }
 
-      // TODO: cambiar el response data
-      await getTotal()
-      const response: ResponseData = await resource.get({
-        urlParams: {
-          ...sort,
-          ...mappedFilters,
-          page: params?.page ?? pagination.page,
-          limit: params?.limit ?? pagination.limit,
-          start_time: params?.start_time ?? dateFilter.start_time,
-          end_time: params?.end_time ?? dateFilter.end_time
-        }
-      })
+      const [response] = await Promise.all([
+        await resource.get({
+          urlParams: {
+            ...sort,
+            ...mappedFilters,
+            page: params?.page ?? pagination.page,
+            limit: params?.limit ?? pagination.limit,
+            start_time: params?.start_time ?? dateFilter.start_time,
+            end_time: params?.end_time ?? dateFilter.end_time
+          }
+        }),
+        getTotalRows ? getTotal() : null
+      ])
 
       dispatch(actions.setData(response.data))
 

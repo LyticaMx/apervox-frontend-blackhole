@@ -12,6 +12,7 @@ import { rolesMessages } from '../messages'
 interface Props {
   onAction: () => void
 }
+const status = { active: true, inactive: false, both: undefined }
 const Header = ({ onAction }: Props): ReactElement => {
   const { total, actions } = useRoles()
 
@@ -55,14 +56,25 @@ const Header = ({ onAction }: Props): ReactElement => {
         action={{ label: getMessage('button'), onClick: onAction }}
         download={(document) => alert(document)}
         staticFilters={staticFilters}
-        onChange={(data) =>
+        onChange={(data) => {
+          const staticF = data.filterByField.staticFilters
+
+          console.log('🚀 ~ :', {
+            start_time: data.dateRange[0],
+            end_time: data.dateRange[1],
+            filters: data.filterByField.fields,
+            query: data.filterByField.search,
+            status: status[staticF?.status ?? 'both']
+          })
+
           actions?.getData({
             start_time: data.dateRange[0],
             end_time: data.dateRange[1],
             filters: data.filterByField.fields,
-            query: data.filterByField.search
+            query: data.filterByField.search,
+            status: status[staticF?.status ?? 'both']
           })
-        }
+        }}
       />
     </div>
   )
