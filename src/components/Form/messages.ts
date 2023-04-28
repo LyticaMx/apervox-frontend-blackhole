@@ -22,3 +22,10 @@ export const passwordFieldMessages = defineMessages({
     defaultMessage: 'Fuerte'
   }
 })
+
+export const multiValueContainerMessages = defineMessages({
+  selectedElements: {
+    id: 'components.Form.SelectPaginate.MultiValueContainer.selectedElements',
+    defaultMessage: 'Elementos seleccionados'
+  }
+})

@@ -102,36 +102,38 @@ export const createInstance = ({
       try {
         const originalRequest = error.config
         const token: string = getItem('token')
-        const session: any = jwtDecode(token)
+        if (token) {
+          const session: any = jwtDecode(token)
 
-        if (
-          error.response.status === 401 &&
-          error.response.data.message === 'No autorizado.' && // TODO: Definir un mensaje fijo para cuando los tokens se vencen
-          isBefore(new Date(session.exp * 1000), new Date())
-        ) {
-          originalRequest._retry = true
-          //! se debe hacer un parse de la data cuando se envíe un application/json
-          originalRequest.data =
-            originalRequest.data &&
-            originalRequest.headers['Content-Type'] === 'application/json'
-              ? JSON.parse(originalRequest.data)
-              : originalRequest.data
-          instance.defaults.headers.common.Authorization = `Bearer ${token}`
-          await new Promise<void>((resolve) => {
-            const max = 4 * 500
-            const counter = { actual: 0 }
-            interval.resolve = resolve
-            interval.id = setInterval(() => {
-              if (counter.actual >= max || !refreshingToken?.current) {
-                clearInterval(interval?.id)
-                delete interval.id
-                delete interval.resolve
-                resolve()
-              }
-              counter.actual += 500
-            }, 500)
-          })
-          return await instance(originalRequest)
+          if (
+            error.response.status === 401 &&
+            error.response.data.message === 'No autorizado.' && // TODO: Definir un mensaje fijo para cuando los tokens se vencen
+            isBefore(new Date(session.exp * 1000), new Date())
+          ) {
+            originalRequest._retry = true
+            //! se debe hacer un parse de la data cuando se envíe un application/json
+            originalRequest.data =
+              originalRequest.data &&
+              originalRequest.headers['Content-Type'] === 'application/json'
+                ? JSON.parse(originalRequest.data)
+                : originalRequest.data
+            instance.defaults.headers.common.Authorization = `Bearer ${token}`
+            await new Promise<void>((resolve) => {
+              const max = 4 * 500
+              const counter = { actual: 0 }
+              interval.resolve = resolve
+              interval.id = setInterval(() => {
+                if (counter.actual >= max || !refreshingToken?.current) {
+                  clearInterval(interval?.id)
+                  delete interval.id
+                  delete interval.resolve
+                  resolve()
+                }
+                counter.actual += 500
+              }, 500)
+            })
+            return await instance(originalRequest)
+          }
         }
         return await Promise.reject(error)
       } finally {
