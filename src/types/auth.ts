@@ -1,4 +1,3 @@
-import { MutableRefObject } from 'react'
 import { FormProfile, Profile } from './profile'
 
 export interface SignedIn {
@@ -55,7 +54,6 @@ export interface RestorePassword {
 
 export interface AuthContextType {
   auth: Auth
-  refreshingToken?: MutableRefObject<boolean>
   actions?: {
     signIn: (params: SignIn) => Promise<SignedIn>
     signUp: (params: SignUp) => Promise<boolean>
@@ -66,7 +64,7 @@ export interface AuthContextType {
     ) => Promise<boolean>
     signOut: () => Promise<boolean>
     updateProfile: (profile: FormProfile) => Promise<boolean>
-    refreshToken: () => Promise<boolean>
+    refreshToken: (token: string, rToken: string) => void
     killSession: (hideNotification?: boolean) => void
   }
 }

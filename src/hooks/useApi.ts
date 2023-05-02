@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import axios, { AxiosRequestHeaders, AxiosResponse } from 'axios'
 import { useIntl } from 'react-intl'
+import mutexify from 'mutexify/promise'
 
 import { createInstance, BaseURL } from 'providers/api'
 import { useLoader } from 'context/Loader'
@@ -31,6 +32,8 @@ interface Fetch {
 
 type ApiMessage = keyof typeof apiMessages
 
+const lock = mutexify() // Cambiar a mutex propio
+
 const useApi = ({
   endpoint,
   method,
@@ -49,7 +52,7 @@ const useApi = ({
     headers?: Partial<AxiosRequestHeaders>
   ): Promise<ResponseData> => {
     const url: string = `${endpoint}${queryString ? `/${queryString}` : ''}`
-
+    const release = await lock()
     try {
       if (withLoader) loaderActions?.showLoader()
 
@@ -121,6 +124,7 @@ const useApi = ({
       throw { error: 1, description: error } as any
     } finally {
       if (withLoader) loaderActions?.hideLoader()
+      release()
     }
   }
 

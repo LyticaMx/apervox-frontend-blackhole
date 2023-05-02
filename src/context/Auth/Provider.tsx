@@ -1,4 +1,4 @@
-import { useState, useMemo, ReactNode, ReactElement, useRef } from 'react'
+import { useState, useMemo, ReactNode, ReactElement } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useIntl } from 'react-intl'
 import jwtDecode from 'jwt-decode'
@@ -26,7 +26,7 @@ const AuthProvider = ({ children }: Props): ReactElement => {
   const history = useHistory()
   const { actions: loaderActions } = useLoader()
   const intl = useIntl()
-  const refreshingToken = useRef<boolean>(false)
+
   const [auth, setAuth] = useState<Auth>(initialState)
   const toast = useToast()
 
@@ -58,12 +58,6 @@ const AuthProvider = ({ children }: Props): ReactElement => {
   const getProfileService = useApi({
     endpoint: 'me',
     method: 'get'
-  })
-
-  const refreshTokenService = useApi({
-    endpoint: '/auth/refresh-token',
-    method: 'post',
-    withLoader: false
   })
 
   const signIn = async (params: SignIn): Promise<SignedIn> => {
@@ -202,33 +196,11 @@ const AuthProvider = ({ children }: Props): ReactElement => {
     }
   }
 
-  const refreshToken = async (): Promise<boolean> => {
-    try {
-      refreshingToken.current = true
-      const res = await refreshTokenService(
-        {},
-        {
-          'refresh-token': getItem('rToken')
-        }
-      )
-      if (res.data) {
-        const token: string = res.data.token
-        const rToken: string = res.data.refresh_token
+  const refreshToken = (token: string, rToken: string): void => {
+    setItem('token', token)
+    setItem('rToken', rToken)
 
-        setAuth((prev) => ({ ...prev, token, rToken }))
-
-        setItem('token', token)
-        setItem('rToken', rToken)
-
-        return true
-      }
-
-      return false
-    } catch (error) {
-      return false
-    } finally {
-      refreshingToken.current = false
-    }
+    setAuth((prev) => ({ ...prev, token, rToken }))
   }
 
   const updateProfile = async (newProfile: FormProfile): Promise<boolean> => {
@@ -302,7 +274,6 @@ const AuthProvider = ({ children }: Props): ReactElement => {
   const contextValue = useMemo(
     () => ({
       auth,
-      refreshingToken,
       actions: {
         signIn,
         signUp,
