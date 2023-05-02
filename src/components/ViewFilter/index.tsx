@@ -34,16 +34,37 @@ interface Props {
     | ((documentType: DocumentType) => void)
     | ((documentType: DocumentType) => Promise<void>)
     | ((documentType: DocumentType) => Promise<boolean>)
+
+  initialValues?: {
+    dateRange?: {
+      start_time?: Date
+      end_time?: Date
+    }
+    search?: string
+    fields?: string[]
+    staticFilters?: Record<string, string | string[]>
+  }
 }
 const ViewFilter = (props: Props): ReactElement => {
-  const [dateRange, setDateRange] = useState<[Date?, Date?]>([])
+  const [dateRange, setDateRange] = useState<[Date?, Date?]>(
+    props.initialValues?.dateRange?.start_time &&
+      props.initialValues?.dateRange?.end_time
+      ? [
+          props.initialValues?.dateRange?.start_time,
+          props.initialValues?.dateRange?.end_time
+        ]
+      : []
+  )
   const [filterByField, setFilterByField] = useState({
-    search: '',
-    fields: [],
+    search: props.initialValues?.search ?? '',
+    fields: props.initialValues?.fields ?? [],
     staticFilters:
       props.staticFilters?.reduce<Record<string, string | string[]>>(
         (carry, item) => {
-          carry[item.name] = item.multiple ? [] : ''
+          carry[item.name] =
+            props.initialValues?.staticFilters?.[item.name] ?? item.multiple
+              ? []
+              : ''
 
           return carry
         },
