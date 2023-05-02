@@ -52,7 +52,10 @@ const UserInfo = (): ReactElement => {
         id: 'name',
         label: formatMessage(userInfoMessages.name),
         placeholder: formatMessage(userInfoMessages.name),
-        inputProps: { disabled: true }
+        inputProps: {
+          disabled: true,
+          className: 'text-gray-500 border-none cursor-not-allowed'
+        }
       },
       breakpoints: { xs: 12, md: 6 }
     },
@@ -62,7 +65,10 @@ const UserInfo = (): ReactElement => {
       options: {
         id: 'extension',
         label: formatMessage(userInfoMessages.extension),
-        placeholder: formatMessage(userInfoMessages.extension)
+        placeholder: formatMessage(userInfoMessages.extension),
+        inputProps: {
+          className: 'border-gray-300'
+        }
       },
       breakpoints: { xs: 12, md: 6 }
     },
@@ -73,7 +79,10 @@ const UserInfo = (): ReactElement => {
         id: 'lastname',
         label: formatMessage(userInfoMessages.lastname),
         placeholder: formatMessage(userInfoMessages.lastname),
-        inputProps: { disabled: true }
+        inputProps: {
+          disabled: true,
+          className: 'text-gray-500 border-none cursor-not-allowed'
+        }
       },
       breakpoints: { xs: 12, md: 6 }
     },
@@ -83,7 +92,10 @@ const UserInfo = (): ReactElement => {
       options: {
         id: 'position',
         label: formatMessage(userInfoMessages.position),
-        placeholder: formatMessage(userInfoMessages.position)
+        placeholder: formatMessage(userInfoMessages.position),
+        inputProps: {
+          className: 'border-gray-300'
+        }
       },
       breakpoints: { xs: 12, md: 6 }
     },
@@ -94,7 +106,10 @@ const UserInfo = (): ReactElement => {
         id: 'username',
         label: formatMessage(userInfoMessages.username),
         placeholder: formatMessage(userInfoMessages.username),
-        inputProps: { disabled: true }
+        inputProps: {
+          disabled: true,
+          className: 'text-gray-500 border-none cursor-not-allowed'
+        }
       },
       breakpoints: { xs: 12, md: 6 }
     },
@@ -131,7 +146,10 @@ const UserInfo = (): ReactElement => {
       options: {
         id: 'email',
         label: formatMessage(userInfoMessages.email),
-        placeholder: formatMessage(userInfoMessages.email)
+        placeholder: formatMessage(userInfoMessages.email),
+        inputProps: {
+          className: 'border-gray-300'
+        }
       },
       breakpoints: { xs: 12, md: 6 }
     }
