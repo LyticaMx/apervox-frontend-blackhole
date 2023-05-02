@@ -3,45 +3,18 @@ import Navbar from 'components/Layout/Navbar'
 import Sidebar from 'components/Layout/Sidebar'
 import Loader from 'components/Loader'
 import { useAuth } from 'context/Auth'
-import { isAfter } from 'date-fns'
 import { apiMessages } from 'globalMessages'
 import useToast from 'hooks/useToast'
-import jwtDecode from 'jwt-decode'
-import { ReactElement, useEffect } from 'react'
+import { ReactElement } from 'react'
 import { useIdleTimer } from 'react-idle-timer'
 import { useIntl } from 'react-intl'
 import { Layout } from 'types/layout'
 
 const EvidenceLayout = ({ children }: Layout): ReactElement => {
   const intl = useIntl()
-  const { auth, actions, refreshingToken } = useAuth()
-  const { token } = auth
+  const { actions } = useAuth()
+
   const toast = useToast()
-
-  useEffect(() => {
-    validateSession(null, true)
-  }, [])
-
-  const validateSession = async (
-    _,
-    showTimeSession?: boolean
-  ): Promise<void> => {
-    const session: any = jwtDecode(token) // decode your token here
-    const exp = session.exp
-
-    if (exp) {
-      if (
-        isAfter(new Date(), new Date(exp * 1000 + 1000)) &&
-        !refreshingToken?.current
-      ) {
-        const successRefresh = await actions?.refreshToken()
-
-        if (!successRefresh) {
-          actions?.killSession()
-        }
-      }
-    }
-  }
 
   const onIdle = (): void => {
     toast.danger(intl.formatMessage(apiMessages.sessionExpired))
@@ -50,8 +23,7 @@ const EvidenceLayout = ({ children }: Layout): ReactElement => {
 
   useIdleTimer({
     timeout: 1000 * 60 * 15,
-    onIdle,
-    onAction: validateSession
+    onIdle
   })
 
   return (
