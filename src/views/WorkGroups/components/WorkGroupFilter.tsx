@@ -63,6 +63,7 @@ const WorkGroupFilter = ({ toggleOpen }: Props): ReactElement => {
         actions?.getWorkGroups({
           start_time: data.dateRange[0],
           end_time: data.dateRange[1],
+          clearDates: data.clearDates,
           filters: data.filterByField.fields,
           query: data.filterByField.search
         })

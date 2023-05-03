@@ -88,6 +88,14 @@ export const useActions = (
           ? false
           : undefined
 
+      const startTime =
+        params?.start_time ??
+        (!params?.clearDates ? dateFilter.start_time : undefined)
+
+      const endTime =
+        params?.end_time ??
+        (!params?.clearDates ? dateFilter.end_time : undefined)
+
       const [response, totalResponse] = await Promise.all([
         getUsersService({
           urlParams: {
@@ -95,8 +103,8 @@ export const useActions = (
             ...mappedFilters,
             page: params?.page ?? usersPagination.page,
             limit: params?.limit ?? usersPagination.limit,
-            start_time: params?.start_time ?? dateFilter.start_time,
-            end_time: params?.end_time ?? dateFilter.end_time
+            start_time: startTime,
+            end_time: endTime
           }
         }),
         getTotal ? getUsersService({ urlParams: { page: 1, limit: 1 } }) : null
@@ -141,8 +149,8 @@ export const useActions = (
             filters: params?.filters ?? searchFilter.filters
           },
           date: {
-            start_time: params?.start_time ?? dateFilter.start_time,
-            end_time: params?.end_time ?? dateFilter.end_time
+            start_time: startTime,
+            end_time: endTime
           },
           static: {
             sessions: params?.sessions ?? staticFilter.sessions,

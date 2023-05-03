@@ -48,6 +48,14 @@ export const useActions = (state: State, dispatch): Actions => {
         return old
       }, {})
 
+      const startTime =
+        params?.start_time ??
+        (!params?.clearDates ? dateFilter.start_time : undefined)
+
+      const endTime =
+        params?.end_time ??
+        (!params?.clearDates ? dateFilter.end_time : undefined)
+
       // TODO: cambiar el response data
       const response: ResponseData = await resource.get({
         urlParams: {
@@ -55,8 +63,8 @@ export const useActions = (state: State, dispatch): Actions => {
           ...mappedFilters,
           page: params?.page ?? pagination.page,
           limit: params?.limit ?? pagination.limit,
-          start_time: params?.start_time ?? dateFilter.start_time,
-          end_time: params?.end_time ?? dateFilter.end_time
+          start_time: startTime,
+          end_time: endTime
         }
       })
 
@@ -78,8 +86,8 @@ export const useActions = (state: State, dispatch): Actions => {
             filters: params?.filters ?? searchFilter.filters
           },
           date: {
-            start_time: params?.start_time ?? dateFilter.start_time,
-            end_time: params?.end_time ?? dateFilter.end_time
+            start_time: startTime,
+            end_time: endTime
           }
         })
       )

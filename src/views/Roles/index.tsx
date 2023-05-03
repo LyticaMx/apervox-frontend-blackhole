@@ -54,7 +54,8 @@ const Roles = (): ReactElement => {
               start_time: data.dateRange[0],
               end_time: data.dateRange[1],
               filters: data.filterByField.fields,
-              query: data.filterByField.search
+              query: data.filterByField.search,
+              clearDates: data.clearDates
             })
           }
         />

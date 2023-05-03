@@ -19,6 +19,7 @@ interface ActionButton {
 
 interface FilterStatus {
   dateRange: [Date?, Date?]
+  clearDates?: boolean
   filterByField: {
     fields: string[]
     search: string
@@ -74,7 +75,13 @@ const ViewFilter = (props: Props): ReactElement => {
 
   // Revisar si es conveniente que se llame cada vez que entra la persona a la vista
   useDidMountEffect(() => {
-    if (props.onChange) props.onChange({ dateRange, filterByField })
+    if (props.onChange) {
+      props.onChange({
+        dateRange,
+        filterByField,
+        clearDates: dateRange.length !== 2
+      })
+    }
   }, [dateRange, filterByField])
 
   const renderActions = (): ReactNode => {
@@ -110,7 +117,12 @@ const ViewFilter = (props: Props): ReactElement => {
 
   return (
     <div className="flex gap-2 items-center">
-      <Daterangepicker shadow value={dateRange} onChange={setDateRange} />
+      <Daterangepicker
+        shadow
+        value={dateRange}
+        onChange={setDateRange}
+        clearable
+      />
       <FilterByField
         items={props.fields}
         values={filterByField}
