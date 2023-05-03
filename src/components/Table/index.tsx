@@ -61,6 +61,7 @@ interface Props<T> {
   onRowClicked?: (row: T, event: any) => void
   className?: string
   manualSorting?: ManualSorting
+  enableSorting?: boolean
   maxHeight?: number
   withCheckbox?: boolean
   manualLimit?: PaginationLimit
@@ -82,6 +83,7 @@ const Table = <DataType,>({
   onRowClicked,
   className,
   manualSorting,
+  enableSorting = true,
   manualLimit,
   actionsForSelectedItems,
   rowConfig
@@ -130,6 +132,13 @@ const Table = <DataType,>({
     return newColumns.concat(columns)
   }, [columns, withCheckbox])
 
+  const onSorting = (callback): void => {
+    const sortedCb = callback(manualSorting?.sorting ?? sortingState)
+
+    if (manualSorting) manualSorting.onSortingChange(sortedCb)
+    else setSortingState(callback)
+  }
+
   const table = useReactTable({
     data,
     columns: enhancedColumns,
@@ -137,15 +146,19 @@ const Table = <DataType,>({
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     debugTable: true, // para obtener los logs de la tabla
-    manualPagination: Boolean(manualPagination),
+    manualPagination: !!manualPagination,
     initialState: {
       pagination: { pageSize, pageIndex: 0 }
     },
-    state: { sorting: manualSorting?.sorting, rowSelection, columnVisibility },
-    manualSorting: true,
-    enableSorting: !!manualSorting,
+    state: {
+      sorting: manualSorting?.sorting ?? sortingState,
+      rowSelection,
+      columnVisibility
+    },
+    manualSorting: !!manualSorting,
+    enableSorting,
     getSortedRowModel: getSortedRowModel(),
-    onSortingChange: setSortingState,
+    onSortingChange: onSorting,
     onRowSelectionChange: setRowSelection,
     onColumnVisibilityChange: setColumnVisibility
   })
@@ -226,28 +239,6 @@ const Table = <DataType,>({
     else if (value === data.length) return 'all'
     return `${value}`
   }, [JSON.stringify(selectedKeys)])
-
-  useEffect(
-    () => {
-      if (
-        JSON.stringify(manualSorting?.sorting) !== JSON.stringify(sortingState)
-      ) {
-        manualSorting?.onSortingChange(sortingState)
-      }
-    },
-    // Se necesita volver string debido a los valores del sortingState
-    // se encuentran en un arreglo y con esto se evitan dobles renders
-    [JSON.stringify(sortingState)]
-  )
-
-  useEffect(() => {
-    if (
-      manualSorting &&
-      JSON.stringify(manualSorting?.sorting) !== JSON.stringify(sortingState)
-    ) {
-      setSortingState(manualSorting.sorting)
-    }
-  }, [JSON.stringify(manualSorting?.sorting)])
 
   useEffect(() => {
     if (!withCheckbox) return

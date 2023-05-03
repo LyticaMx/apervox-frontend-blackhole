@@ -1,21 +1,36 @@
-import { useEffect, useRef } from 'react'
+import { useAuth } from 'context/Auth'
+import { useEffect, useRef, useState } from 'react'
 import io, { ManagerOptions, SocketOptions, Socket } from 'socket.io-client'
 
 const useSocket = (
-  opts?: Partial<ManagerOptions & SocketOptions>
-): Socket | undefined => {
+  opts?: Partial<ManagerOptions & SocketOptions & { namespace: string }>
+): {
+  socket: Socket | undefined
+  isSocketConnected: boolean
+} => {
   const socket = useRef<Socket | undefined>()
+  const [isSocketConnected, setIsSocketConnected] = useState<boolean>(false)
+  const { auth } = useAuth()
+
   useEffect(() => {
-    if (process.env.REACT_APP_MAIN_BACKEND_URL) {
-      socket.current = io(process.env.REACT_APP_MAIN_BACKEND_URL, opts)
+    if (!auth.isLogguedIn) return
+    if (process.env.REACT_APP_MAIN_SOCKET_URL) {
+      socket.current = io(
+        `${process.env.REACT_APP_MAIN_SOCKET_URL}${
+          opts?.namespace ? `/${opts.namespace}` : ''
+        }`,
+        opts
+      )
 
-      socket.current.on('connect', () =>
+      socket.current.on('connect', () => {
         console.log(`Client connected: ${socket.current?.id}`)
-      )
+        setIsSocketConnected(true)
+      })
 
-      socket.current.on('disconnect', (reason) =>
+      socket.current.on('disconnect', (reason) => {
         console.log(`Client disconnected: ${reason}`)
-      )
+        setIsSocketConnected(false)
+      })
 
       socket.current.on('connect_error', (reason) =>
         console.log(`Client connect_error: ${reason.message}`)
@@ -25,17 +40,9 @@ const useSocket = (
     return () => {
       if (socket.current) socket.current.disconnect()
     }
-  }, [])
+  }, [auth.isLogguedIn])
 
-  //   const on = (ev: string, listener): void => {
-  //     if (socket.current) socket.current.on(ev, listener)
-  //   }
-
-  //   const emmit = (): void => {
-  //     if (socket.current) socket.current.emmit()
-  //   }
-
-  return socket.current
+  return { socket: socket.current, isSocketConnected }
 }
 
 export { useSocket }
