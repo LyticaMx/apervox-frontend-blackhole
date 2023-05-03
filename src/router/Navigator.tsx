@@ -1,12 +1,34 @@
-import { ReactElement } from 'react'
+import { ReactElement, useEffect } from 'react'
 import { Switch, Redirect, Route } from 'react-router-dom'
 
 import { useAuth } from 'context/Auth'
 
 import { pathRoute, routes } from './routes'
+import { useSocket } from 'hooks/useSocket'
+import { getItem } from 'utils/persistentStorage'
 
 const Navigator = (): ReactElement => {
-  const { auth } = useAuth()
+  const { auth, actions: authActions } = useAuth()
+
+  const { socket, isSocketConnected } = useSocket({
+    namespace: 'sessions',
+    query: {
+      token: getItem('token')
+    }
+  })
+
+  useEffect(() => {
+    if (!isSocketConnected) return
+    socket?.on('close_session', (data) => {
+      const ids: string[] = data.ids
+      const logout = ids.some((id) => auth.profile.id === id)
+      if (logout) authActions?.killSession(true)
+    })
+
+    return () => {
+      socket?.off('close_session')
+    }
+  }, [isSocketConnected])
 
   return (
     <Switch>
