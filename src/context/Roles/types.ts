@@ -13,8 +13,14 @@ export interface RolesPaginationParams extends PaginationParams {
   sort?: SortingState
 }
 
+export interface StaticFilters {
+  status?: boolean
+  hasUsers?: boolean
+}
+
 export interface State {
   data: Role[]
+  total: number
   pagination: RolesPagination
   dateFilter: DateFilter
   searchFilter: SearchFilter
@@ -37,7 +43,8 @@ export interface PayloadUpdate {
 
 export interface Actions {
   getData: (
-    params?: RolesPaginationParams & SearchParams & DateFilter
+    params?: RolesPaginationParams & SearchParams & DateFilter & StaticFilters,
+    getTotal?: boolean
   ) => Promise<void>
   create: (payload: PayloadCreate) => Promise<boolean>
   update: (payload: PayloadUpdate) => Promise<boolean>

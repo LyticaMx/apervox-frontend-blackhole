@@ -216,12 +216,13 @@ const FilterByField = ({
                 onSubmit={formik.handleSubmit}
                 onReset={formik.handleReset}
                 className={clsx(
-                  staticFilters.length > 0 && 'max-h-96 overflow-auto'
+                  staticFilters.length > 0 && 'max-h-96 overflow-auto p-0.5'
                 )}
               >
                 <TextField
                   id="search"
                   name="search"
+                  outlined
                   onChange={formik.handleChange}
                   value={formik.values.search}
                 />

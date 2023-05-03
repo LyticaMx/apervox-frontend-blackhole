@@ -18,6 +18,7 @@ export interface Props {
   onBlur?: (element: any) => any
   onKeyDown?: (element: any) => any
   error?: boolean
+  outlined?: boolean
   helperText?: string
   placeholder?: string
   multiline?: boolean
@@ -34,6 +35,7 @@ const TextField = ({
   type = 'text',
   className,
   error,
+  outlined,
   helperText,
   multiline,
   rows = 5,
@@ -76,9 +78,8 @@ const TextField = ({
         {...props}
         className={clsx(
           'text-field',
-          {
-            'border-red-500 border-2': error
-          },
+
+          { outlined, 'border-red-500 border-2': error },
           inputProps.className
         )}
       />

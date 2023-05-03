@@ -23,6 +23,7 @@ interface FilterStatus {
   filterByField: {
     fields: string[]
     search: string
+    staticFilters?: Record<string, any>
   }
 }
 
@@ -70,7 +71,7 @@ const ViewFilter = (props: Props): ReactElement => {
           return carry
         },
         {}
-      ) ?? {}
+      ) ?? ([] as any)
   })
 
   // Revisar si es conveniente que se llame cada vez que entra la persona a la vista

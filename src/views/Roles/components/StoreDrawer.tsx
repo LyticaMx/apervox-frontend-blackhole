@@ -183,6 +183,7 @@ const StoreDrawer = ({ open, role, onClose }: Props): ReactElement => {
           <span className="text-sm italic">{getMessage('name')}</span>
           <TextField
             name="name"
+            outlined
             value={formik.values.name}
             onChange={formik.handleChange}
             error={!!formik.errors.name && !!formik.touched.name}
@@ -207,7 +208,6 @@ const StoreDrawer = ({ open, role, onClose }: Props): ReactElement => {
           <p className="text-sm italic">
             {getGlobalMessage('users', 'generalMessages')}
           </p>
-          <TextField />
           <SelectPaginate
             asyncProps={{
               api: {
