@@ -168,7 +168,7 @@ const UserList = ({
     },
     {
       accessorKey: 'createdOn',
-      header: getMessage('date'),
+      header: getMessage('registrationDate'),
       cell: ({ getValue }) => format(new Date(getValue<string>()), 'dd/MM/yyyy')
     },
     {

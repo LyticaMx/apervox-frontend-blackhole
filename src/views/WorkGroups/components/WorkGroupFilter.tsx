@@ -4,7 +4,6 @@ import { useFormatMessage } from 'hooks/useIntl'
 import { generalMessages } from 'globalMessages'
 import { workGroupsMessages } from '../messages'
 import { useWorkGroups } from 'context/WorkGroups'
-import { StaticFilter } from 'components/FilterByField'
 
 interface Props {
   toggleOpen: () => void
@@ -13,7 +12,7 @@ interface Props {
 const WorkGroupFilter = ({ toggleOpen }: Props): ReactElement => {
   const getMessage = useFormatMessage(workGroupsMessages)
   const getGeneralMessage = useFormatMessage(generalMessages)
-  const { actions } = useWorkGroups()
+  const { actions, dateFilter, searchFilter, staticFilter } = useWorkGroups()
 
   const filterItems = [
     {
@@ -31,6 +30,7 @@ const WorkGroupFilter = ({ toggleOpen }: Props): ReactElement => {
   ]
 
   // TODO: Eliminar despues de ser utilizado como ejemplo
+  /*
   const staticFilters: StaticFilter[] = [
     {
       label: getMessage('status'),
@@ -52,21 +52,33 @@ const WorkGroupFilter = ({ toggleOpen }: Props): ReactElement => {
       // multiple: true
     }
   ]
+  */
 
   return (
     <ViewFilter
       fields={filterItems}
       action={{ label: getMessage('button'), onClick: toggleOpen }}
       download={(document) => alert(document)}
-      staticFilters={staticFilters}
       onChange={(data) =>
         actions?.getWorkGroups({
           start_time: data.dateRange[0],
           end_time: data.dateRange[1],
+          clearDates: data.clearDates,
           filters: data.filterByField.fields,
           query: data.filterByField.search
         })
       }
+      initialValues={{
+        dateRange: {
+          start_time: dateFilter.start_time,
+          end_time: dateFilter.end_time
+        },
+        search: searchFilter.query,
+        fields: searchFilter.filters,
+        staticFilters: {
+          status: staticFilter.status ?? []
+        }
+      }}
     />
   )
 }

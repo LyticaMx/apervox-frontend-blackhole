@@ -56,7 +56,7 @@ const TextField = ({
         )
       }
 
-      return <input {...props} {...inputProps} />
+      return <input {...props} {...inputProps} className={props.className} />
     },
     [multiline, rows]
   )
@@ -76,10 +76,12 @@ const TextField = ({
         id={id}
         type={type}
         {...props}
-        className={clsx('text-field', {
-          outlined,
-          'border-red-500 border-2': error
-        })}
+        className={clsx(
+          'text-field',
+
+          { outlined, 'border-red-500 border-2': error },
+          inputProps.className
+        )}
       />
       {helperText && (
         <label className="text-xs text-red-500" id={`helper-${id}`}>

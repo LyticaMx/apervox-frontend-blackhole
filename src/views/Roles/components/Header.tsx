@@ -72,7 +72,8 @@ const Header = ({ onAction }: Props): ReactElement => {
             end_time: data.dateRange[1],
             filters: data.filterByField.fields,
             query: data.filterByField.search,
-            status: status[staticF?.status ?? 'both']
+            status: status[staticF?.status ?? 'both'],
+            clearDates: data.clearDates
           })
         }}
       />

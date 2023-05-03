@@ -156,6 +156,13 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
           ? false
           : undefined
 
+      const startTime =
+        params?.start_time ??
+        (!params?.clearDates ? dateFilter.start_time : undefined)
+      const endTime =
+        params?.end_time ??
+        (!params?.clearDates ? dateFilter.end_time : undefined)
+
       const [response, totalResponse] = await Promise.all([
         getWorkgroupsService({
           urlParams: {
@@ -163,8 +170,8 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
             ...mappedFilters,
             page: params?.page ?? workGroupsPagination.page,
             limit: params?.limit ?? workGroupsPagination.limit,
-            start_time: params?.start_time ?? dateFilter.start_time,
-            end_time: params?.end_time ?? dateFilter.end_time
+            start_time: startTime,
+            end_time: endTime
           }
         }),
         getTotal
@@ -208,8 +215,8 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
             filters: params?.filters ?? searchFilter.filters
           },
           date: {
-            start_time: params?.start_time ?? dateFilter.start_time,
-            end_time: params?.end_time ?? dateFilter.end_time
+            start_time: startTime,
+            end_time: endTime
           },
           static: {
             hasTechniques: params?.hasTechniques ?? staticFilter.hasTechniques,

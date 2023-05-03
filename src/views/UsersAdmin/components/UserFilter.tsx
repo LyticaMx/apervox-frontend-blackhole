@@ -12,8 +12,7 @@ interface Props {
 const UserFilter = ({ toggleOpen }: Props): ReactElement => {
   const getMessage = useFormatMessage(usersMessages)
   const getGeneralMessage = useFormatMessage(generalMessages)
-  const { actions } = useUsers()
-
+  const { actions, dateFilter, searchFilter } = useUsers()
   const filterItems = [
     {
       name: 'names',
@@ -44,12 +43,21 @@ const UserFilter = ({ toggleOpen }: Props): ReactElement => {
   return (
     <ViewFilter
       fields={filterItems}
+      initialValues={{
+        dateRange: {
+          start_time: dateFilter.start_time,
+          end_time: dateFilter.end_time
+        },
+        search: searchFilter.query,
+        fields: searchFilter.filters
+      }}
       action={{ label: getMessage('button'), onClick: toggleOpen }}
       download={(document) => alert(document)}
       onChange={(data) =>
         actions?.getUsers({
           start_time: data.dateRange[0],
           end_time: data.dateRange[1],
+          clearDates: data.clearDates,
           filters: data.filterByField.fields,
           query: data.filterByField.search
         })
