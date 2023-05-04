@@ -160,6 +160,7 @@ const UserInfo = (): ReactElement => {
       position: auth.profile.position,
       groups: auth.profile.groups
     },
+    enableReinitialize: true,
     validationSchema,
     onSubmit: async (values) => {
       const updated = await actions?.updateProfile({
