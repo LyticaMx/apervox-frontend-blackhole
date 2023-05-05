@@ -3340,6 +3340,11 @@
   resolved "https://registry.yarnpkg.com/@types/ms/-/ms-0.7.31.tgz#31b7ca6407128a3d2bbc27fe2d21b345397f6197"
   integrity sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==
 
+"@types/mutexify@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@types/mutexify/-/mutexify-1.2.0.tgz#40884c61c53458d8cb57e0b740f791f8a7dfbbe4"
+  integrity sha512-rHQCddccktnPLPlUtD1b+Mb5QfHq1FtY1IaVNYqKIEjSVXne87F6i7jFgy01vf40BrmXhGIpxNL1ucWGRzv39A==
+
 "@types/node@*":
   version "18.11.9"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.9.tgz#02d013de7058cea16d36168ef2fc653464cfbad4"

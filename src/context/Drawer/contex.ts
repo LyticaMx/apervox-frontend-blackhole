@@ -3,6 +3,7 @@ import { DrawerContextType } from 'types/drawer'
 
 export const initialState: DrawerContextType = {
   show: false,
+  type: 'drawer',
   title: null,
   body: null,
   closeButton: null,
@@ -10,7 +11,8 @@ export const initialState: DrawerContextType = {
   config: {
     className: '',
     placement: 'right',
-    withoutBackdrop: false
+    withoutBackdrop: false,
+    width: '320px'
   }
 }
 

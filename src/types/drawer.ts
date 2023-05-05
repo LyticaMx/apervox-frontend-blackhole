@@ -6,12 +6,14 @@ interface DrawerConfig {
   placement?: Placement
   className?: string
   withoutBackdrop?: boolean
+  width?: string
 }
 
 export type SimpleDrawerConfig = Omit<DrawerContextType, 'actions' | 'show'>
 
 export interface DrawerContextType {
   show: boolean
+  type?: 'drawer' | 'aside'
   title?: ReactNode
   body: ReactNode
   closeButton?: ReactNode
