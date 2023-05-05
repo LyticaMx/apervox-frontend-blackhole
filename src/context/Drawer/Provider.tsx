@@ -16,9 +16,8 @@ const DrawerProvider = (props: Props): ReactElement => {
   ): void =>
     setDrawerState((prevState) => ({ ...prevState, ...newState, show: true }))
 
-  const handleCloseDrawer = (
-    callback?: (() => void) | (() => Promise<void>)
-  ): void => {
+  const handleCloseDrawer = (): void => {
+    if (drawerState.config?.onClose) drawerState.config.onClose()
     setDrawerState((prev) => ({ ...prev, show: false }))
 
     setTimeout(() => {

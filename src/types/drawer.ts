@@ -7,6 +7,7 @@ interface DrawerConfig {
   className?: string
   withoutBackdrop?: boolean
   width?: string
+  onClose?: () => void
 }
 
 export type SimpleDrawerConfig = Omit<DrawerContextType, 'actions' | 'show'>
