@@ -63,6 +63,7 @@ export interface AuthContextType {
       newPassword: string
     ) => Promise<boolean>
     signOut: () => Promise<boolean>
+    getProfile: () => Promise<void>
     updateProfile: (profile: FormProfile) => Promise<boolean>
     refreshToken: (token: string, rToken: string) => void
     killSession: (hideNotification?: boolean) => void

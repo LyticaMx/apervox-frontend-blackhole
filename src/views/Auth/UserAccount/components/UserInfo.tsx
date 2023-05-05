@@ -12,6 +12,7 @@ import { Field } from 'types/form'
 import { formMessages } from 'globalMessages'
 import { userInfoMessages } from '../messages'
 import useToast from 'hooks/useToast'
+import { ProfileGroup } from 'types/profile'
 
 interface FormValues {
   name: string
@@ -20,24 +21,8 @@ interface FormValues {
   email: string
   extension: string
   position: string
-  groups: string[]
+  groups: ProfileGroup[]
 }
-
-// TODO: remove this, only for demo purposes
-const mockGroups = [
-  {
-    id: 'g1',
-    name: 'Grupo 1'
-  },
-  {
-    id: 'g2',
-    name: 'Grupo 2 medio'
-  },
-  {
-    id: 'g3',
-    name: 'Grupo 3'
-  }
-]
 
 const UserInfo = (): ReactElement => {
   const { formatMessage } = useIntl()
@@ -116,7 +101,7 @@ const UserInfo = (): ReactElement => {
     {
       type: 'custom',
       name: 'groups',
-      children: (
+      children: ({ values }) => (
         <>
           <label
             className="mb-1 block text-sm font-medium text-gray-700"
@@ -126,7 +111,7 @@ const UserInfo = (): ReactElement => {
           </label>
 
           <div className="flex flex-wrap space-x-2">
-            {mockGroups.map((group) => (
+            {values.groups.map((group) => (
               <Tag
                 key={group.id}
                 label={group.name}
@@ -173,8 +158,9 @@ const UserInfo = (): ReactElement => {
       email: auth.profile.email,
       extension: auth.profile.phone,
       position: auth.profile.position,
-      groups: []
+      groups: auth.profile.groups
     },
+    enableReinitialize: true,
     validationSchema,
     onSubmit: async (values) => {
       const updated = await actions?.updateProfile({

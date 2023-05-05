@@ -4,6 +4,11 @@ export interface FormProfile {
   email: string
 }
 
+export interface ProfileGroup {
+  id: string
+  name: string
+}
+
 export interface Profile {
   id: string
   names: string
@@ -13,6 +18,6 @@ export interface Profile {
   email: string
   phone: string
   position: string
-  groups: string[]
+  groups: ProfileGroup[]
   role: string
 }

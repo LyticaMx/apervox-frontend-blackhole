@@ -5,7 +5,7 @@ import jwtDecode from 'jwt-decode'
 import useToast from 'hooks/useToast'
 
 import { Auth, SignIn, SignUp, SignedIn } from 'types/auth'
-import { FormProfile } from 'types/profile'
+import { FormProfile, Profile } from 'types/profile'
 
 import { getItem, removeItem, setItem } from 'utils/persistentStorage'
 import { getDateDiferenceInMinutes } from 'utils/formatTime'
@@ -79,28 +79,13 @@ const AuthProvider = ({ children }: Props): ReactElement => {
         setItem('token', token)
         setItem('rToken', rToken)
 
-        const resProfile = await getProfileService({})
-
         const authData: Auth = {
           isLogguedIn: true,
           token,
           rToken,
           profile: {
-            id,
-            names: resProfile.data?.profile?.names ?? '',
-            lastName: resProfile.data?.profile?.last_name ?? '',
-            username: resProfile.data?.username ?? '',
-            since: `${String(
-              format(
-                new Date(resProfile.data?.created_at ?? '1970-01-01T00:00:00Z'),
-                'dd-MM-yyyy HH:mm:ss'
-              )
-            )}`,
-            email: resProfile.data?.email ?? '',
-            phone: resProfile.data?.company?.phone_extension ?? '',
-            position: resProfile.data?.company?.position ?? '',
-            groups: resProfile.data?.groups ?? [],
-            role: resProfile.data?.role ?? ''
+            ...initialState.profile,
+            username: params.user
           }
         }
 
@@ -162,11 +147,14 @@ const AuthProvider = ({ children }: Props): ReactElement => {
 
       if (!isActualPassword) return false
 
-      const profile = JSON.parse(localStorage.getItem('profile') ?? '')
+      let id = auth.profile.id
 
-      const id = (auth.profile.id || profile?.id) ?? ''
-
-      if (!id) return false
+      if (!id) {
+        const token = localStorage.getItem('token')
+        if (!token) return false
+        const decodedToken: any = jwtDecode(token)
+        id = decodedToken?.id ?? ''
+      }
 
       await updateProfileService({
         body: {
@@ -176,7 +164,7 @@ const AuthProvider = ({ children }: Props): ReactElement => {
       })
 
       return true
-    } catch {
+    } catch (e) {
       return false
     }
   }
@@ -201,6 +189,32 @@ const AuthProvider = ({ children }: Props): ReactElement => {
     setItem('rToken', rToken)
 
     setAuth((prev) => ({ ...prev, token, rToken }))
+  }
+
+  const getProfile = async (): Promise<void> => {
+    try {
+      const res: ResponseData = await getProfileService()
+
+      const profile: Profile = {
+        id: res.data?.id ?? '',
+        names: res.data?.profile?.names ?? '',
+        lastName: res.data?.profile?.last_name ?? '',
+        username: res.data?.username ?? '',
+        since: `${String(
+          format(
+            new Date(res.data?.created_at ?? '1970-01-01T00:00:00Z'),
+            'dd-MM-yyyy HH:mm:ss'
+          )
+        )}`,
+        email: res.data?.email ?? '',
+        phone: res.data?.company?.phone_extension ?? '',
+        position: res.data?.company?.position ?? '',
+        groups: res.data?.groups ?? [],
+        role: res.data?.role ?? ''
+      }
+
+      setAuth((auth) => ({ ...auth, profile }))
+    } catch {}
   }
 
   const updateProfile = async (newProfile: FormProfile): Promise<boolean> => {
@@ -280,6 +294,7 @@ const AuthProvider = ({ children }: Props): ReactElement => {
         changePassword,
         verifyPassword,
         signOut,
+        getProfile,
         updateProfile,
         refreshToken,
         killSession
