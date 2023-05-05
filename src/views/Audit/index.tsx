@@ -64,6 +64,7 @@ const Audit = (): ReactElement => {
   const handleOpenAction = useCallback(
     (row: AuditInterface) => {
       actions?.handleOpenDrawer({
+        type: 'aside',
         title: (
           <span className="text-secondary text-lg uppercase font-extrabold">
             {formatMessage(auditDrawerMessages.auditedMovement)}
@@ -88,6 +89,7 @@ const Audit = (): ReactElement => {
 
   const handleMoreData = useCallback((type: TargetTypes) => {
     const drawerConfig: SimpleDrawerConfig = {
+      type: 'aside',
       body: null,
       config: {
         withoutBackdrop: true

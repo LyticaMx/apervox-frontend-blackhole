@@ -11,7 +11,7 @@ export const rolesMessages = defineMessages({
   },
   button: {
     id: 'views.roles.button',
-    defaultMessage: 'Crear role de usario'
+    defaultMessage: 'Crear rol de usario'
   },
   deleteSuccess: {
     id: 'views.roles.deleteSuccess',
@@ -43,7 +43,7 @@ export const rolesDeleteMessages = defineMessages({
   message: {
     id: 'views.roles.delete.message',
     defaultMessage:
-      '¿Estas seguro de querer eliminar el rol de usuario seleccionado?'
+      '¿Estás seguro de querer eliminar el rol de usuario seleccionado?'
   },
   confirm: {
     id: 'views.roles.delete.confirm',

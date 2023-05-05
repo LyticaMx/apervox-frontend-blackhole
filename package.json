@@ -100,6 +100,7 @@
   "devDependencies": {
     "@formatjs/cli": "^5.1.0",
     "@types/lodash": "^4.14.184",
+    "@types/mutexify": "^1.2.0",
     "@types/react-router-dom": "^5.3.3",
     "@types/wavesurfer.js": "^6.0.3",
     "@typescript-eslint/eslint-plugin": "^5.0.0",

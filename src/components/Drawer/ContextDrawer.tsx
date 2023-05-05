@@ -20,10 +20,19 @@ const placements: Placements = {
 }
 
 const ContextDrawer = (): ReactElement => {
-  const { body, show, actions, closeButton, config, isDismissable, title } =
-    useDrawer()
+  const {
+    body,
+    show,
+    type,
+    actions,
+    closeButton,
+    config,
+    isDismissable,
+    title
+  } = useDrawer()
   const bodyRef = useRef(document.querySelector('body'))
   const portalRootRef = useRef(createPortalRoot())
+  const isShowing = useMemo(() => show && type === 'drawer', [show, type])
 
   useEffect(() => {
     bodyRef.current?.appendChild(portalRootRef.current)
@@ -41,19 +50,21 @@ const ContextDrawer = (): ReactElement => {
       }
     }
 
-    if (show) {
+    if (isShowing) {
       window.addEventListener('keyup', onKeyPress)
     }
 
     return () => {
       window.removeEventListener('keyup', onKeyPress)
     }
-  }, [show, actions?.handleCloseDrawer])
+  }, [isShowing, actions?.handleCloseDrawer])
 
   const classOpen = useMemo(
     () =>
-      show ? 'opacity-100 duration-500' : 'opacity-0 duration-500 invisible',
-    [show]
+      isShowing
+        ? 'opacity-100 duration-500'
+        : 'opacity-0 duration-500 invisible',
+    [isShowing]
   )
 
   const renderTitle = (): ReactNode => {

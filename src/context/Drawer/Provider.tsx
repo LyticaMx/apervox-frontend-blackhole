@@ -16,8 +16,13 @@ const DrawerProvider = (props: Props): ReactElement => {
   ): void =>
     setDrawerState((prevState) => ({ ...prevState, ...newState, show: true }))
 
-  const handleCloseDrawer = (): void =>
-    setDrawerState({ ...initialState, config: { ...initialState.config } })
+  const handleCloseDrawer = (): void => {
+    setDrawerState((prev) => ({ ...prev, show: false }))
+
+    setTimeout(() => {
+      setDrawerState({ ...initialState, config: { ...initialState.config } })
+    }, 500)
+  }
 
   const contextValue = useMemo<DrawerContextType>(
     () =>
