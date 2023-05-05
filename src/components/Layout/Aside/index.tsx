@@ -36,6 +36,12 @@ export const Aside = (): ReactElement | null => {
     }
   }, [isShowing, actions?.handleCloseDrawer])
 
+  useEffect(() => {
+    return () => {
+      actions?.handleCloseDrawer()
+    }
+  }, [])
+
   const renderTitle = (): ReactNode => {
     let rTitle: ReactNode = ''
 
@@ -58,16 +64,16 @@ export const Aside = (): ReactElement | null => {
   return (
     <aside
       style={{
-        width: isShowing ? width : '0px'
+        width: isShowing ? 'auto' : '0px'
       }}
       className={clsx(
-        'z-50  overflow-y-auto bg-neutral-200 bg-opacity-60 transition-width duration-500 outline-none shadow-md shadow-gray-300',
+        'z-50  overflow-y-auto bg-neutral-200 bg-opacity-60 transition-width duration-500 outline-none shadow-md shadow-gray-300 sticky top-0',
         config?.className
       )}
     >
       <div style={{ width }} className="p-4">
         <div className="h-full flex flex-col">
-          <header className="flex">
+          <header className="flex items-center gap-1">
             {title && renderTitle()}
             {closeButton ?? (
               <button
