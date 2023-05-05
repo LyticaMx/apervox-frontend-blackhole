@@ -80,6 +80,8 @@ const WorkGroups = (): ReactElement => {
           onClose: () => actions?.selectWorkGroup()
         }
       })
+    } else {
+      drawerActions?.handleCloseDrawer()
     }
   }, [selected])
 
