@@ -147,9 +147,13 @@ const AuthProvider = ({ children }: Props): ReactElement => {
 
       if (!isActualPassword) return false
 
-      const profile = JSON.parse(localStorage.getItem('profile') ?? '')
+      const token = localStorage.getItem('token')
 
-      const id = (auth.profile.id || profile?.id) ?? ''
+      if (!token) return false
+
+      const decodedToken: any = jwtDecode(token)
+
+      const id = (auth.profile.id || decodedToken?.id) ?? ''
 
       if (!id) return false
 
@@ -161,7 +165,7 @@ const AuthProvider = ({ children }: Props): ReactElement => {
       })
 
       return true
-    } catch {
+    } catch (e) {
       return false
     }
   }
