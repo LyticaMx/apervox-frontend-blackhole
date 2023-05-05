@@ -147,15 +147,14 @@ const AuthProvider = ({ children }: Props): ReactElement => {
 
       if (!isActualPassword) return false
 
-      const token = localStorage.getItem('token')
+      let id = auth.profile.id
 
-      if (!token) return false
-
-      const decodedToken: any = jwtDecode(token)
-
-      const id = (auth.profile.id || decodedToken?.id) ?? ''
-
-      if (!id) return false
+      if (!id) {
+        const token = localStorage.getItem('token')
+        if (!token) return false
+        const decodedToken: any = jwtDecode(token)
+        id = decodedToken?.id ?? ''
+      }
 
       await updateProfileService({
         body: {
