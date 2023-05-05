@@ -14,10 +14,11 @@ import AssociatedUserList from './components/AssociatedUserList'
 import CreateWorkGroupDrawer from './components/CreateWorkGroupDrawer'
 import EditWorkGroupDrawer from './components/EditWorkGroupDrawer'
 import HistoryDrawer from './components/HistoryDrawer'
-import { workGroupsMessages } from './messages'
+import { workGroupsEditDrawerMessages, workGroupsMessages } from './messages'
 import Typography from 'components/Typography'
-import Button from 'components/Button'
 import { formatTotal } from 'utils/formatTotal'
+import { useDrawer } from 'context/Drawer'
+import { useIntl } from 'react-intl'
 
 interface SynchroEditIds {
   ids: string[]
@@ -27,9 +28,10 @@ interface SynchroEditIds {
 const WorkGroups = (): ReactElement => {
   const getMessage = useFormatMessage(workGroupsMessages)
   const [tab, setTab] = useState<string>('users')
+  const { actions: drawerActions } = useDrawer()
+  const { formatMessage } = useIntl()
   const [openHistoryDrawer, toggleOpenHistoryDrawer] = useToggle(false)
   const [openCreateDrawer, toggleOpenCreateDrawer] = useToggle(false)
-  const [openEditDrawer, toggleOpenEditDrawer] = useToggle(false)
   const [disableWorkgroups, setDisableWorkgroups] = useState<SynchroEditIds>({
     ids: [],
     resolve: null
@@ -63,6 +65,20 @@ const WorkGroups = (): ReactElement => {
     if (selected.id) {
       setTab('users')
       actions?.getWorkGroupUsers({ page: 1 })
+      drawerActions?.handleOpenDrawer({
+        body: <EditWorkGroupDrawer actualTab={tab} />,
+        type: 'aside',
+        title: (
+          <Typography variant="title" style="bold" className="uppercase">
+            {formatMessage(workGroupsEditDrawerMessages.title)}
+          </Typography>
+        ),
+
+        config: {
+          withoutBackdrop: true,
+          width: 'auto'
+        }
+      })
     }
   }, [selected])
 
@@ -116,12 +132,6 @@ const WorkGroups = (): ReactElement => {
             setDisableWorkgroups({ ids: [], resolve: null })
           }}
         />
-
-        <EditWorkGroupDrawer
-          open={openEditDrawer}
-          actualTab={tab}
-          onClose={toggleOpenEditDrawer}
-        />
       </div>
 
       <div className="flex gap-4 mt-2 mb-4">
@@ -154,13 +164,6 @@ const WorkGroups = (): ReactElement => {
               </Title>
               <Typography variant="subtitle">{selected.description}</Typography>
             </div>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={toggleOpenEditDrawer}
-            >
-              {getMessage('editGroup')}
-            </Button>
           </div>
 
           <Tabs
