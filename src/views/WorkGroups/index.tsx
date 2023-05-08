@@ -76,7 +76,6 @@ const WorkGroups = (): ReactElement => {
 
         config: {
           withoutBackdrop: true,
-          width: 'auto',
           onClose: () => actions?.selectWorkGroup()
         }
       })
