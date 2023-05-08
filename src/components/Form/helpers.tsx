@@ -92,6 +92,12 @@ export const fieldMapper = <T,>({ field, formik }: Params<T>): ReactNode => {
           {...field.options}
           value={formik.values[name]}
           onChange={(val) => formik.setFieldValue(name, val)}
+          error={!!formik.errors[name] && !!formik.touched[name]}
+          helperText={
+            !!formik.errors[name] && !!formik.touched[name]
+              ? formik.errors[name]
+              : ''
+          }
         />
       )
     case 'select-multiple':

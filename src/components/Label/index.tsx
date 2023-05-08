@@ -1,10 +1,10 @@
 import clsx from 'clsx'
-import { ReactElement } from 'react'
+import { ReactElement, ReactNode } from 'react'
 import { labelFormClasses } from 'utils/classes'
 
 interface Props {
   id: any
-  children: string
+  children: ReactNode
   labelSpacing?: '1' | '2' | '3' | '4' | '5'
   labelClassname?: string
 }

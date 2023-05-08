@@ -7,6 +7,7 @@ import { useOnClickOutside } from 'usehooks-ts'
 
 import { formClasses, labelFormClasses } from 'utils/classes'
 import { useGlobalMessage } from 'hooks/useIntl'
+import RequiredMarker from '../RequiredMarker'
 
 type Item = Record<string, any>
 
@@ -19,6 +20,7 @@ export interface Props {
   selected: Array<string | number>
   onChange: (value: any) => void
   noFoundText: string
+  requiredMarker?: boolean
 }
 const defaultProps: Props = {
   items: [],
@@ -37,7 +39,8 @@ const Selectmultiple = ({
   valueField,
   selected,
   onChange,
-  noFoundText
+  noFoundText,
+  requiredMarker
 }: Props): ReactElement => {
   const ref = useRef(null)
   const getMessage = useGlobalMessage()
@@ -101,6 +104,7 @@ const Selectmultiple = ({
             {label && (
               <Combobox.Label className={labelFormClasses}>
                 {label}
+                {requiredMarker && <RequiredMarker />}
               </Combobox.Label>
             )}
             <div className="relative">

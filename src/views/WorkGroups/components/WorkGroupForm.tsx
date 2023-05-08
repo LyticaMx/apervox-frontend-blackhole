@@ -40,7 +40,8 @@ const WorkGroupForm = ({
       options: {
         id: 'workgroup-name',
         label: getMessage('name'),
-        placeholder: getMessage('name')
+        placeholder: getMessage('name'),
+        requiredMarker: true
       },
       breakpoints: { xs: 12 }
     },
@@ -52,7 +53,8 @@ const WorkGroupForm = ({
         label: getMessage('description'),
         placeholder: getMessage('description'),
         multiline: true,
-        rows: 4
+        rows: 4,
+        requiredMarker: true
       },
       breakpoints: { xs: 12 }
     },
