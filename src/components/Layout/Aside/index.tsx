@@ -2,9 +2,8 @@ import { ReactElement, ReactNode, useEffect, useMemo } from 'react'
 import clsx from 'clsx'
 import { XCircleIcon } from '@heroicons/react/24/outline'
 
-import { useDrawer } from 'context/Drawer'
+import { DEFAULT_DRAWER_WIDTH, useDrawer } from 'context/Drawer'
 
-const DEFAULT_WIDTH = '320px'
 export const Aside = (): ReactElement | null => {
   const {
     body,
@@ -18,7 +17,10 @@ export const Aside = (): ReactElement | null => {
   } = useDrawer()
 
   const isShowing = useMemo(() => show && type === 'aside', [show, type])
-  const width = useMemo(() => config?.width ?? DEFAULT_WIDTH, [config?.width])
+  const width = useMemo(
+    () => config?.width ?? DEFAULT_DRAWER_WIDTH,
+    [config?.width]
+  )
 
   useEffect(() => {
     const onKeyPress = (e: any): void => {
@@ -64,14 +66,14 @@ export const Aside = (): ReactElement | null => {
   return (
     <aside
       style={{
-        width: isShowing ? 'auto' : '0px'
+        maxWidth: isShowing ? width : '0px'
       }}
       className={clsx(
-        'z-50  overflow-y-auto bg-neutral-200 bg-opacity-60 transition-width duration-500 outline-none shadow-md shadow-gray-300 sticky top-0',
+        'z-50 overflow-x-hidden overflow-y-auto bg-neutral-200 bg-opacity-60 transition-all duration-500 outline-none shadow-md shadow-gray-300 sticky top-0',
         config?.className
       )}
     >
-      <div style={{ width }} className="p-4">
+      <div className="p-4" style={{ minWidth: width }}>
         <div className="h-full flex flex-col">
           <header className="flex items-center gap-1">
             {title && renderTitle()}

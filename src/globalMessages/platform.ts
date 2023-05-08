@@ -131,13 +131,5 @@ export const platformMessages = defineMessages({
   dialog: {
     id: 'global.platform.dialog',
     defaultMessage: 'Diálogo'
-  },
-  logged: {
-    id: 'global.platform.logged',
-    defaultMessage: 'Logueado'
-  },
-  notLogged: {
-    id: 'global.platform.notLogged',
-    defaultMessage: 'No logueado'
   }
 })

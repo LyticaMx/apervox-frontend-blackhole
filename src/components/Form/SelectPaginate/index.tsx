@@ -3,6 +3,9 @@ import { Props as AsyncSelectProps, useAsyncSelect } from 'hooks/useAsyncSelect'
 import { AsyncPaginate } from 'react-select-async-paginate'
 import MultiValueContainer from './MultiValueContainer'
 import Label from 'components/Label'
+import clsx from 'clsx'
+import Typography from 'components/Typography'
+import RequiredMarker from '../RequiredMarker'
 
 export interface Props {
   asyncProps: AsyncSelectProps
@@ -16,6 +19,9 @@ export interface Props {
   debounceTimeout?: number
   selectedItemsTitle?: string
   maxItems?: number
+  requiredMarker?: boolean
+  error?: boolean
+  helperText?: string
 }
 
 const SelectPaginate = (props: Props): ReactElement => {
@@ -25,8 +31,13 @@ const SelectPaginate = (props: Props): ReactElement => {
   return (
     <div>
       {props.label && (
-        <Label id="" labelSpacing="1">
+        <Label
+          id=""
+          labelSpacing="1"
+          labelClassname={clsx({ 'text-red-500': props.error })}
+        >
           {props.label}
+          {props.requiredMarker && <RequiredMarker />}
         </Label>
       )}
       <AsyncPaginate
@@ -42,7 +53,19 @@ const SelectPaginate = (props: Props): ReactElement => {
           MultiValueContainer: () => null,
           ClearIndicator: () => null
         }}
+        classNames={{
+          control: () =>
+            clsx(props.error && "border !border-red-500 ring-1 ring-red-500'")
+        }}
       />
+      {props.helperText && (
+        <Typography
+          variant="caption"
+          className={clsx('mt-1', props.error && 'text-red-500')}
+        >
+          {props.helperText}
+        </Typography>
+      )}
       {props.isMulti && (
         <MultiValueContainer
           values={props.value}

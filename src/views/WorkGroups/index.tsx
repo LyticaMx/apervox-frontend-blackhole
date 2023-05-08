@@ -76,10 +76,11 @@ const WorkGroups = (): ReactElement => {
 
         config: {
           withoutBackdrop: true,
-          width: 'auto',
           onClose: () => actions?.selectWorkGroup()
         }
       })
+    } else {
+      drawerActions?.handleCloseDrawer()
     }
   }, [selected])
 

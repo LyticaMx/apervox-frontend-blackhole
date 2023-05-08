@@ -151,7 +151,7 @@ const TableConfiguration = <DataType,>(
                   }}
                   type="button"
                 >
-                  {formatMessage(actionsMessages.clean)}
+                  {formatMessage(actionsMessages.reset)}
                 </button>
                 <div className="w-1 inline h-6 bg-[#00000029] rounded-md" />
                 <button

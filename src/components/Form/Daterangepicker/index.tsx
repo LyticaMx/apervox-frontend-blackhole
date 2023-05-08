@@ -10,6 +10,7 @@ import Menu from './Menu'
 import DateView from './Date'
 import Switch from 'components/Form/Switch'
 import SelectField from '../Select'
+import RequiredMarker from '../RequiredMarker'
 
 export interface Props {
   id?: string
@@ -28,6 +29,7 @@ export interface Props {
   menu?: boolean
   iconPosition?: 'left' | 'right'
   shadow?: boolean
+  requiredMarker?: boolean
 }
 
 const Daterangepicker = ({
@@ -44,6 +46,7 @@ const Daterangepicker = ({
   menu,
   iconPosition = 'left',
   shadow,
+  requiredMarker,
   ...props
 }: Props): ReactElement => {
   const [DATE, setDate] = useState(new Date())
@@ -116,6 +119,7 @@ const Daterangepicker = ({
           {label && (
             <label htmlFor={id} className={labelFormClasses}>
               {label}
+              {requiredMarker && <RequiredMarker />}
             </label>
           )}
           <div className="relative">

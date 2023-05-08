@@ -1,6 +1,8 @@
 import { createContext, Context } from 'react'
 import { DrawerContextType } from 'types/drawer'
 
+export const DEFAULT_DRAWER_WIDTH = '350px'
+
 export const initialState: DrawerContextType = {
   show: false,
   type: 'drawer',
@@ -12,7 +14,7 @@ export const initialState: DrawerContextType = {
     className: '',
     placement: 'right',
     withoutBackdrop: false,
-    width: '320px'
+    width: DEFAULT_DRAWER_WIDTH
   }
 }
 

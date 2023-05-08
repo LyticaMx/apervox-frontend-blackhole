@@ -2,6 +2,7 @@ import { InputHTMLAttributes, ReactElement, useCallback } from 'react'
 import clsx from 'clsx'
 
 import Label from 'components/Label'
+import RequiredMarker from '../RequiredMarker'
 
 // import { formClasses } from 'utils/classes'
 
@@ -27,6 +28,7 @@ export interface Props {
   inputProps?: InputHTMLAttributes<HTMLInputElement>
   ref?: React.RefObject<HTMLInputElement>
   labelClassname?: string
+  requiredMarker?: boolean
 }
 
 const TextField = ({
@@ -41,6 +43,7 @@ const TextField = ({
   rows = 5,
   labelSpacing,
   labelClassname,
+  requiredMarker,
   inputProps = {},
   ...props
 }: Props): ReactElement => {
@@ -70,6 +73,7 @@ const TextField = ({
           labelClassname={labelClassname}
         >
           {label}
+          {requiredMarker && <RequiredMarker />}
         </Label>
       )}
       <Component

@@ -13,6 +13,7 @@ import { formClasses, labelFormClasses } from 'utils/classes'
 
 import DateView from './Date'
 import MonthView from './Month'
+import RequiredMarker from '../RequiredMarker'
 
 type DatepickerType = 'date' | 'month' | 'year'
 export interface Props {
@@ -29,6 +30,7 @@ export interface Props {
   placeholder?: string
   minDate?: string
   maxDate?: string
+  requiredMarker?: boolean
 }
 
 const Datepicker = ({
@@ -42,6 +44,7 @@ const Datepicker = ({
   clearable,
   minDate,
   maxDate,
+  requiredMarker,
   ...props
 }: Props): ReactElement => {
   const ref = useRef(null)
@@ -125,7 +128,7 @@ const Datepicker = ({
     <div>
       {label && (
         <label htmlFor={id} className={labelFormClasses}>
-          {label}
+          {label} {requiredMarker && <RequiredMarker />}
         </label>
       )}
       <div className="relative" ref={ref}>

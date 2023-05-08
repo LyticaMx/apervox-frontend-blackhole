@@ -42,6 +42,10 @@ export const actionsMessages = defineMessages({
     id: 'global.actions.clean',
     defaultMessage: 'Limpiar'
   },
+  reset: {
+    id: 'global.actions.reset', // Desconozco si el verbo correcto sería reset, tambien se podria utilizar restore
+    defaultMessage: 'Restablecer'
+  },
   accept: {
     id: 'global.actions.accept',
     defaultMessage: 'Aceptar'

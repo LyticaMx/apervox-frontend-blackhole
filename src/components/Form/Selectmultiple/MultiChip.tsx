@@ -9,6 +9,7 @@ import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 import Chip, { Props as ChipProps } from 'components/Tag'
 import { labelFormClasses } from 'utils/classes'
 import { useGlobalMessage } from 'hooks/useIntl'
+import RequiredMarker from '../RequiredMarker'
 
 type Item = Record<string, any>
 
@@ -33,6 +34,7 @@ export interface Props {
   noFoundText?: string
   onNewOption?: (option: string) => void
   chipProps?: Partial<ChipProps>
+  requiredMarker?: boolean
 }
 
 const MultiChipSelect = ({
@@ -44,7 +46,8 @@ const MultiChipSelect = ({
   onChange = () => {},
   noFoundText = 'Nothing found.',
   onNewOption,
-  chipProps
+  chipProps,
+  requiredMarker
 }: Props): ReactElement => {
   const ref = useRef(null)
   const getMessage = useGlobalMessage()
@@ -117,6 +120,7 @@ const MultiChipSelect = ({
             {label && (
               <Combobox.Label className={labelFormClasses}>
                 {label}
+                {requiredMarker && <RequiredMarker />}
               </Combobox.Label>
             )}
             <div className="relative">

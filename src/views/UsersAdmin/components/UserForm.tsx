@@ -42,7 +42,8 @@ const UserForm = ({
       options: {
         id: 'name',
         label: getMessage('name'),
-        placeholder: getMessage('name')
+        placeholder: getMessage('name'),
+        requiredMarker: true
       },
       breakpoints: { xs: 12 }
     },
@@ -52,7 +53,8 @@ const UserForm = ({
       options: {
         id: 'lastname',
         label: getMessage('surnames'),
-        placeholder: getMessage('surnames')
+        placeholder: getMessage('surnames'),
+        requiredMarker: true
       },
       breakpoints: { xs: 12 }
     },
@@ -62,7 +64,8 @@ const UserForm = ({
       options: {
         id: 'username',
         label: getMessage('username'),
-        placeholder: getMessage('username')
+        placeholder: getMessage('username'),
+        requiredMarker: true
       },
       breakpoints: { xs: 12 }
     },
@@ -72,7 +75,8 @@ const UserForm = ({
       options: {
         id: 'email',
         label: getMessage('email'),
-        placeholder: getMessage('email')
+        placeholder: getMessage('email'),
+        requiredMarker: true
       },
       breakpoints: { xs: 12 }
     },
@@ -92,7 +96,8 @@ const UserForm = ({
       options: {
         id: 'position',
         label: getMessage('position'),
-        placeholder: getMessage('position')
+        placeholder: getMessage('position'),
+        requiredMarker: true
       },
       breakpoints: { xs: 12 }
     },
@@ -110,7 +115,8 @@ const UserForm = ({
         debounceTimeout: 300,
         placeholder: getMessage('selectRolePlaceholder'),
         loadingMessage: () => `${getMessage('loading')}...`,
-        noOptionsMessage: () => getMessage('noOptions')
+        noOptionsMessage: () => getMessage('noOptions'),
+        requiredMarker: true
       }
     },
     {

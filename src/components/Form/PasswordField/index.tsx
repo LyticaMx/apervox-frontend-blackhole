@@ -7,6 +7,7 @@ import { formClasses } from 'utils/classes'
 import PasswordStrengthBar from 'react-password-strength-bar'
 import { useIntl } from 'react-intl'
 import { passwordFieldMessages } from '../messages'
+import RequiredMarker from '../RequiredMarker'
 
 export interface Props {
   id: string
@@ -27,6 +28,7 @@ export interface Props {
   labelClassname?: string
   passwordStrength?: boolean
   passwordStrengthScoreWordClassName?: string
+  requiredMarker?: boolean
 }
 
 const PasswordField = ({
@@ -41,6 +43,7 @@ const PasswordField = ({
   inputProps = {},
   passwordStrength,
   passwordStrengthScoreWordClassName = '',
+  requiredMarker,
   ...props
 }: Props): ReactElement => {
   const [toggleView, setToggleView] = useState<boolean>(false)
@@ -55,6 +58,7 @@ const PasswordField = ({
           labelClassname={labelClassname}
         >
           {label}
+          {requiredMarker && <RequiredMarker />}
         </Label>
       )}
       <div>

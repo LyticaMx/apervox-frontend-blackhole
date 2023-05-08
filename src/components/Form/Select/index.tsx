@@ -7,6 +7,7 @@ import { CheckIcon, XMarkIcon } from '@heroicons/react/20/solid'
 import { formClasses, labelFormClasses } from 'utils/classes'
 import clsx from 'clsx'
 import { ChevronDownIcon } from '@heroicons/react/24/outline'
+import RequiredMarker from '../RequiredMarker'
 
 type Item = Record<string, any>
 
@@ -25,6 +26,7 @@ export interface Props {
   size?: 'sm' | 'md'
   className?: string
   optionsContainerClassname?: string
+  requiredMarker?: boolean
 }
 
 const defaultProps: Props = {
@@ -50,6 +52,7 @@ const SelectField = ({
   disabled,
   size = 'md',
   className,
+  requiredMarker,
   optionsContainerClassname
 }: Props): ReactElement => {
   const sizeClasses = useMemo(
@@ -98,7 +101,10 @@ const SelectField = ({
       >
         <div>
           {label && (
-            <Listbox.Label className={labelFormClasses}>{label}</Listbox.Label>
+            <Listbox.Label className={labelFormClasses}>
+              {label}
+              {requiredMarker && <RequiredMarker />}
+            </Listbox.Label>
           )}
           <Listbox.Button
             className={clsx(
