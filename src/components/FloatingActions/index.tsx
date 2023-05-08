@@ -35,7 +35,7 @@ const FloatingActions = ({
   useOnClickOutside(ref, handleClickOutside)
 
   return (
-    <Popover className="relative inline-block" ref={ref}>
+    <Popover className="inline-block" ref={ref}>
       <Float
         show={show}
         placement="bottom-start"
