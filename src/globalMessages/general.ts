@@ -475,11 +475,11 @@ export const generalMessages = defineMessages({
   },
   logguedIn: {
     id: 'global.general.logguedIn',
-    defaultMessage: 'Logueado'
+    defaultMessage: 'Conectado'
   },
   notLogguedIn: {
     id: 'global.general.notLogguedIn',
-    defaultMessage: 'No logueado'
+    defaultMessage: 'Desconectado'
   },
   language: {
     id: 'global.general.language',

@@ -90,6 +90,14 @@ const UserList = ({
         return (
           <div className="flex items-center">
             <Typography className="mr-2" variant="body2">
+              <span
+                className={clsx(
+                  'mr-1',
+                  hasSessions ? 'text-green-500' : 'text-red-500'
+                )}
+              >
+                &#9679;
+              </span>
               {getMessage(hasSessions ? 'logguedIn' : 'notLogguedIn')}
             </Typography>
 
@@ -112,11 +120,11 @@ const UserList = ({
           },
           options: [
             {
-              name: getMessage('logged'),
+              name: getMessage('logguedIn'),
               value: 'logged'
             },
             {
-              name: getMessage('notLogged'),
+              name: getMessage('notLogguedIn'),
               value: 'not logged'
             },
             {
