@@ -30,7 +30,7 @@ interface Fetch {
   urlParams?: UrlParams
 }
 
-type ApiMessage = keyof typeof apiMessages
+// type ApiMessage = keyof typeof apiMessages
 
 const lock = mutexify() // Cambiar a mutex propio
 
@@ -105,13 +105,17 @@ const useApi = ({
           authActions?.killSession()
           setItem('errorsAuthRegistered', errorsRegistered + 1)
         } else {
+          /* TODO: se reactivará cuando se tengan definidas las i18Key con backend
           const i18ErrorMessage: ApiMessage =
             response?.data && response.data.i18key
               ? response.data.i18key
               : 'unexpected'
+          */
           setTimeout(() => {
             launchToast({
-              title: intl.formatMessage(apiMessages[i18ErrorMessage]),
+              title:
+                response?.data?.message ??
+                intl.formatMessage(apiMessages.unexpected),
               type: 'Danger'
             })
           }, 500)
