@@ -233,10 +233,23 @@ export const mediaMessages = defineMessages({
     id: 'views.Config.Media.title',
     defaultMessage: 'Medios y compañias para medios de adquisición'
   },
-  counters: {
-    id: 'views.Config.Media.counters',
-    defaultMessage:
-      '{media} medios, {devices} equipos y {carriers} compañias existentes en el sistema'
+  media: { id: 'views.Config.Media.media', defaultMessage: 'Medios' },
+  carriers: {
+    id: 'views.Config.Media.carriers',
+    defaultMessage: 'Compañías telefónicas'
+  },
+  devices: { id: 'views.Config.Media.devices', defaultMessage: 'Equipos' },
+  mediaCounter: {
+    id: 'views.Config.Media.mediaCounter',
+    defaultMessage: '{media} medios'
+  },
+  deviceCounter: {
+    id: 'views.Config.Media.deviceCounter',
+    defaultMessage: '{devices} equipos'
+  },
+  carrierCounter: {
+    id: 'views.Config.media.carrierCounter',
+    defaultMessage: '{carriers} compañias existentes en el sistema'
   },
   carrierCaption: {
     id: 'views.Config.Media.carrierCaption',
@@ -304,6 +317,10 @@ export const mediaMessages = defineMessages({
   addMedia: {
     id: 'views.Config.Media.addMedia',
     defaultMessage: 'Agregar medio'
+  },
+  addDevice: {
+    id: 'views.Config.Media.addDevice',
+    defaultMessage: 'Agregar equipo'
   },
   addMediaOrDevice: {
     id: 'views.Config.Media.addMediaOrDevice',

@@ -20,6 +20,7 @@ import { messages } from './messages'
 import * as yup from 'yup'
 import LabelsAdministration from './components/LabelsAdministration'
 import LetterheadAdministration from './components/LetterheadAdministration'
+import SelectField from 'components/Form/Select'
 
 interface FormValues {
   language: 'es-mx' | 'en-us'
@@ -27,8 +28,6 @@ interface FormValues {
   fullDataEvidence: boolean
   url: string
   doubleStepDelete: boolean
-  failedAttemps: number
-  timeUntilUnlock: number
   inactivityTime: number
   openSessions: number
 }
@@ -38,21 +37,7 @@ const GeneralConfig = (): ReactElement => {
 
   const validationSchema = yup.object({
     url: yup.string().required(formatMessage(formMessages.required)),
-    failedAttemps: yup
-      .number()
-      .typeError(formatMessage(formMessages.mustBeNumber))
-      .required(formatMessage(formMessages.required))
-      .min(1, formatMessage(formMessages.minValue, { value: 1 })),
-    timeUntilUnlock: yup
-      .number()
-      .typeError(formatMessage(formMessages.mustBeNumber))
-      .required(formatMessage(formMessages.required))
-      .min(
-        1,
-        formatMessage(formMessages.minValue, {
-          value: `1 ${formatMessage(timeMessages.minute).toLowerCase()}`
-        })
-      ),
+
     inactivityTime: yup
       .number()
       .typeError(formatMessage(formMessages.mustBeNumber))
@@ -76,10 +61,8 @@ const GeneralConfig = (): ReactElement => {
       summarizedDataEvidence: true,
       fullDataEvidence: false,
       doubleStepDelete: true,
-      failedAttemps: 5,
-      inactivityTime: 5,
-      openSessions: 5,
-      timeUntilUnlock: 15,
+      openSessions: 1,
+      inactivityTime: 10,
       url: 'C:\\Users\\user12\\BlackHole\\evidenciasdescargadas'
     },
     onSubmit: (values) => console.log(values),
@@ -175,60 +158,29 @@ const GeneralConfig = (): ReactElement => {
             md={4}
             className="bg-white rounded-md px-6 py-4 shadow-md row-span-3"
           >
-            <Typography style="medium" className="uppercase text-secondary">
-              {formatMessage(messages.authenticationPolicy)}
-            </Typography>
-            <Typography>
-              {formatMessage(messages.maximumSessionNumberPolicy)}
-            </Typography>
-            <TextField
-              name="failedAttemps"
-              label={formatMessage(messages.failedLoginAttemps)}
-              className="mt-2"
-              value={formik.values.failedAttemps}
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-              error={Boolean(
-                formik.touched.failedAttemps && formik.errors.failedAttemps
-              )}
-              helperText={
-                formik.touched.failedAttemps && formik.errors.failedAttemps
-                  ? formik.errors.failedAttemps
-                  : ''
-              }
-            />
-            <Typography className="mt-3 text-secondary">
-              {formatMessage(messages.timeUntilSessionUnlockPolicy)}
-            </Typography>
-            <TextField
-              name="timeUntilUnlock"
-              label={formatMessage(messages.waitTime)}
-              className="mt-2"
-              value={formik.values.timeUntilUnlock}
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-              error={Boolean(
-                formik.touched.timeUntilUnlock && formik.errors.timeUntilUnlock
-              )}
-              helperText={
-                formik.touched.timeUntilUnlock && formik.errors.timeUntilUnlock
-                  ? formik.errors.timeUntilUnlock
-                  : ''
-              }
-            />
             <Typography className="mt-3 text-primary uppercase" style="medium">
               {formatMessage(generalMessages.inactivity)}
             </Typography>
             <Typography>
               {formatMessage(messages.waitTimeUntilInactivityClosePolicy)}
             </Typography>
-            <TextField
-              name="inactivityTime"
+            <SelectField
+              items={[
+                { value: 10 },
+                { value: 9 },
+                { value: 8 },
+                { value: 7 },
+                { value: 6 },
+                { value: 5 }
+              ]}
+              textField="value"
+              valueField="value"
               className="mt-2"
-              label={formatMessage(messages.waitTimeUntilClose)}
+              onChange={async (val) =>
+                await formik.setFieldValue('inactivityTime', val)
+              }
               value={formik.values.inactivityTime}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
+              label={formatMessage(messages.waitTimeUntilClose)}
               error={Boolean(
                 formik.touched.inactivityTime && formik.errors.inactivityTime
               )}
@@ -244,13 +196,16 @@ const GeneralConfig = (): ReactElement => {
             <Typography>
               {formatMessage(messages.openSessionsPolicy)}
             </Typography>
-            <TextField
-              name="openSessions"
+            <SelectField
+              items={[{ value: 1 }, { value: 2 }, { value: 3 }]}
+              textField="value"
+              valueField="value"
               className="mt-2"
-              label={formatMessage(messages.maximunOpenSessions)}
+              onChange={async (val) =>
+                await formik.setFieldValue('openSessions', val)
+              }
               value={formik.values.openSessions}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
+              label={formatMessage(messages.maximunOpenSessions)}
               error={Boolean(
                 formik.touched.openSessions && formik.errors.openSessions
               )}
