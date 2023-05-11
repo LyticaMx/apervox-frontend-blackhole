@@ -24,7 +24,7 @@ const BaseLayout = ({ children }: Layout): ReactElement => {
   }
 
   useIdleTimer({
-    timeout: 1000 * 60 * 15,
+    timeout: 1000 * 60 * 150,
     onIdle
   })
 
@@ -34,7 +34,7 @@ const BaseLayout = ({ children }: Layout): ReactElement => {
         <Navbar />
         <Sidebar />
         <div className="absolute inset-0 ml-14 mt-11 flex flex-1 overflow-y-auto">
-          <main className="flex-1 bg-background min-h-full h-fit">
+          <main className="flex-1 bg-background min-h-full h-fit container">
             <div className="py-6">
               <div className="mx-auto px-4 sm:px-6 md:px-8 py-4">
                 {children}

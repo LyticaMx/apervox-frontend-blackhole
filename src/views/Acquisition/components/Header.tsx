@@ -9,6 +9,7 @@ import ViewFilter from 'components/ViewFilter'
 import { messages } from '../messages'
 import StoreDrawer from './StoreDrawer'
 import { useToggle } from 'usehooks-ts'
+import { pathRoute } from 'router/routes'
 
 const Header = (): ReactElement => {
   const getMessage = useFormatMessage(messages)
@@ -17,8 +18,7 @@ const Header = (): ReactElement => {
     bussyLines: 5,
     availableLines: 5,
     quarantineLines: 5,
-    maintenanceLines: 5,
-    verificationLines: 5
+    maintenanceLines: 5
   }
 
   const items = [
@@ -45,6 +45,9 @@ const Header = (): ReactElement => {
             {getMessage(key)}
           </ViewCounter>
         ))}
+        <ViewCounter count={5} to={pathRoute.acquisition.verificationLine}>
+          {getMessage('verificationLines')}
+        </ViewCounter>{' '}
       </div>
 
       <StoreDrawer open={open} onClose={toggle} />

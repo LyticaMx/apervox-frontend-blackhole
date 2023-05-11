@@ -3,19 +3,17 @@ import Tooltip from 'components/Tooltip'
 import { actionsMessages } from 'globalMessages'
 import { ReactElement } from 'react'
 import { useIntl } from 'react-intl'
+import { Link } from 'react-router-dom'
 
 interface Props {
-  onClick: () => void
+  route: string
 }
 
-const GoBackButton = ({ onClick }: Props): ReactElement => {
+const GoBackButton = (props: Props): ReactElement => {
   const { formatMessage } = useIntl()
 
   return (
-    <div
-      className=" bg-primary-100 p-3 justify-center items-center flex rounded-2xl cursor-pointer"
-      onClick={onClick}
-    >
+    <div className="absolute top-2 right-4 xl:right-16 2xl:right-32">
       <Tooltip
         content={formatMessage(actionsMessages.goBack)}
         floatProps={{ offset: 10, arrow: true }}
@@ -26,10 +24,9 @@ const GoBackButton = ({ onClick }: Props): ReactElement => {
         }}
         placement="top"
       >
-        <ArrowUturnLeftIcon
-          className="w-5 h-5 text-primary "
-          onClick={onClick}
-        />
+        <Link to={props.route} className="">
+          <ArrowUturnLeftIcon className="w-5 h-5 text-secondary-gray mr-3" />
+        </Link>
       </Tooltip>
     </div>
   )

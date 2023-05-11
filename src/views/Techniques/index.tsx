@@ -3,7 +3,6 @@ import { ReactElement, useEffect, useState } from 'react'
 import { useToggle } from 'usehooks-ts'
 
 import Title from 'components/Title'
-import GoBackButton from 'components/GoBackButton'
 
 import { useFormatMessage } from 'hooks/useIntl'
 import { Target, Technique } from 'types/technique'
@@ -21,9 +20,6 @@ const Techniques = (): ReactElement => {
   const { actions } = useTechniques()
 
   const [openCreateDrawer, toggleOpenCreateDrawer] = useToggle(false)
-  const [techinqueSelected, setTechinqueSelected] = useState<Technique | null>(
-    null
-  )
 
   useEffect(() => {
     actions?.getTechniques()
@@ -33,10 +29,6 @@ const Techniques = (): ReactElement => {
     <>
       <div className="flex justify-between mb-4">
         <div className="flex justify-start items-center">
-          {techinqueSelected && (
-            <GoBackButton onClick={() => setTechinqueSelected(null)} />
-          )}
-
           <div className="ml-2">
             <Title className="uppercase">{getMessage('title')}</Title>
             <p className="uppercase">04 {getMessage('subtitle')}</p>
