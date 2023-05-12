@@ -35,17 +35,14 @@ const DeleteDialog = ({
       } else {
         deleted = (await actions?.deleteWorkGroups(ids)) ?? false
       }
-      if (!deleted) {
-        resolve(false)
-        return
-      }
+      if (!deleted) return
 
       launchToast({
         type: 'Success',
         title: getMessage('successDelete', { groups: ids.length })
       })
 
-      actions?.getWorkGroups({ page: 1 }, true)
+      await actions?.getWorkGroups({ page: 1 }, true)
       resolve(true)
       onConfirm()
     } catch {

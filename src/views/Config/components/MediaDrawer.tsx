@@ -107,7 +107,7 @@ const MediaDrawer = (props: Props): ReactElement => {
           )}
           onClick={() => setFormType('media')}
         >
-          {formatMessage(platformMessages.inputMedium)}
+          {formatMessage(platformMessages.acquisitionMedium)}
         </button>
         <button
           className={clsx(

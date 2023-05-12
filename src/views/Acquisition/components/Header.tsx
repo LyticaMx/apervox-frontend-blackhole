@@ -7,9 +7,10 @@ import ViewCounter from 'components/ViewCounter'
 import ViewFilter from 'components/ViewFilter'
 
 import { messages } from '../messages'
-import StoreDrawer from './StoreDrawer'
+
 import { useToggle } from 'usehooks-ts'
 import { pathRoute } from 'router/routes'
+import CreateOverflowLineDrawer from './CreateOverflowLineDrawer'
 
 const Header = (): ReactElement => {
   const getMessage = useFormatMessage(messages)
@@ -36,7 +37,7 @@ const Header = (): ReactElement => {
         <ViewFilter
           fields={items}
           download={(document) => alert(document)}
-          action={{ label: getMessage('button'), onClick: toggle }}
+          action={{ label: getMessage('button'), onClick: () => toggle() }}
         />
       </div>
       <div className="flex gap-2">
@@ -50,7 +51,7 @@ const Header = (): ReactElement => {
         </ViewCounter>{' '}
       </div>
 
-      <StoreDrawer open={open} onClose={toggle} />
+      <CreateOverflowLineDrawer open={open} onClose={toggle} />
     </div>
   )
 }

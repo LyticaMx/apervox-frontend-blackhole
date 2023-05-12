@@ -14,8 +14,8 @@ export const platformMessages = defineMessages({
     defaultMessage: 'Técnica'
   },
   // Medio (de entrada) cambia en inglés
-  inputMedium: {
-    id: 'global.platform.inputMedium',
+  acquisitionMedium: {
+    id: 'global.platform.acquisitionMedium',
     defaultMessage: 'Medio'
   },
   target: {

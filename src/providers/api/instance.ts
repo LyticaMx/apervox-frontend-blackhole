@@ -99,9 +99,7 @@ export const createInstance = ({
   )
 
   instance.interceptors.response.use(
-    (response) => {
-      return response
-    },
+    (response) => response,
     async (error): Promise<any> => await Promise.reject(error)
   )
 

@@ -8,10 +8,11 @@ import * as yup from 'yup'
 
 export interface FormValues {
   phone: string
+  medium: string
 }
 
 interface Props {
-  initialValues?: FormValues
+  initialvalues?: FormValues
   onSubmit: (
     values: FormValues,
     formikHelpers?: FormikHelpers<FormValues>
@@ -19,8 +20,8 @@ interface Props {
   formikRef?: MutableRefObject<FormikContextType<FormValues> | undefined>
 }
 
-const VerificationLineForm = ({
-  initialValues,
+const OverflowLineForm = ({
+  initialvalues,
   onSubmit,
   formikRef
 }: Props): ReactElement => {
@@ -31,8 +32,24 @@ const VerificationLineForm = ({
       type: 'text',
       name: 'phone',
       options: {
-        label: formatMessage(platformMessages.phoneNumber),
+        label: formatMessage(platformMessages.phoneLine),
         placeholder: formatMessage(formMessages.phonePlaceholder),
+        requiredMarker: true
+      },
+      breakpoints: { xs: 12 }
+    },
+    {
+      type: 'select',
+      name: 'medium',
+      options: {
+        clearable: false,
+        items: [
+          { value: '001', label: 'ETSI' },
+          { value: '002', label: 'FXS/XO' }
+        ],
+        textField: 'label',
+        valueField: 'value',
+        label: formatMessage(platformMessages.acquisitionMedium),
         requiredMarker: true
       },
       breakpoints: { xs: 12 }
@@ -43,19 +60,21 @@ const VerificationLineForm = ({
     phone: yup
       .string()
       .required(formatMessage(formMessages.required))
-      .length(10, formatMessage(formMessages.length, { length: 10 }))
+      .length(10, formatMessage(formMessages.length, { length: 10 })),
+    medium: yup.string().required(formatMessage(formMessages.required))
   })
 
   const formikConfig = useMemo<FormikConfig<FormValues>>(
     () => ({
       initialValues: {
-        phone: initialValues?.phone ?? ''
+        phone: initialvalues?.phone ?? '',
+        medium: initialvalues?.medium ?? ''
       },
       validationSchema,
       onSubmit,
       enableReinitialize: true
     }),
-    [initialValues]
+    [initialvalues]
   )
 
   return (
@@ -74,4 +93,4 @@ const VerificationLineForm = ({
   )
 }
 
-export default VerificationLineForm
+export default OverflowLineForm

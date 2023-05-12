@@ -75,6 +75,64 @@ export const createMessages = defineMessages({
     id: 'views.acquisition.create.subtitle',
     defaultMessage:
       'Completa los siguientes campos para agregar una línea de derivación.'
+  },
+  success: {
+    id: 'views.acquisition.create.success',
+    defaultMessage: 'Línea de derivación creada correctamente'
+  }
+})
+
+export const editMessages = defineMessages({
+  title: {
+    id: 'views.acquisition.edit.title',
+    defaultMessage: 'Datos de la línea'
+  },
+  subtitle: {
+    id: 'views.acquisition.edit.subtitle',
+    defaultMessage: 'Datos actuales de la línea'
+  },
+  success: {
+    id: 'views.acquisition.edit.success',
+    defaultMessage: 'Línea de derivación editada correctamente'
+  }
+})
+
+export const deleteMessages = defineMessages({
+  title: {
+    id: 'views.acquisition.delete.title',
+    defaultMessage: 'Eliminar {selectedLines, plural, one{línea} other{líneas}}'
+  },
+  message: {
+    id: 'views.acquisition.delete.message',
+    defaultMessage:
+      '¿Estás seguro de querer eliminar {selectedLines, plural, one{la línea seleccionada} other {las # líneas seleccionadas}}?'
+  },
+  passwordConfirm: {
+    id: 'views.acquisition.delete.passswordConfirm',
+    defaultMessage:
+      'Ingresa tu contraseña para validar la eliminación de {selectedLines, plural, one{la línea} other{las # líneas}}'
+  },
+  success: {
+    id: 'views.acquisition.delete.success',
+    defaultMessage:
+      '{selectedLines, plural, one{Línea eliminada} other{Líneas eliminadas}} correctamente'
+  }
+})
+
+export const disableOverflowLineDialogMessages = defineMessages({
+  title: {
+    id: 'views.acquisition.DisableOverflowLineDialog.title',
+    defaultMessage: 'Habilitar / deshabilitar línea de derivación'
+  },
+  message: {
+    id: 'views.acquisition.DisableOverflowLineDialog.message',
+    defaultMessage:
+      '¿Quieres {status, select, false{deshabilitar} other{habilitar}} la línea seleccionada?'
+  },
+  success: {
+    id: 'views.acquisition.DisableOverflowLineDialog.success',
+    defaultMessage:
+      'Línea {status, select, false{deshabilitada} other{habilitada}} correctamente'
   }
 })
 

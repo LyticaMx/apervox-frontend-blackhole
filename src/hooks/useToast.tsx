@@ -18,12 +18,13 @@ interface Params {
   autoClose?: number | false | undefined
 }
 
+type ToastParams = Omit<Params, 'title' | 'type'>
 interface ReturnType {
   launchToast: (params: Params) => void
-  success: (title: string, params?: Params) => void
-  warning: (title: string, params?: Params) => void
-  danger: (title: string, params?: Params) => void
-  info: (title: string, params?: Params) => void
+  success: (title: string, params?: ToastParams) => void
+  warning: (title: string, params?: ToastParams) => void
+  danger: (title: string, params?: ToastParams) => void
+  info: (title: string, params?: ToastParams) => void
 }
 
 const useToast = (): ReturnType => {
@@ -77,16 +78,16 @@ const useToast = (): ReturnType => {
 
   return {
     launchToast,
-    success: (title, params?: Params) => {
+    success: (title, params?: ToastParams) => {
       launchToast({ ...params, type: 'Success', title })
     },
-    warning: (title, params?: Params) => {
+    warning: (title, params?: ToastParams) => {
       launchToast({ ...params, type: 'Warning', title })
     },
-    danger: (title, params?: Params) => {
+    danger: (title, params?: ToastParams) => {
       launchToast({ ...params, type: 'Danger', title })
     },
-    info: (title, params?: Params) => {
+    info: (title, params?: ToastParams) => {
       launchToast({ ...params, type: 'Info', title })
     }
   }

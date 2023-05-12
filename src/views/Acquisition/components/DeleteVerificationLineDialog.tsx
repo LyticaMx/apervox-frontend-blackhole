@@ -23,10 +23,17 @@ const DeleteVerificationLineDialog = ({
     <DeleteDialog
       open={open}
       onAccept={async ({ password }) => {}}
-      title={formatMessage(deleteVerificationLineMessages.title)}
-      question={formatMessage(deleteVerificationLineMessages.message)}
+      title={formatMessage(deleteVerificationLineMessages.title, {
+        selectedLines: ids.length
+      })}
+      question={formatMessage(deleteVerificationLineMessages.message, {
+        selectedLines: ids.length
+      })}
       confirmation={formatMessage(
-        deleteVerificationLineMessages.passwordConfirm
+        deleteVerificationLineMessages.passwordConfirm,
+        {
+          selectedLines: ids.length
+        }
       )}
       onClose={onClose}
     />

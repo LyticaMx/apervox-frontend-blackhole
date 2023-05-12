@@ -55,7 +55,7 @@ const Media = (): ReactElement => {
         case 'media':
           config.color = '#4646FD'
           config.letter = 'm'
-          config.caption = formatMessage(platformMessages.inputMedium)
+          config.caption = formatMessage(platformMessages.acquisitionMedium)
           break
         default:
           break
