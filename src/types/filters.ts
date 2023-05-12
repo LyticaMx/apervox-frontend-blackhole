@@ -1,3 +1,4 @@
+import { SortingState } from '@tanstack/react-table'
 import { NonEmptyArray } from './utils'
 
 export interface DateFilter {
@@ -15,4 +16,9 @@ export interface PaginationFilter {
   page: number
   limit: number
   limitOptions?: NonEmptyArray<number>
+}
+
+export interface PaginationSortFilter extends PaginationFilter {
+  totalRecords: number
+  sort: SortingState
 }
