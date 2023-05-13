@@ -6,6 +6,8 @@ import Drawer from 'components/Drawer'
 import Typography from 'components/Typography'
 import { useIntl } from 'react-intl'
 import { createVerificationLineMessages } from '../messages'
+import { useVerificationLine } from 'context/VerificationLines'
+import useToast from 'hooks/useToast'
 
 interface Props {
   open: boolean
@@ -17,7 +19,24 @@ const CreateVerificationLineDrawer = ({
   onClose
 }: Props): ReactElement => {
   const formikRef = useRef<FormikContextType<FormValues>>()
+  const { actions: verificationLineActions } = useVerificationLine()
   const { formatMessage } = useIntl()
+  const toast = useToast()
+
+  const handleSubmit = async (values: FormValues): Promise<void> => {
+    try {
+      const created = await verificationLineActions?.create({
+        phone: values.phone
+      })
+      if (created) {
+        toast.success(formatMessage(createVerificationLineMessages.success))
+        onClose?.()
+        await verificationLineActions?.get({}, true)
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
 
   useDidMountEffect(() => {
     if (!open) {
@@ -26,6 +45,7 @@ const CreateVerificationLineDrawer = ({
       }, 300)
     }
   }, [open])
+
   return (
     <Drawer
       open={open}
@@ -40,7 +60,7 @@ const CreateVerificationLineDrawer = ({
         <Typography variant="body2" className="leading-tight mb-4">
           {formatMessage(createVerificationLineMessages.subtitle)}
         </Typography>
-        <VerificationLineForm onSubmit={async () => {}} formikRef={formikRef} />
+        <VerificationLineForm onSubmit={handleSubmit} formikRef={formikRef} />
       </div>
     </Drawer>
   )

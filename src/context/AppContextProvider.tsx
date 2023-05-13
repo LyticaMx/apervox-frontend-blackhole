@@ -9,6 +9,7 @@ import { TechniquesProvider } from './Techniques'
 import { UsersProvider } from 'context/Users'
 import { RolesProvider } from './Roles'
 import { OverflowLineProvider } from './OverflowLines'
+import { VerificationLineProvider } from './VerificationLines'
 
 interface Props {
   children: ReactNode
@@ -24,6 +25,7 @@ export const AppContextProvider = (props: Props): any => {
     WorkGroupsProvider,
     RolesProvider,
     OverflowLineProvider,
+    VerificationLineProvider,
     TechniqueProvider,
     TechniquesProvider
   ]

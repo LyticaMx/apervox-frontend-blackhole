@@ -28,6 +28,7 @@ const EditOverflowLineDrawer = ({
   const handleEdit = async (values: FormValues): Promise<void> => {
     try {
       const updated = await overflowLineActions?.update({
+        id: overflowLine?.id ?? '',
         phone: values.phone,
         medium: {
           id: values.medium
@@ -36,6 +37,7 @@ const EditOverflowLineDrawer = ({
       if (updated) {
         toast.success(formatMessage(editMessages.success))
         await overflowLineActions?.get()
+        onClose?.()
       }
     } catch (e) {
       console.error(e)

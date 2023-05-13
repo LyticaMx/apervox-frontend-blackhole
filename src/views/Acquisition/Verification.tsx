@@ -1,6 +1,6 @@
 import Title from 'components/Title'
 import ViewCounter from 'components/ViewCounter'
-import { ReactElement, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { pathRoute } from 'router/routes'
 import { messages, tableMessages } from './messages'
 import ViewFilter from 'components/ViewFilter'
@@ -18,12 +18,13 @@ import CreateVerificationLineDrawer from './components/CreateVerificationLineDra
 import Tooltip from 'components/Tooltip'
 import { TrashIcon } from '@heroicons/react/24/outline'
 import EditVerificationLineDrawer from './components/EditVerificationLineDrawer'
+import { VerificationLine } from 'types/verificationLine'
+import { useVerificationLine } from 'context/VerificationLines/useVerificationLine'
+import DeleteVerificationLineDialog from './components/DeleteVerificationLineDialog'
 
-export interface VerificationLine {
-  id?: string
-  phone: string
-  createdOn?: string
-  createdBy?: string
+interface SynchroEditIds {
+  ids: string[]
+  resolve: ((value: boolean | PromiseLike<boolean>) => void) | null
 }
 
 const Verification = (): ReactElement => {
@@ -32,7 +33,14 @@ const Verification = (): ReactElement => {
   const [selectedLine, setSelectedLine] = useState<VerificationLine | null>(
     null
   )
+  const [deleteVerificationLines, setDeleteVerificationLines] =
+    useState<SynchroEditIds>({ ids: [], resolve: null })
   const [openEdit, setOpenEdit] = useState(false)
+  const {
+    data,
+    pagination,
+    actions: verificationLineActions
+  } = useVerificationLine()
   const counters = {
     bussyLines: 5,
     availableLines: 5,
@@ -72,7 +80,14 @@ const Verification = (): ReactElement => {
           >
             <button
               className="mx-1 text-muted hover:text-primary flex items-center"
-              onClick={() => {}}
+              onClick={async () =>
+                await new Promise<boolean>((resolve) =>
+                  setDeleteVerificationLines({
+                    ids: [getValue<string>() ?? ''],
+                    resolve
+                  })
+                )
+              }
               disabled={
                 table.getIsSomeRowsSelected() || table.getIsAllRowsSelected()
               }
@@ -84,6 +99,10 @@ const Verification = (): ReactElement => {
       )
     }
   ])
+
+  useEffect(() => {
+    verificationLineActions?.get({}, true)
+  }, [])
 
   return (
     <div>
@@ -119,22 +138,40 @@ const Verification = (): ReactElement => {
         onClose={() => setOpenEdit(false)}
         open={openEdit}
       />
+      <DeleteVerificationLineDialog
+        ids={deleteVerificationLines.ids}
+        resolve={deleteVerificationLines.resolve ?? (() => {})}
+        onConfirm={() => setDeleteVerificationLines({ ids: [], resolve: null })}
+        onClose={() => {
+          if (deleteVerificationLines.resolve) {
+            deleteVerificationLines.resolve(false)
+          }
+          setDeleteVerificationLines({ ids: [], resolve: null })
+        }}
+      />
       <div className="mt-2">
         <Table
           columns={columns}
-          data={[
-            {
-              id: 'asdasdasd',
-              phone: '0001112223',
-              createdOn: '2023-05-11T17:13:11.008Z',
-              createdBy: 'superuser'
-            }
-          ]}
-          withCheckbox
+          data={data}
           maxHeight={500}
           onRowClicked={(row) => {
             setSelectedLine(row)
             setOpenEdit(true)
+          }}
+          manualSorting={{
+            onSortingChange: (sort) => verificationLineActions?.get({ sort }),
+            sorting: pagination.sort
+          }}
+          pageSize={pagination.limit}
+          manualLimit={{
+            onChangeLimit: (page, limit) =>
+              verificationLineActions?.get({ page: page + 1, limit }),
+            options: pagination.limitOptions ?? [15]
+          }}
+          manualPagination={{
+            currentPage: pagination.page,
+            totalRecords: pagination.totalRecords,
+            onChange: (page) => verificationLineActions?.get({ page: page + 1 })
           }}
         />
       </div>

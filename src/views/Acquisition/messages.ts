@@ -145,6 +145,10 @@ export const createVerificationLineMessages = defineMessages({
     id: 'views.acquisition.CreateVerificationLines.subtitle',
     defaultMessage:
       'Completa los siguientes campos para agregar una línea de verificación'
+  },
+  success: {
+    id: 'views.acquisition.CreateVerificationLines.success',
+    defaultMessage: 'Línea de verificación creada correctamente'
   }
 })
 
@@ -156,6 +160,10 @@ export const editVerificationLineMessages = defineMessages({
   message: {
     id: 'views.acquisition.EditVerificationLines.message',
     defaultMessage: 'Datos actuales de la línea de verificación'
+  },
+  success: {
+    id: 'views.acquisition.EditVerificationLines.success',
+    defaultMessage: 'Línea de verificación editada correctamente'
   }
 })
 
