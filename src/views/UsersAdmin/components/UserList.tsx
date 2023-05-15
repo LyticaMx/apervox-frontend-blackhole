@@ -15,6 +15,7 @@ import { useUsers } from 'context/Users'
 import { User, UserGroup } from 'types/user'
 import clsx from 'clsx'
 import { userListMessages } from '../messages'
+import { useAuth } from 'context/Auth'
 
 const colorByStatus = {
   enabled: 'bg-green-600',
@@ -41,6 +42,7 @@ const UserList = ({
 }: Props): ReactElement => {
   const getMessage = useFormatMessage(userListMessages)
   const { listOfUsers, usersPagination, actions } = useUsers()
+  const { auth } = useAuth()
 
   useEffect(() => {
     actions?.getUsers({}, true)
@@ -212,15 +214,19 @@ const UserList = ({
                   onDisableUser([id])
                 }
               },
-              {
-                label: getMessage('closeSession'),
-                disabled:
-                  table.getIsSomePageRowsSelected() ||
-                  table.getIsAllRowsSelected(),
-                onClick: () => {
-                  onRemoteLogOffUser([id])
-                }
-              },
+              ...(auth.profile.id === id
+                ? []
+                : [
+                    {
+                      label: getMessage('closeSession'),
+                      disabled:
+                        table.getIsSomePageRowsSelected() ||
+                        table.getIsAllRowsSelected(),
+                      onClick: () => {
+                        onRemoteLogOffUser([id])
+                      }
+                    }
+                  ]),
               {
                 label: getMessage('delete'),
                 className: 'text-red-500',
