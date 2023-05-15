@@ -170,20 +170,24 @@ const TableConfiguration = <DataType,>(
                   {formatMessage(generalMessages.columns)}
                 </Typography>
 
-                {columnsCanBeHidden.map((column) => (
+                {columnsCanBeHidden.map((column, index) => (
                   <div key={column.id}>
-                    <label htmlFor={column.id}>
-                      <>
-                        <input
-                          type="checkbox"
-                          className="rounded disabled:bg-gray-400 disabled:hover:bg-gray-400"
-                          name={column.id}
-                          checked={formik.values[column.id]}
-                          onChange={formik.handleChange}
-                          disabled={!canDisableMore && formik.values[column.id]}
-                        />{' '}
-                        {column.columnDef.header}
-                      </>
+                    <label
+                      htmlFor={`${column.id}-${index + 1}`}
+                      className="cursor-pointer"
+                    >
+                      <input
+                        type="checkbox"
+                        className="rounded disabled:bg-gray-400 disabled:hover:bg-gray-400"
+                        id={`${column.id}-${index + 1}`}
+                        name={column.id}
+                        checked={formik.values[column.id]}
+                        onChange={formik.handleChange}
+                        disabled={!canDisableMore && formik.values[column.id]}
+                      />
+                      <span className="ml-2 select-none">
+                        {column.columnDef.header as string}
+                      </span>
                     </label>
                   </div>
                 ))}
