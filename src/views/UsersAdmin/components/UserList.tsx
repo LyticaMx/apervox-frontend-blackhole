@@ -203,7 +203,7 @@ const UserList = ({
                 }
               },
               {
-                label: getMessage('disableUser'),
+                label: getMessage('disableUser', { disabled: status }),
                 disabled:
                   status === 'banned' ||
                   table.getIsSomePageRowsSelected() ||
