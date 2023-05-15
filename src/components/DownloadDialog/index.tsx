@@ -84,17 +84,22 @@ const DownloadDialog = (props: Props): ReactElement => {
                 {formatMessage(actionsMessages.export)}
               </Typography>
             </Grid>
-            <Grid item xs={12} sm={7} className="flex max-h-6 items-start">
+            <Grid
+              item
+              xs={12}
+              sm={7}
+              className="flex max-h-6 items-center justify-end"
+            >
               <button
-                className="text-primary mr-2 flex-none"
+                className="text-primary mr-2 flex-none text-sm"
                 onClick={() => formRef.current?.resetForm()}
                 type="button"
               >
                 {formatMessage(actionsMessages.clean)}
               </button>
-              <div className="w-1 inline h-6 bg-[#00000029] rounded-md" />
+              <div className="border border-gray-400 rounded-lg h-3" />
               <button
-                className="text-primary ml-2"
+                className="text-primary ml-2 text-sm"
                 onClick={() => formRef.current?.submitForm()}
                 type="submit"
               >
