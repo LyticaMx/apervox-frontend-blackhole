@@ -24,7 +24,7 @@ const BaseLayout = ({ children }: Layout): ReactElement => {
   }
 
   useIdleTimer({
-    timeout: 1000 * 60 * 150,
+    timeout: 1000 * 60 * 15,
     onIdle
   })
 
