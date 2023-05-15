@@ -45,7 +45,7 @@ const GeneralMediaList = <DataType extends Media | Carrier | Device>(
         case 'media':
           config.color = '#4646FD'
           config.letter = 'm'
-          config.caption = formatMessage(platformMessages.inputMedium)
+          config.caption = formatMessage(platformMessages.acquisitionMedium)
           break
         default:
           break
