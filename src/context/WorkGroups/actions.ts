@@ -17,8 +17,15 @@ import { initialState } from './context'
 import useApi from 'hooks/useApi'
 import { ResponseData, SearchParams } from 'types/api'
 
-const orderByMapper = { registered_by: 'created_by', total_users: 'users' }
-const orderByMapperUsers = {}
+const orderByMapper = {
+  registered_by: 'created_by.username',
+  total_users: 'users'
+}
+const orderByMapperUsers = {
+  name: 'profile.names',
+  surnames: 'profile.last_name',
+  role: 'role.name'
+}
 
 const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
   const {
@@ -116,8 +123,8 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
         status?: boolean
       } = {}
 
-      if (params?.sort && params.sort.length > 0) {
-        const [sortBy] = params.sort
+      const [sortBy] = params?.sort ?? workGroupsPagination.sort
+      if (sortBy) {
         sort.by = orderByMapper[sortBy.id] ?? sortBy.id
         sort.order = sortBy.desc ? 'desc' : 'asc'
       }
@@ -235,8 +242,9 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
   ): Promise<void> => {
     try {
       const sort = { by: 'created_at', order: 'desc' }
-      if (params?.sort && params.sort.length > 0) {
-        const [sortBy] = params.sort
+
+      const [sortBy] = params?.sort ?? usersPagination.sort
+      if (sortBy) {
         sort.by = orderByMapperUsers[sortBy.id] ?? sortBy.id
         sort.order = sortBy.desc ? 'desc' : 'asc'
       }

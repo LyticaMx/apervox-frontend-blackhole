@@ -11,10 +11,11 @@ import {
 import { actions } from './constants'
 
 const orderByMapper = {
-  name: 'names',
-  createdBy: 'created_by',
+  name: 'profile.names',
+  createdBy: 'created_by.username',
   createdOn: 'created_at',
-  lastName: 'last_name'
+  lastName: 'profile.last_name',
+  role: 'role.name'
 }
 
 export const useActions = (
@@ -55,8 +56,8 @@ export const useActions = (
         status?: boolean
       } = {}
 
-      if (params?.sort && params.sort.length > 0) {
-        const [sortBy] = params.sort
+      const [sortBy] = params?.sort ?? usersPagination.sort
+      if (sortBy) {
         sort.by = orderByMapper[sortBy.id] ?? sortBy.id
         sort.order = sortBy.desc ? 'desc' : 'asc'
       }

@@ -49,13 +49,11 @@ const UserList = ({
   const columns = useTableColumns<User>(() => [
     {
       accessorKey: 'name',
-      header: getMessage('name'),
-      enableSorting: false
+      header: getMessage('name')
     },
     {
       accessorKey: 'lastName',
-      header: getMessage('surnames'),
-      enableSorting: false
+      header: getMessage('surnames')
     },
     {
       accessorKey: 'username',
@@ -72,13 +70,11 @@ const UserList = ({
     },
     {
       accessorKey: 'role',
-      header: getMessage('profile'),
-      enableSorting: false
+      header: getMessage('profile')
     },
     {
       accessorKey: 'createdBy',
-      header: getMessage('registeredBy'),
-      enableSorting: false
+      header: getMessage('registeredBy')
     },
     {
       accessorKey: 'sessions',
