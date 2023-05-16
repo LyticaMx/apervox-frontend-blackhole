@@ -21,13 +21,11 @@ const AssociatedUserList = (): ReactElement => {
     () => [
       {
         accessorKey: 'name',
-        header: getMessage('name'),
-        enableSorting: false
+        header: getMessage('name')
       },
       {
         accessorKey: 'surnames',
-        header: getMessage('surnames'),
-        enableSorting: false
+        header: getMessage('surnames')
       },
       {
         accessorKey: 'username',
@@ -40,8 +38,7 @@ const AssociatedUserList = (): ReactElement => {
       },
       {
         accessorKey: 'role',
-        header: getMessage('profile'),
-        enableSorting: false
+        header: getMessage('profile')
       },
       {
         accessorKey: 'status',

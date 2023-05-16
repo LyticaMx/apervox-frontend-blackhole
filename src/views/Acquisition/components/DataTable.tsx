@@ -1,55 +1,72 @@
-import { DocumentMagnifyingGlassIcon } from '@heroicons/react/24/outline'
-import { SortingState } from '@tanstack/react-table'
+import {
+  DocumentMagnifyingGlassIcon,
+  TrashIcon
+} from '@heroicons/react/24/outline'
 import IconButton from 'components/Button/IconButton'
 import Switch from 'components/Form/Switch'
 import Table from 'components/Table'
 import { format } from 'date-fns'
 import { useFormatMessage } from 'hooks/useIntl'
 import useTableColumns from 'hooks/useTableColumns'
-import { ReactElement, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { tableMessages } from '../messages'
-import { Line, data } from '../types'
+import { OverflowLine } from 'types/overflowLine'
+import { useOverflowLine } from 'context/OverflowLines'
+import { useToggle } from 'hooks/useToggle'
+import EditOverflowLineDrawer from './EditOverflowLineDrawer'
+import DeleteOverflowLineDialog from './DeleteOverflowLineDialog'
+import DisableOverflowLineDialog from './DisableOverflowLineDialog'
+
+interface SynchroEditIds {
+  ids: string[]
+  resolve: ((value: boolean | PromiseLike<boolean>) => void) | null
+}
 
 const DataTable = (): ReactElement => {
   const getMessage = useFormatMessage(tableMessages)
-  const [sortingState, setSortingState] = useState<SortingState>([])
-  const [rowSelected, setRowSelected] = useState<Line | null>(null)
+  const { data, pagination, actions: overflowLineActions } = useOverflowLine()
+  const [rowSelected, setRowSelected] = useState<OverflowLine | null>(null)
+  const [disableOverflowLine, setDisableOverflowLine] = useState<{
+    id: string
+    status: boolean
+  }>({ id: '', status: false })
+  const [deleteOverflowLines, setDeleteOverflowLines] =
+    useState<SynchroEditIds>({ ids: [], resolve: null })
+  const [open, toggle] = useToggle()
 
-  console.log('🚀 ~ file: Table.tsx:20 ~ DataTable ~ rowSelected', rowSelected)
-
-  const columns = useTableColumns<Line>(() => [
+  const columns = useTableColumns<OverflowLine>(() => [
     {
       accessorKey: 'id',
       header: 'ID'
     },
     {
-      accessorKey: 'target',
+      accessorKey: 'target.phone',
       header: getMessage('target')
     },
     {
-      accessorKey: 'company',
+      accessorKey: 'target.carrier',
       header: getMessage('company')
     },
     {
-      accessorKey: 'source',
-      header: getMessage('inputMedium')
+      accessorKey: 'medium.name',
+      header: getMessage('acquisitionMedium')
     },
     {
-      accessorKey: 'line',
+      accessorKey: 'phone',
       header: getMessage('derivation')
     },
     {
-      accessorKey: 'user',
+      accessorKey: 'createdBy',
       header: getMessage('createdBy')
     },
     {
-      accessorKey: 'date',
+      accessorKey: 'createdOn',
       header: getMessage('date'),
       cell: ({ getValue }) =>
         format(new Date(getValue<string>()), 'dd/MM/yyyy - hh:mm')
     },
     {
-      accessorKey: 'technique',
+      accessorKey: 'target.technique',
       header: getMessage('technique')
     },
     {
@@ -71,9 +88,22 @@ const DataTable = (): ReactElement => {
     },
     {
       header: getMessage('actions'),
-      cell: () => (
+      enableSorting: false,
+      accessorKey: 'enabled',
+      cell: ({ getValue, row }) => (
         <div className="flex gap-2 items-center">
-          <Switch color="primary" size="sm" />
+          <Switch
+            color="primary"
+            size="sm"
+            stopPropagation
+            value={getValue<boolean>() ?? false}
+            onChange={() =>
+              setDisableOverflowLine({
+                id: row.original.id ?? '',
+                status: getValue<boolean>() ?? false
+              })
+            }
+          />
           <IconButton
             tooltip={getMessage('history')}
             className="text-muted hover:text-primary"
@@ -85,16 +115,58 @@ const DataTable = (): ReactElement => {
     }
   ])
 
+  useEffect(() => {
+    overflowLineActions?.get({ page: 1 }, true)
+  }, [])
+
   return (
-    <Table
-      columns={columns}
-      data={data}
-      manualSorting={{
-        onSortingChange: setSortingState,
-        sorting: sortingState
-      }}
-      onRowClicked={setRowSelected}
-    />
+    <>
+      <EditOverflowLineDrawer
+        open={open}
+        overflowLine={rowSelected}
+        onClose={toggle}
+      />
+      <DeleteOverflowLineDialog
+        ids={deleteOverflowLines.ids}
+        resolve={deleteOverflowLines.resolve ?? (() => {})}
+        onConfirm={() => setDeleteOverflowLines({ ids: [], resolve: null })}
+        onClose={() => {
+          if (deleteOverflowLines.resolve) deleteOverflowLines.resolve(false)
+          setDeleteOverflowLines({ ids: [], resolve: null })
+        }}
+      />
+      <DisableOverflowLineDialog
+        id={disableOverflowLine.id}
+        currentStatus={disableOverflowLine.status}
+        onClose={() => setDisableOverflowLine({ id: '', status: false })}
+      />
+      <Table
+        columns={columns}
+        data={data}
+        manualSorting={{
+          onSortingChange: (sort) => overflowLineActions?.get({ sort }),
+          sorting: pagination.sort
+        }}
+        withCheckbox
+        onRowClicked={(row) => {
+          setRowSelected(row)
+          toggle()
+        }}
+        actionsForSelectedItems={[
+          {
+            name: 'delete',
+            action: async (items) =>
+              await new Promise<boolean>((resolve) =>
+                setDeleteOverflowLines({
+                  ids: items.map((item) => item.id ?? ''),
+                  resolve
+                })
+              ),
+            Icon: TrashIcon
+          }
+        ]}
+      />
+    </>
   )
 }
 

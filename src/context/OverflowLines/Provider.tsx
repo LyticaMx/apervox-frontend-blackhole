@@ -1,0 +1,28 @@
+import { ReactElement, ReactNode, useMemo, useReducer } from 'react'
+import { reducer } from './reducer'
+import { OverflowLineContext, initialState } from './context'
+import { OverflowLineContextType } from 'types/overflowLine'
+import { useActions } from './actions'
+
+interface Props {
+  children: ReactNode
+}
+
+const OverflowLineProvider = (props: Props): ReactElement => {
+  const { children } = props
+  const [state, dispatch] = useReducer(reducer, initialState)
+  const actions = useActions(state, dispatch)
+
+  const contextValue = useMemo<OverflowLineContextType>(
+    () => Object.assign({}, state, { actions }),
+    [state, actions]
+  )
+
+  return (
+    <OverflowLineContext.Provider value={contextValue}>
+      {children}
+    </OverflowLineContext.Provider>
+  )
+}
+
+export { OverflowLineProvider }

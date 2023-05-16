@@ -14,8 +14,8 @@ export const platformMessages = defineMessages({
     defaultMessage: 'Técnica'
   },
   // Medio (de entrada) cambia en inglés
-  inputMedium: {
-    id: 'global.platform.inputMedium',
+  acquisitionMedium: {
+    id: 'global.platform.acquisitionMedium',
     defaultMessage: 'Medio'
   },
   target: {
@@ -131,5 +131,13 @@ export const platformMessages = defineMessages({
   dialog: {
     id: 'global.platform.dialog',
     defaultMessage: 'Diálogo'
+  },
+  phoneNumber: {
+    id: 'global.platform.phoneNumber',
+    defaultMessage: 'Número telefónico'
+  },
+  incorrectPassword: {
+    id: 'global.platform.incorrectPassword',
+    defaultMessage: 'Contraseña incorrecta'
   }
 })

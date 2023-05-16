@@ -141,7 +141,7 @@ const TableConfiguration = <DataType,>(
                   {formatMessage(tableConfigurationMessages.title)}
                 </Typography>
               </Grid>
-              <Grid item cols={5} className="flex max-h-6 items-start">
+              <Grid item cols={5} className="flex max-h-6 items-center">
                 <button
                   className="text-primary mr-2 flex-none"
                   onClick={() => {
@@ -153,7 +153,7 @@ const TableConfiguration = <DataType,>(
                 >
                   {formatMessage(actionsMessages.reset)}
                 </button>
-                <div className="w-1 inline h-6 bg-[#00000029] rounded-md" />
+                <div className="border border-gray-400 rounded-lg h-4" />
                 <button
                   className="text-primary ml-2"
                   onClick={() => setOpenTableConfiguration(false)}
@@ -170,20 +170,24 @@ const TableConfiguration = <DataType,>(
                   {formatMessage(generalMessages.columns)}
                 </Typography>
 
-                {columnsCanBeHidden.map((column) => (
+                {columnsCanBeHidden.map((column, index) => (
                   <div key={column.id}>
-                    <label htmlFor={column.id}>
-                      <>
-                        <input
-                          type="checkbox"
-                          className="rounded disabled:bg-gray-400 disabled:hover:bg-gray-400"
-                          name={column.id}
-                          checked={formik.values[column.id]}
-                          onChange={formik.handleChange}
-                          disabled={!canDisableMore && formik.values[column.id]}
-                        />{' '}
-                        {column.columnDef.header}
-                      </>
+                    <label
+                      htmlFor={`${column.id}-${index + 1}`}
+                      className="cursor-pointer"
+                    >
+                      <input
+                        type="checkbox"
+                        className="rounded disabled:bg-gray-400 disabled:hover:bg-gray-400"
+                        id={`${column.id}-${index + 1}`}
+                        name={column.id}
+                        checked={formik.values[column.id]}
+                        onChange={formik.handleChange}
+                        disabled={!canDisableMore && formik.values[column.id]}
+                      />
+                      <span className="ml-2 select-none">
+                        {column.columnDef.header as string}
+                      </span>
                     </label>
                   </div>
                 ))}

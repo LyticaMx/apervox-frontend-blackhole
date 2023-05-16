@@ -78,6 +78,11 @@ export const formMessages = defineMessages({
     id: 'global.form.automaticSessionExpiration',
     defaultMessage: 'Vencimiento de sesión automático'
   },
+  /* Placeholders */
+  phonePlaceholder: {
+    id: 'global.form.phonePlaceholder',
+    defaultMessage: 'Ej. 1112223444'
+  },
 
   /* Errors */
   required: {
@@ -99,6 +104,10 @@ export const formMessages = defineMessages({
   minLength: {
     id: 'global.form.minLength',
     defaultMessage: 'El campo debe tener al menos {length} caracteres'
+  },
+  length: {
+    id: 'global.form.length',
+    defaultMessage: 'El campo debe tener {length} caracteres'
   },
   minValue: {
     id: 'global.form.minValue',

@@ -53,8 +53,7 @@ const WorkGroupList = ({
     },
     {
       accessorKey: 'registered_by',
-      header: getMessage('registeredBy'),
-      enableSorting: false
+      header: getMessage('registeredBy')
     },
     {
       accessorKey: 'total_users',

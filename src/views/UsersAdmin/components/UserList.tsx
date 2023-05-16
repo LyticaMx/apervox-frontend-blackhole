@@ -15,6 +15,7 @@ import { useUsers } from 'context/Users'
 import { User, UserGroup } from 'types/user'
 import clsx from 'clsx'
 import { userListMessages } from '../messages'
+import { useAuth } from 'context/Auth'
 
 const colorByStatus = {
   enabled: 'bg-green-600',
@@ -41,6 +42,7 @@ const UserList = ({
 }: Props): ReactElement => {
   const getMessage = useFormatMessage(userListMessages)
   const { listOfUsers, usersPagination, actions } = useUsers()
+  const { auth } = useAuth()
 
   useEffect(() => {
     actions?.getUsers({}, true)
@@ -49,13 +51,11 @@ const UserList = ({
   const columns = useTableColumns<User>(() => [
     {
       accessorKey: 'name',
-      header: getMessage('name'),
-      enableSorting: false
+      header: getMessage('name')
     },
     {
       accessorKey: 'lastName',
-      header: getMessage('surnames'),
-      enableSorting: false
+      header: getMessage('surnames')
     },
     {
       accessorKey: 'username',
@@ -72,13 +72,11 @@ const UserList = ({
     },
     {
       accessorKey: 'role',
-      header: getMessage('profile'),
-      enableSorting: false
+      header: getMessage('profile')
     },
     {
       accessorKey: 'createdBy',
-      header: getMessage('registeredBy'),
-      enableSorting: false
+      header: getMessage('registeredBy')
     },
     {
       accessorKey: 'sessions',
@@ -207,7 +205,7 @@ const UserList = ({
                 }
               },
               {
-                label: getMessage('disableUser'),
+                label: getMessage('disableUser', { disabled: status }),
                 disabled:
                   status === 'banned' ||
                   table.getIsSomePageRowsSelected() ||
@@ -216,15 +214,19 @@ const UserList = ({
                   onDisableUser([id])
                 }
               },
-              {
-                label: getMessage('closeSession'),
-                disabled:
-                  table.getIsSomePageRowsSelected() ||
-                  table.getIsAllRowsSelected(),
-                onClick: () => {
-                  onRemoteLogOffUser([id])
-                }
-              },
+              ...(auth.profile.id === id
+                ? []
+                : [
+                    {
+                      label: getMessage('closeSession'),
+                      disabled:
+                        table.getIsSomePageRowsSelected() ||
+                        table.getIsAllRowsSelected(),
+                      onClick: () => {
+                        onRemoteLogOffUser([id])
+                      }
+                    }
+                  ]),
               {
                 label: getMessage('delete'),
                 className: 'text-red-500',

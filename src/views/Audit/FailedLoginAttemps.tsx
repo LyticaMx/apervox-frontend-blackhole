@@ -1,6 +1,7 @@
 import Table from 'components/Table'
 import Typography from 'components/Typography'
 import ViewFilter from 'components/ViewFilter'
+import GoBackButton from 'components/GoBackButton'
 import { formMessages, generalMessages } from 'globalMessages'
 import useTableColumns from 'hooks/useTableColumns'
 import { format } from 'date-fns'
@@ -11,7 +12,6 @@ import { pathRoute } from 'router/routes'
 import { messages } from './messages'
 import UserDrawer from './components/UserDrawer'
 import { SortingState } from '@tanstack/react-table'
-import GoBackButton from './components/GoBackButton'
 import { useDrawer } from 'context/Drawer'
 
 interface FailedLoginAttempsAudit {

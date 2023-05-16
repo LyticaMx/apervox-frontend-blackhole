@@ -7,8 +7,12 @@ import ViewCounter from 'components/ViewCounter'
 import ViewFilter from 'components/ViewFilter'
 
 import { messages } from '../messages'
-import StoreDrawer from './StoreDrawer'
+
 import { useToggle } from 'usehooks-ts'
+import { pathRoute } from 'router/routes'
+import CreateOverflowLineDrawer from './CreateOverflowLineDrawer'
+import { formatTotal } from 'utils/formatTotal'
+import { useOverflowLine } from 'context/OverflowLines'
 
 const Header = (): ReactElement => {
   const getMessage = useFormatMessage(messages)
@@ -17,9 +21,9 @@ const Header = (): ReactElement => {
     bussyLines: 5,
     availableLines: 5,
     quarantineLines: 5,
-    maintenanceLines: 5,
-    verificationLines: 5
+    maintenanceLines: 5
   }
+  const { total } = useOverflowLine()
 
   const items = [
     { label: 'Numero de usuarios', name: 'numero_usuarios' },
@@ -31,12 +35,14 @@ const Header = (): ReactElement => {
       <div className="flex justify-between">
         <div>
           <Title className="uppercase">{getMessage('title')}</Title>
-          <p className="uppercase">04 {getMessage('subtitle')}</p>
+          <p className="uppercase">
+            {formatTotal(total, getMessage('subtitle'))}
+          </p>
         </div>
         <ViewFilter
           fields={items}
           download={(document) => alert(document)}
-          action={{ label: getMessage('button'), onClick: toggle }}
+          action={{ label: getMessage('button'), onClick: () => toggle() }}
         />
       </div>
       <div className="flex gap-2">
@@ -45,9 +51,12 @@ const Header = (): ReactElement => {
             {getMessage(key)}
           </ViewCounter>
         ))}
+        <ViewCounter count={5} to={pathRoute.acquisition.verificationLine}>
+          {getMessage('verificationLines')}
+        </ViewCounter>{' '}
       </div>
 
-      <StoreDrawer open={open} onClose={toggle} />
+      <CreateOverflowLineDrawer open={open} onClose={toggle} />
     </div>
   )
 }

@@ -303,9 +303,10 @@ const Table = <DataType,>({
                           <div
                             onClick={header.column.getToggleSortingHandler()}
                             className={clsx(
+                              'flex',
                               (!!manualSorting ||
                                 !!header.column.columnDef.meta) &&
-                                'cursor-pointer flex select-none items-center',
+                                'cursor-pointer select-none items-center',
                               index === 0 && withCheckbox && 'justify-center'
                             )}
                           >

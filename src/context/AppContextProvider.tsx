@@ -8,6 +8,8 @@ import { TechniqueProvider } from './Technique'
 import { TechniquesProvider } from './Techniques'
 import { UsersProvider } from 'context/Users'
 import { RolesProvider } from './Roles'
+import { OverflowLineProvider } from './OverflowLines'
+import { VerificationLineProvider } from './VerificationLines'
 
 interface Props {
   children: ReactNode
@@ -18,12 +20,14 @@ export const AppContextProvider = (props: Props): any => {
     DatesFilterProvider,
     PinsProvider,
     AlertsProvider,
-    WorkGroupsProvider,
-    TechniqueProvider,
-    TechniquesProvider,
     /* Contextos de BH2 */
     UsersProvider,
-    RolesProvider
+    WorkGroupsProvider,
+    RolesProvider,
+    OverflowLineProvider,
+    VerificationLineProvider,
+    TechniqueProvider,
+    TechniquesProvider
   ]
 
   const CombinedProviders = providers.reduce(
