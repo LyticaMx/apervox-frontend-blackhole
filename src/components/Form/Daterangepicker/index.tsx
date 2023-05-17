@@ -11,6 +11,7 @@ import DateView from './Date'
 import Switch from 'components/Form/Switch'
 import SelectField from '../Select'
 import RequiredMarker from '../RequiredMarker'
+import { useAutoCloseDialog } from 'hooks/useAutoCloseDialog'
 
 export interface Props {
   id?: string
@@ -51,7 +52,8 @@ const Daterangepicker = ({
 }: Props): ReactElement => {
   const [DATE, setDate] = useState(new Date())
   const [dates, setDates] = useState<[Date?, Date?]>([])
-  const [show, setShow] = useState(false)
+  const { open: show, popoverRef, setOpen: setShow } = useAutoCloseDialog()
+
   const toggle = (): void => {
     setShow(!show)
   }
@@ -173,7 +175,7 @@ const Daterangepicker = ({
           static
           className="bg-white border border-gray-200 rounded-md shadow-lg focus:outline-none z-10"
         >
-          <div className="flex bg-white shadow-lg rounded-xl">
+          <div className="flex bg-white shadow-lg rounded-xl" ref={popoverRef}>
             {menu && <Menu onClick={setDates} />}
             <div className="flex flex-col divide-y">
               {/* HEADER */}
@@ -187,6 +189,7 @@ const Daterangepicker = ({
                         className="flex items-center w-28 px-2 py-1 text-sm text-gray-900 rounded-md border-gray-300 border"
                         placeholder="18 / 02 / 2021"
                         value={dates[0] ? format(dates[0], formatDisplay) : ''}
+                        onChange={() => {}}
                       />
 
                       {hours && (
@@ -222,6 +225,7 @@ const Daterangepicker = ({
                         className="flex items-center w-28 px-2 py-1 text-sm text-gray-900 rounded-md border-gray-300 border"
                         placeholder="11 / 03 / 2021"
                         value={dates[1] ? format(dates[1], formatDisplay) : ''}
+                        onChange={() => {}}
                       />
 
                       {hours && (

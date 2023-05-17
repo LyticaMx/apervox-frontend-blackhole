@@ -7,6 +7,7 @@ import Grid from 'components/Grid'
 import Typography from 'components/Typography'
 import { FormikConfig, FormikContextType } from 'formik'
 import { actionsMessages, generalMessages } from 'globalMessages'
+import { useAutoCloseDialog } from 'hooks/useAutoCloseDialog'
 import { ReactElement, useMemo, useRef, useState } from 'react'
 import { useIntl } from 'react-intl'
 import { Field } from 'types/form'
@@ -27,7 +28,11 @@ interface FormValues {
 
 const StaticFilter = (props: Props): ReactElement => {
   const { onChange, options, optionsTitle } = props
-  const [openFilter, setOpenFilter] = useState<boolean>(false)
+  const {
+    open: openFilter,
+    setOpen: setOpenFilter,
+    popoverRef
+  } = useAutoCloseDialog()
   const [inputSearch, setInputSearch] = useState<string>('')
   const { formatMessage } = useIntl()
 
@@ -99,7 +104,7 @@ const StaticFilter = (props: Props): ReactElement => {
           className="bg-white border-gray-200 rounded-md shadow-lg focus:outline-none z-10 max-w-sm"
           onClick={(e) => e.stopPropagation()}
         >
-          <Grid spacing={2} className="p-4">
+          <Grid spacing={2} className="p-4" ref={popoverRef}>
             <Grid item cols={7}>
               <Typography
                 className="text-secondary text-lg uppercase"

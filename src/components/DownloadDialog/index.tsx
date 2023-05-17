@@ -7,7 +7,8 @@ import Tooltip from 'components/Tooltip'
 import Typography from 'components/Typography'
 import { FormikConfig, FormikContextType } from 'formik'
 import { actionsMessages } from 'globalMessages'
-import { ReactElement, useRef, useState } from 'react'
+import { useAutoCloseDialog } from 'hooks/useAutoCloseDialog'
+import { ReactElement, useEffect, useRef } from 'react'
 import { useIntl } from 'react-intl'
 import { DocumentType } from 'types/utils'
 
@@ -23,7 +24,7 @@ interface Props {
 }
 
 const DownloadDialog = (props: Props): ReactElement => {
-  const [show, setShow] = useState<boolean>(false)
+  const { open: show, popoverRef, setOpen: setShow } = useAutoCloseDialog()
   const formRef = useRef<FormikContextType<FormValues>>()
   const { formatMessage } = useIntl()
   const toggle = (): void => setShow(!show)
@@ -35,6 +36,21 @@ const DownloadDialog = (props: Props): ReactElement => {
       setShow(false)
     }
   }
+
+  useEffect(() => {
+    if (!show) return
+    const handleClickOutside = (event): void => {
+      if (popoverRef.current && !popoverRef.current.contains(event.target)) {
+        setShow(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [show])
 
   return (
     <Popover className="relative inline-block">
@@ -71,75 +87,78 @@ const DownloadDialog = (props: Props): ReactElement => {
             </Popover.Button>
           </Tooltip>
         </Popover.Group>
+
         <Popover.Panel
-          static
+          unmount
           className="bg-white border border-gray-100 rounded-md shadow-lg focus:outline-none z-10 w-72"
         >
-          <Grid className="p-4" spacing={2}>
-            <Grid item xs={12} sm={5}>
-              <Typography
-                style="bold"
-                className="text-secondary text-lg bold uppercase"
+          <div ref={popoverRef}>
+            <Grid className="p-4" spacing={2}>
+              <Grid item xs={12} sm={5}>
+                <Typography
+                  style="bold"
+                  className="text-secondary text-lg bold uppercase"
+                >
+                  {formatMessage(actionsMessages.export)}
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                sm={7}
+                className="flex max-h-6 items-center justify-end"
               >
-                {formatMessage(actionsMessages.export)}
-              </Typography>
-            </Grid>
-            <Grid
-              item
-              xs={12}
-              sm={7}
-              className="flex max-h-6 items-center justify-end"
-            >
-              <button
-                className="text-primary mr-2 flex-none text-sm"
-                onClick={() => formRef.current?.resetForm()}
-                type="button"
-              >
-                {formatMessage(actionsMessages.clean)}
-              </button>
-              <div className="border border-gray-400 rounded-lg h-3" />
-              <button
-                className="text-primary ml-2 text-sm"
-                onClick={() => formRef.current?.submitForm()}
-                type="submit"
-              >
-                {formatMessage(actionsMessages.export)}
-              </button>
-            </Grid>
-            <Grid item>
-              <Form
-                formikConfig={formikConfig}
-                fields={[
-                  {
-                    type: 'radio',
-                    name: 'documentType',
-                    options: {
-                      label: 'XLS',
-                      value: 'xls'
+                <button
+                  className="text-primary mr-2 flex-none text-sm"
+                  onClick={() => formRef.current?.resetForm()}
+                  type="button"
+                >
+                  {formatMessage(actionsMessages.clean)}
+                </button>
+                <div className="border border-gray-400 rounded-lg h-3" />
+                <button
+                  className="text-primary ml-2 text-sm"
+                  onClick={() => formRef.current?.submitForm()}
+                  type="submit"
+                >
+                  {formatMessage(actionsMessages.export)}
+                </button>
+              </Grid>
+              <Grid item>
+                <Form
+                  formikConfig={formikConfig}
+                  fields={[
+                    {
+                      type: 'radio',
+                      name: 'documentType',
+                      options: {
+                        label: 'XLS',
+                        value: 'xls'
+                      }
+                    },
+                    {
+                      type: 'radio',
+                      name: 'documentType',
+                      options: {
+                        label: 'CSV',
+                        value: 'csv'
+                      }
+                    },
+                    {
+                      type: 'radio',
+                      name: 'documentType',
+                      options: {
+                        label: 'PDF',
+                        value: 'pdf'
+                      }
                     }
-                  },
-                  {
-                    type: 'radio',
-                    name: 'documentType',
-                    options: {
-                      label: 'CSV',
-                      value: 'csv'
-                    }
-                  },
-                  {
-                    type: 'radio',
-                    name: 'documentType',
-                    options: {
-                      label: 'PDF',
-                      value: 'pdf'
-                    }
-                  }
-                ]}
-                renderSubmitButton={false}
-                formikRef={formRef}
-              />
+                  ]}
+                  renderSubmitButton={false}
+                  formikRef={formRef}
+                />
+              </Grid>
             </Grid>
-          </Grid>
+          </div>
         </Popover.Panel>
       </Float>
     </Popover>
