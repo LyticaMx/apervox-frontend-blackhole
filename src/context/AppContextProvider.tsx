@@ -12,6 +12,8 @@ import { CarriersProvider } from './Carriers'
 import { DevicesProvider } from './Devices'
 import { AcquisitionMediumsProvider } from './AcquisitionMediums'
 import { LetterheadsProvider } from './Letterheads'
+import { OverflowLineProvider } from './OverflowLines'
+import { VerificationLineProvider } from './VerificationLines'
 
 interface Props {
   children: ReactNode
@@ -22,16 +24,19 @@ export const AppContextProvider = (props: Props): any => {
     DatesFilterProvider,
     PinsProvider,
     AlertsProvider,
-    WorkGroupsProvider,
-    TechniqueProvider,
-    TechniquesProvider,
     /* Contextos de BH2 */
     UsersProvider,
     RolesProvider,
     CarriersProvider,
     AcquisitionMediumsProvider,
     DevicesProvider,
-    LetterheadsProvider
+    LetterheadsProvider,
+    WorkGroupsProvider,
+    RolesProvider,
+    OverflowLineProvider,
+    VerificationLineProvider,
+    TechniqueProvider,
+    TechniquesProvider
   ]
 
   const CombinedProviders = providers.reduce(

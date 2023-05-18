@@ -126,7 +126,7 @@ const Pagination = ({
                 key={index}
                 className={clsx(
                   'p-1 shadow-none inline-flex',
-                  pageNumber === currentPage + 1
+                  pageNumber === currentPage
                     ? 'text-primary font-semibold'
                     : 'text-secondary-gray hover:text-primary'
                 )}

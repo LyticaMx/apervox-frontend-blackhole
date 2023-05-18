@@ -52,6 +52,7 @@ import DemoEfra from 'views/Demo/efra'
 import VideoPlayer from 'views/Demo/VideoPlayer'
 import RichTextEditor from 'views/Demo/RichTextEditor'
 import EvidenceViewDemo from 'views/Demo/EvidenceViewDemo'
+import Verification from 'views/Acquisition/Verification'
 
 export interface Route {
   id: string
@@ -97,7 +98,10 @@ export const pathRoute = {
     base: '/monitoreo',
     history: '/monitoreo/historial'
   },
-  acquisition: '/medios-adquisicion',
+  acquisition: {
+    acquisitionMedium: '/medios-adquisicion',
+    verificationLine: '/lineas-de-verificacion'
+  },
   evidence: '/evidencia',
   techniques: '/tecnicas',
   technique: '/tecnica',
@@ -241,10 +245,20 @@ export const routes: Route[] = [
   },
   {
     id: 'acquisition',
-    path: pathRoute.acquisition,
+    path: pathRoute.acquisition.acquisitionMedium,
     icon: WifiIcon,
     i18Key: 'acquisition',
-    modules: [],
+    modules: [
+      {
+        id: 'verification-line',
+        component: Verification,
+        layout: BaseLayout,
+        modules: [],
+        scopes: [],
+        path: pathRoute.acquisition.verificationLine,
+        private: true
+      }
+    ],
     scopes: [],
     component: Acquisition,
     layout: BaseLayout,

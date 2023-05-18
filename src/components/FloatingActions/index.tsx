@@ -1,9 +1,9 @@
 import clsx from 'clsx'
-import { ReactElement, useState, useRef } from 'react'
+import { ReactElement } from 'react'
 import { Popover } from '@headlessui/react'
 import { Float } from '@headlessui-float/react'
 import { EllipsisVerticalIcon } from '@heroicons/react/24/solid'
-import { useOnClickOutside } from 'usehooks-ts'
+import { useAutoCloseDialog } from 'hooks/useAutoCloseDialog'
 
 interface Action {
   label: string
@@ -21,18 +21,11 @@ const FloatingActions = ({
   actions,
   disabled = false
 }: Props): ReactElement => {
-  const ref = useRef(null)
-  const [show, setShow] = useState(false)
+  const { open: show, setOpen: setShow, popoverRef: ref } = useAutoCloseDialog()
 
   const toggle = (): void => {
     setShow(!show)
   }
-
-  const handleClickOutside = (): void => {
-    setShow(false)
-  }
-
-  useOnClickOutside(ref, handleClickOutside)
 
   return (
     <Popover className="inline-block" ref={ref}>

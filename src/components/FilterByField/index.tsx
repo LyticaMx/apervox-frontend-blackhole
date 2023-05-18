@@ -1,7 +1,8 @@
-import { ReactElement, ReactNode, useEffect, useMemo, useState } from 'react'
+import { ReactElement, ReactNode, useEffect, useMemo } from 'react'
 import { useIntl } from 'react-intl'
 import { useFormik } from 'formik'
 
+import clsx from 'clsx'
 import { Popover } from '@headlessui/react'
 import { Float } from '@headlessui-float/react'
 import { AdjustmentsVerticalIcon } from '@heroicons/react/24/outline'
@@ -11,8 +12,7 @@ import { actionsMessages, generalMessages } from 'globalMessages'
 import TextField from 'components/Form/Textfield'
 import Radio from 'components/Form/Radio'
 import StaticFilterComponent from './StaticFilter'
-
-import clsx from 'clsx'
+import { useAutoCloseDialog } from 'hooks/useAutoCloseDialog'
 
 export type InputType =
   | 'datepicker'
@@ -73,15 +73,15 @@ const FilterByField = ({
   staticFilters = []
 }: Props): ReactElement => {
   const intl = useIntl()
-  const [show, setShow] = useState(false)
+  const { open, popoverRef, setOpen } = useAutoCloseDialog()
 
   const toggle = (): void => {
-    setShow(!show)
+    setOpen(!open)
   }
 
   const handleClose = (): void => {
     if (onClose) onClose()
-    setShow(false)
+    setOpen(false)
   }
 
   const initialStaticValues = useMemo(() => {
@@ -141,7 +141,7 @@ const FilterByField = ({
   }, [values])
 
   useEffect(() => {
-    if (show && values) {
+    if (open && values) {
       formik.resetForm({
         values: values ?? {
           search: '',
@@ -150,7 +150,7 @@ const FilterByField = ({
         }
       })
     }
-  }, [show, values])
+  }, [open, values])
 
   const disabled =
     disabledEmpty &&
@@ -159,7 +159,7 @@ const FilterByField = ({
   return (
     <Popover className="relative inline-block">
       <Float
-        show={show}
+        show={open}
         placement="bottom-start"
         offset={5}
         shift={6}
@@ -185,7 +185,10 @@ const FilterByField = ({
           static
           className="bg-white border border-gray-100 rounded-md shadow-lg focus:outline-none z-10 w-72"
         >
-          <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
+          <div
+            className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
+            ref={popoverRef}
+          >
             <div className="px-4 pt-4 flex justify-between">
               <span>{intl.formatMessage(generalMessages.filters)}</span>
               <div className="flex gap-2 items-center">
