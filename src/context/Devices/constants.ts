@@ -1,6 +1,6 @@
 import { createAction, Filters } from 'types/contextReducer'
+import { Device } from 'types/device'
 import { PaginationSortFilter } from 'types/filters'
-import { Label } from 'types/label'
 
 export enum Types {
   SET_DATA = 'labels/setData',
@@ -9,7 +9,7 @@ export enum Types {
 }
 
 export const actions = {
-  setData: createAction<Types, Label[]>(Types.SET_DATA),
+  setData: createAction<Types, Device[]>(Types.SET_DATA),
   setPagination: createAction<Types, PaginationSortFilter>(
     Types.SET_PAGINATION
   ),

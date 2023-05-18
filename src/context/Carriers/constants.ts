@@ -1,5 +1,5 @@
+import { Carrier } from 'types/Carrier'
 import { createAction, Filters } from 'types/contextReducer'
-import { Label } from 'types/label'
 import { Pagination } from './types'
 
 export enum Types {
@@ -9,7 +9,7 @@ export enum Types {
 }
 
 export const actions = {
-  setData: createAction<Types, Label[]>(Types.SET_DATA),
+  setData: createAction<Types, Carrier[]>(Types.SET_DATA),
   setPagination: createAction<Types, Pagination>(Types.SET_PAGINATION),
   setFilters: createAction<Types, Filters>(Types.SET_FILTERS)
 }

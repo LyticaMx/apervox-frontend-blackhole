@@ -8,6 +8,10 @@ import { TechniqueProvider } from './Technique'
 import { TechniquesProvider } from './Techniques'
 import { UsersProvider } from 'context/Users'
 import { RolesProvider } from './Roles'
+import { CarriersProvider } from './Carriers'
+import { DevicesProvider } from './Devices'
+import { AcquisitionMediumsProvider } from './AcquisitionMediums'
+import { LetterheadsProvider } from './Letterheads'
 
 interface Props {
   children: ReactNode
@@ -23,7 +27,11 @@ export const AppContextProvider = (props: Props): any => {
     TechniquesProvider,
     /* Contextos de BH2 */
     UsersProvider,
-    RolesProvider
+    RolesProvider,
+    CarriersProvider,
+    AcquisitionMediumsProvider,
+    DevicesProvider,
+    LetterheadsProvider
   ]
 
   const CombinedProviders = providers.reduce(
