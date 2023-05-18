@@ -241,15 +241,15 @@ export const mediaMessages = defineMessages({
   devices: { id: 'views.Config.Media.devices', defaultMessage: 'Equipos' },
   mediaCounter: {
     id: 'views.Config.Media.mediaCounter',
-    defaultMessage: '{media} medios'
+    defaultMessage: '{counter} medios'
   },
   deviceCounter: {
     id: 'views.Config.Media.deviceCounter',
-    defaultMessage: '{devices} equipos'
+    defaultMessage: '{counter} equipos'
   },
   carrierCounter: {
     id: 'views.Config.media.carrierCounter',
-    defaultMessage: '{carriers} compañias existentes en el sistema'
+    defaultMessage: '{counter} compañias existentes en el sistema'
   },
   carrierCaption: {
     id: 'views.Config.Media.carrierCaption',

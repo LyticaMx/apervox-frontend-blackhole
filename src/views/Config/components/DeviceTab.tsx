@@ -9,29 +9,19 @@ import { formMessages } from 'globalMessages'
 import { useDrawer } from 'context/Drawer'
 import MediaDrawer from './MediaDrawer'
 import GeneralMediaList from './GeneralMediaList'
-import { Device } from '../Media'
 import EditDeviceDrawer from './EditDeviceDrawer'
+import { useDevices } from 'context/Devices'
 
 const DeviceTab = (): ReactElement => {
+  const { data } = useDevices()
   const [openDeleteDevice, setOpenDeleteDevice] = useState(false)
   const { actions: drawerActions } = useDrawer()
   const { formatMessage } = useIntl()
-
-  const demo: Device[] = [
-    {
-      id: '04',
-      date: '2023-01-21T20:19:23.032Z',
-      name: 'FXS / FXSO',
-      type: 'device',
-      deviceName: 'Grandstream Gateway GXW4232'
-    }
-  ]
 
   return (
     <div className="mt-2">
       <DeleteDialog
         onAccept={(data) => {
-          console.log(data)
           setOpenDeleteDevice(false)
         }}
         open={openDeleteDevice}
@@ -72,7 +62,8 @@ const DeviceTab = (): ReactElement => {
         </Grid>
         <Grid item xs={12} className="mt-4">
           <GeneralMediaList
-            data={demo}
+            type="device"
+            data={data}
             handleEdit={(row) =>
               drawerActions?.handleOpenDrawer({
                 title: (
@@ -89,13 +80,15 @@ const DeviceTab = (): ReactElement => {
                     subtitle={formatMessage(mediaMessages.actualDeviceData)}
                     initialValues={{
                       media: 'fxs/fxso',
-                      name: row.deviceName ?? 'bh - device'
+                      name: 'bh - device'
                     }}
                   />
                 )
               })
             }
-            handleDelete={() => {}}
+            handleDelete={() => {
+              setOpenDeleteDevice(true)
+            }}
             handleMultipleDelete={async () => true}
           />
         </Grid>

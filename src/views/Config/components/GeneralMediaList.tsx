@@ -3,7 +3,6 @@ import { ReactElement, useCallback } from 'react'
 import { mediaMessages } from '../messages'
 import { actionsMessages, platformMessages } from 'globalMessages'
 import { useIntl } from 'react-intl'
-import { Carrier, Device, Media } from '../Media'
 import Typography from 'components/Typography'
 import useTableColumns from 'hooks/useTableColumns'
 import { format } from 'date-fns'
@@ -11,15 +10,21 @@ import Tooltip from 'components/Tooltip'
 import IconButton from 'components/Button/IconButton'
 import { TrashIcon } from '@heroicons/react/24/outline'
 import Table from 'components/Table'
+import { Carrier } from 'types/Carrier'
+import { Device } from 'types/device'
+import { AcquisitionMedium } from 'types/acquisitionMedium'
 
 interface Props<T> {
+  type: 'carrier' | 'medium' | 'device'
   data: T[]
   handleDelete: () => void
   handleEdit: (row: T, event: any) => void
   handleMultipleDelete: (items: T[]) => Promise<boolean>
 }
 
-const GeneralMediaList = <DataType extends Media | Carrier | Device>(
+const GeneralMediaList = <
+  DataType extends AcquisitionMedium | Carrier | Device
+>(
   props: Props<DataType>
 ): ReactElement => {
   const { formatMessage } = useIntl()
@@ -29,20 +34,21 @@ const GeneralMediaList = <DataType extends Media | Carrier | Device>(
       const data = row.original
       const config = { color: '', letter: '', caption: '' }
 
-      switch (data.type) {
+      switch (props.type) {
         case 'carrier':
           config.color = '#E020F5'
           config.letter = 'O'
           config.caption = formatMessage(mediaMessages.carrierCaption)
           break
-        case 'device':
+        case 'device': {
           config.color = '#E8D903'
           config.letter = 'E'
           config.caption = formatMessage(mediaMessages.deviceCaption, {
-            device: data.deviceName
+            device: ''
           })
           break
-        case 'media':
+        }
+        case 'medium':
           config.color = '#4646FD'
           config.letter = 'm'
           config.caption = formatMessage(platformMessages.acquisitionMedium)
@@ -83,7 +89,7 @@ const GeneralMediaList = <DataType extends Media | Carrier | Device>(
     },
     {
       header: '',
-      accessorKey: 'date',
+      accessorKey: 'created_at',
       cell: ({ getValue }) => (
         <span className="text-secondary-gray">
           {format(new Date(getValue<string>()), 'dd/MM/yyyy - hh:mm')}
@@ -108,7 +114,9 @@ const GeneralMediaList = <DataType extends Media | Carrier | Device>(
           <IconButton
             className="hover:text-primary"
             disabled={row.getIsSelected()}
-            onClick={props.handleDelete}
+            onClick={() => {
+              props.handleDelete()
+            }}
           >
             <TrashIcon className="h-5 w-5" />
           </IconButton>

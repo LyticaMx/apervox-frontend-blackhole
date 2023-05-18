@@ -8,6 +8,10 @@ import { TechniqueProvider } from './Technique'
 import { TechniquesProvider } from './Techniques'
 import { UsersProvider } from 'context/Users'
 import { RolesProvider } from './Roles'
+import { CarriersProvider } from './Carriers'
+import { DevicesProvider } from './Devices'
+import { AcquisitionMediumsProvider } from './AcquisitionMediums'
+import { LetterheadsProvider } from './Letterheads'
 import { OverflowLineProvider } from './OverflowLines'
 import { VerificationLineProvider } from './VerificationLines'
 
@@ -22,6 +26,11 @@ export const AppContextProvider = (props: Props): any => {
     AlertsProvider,
     /* Contextos de BH2 */
     UsersProvider,
+    RolesProvider,
+    CarriersProvider,
+    AcquisitionMediumsProvider,
+    DevicesProvider,
+    LetterheadsProvider,
     WorkGroupsProvider,
     RolesProvider,
     OverflowLineProvider,

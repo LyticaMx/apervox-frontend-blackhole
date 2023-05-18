@@ -218,6 +218,7 @@ const StoreDrawer = ({ open, role, onClose }: Props): ReactElement => {
               label: 'username',
               searchField: 'username'
             }}
+            placeholder={getMessage('usersPlaceholder')}
             debounceTimeout={300}
             value={formik.values.users}
             onChange={(val) => {

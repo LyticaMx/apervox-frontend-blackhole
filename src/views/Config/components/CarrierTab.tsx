@@ -8,22 +8,14 @@ import Typography from 'components/Typography'
 import ViewFilter from 'components/ViewFilter'
 import { formMessages } from 'globalMessages'
 import GeneralMediaList from './GeneralMediaList'
-import { Carrier } from '../Media'
 import CompanyDrawer from './CompanyDrawer'
+import { useCarriers } from 'context/Carriers'
 
 const CarrierTab = (): ReactElement => {
+  const { data } = useCarriers()
   const [openDeleteCarrier, setOpenDeleteCarrier] = useState(false)
   const { actions: drawerActions } = useDrawer()
   const { formatMessage } = useIntl()
-
-  const demo: Carrier[] = [
-    {
-      id: '01',
-      date: '2023-01-21T20:19:23.032Z',
-      name: 'Telcel',
-      type: 'carrier'
-    }
-  ]
 
   return (
     <div className="mt-2">
@@ -78,7 +70,8 @@ const CarrierTab = (): ReactElement => {
         </Grid>
         <Grid item xs={12} className="mt-4">
           <GeneralMediaList
-            data={demo}
+            type="carrier"
+            data={data}
             handleEdit={(row) =>
               drawerActions?.handleOpenDrawer({
                 title: (
