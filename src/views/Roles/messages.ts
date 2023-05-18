@@ -123,5 +123,9 @@ export const rolesDrawerMessages = defineMessages({
   usersMessage: {
     id: 'views.roles.drawer.usersMessage',
     defaultMessage: 'Selecciona usuarios para asignarlos a este perfil.'
+  },
+  usersPlaceholder: {
+    id: 'views.roles.drawer.usersPlaceholder',
+    defaultMessage: 'Seleccionar usuarios'
   }
 })
