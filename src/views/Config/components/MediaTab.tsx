@@ -9,28 +9,14 @@ import ViewFilter from 'components/ViewFilter'
 import { formMessages } from 'globalMessages'
 import MediaDrawer from './MediaDrawer'
 import GeneralMediaList from './GeneralMediaList'
-import { Media } from '../Media'
 import EditMediaDrawer from './EditMediaDrawer'
+import { useAcquisitionMediums } from 'context/AcquisitionMediums'
 
 const MediaTab = (): ReactElement => {
+  const { data } = useAcquisitionMediums()
   const [openDeleteMedia, setOpenDeleteMedia] = useState(false)
   const { actions: drawerActions } = useDrawer()
   const { formatMessage } = useIntl()
-
-  const demo: Media[] = [
-    {
-      id: '02',
-      date: '2023-01-21T20:19:23.032Z',
-      name: 'ETSI',
-      type: 'media'
-    },
-    {
-      id: '03',
-      date: '2023-01-21T20:19:23.032Z',
-      name: 'FXS / FXSO',
-      type: 'media'
-    }
-  ]
 
   return (
     <div className="mt-2">
@@ -77,7 +63,8 @@ const MediaTab = (): ReactElement => {
         </Grid>
         <Grid item xs={12} className="mt-4">
           <GeneralMediaList
-            data={demo}
+            type="medium"
+            data={data}
             handleEdit={(row) =>
               drawerActions?.handleOpenDrawer({
                 title: (
@@ -97,7 +84,10 @@ const MediaTab = (): ReactElement => {
                 )
               })
             }
-            handleDelete={() => {}}
+            handleDelete={() => {
+              console.log('entramos?')
+              setOpenDeleteMedia(true)
+            }}
             handleMultipleDelete={async () => true}
           />
         </Grid>
