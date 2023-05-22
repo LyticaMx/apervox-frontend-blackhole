@@ -1,5 +1,5 @@
 import { Context, createContext } from 'react'
-import { State } from './types'
+import { ContextType, State } from './types'
 
 export const initialState: State = {
   data: [],
@@ -14,4 +14,4 @@ export const initialState: State = {
   dateFilter: {}
 }
 
-export const LabelsContext: Context<State> = createContext(initialState)
+export const LabelsContext: Context<ContextType> = createContext(initialState)

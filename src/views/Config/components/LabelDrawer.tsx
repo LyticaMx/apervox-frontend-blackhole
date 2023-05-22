@@ -9,10 +9,11 @@ import { useIntl } from 'react-intl'
 import { Field } from 'types/form'
 import { labelsAdministrationMessages } from '../messages'
 import * as yup from 'yup'
-import { EvidenceType } from 'types/label'
+import { LabelType } from 'types/label'
 
-interface FormValues {
-  evidenceType: EvidenceType
+export interface FormValues {
+  id?: string
+  labelType: LabelType
   name: string
   color: string
 }
@@ -27,7 +28,7 @@ const LabelDrawer = (props: Props): ReactElement => {
   const {
     subtitle,
     onAccept,
-    initialValues = { evidenceType: 'audio', name: '', color: '' }
+    initialValues = { labelType: 'audio', name: '', color: '' }
   } = props
   const { formatMessage } = useIntl()
   const formikRef = useRef<FormikContextType<FormValues>>()
@@ -52,7 +53,7 @@ const LabelDrawer = (props: Props): ReactElement => {
     () => [
       {
         type: 'select',
-        name: 'evidenceType',
+        name: 'labelType',
         options: {
           label: formatMessage(labelsAdministrationMessages.evidenceType),
           items: [
@@ -81,9 +82,9 @@ const LabelDrawer = (props: Props): ReactElement => {
       },
       {
         type: 'text',
-        name: 'label',
+        name: 'name',
         options: {
-          id: 'label',
+          id: 'name',
           label: formatMessage(labelsAdministrationMessages.labelName),
           placeholder: formatMessage(
             labelsAdministrationMessages.labelNamePlaceholder
@@ -130,7 +131,7 @@ const LabelDrawer = (props: Props): ReactElement => {
   )
 
   const validationSchema = yup.object({
-    label: yup.string().required(formatMessage(formMessages.required)),
+    name: yup.string().required(formatMessage(formMessages.required)),
     color: yup.string().required(formatMessage(formMessages.required))
   })
 

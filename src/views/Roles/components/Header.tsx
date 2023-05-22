@@ -59,14 +59,6 @@ const Header = ({ onAction }: Props): ReactElement => {
         onChange={(data) => {
           const staticF = data.filterByField.staticFilters
 
-          console.log('🚀 ~ :', {
-            start_time: data.dateRange[0],
-            end_time: data.dateRange[1],
-            filters: data.filterByField.fields,
-            query: data.filterByField.search,
-            status: status[staticF?.status ?? 'both']
-          })
-
           actions?.getData({
             start_time: data.dateRange[0],
             end_time: data.dateRange[1],

@@ -1,11 +1,10 @@
-import { ReactElement, useMemo, useState } from 'react'
+import { ReactElement, useEffect, useMemo, useState } from 'react'
 import { useIntl } from 'react-intl'
 import { TrashIcon } from '@heroicons/react/24/outline'
 import { format } from 'date-fns'
 
 import { useDrawer } from 'context/Drawer'
-import { Label } from 'types/label'
-import { generalMessages, platformMessages } from 'globalMessages'
+import { generalMessages } from 'globalMessages'
 
 import DeleteDialog from 'components/DeleteDialog'
 import ViewFilter from 'components/ViewFilter'
@@ -17,56 +16,64 @@ import Checkbox from 'components/Form/Checkbox'
 import Button from 'components/Button'
 import IndeterminateCheckbox from 'components/Table/IndeterminateCheckbox'
 
-import LabelDrawer from './LabelDrawer'
+import LabelDrawer, { FormValues } from './LabelDrawer'
 import { labelsAdministrationMessages, messages } from '../messages'
+import { useLabels } from 'context/Labels'
+import { useAuth } from 'context/Auth'
+import { useGlobalMessage } from 'hooks/useIntl'
+import useToast from 'hooks/useToast'
+import { Label } from 'types/label'
+import { StaticFilter } from 'components/FilterByField'
 
 type SelectedLabels = Record<string, boolean>
 
 const LabelsAdministration = (): ReactElement => {
   const { formatMessage } = useIntl()
+  const { data, actions } = useLabels()
+  const { actions: authActions } = useAuth()
+  const toast = useToast()
+  const getGlobalMessage = useGlobalMessage()
+  const { actions: aDrawer } = useDrawer()
+
+  const [label, setLabel] = useState<Label | undefined>()
   const [selected, setSelected] = useState<SelectedLabels>({})
   const [openDeleteDrawer, setOpenDeleteDrawer] = useState<boolean>(false)
-  const { actions } = useDrawer()
-  const demo = useMemo<Label[]>(
-    () => [
-      {
-        id: '000000',
-        color: '#53DC80',
-        name: 'Secuestro',
-        created_at: '2022-12-02T16:00:00.000Z',
-        evidence_type: 'audio'
-      },
-      {
-        id: '000001',
-        color: '#E020F5',
-        name: 'BCC',
-        created_at: '2022-11-28T16:00:00.000Z',
-        evidence_type: 'audio'
-      },
-      {
-        id: '000002',
-        color: '#2596BE',
-        name: 'BSC',
-        created_at: '2022-11-28T16:05:00.000Z',
-        evidence_type: 'audio'
-      },
-      {
-        id: '0000003',
-        color: '#E28743',
-        name: 'Evento duplicado',
-        created_at: '2022-11-28T16:04:00.000Z',
-        evidence_type: 'audio'
-      },
-      {
-        id: '0000004',
-        color: '#EE0000',
-        name: 'Error',
-        created_at: '2022-11-28T13:04:00.000Z',
-        evidence_type: 'audio'
-      }
-    ],
-    []
-  )
+
+  useEffect(() => {
+    actions?.getData()
+  }, [])
+
+  const items = [{ label: 'Nombre', name: 'name' }]
+  const staticFilters: StaticFilter[] = [
+    {
+      label: formatMessage(labelsAdministrationMessages.evidenceType),
+      name: 'label_type',
+      options: [
+        {
+          name: formatMessage(labelsAdministrationMessages.evidenceTypeAll),
+          value: 'all'
+        },
+        {
+          name: formatMessage(labelsAdministrationMessages.evidenceTypeAudio),
+          value: 'audio'
+        },
+        {
+          name: formatMessage(labelsAdministrationMessages.evidenceTypeVideo),
+          value: 'video'
+        },
+        {
+          name: formatMessage(labelsAdministrationMessages.evidenceTypeImage),
+          value: 'image'
+        },
+        {
+          name: formatMessage(
+            labelsAdministrationMessages.evidenceTypeDocument
+          ),
+          value: 'document'
+        }
+      ]
+    }
+  ]
 
   const handleSelected = (id, val): void => {
     if (val) {
@@ -82,7 +89,7 @@ const LabelsAdministration = (): ReactElement => {
   const toggleSelection = (selectAll): void => {
     if (selectAll) {
       setSelected(
-        demo.reduce((carry, item) => {
+        data.reduce((carry, item) => {
           if (!carry[item.id]) carry[item.id] = true
           return carry
         }, {})
@@ -94,14 +101,65 @@ const LabelsAdministration = (): ReactElement => {
 
   const totalSelected = useMemo(() => Object.keys(selected).length, [selected])
 
+  const handleDelete = async ({
+    password
+  }: {
+    password: string
+  }): Promise<void> => {
+    try {
+      const isCorrect = (await authActions?.verifyPassword(password)) ?? false
+      if (!isCorrect) {
+        toast.danger(getGlobalMessage('incorrectPassword', 'generalMessages'))
+
+        return
+      }
+
+      if (label) await actions?.delete(label.id)
+      if (totalSelected) await actions?.deleteAll(Object.keys(selected))
+
+      setSelected({})
+      setLabel(undefined)
+      setOpenDeleteDrawer(false)
+      await actions?.getData()
+    } catch {}
+  }
+
+  const handleUpdate = async (data: FormValues): Promise<void> => {
+    const res = await actions?.update({
+      id: data.id as string,
+      name: data.name,
+      color: data.color,
+      label_type: data.labelType
+    })
+
+    if (res) {
+      await actions?.getData()
+      aDrawer?.handleCloseDrawer()
+    }
+  }
+
+  const handleCreate = async (data: FormValues): Promise<void> => {
+    const res = await actions?.create({
+      name: data.name,
+      color: data.color,
+      label_type: data.labelType
+    })
+
+    if (res) {
+      await actions?.getData()
+      aDrawer?.handleCloseDrawer()
+    }
+  }
+
   return (
     <div>
       <DeleteDialog
-        onAccept={(data) => {
-          setOpenDeleteDrawer(false)
-        }}
+        onAccept={handleDelete}
         open={openDeleteDrawer}
-        onClose={() => setOpenDeleteDrawer(false)}
+        onClose={() => {
+          setOpenDeleteDrawer(false)
+          setLabel(undefined)
+        }}
         title={formatMessage(labelsAdministrationMessages.deleteLabel)}
         question={formatMessage(labelsAdministrationMessages.firstDeleteStep)}
         confirmation={formatMessage(
@@ -116,7 +174,7 @@ const LabelsAdministration = (): ReactElement => {
           color="primary"
           variant="contained"
           onClick={() =>
-            actions?.handleOpenDrawer({
+            aDrawer?.handleOpenDrawer({
               title: (
                 <Typography
                   className="text-secondary font-extrabold uppercase !text-lg"
@@ -127,9 +185,7 @@ const LabelsAdministration = (): ReactElement => {
               ),
               body: (
                 <LabelDrawer
-                  onAccept={async () => {
-                    actions?.handleCloseDrawer()
-                  }}
+                  onAccept={handleCreate}
                   subtitle={formatMessage(
                     labelsAdministrationMessages.createLabelSubtitle
                   )}
@@ -142,12 +198,17 @@ const LabelsAdministration = (): ReactElement => {
         </Button>
       </div>
       <ViewFilter
-        fields={[
-          {
-            name: 'audio',
-            label: formatMessage(platformMessages.audioEvidence)
-          }
-        ]}
+        fields={items}
+        staticFilters={staticFilters}
+        onChange={(data) => {
+          const staticF = data.filterByField.staticFilters
+          const labelType = staticF?.label_type
+          actions?.getData({
+            filters: data.filterByField.fields,
+            query: data.filterByField.search,
+            label_type: labelType === 'all' ? undefined : labelType
+          })
+        }}
       />
       <div className="mt-3">
         {totalSelected > 0 && (
@@ -155,9 +216,9 @@ const LabelsAdministration = (): ReactElement => {
             <div className="flex items-center">
               <IndeterminateCheckbox
                 indeterminate={
-                  demo.length !== totalSelected && totalSelected > 0
+                  data.length !== totalSelected && totalSelected > 0
                 }
-                checked={demo.length === totalSelected}
+                checked={data.length === totalSelected}
                 onChange={(e) => toggleSelection(e.currentTarget.checked)}
               />
               <Typography className="ml-4">
@@ -175,7 +236,7 @@ const LabelsAdministration = (): ReactElement => {
           </div>
         )}
         <Grid spacing={2} className="max-h-[15rem] overflow-y-auto pb-2">
-          {demo.map((item) => (
+          {data.map((item) => (
             <Grid
               item
               xs={12}
@@ -186,7 +247,7 @@ const LabelsAdministration = (): ReactElement => {
               <div
                 className="flex gap-1"
                 onClick={() =>
-                  actions?.handleOpenDrawer({
+                  aDrawer?.handleOpenDrawer({
                     title: (
                       <Typography
                         className="text-secondary font-extrabold uppercase !text-lg"
@@ -200,10 +261,11 @@ const LabelsAdministration = (): ReactElement => {
                         subtitle={formatMessage(
                           labelsAdministrationMessages.editLabelSubtitle
                         )}
-                        onAccept={async (data) => {}}
+                        onAccept={handleUpdate}
                         initialValues={{
+                          id: item.id,
                           name: item.name,
-                          evidenceType: item.evidence_type,
+                          labelType: item.label_type,
                           color: item.color
                         }}
                       />
@@ -232,7 +294,10 @@ const LabelsAdministration = (): ReactElement => {
                 />
                 <IconButton
                   className="!hover:text-primary"
-                  onClick={() => setOpenDeleteDrawer(true)}
+                  onClick={() => {
+                    setLabel(item)
+                    setOpenDeleteDrawer(true)
+                  }}
                 >
                   <TrashIcon className="w-5 h-5" />
                 </IconButton>
