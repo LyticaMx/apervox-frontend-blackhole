@@ -11,9 +11,7 @@ import {
 } from './types'
 
 const orderByMapper = {
-  name: 'name',
-  createdBy: 'created_by',
-  createdOn: 'created_at'
+  name: 'name'
 }
 
 export const useActions = (state: State, dispatch): Actions => {
