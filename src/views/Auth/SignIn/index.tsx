@@ -14,6 +14,9 @@ import ForgotPasswordDialog from './components/ForgotPasswordDialog'
 import CountdownRing from 'components/CountdownRing'
 import WindowControl from 'components/Layout/WindowControl'
 import { pathRoute } from 'router/routes'
+import { getItem } from 'utils/persistentStorage'
+import { SignedIn } from 'types/auth'
+import CloseAllSessions from './components/CloseAllSessions'
 
 interface FormValues {
   user: string
@@ -22,7 +25,10 @@ interface FormValues {
 
 const SignIn = (): ReactElement => {
   const [openDialog, setOpenDialog] = useState<boolean>(false)
-  const [lockLogin, setLockLogin] = useState<boolean>(false)
+  const [credentials, setCredentials] = useState<string>('')
+  const [lockLogin, setLockLogin] = useState<number>(
+    parseInt(getItem('loginTime') ?? 0) || 0
+  )
   const { formatMessage } = useIntl()
   const history = useHistory()
   const { actions } = useAuth()
@@ -32,26 +38,37 @@ const SignIn = (): ReactElement => {
     password: yup.string().required(formatMessage(formMessages.required))
   })
 
+  const handleLogin = (login: SignedIn): void => {
+    if (login.successLogin) {
+      if (login.firstLogin) {
+        history.push(pathRoute.auth.restorePassword, { hasLogged: false })
+      } else {
+        history.push(pathRoute.auth.userAccount)
+      }
+    }
+  }
+
   const config: FormikConfig<FormValues> = {
     initialValues: {
       user: '',
       password: ''
     },
     onSubmit: async (values) => {
-      const successLogin = await actions?.signIn({
+      const successLogin = (await actions?.signIn({
         user: values.user,
         password: values.password
-      })
+      })) ?? { firstLogin: false, successLogin: false }
 
-      if (successLogin?.successLogin) {
-        if (successLogin.firstLogin) {
-          history.push(pathRoute.auth.restorePassword, { hasLogged: false })
-        } else {
-          history.push(pathRoute.auth.userAccount)
-        }
-      } else {
-        setLockLogin(true)
+      if (successLogin?.maximumSessionsOpened) {
+        setCredentials(values.user)
+        return
       }
+
+      if (successLogin?.lockLogin) {
+        setLockLogin(60)
+        return
+      }
+      handleLogin(successLogin)
     },
     validationSchema
   }
@@ -89,18 +106,25 @@ const SignIn = (): ReactElement => {
         open={openDialog}
         onClose={() => setOpenDialog(false)}
       />
-      {lockLogin && (
+      {lockLogin > 0 && (
         <div className="absolute left-4 top-4 flex items-center">
           <CountdownRing
-            time={300}
-            onFinish={() => setLockLogin(false)}
+            time={lockLogin}
+            onFinish={() => setLockLogin(0)}
             fullTime={false}
+            localSave="loginTime"
           />
           <Typography className="md:ml-3 text-white">
             {formatMessage(signInMessages.timeToWaitForLogin)}
           </Typography>
         </div>
       )}
+      <CloseAllSessions
+        open={Boolean(credentials)}
+        user={credentials}
+        onAccept={(signedIn) => handleLogin(signedIn)}
+        onClose={() => setCredentials('')}
+      />
       <div className="flex items-center justify-center flex-col z-[1] w-96">
         <img src={Images.Producto} alt="producto" />
         <Typography className="text-white my-4">
@@ -116,7 +140,7 @@ const SignIn = (): ReactElement => {
             variant: 'contained',
             className: 'mt-4',
             color: 'primary',
-            disabled: lockLogin
+            disabled: lockLogin !== 0
           }}
         />
         <div className="mt-8">
