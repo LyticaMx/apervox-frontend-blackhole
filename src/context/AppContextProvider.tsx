@@ -14,6 +14,7 @@ import { AcquisitionMediumsProvider } from './AcquisitionMediums'
 import { LetterheadsProvider } from './Letterheads'
 import { OverflowLineProvider } from './OverflowLines'
 import { VerificationLineProvider } from './VerificationLines'
+import { LabelsProvider } from './Labels'
 
 interface Props {
   children: ReactNode
@@ -30,6 +31,7 @@ export const AppContextProvider = (props: Props): any => {
     CarriersProvider,
     AcquisitionMediumsProvider,
     DevicesProvider,
+    LabelsProvider,
     LetterheadsProvider,
     WorkGroupsProvider,
     RolesProvider,

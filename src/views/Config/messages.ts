@@ -119,6 +119,26 @@ export const labelsAdministrationMessages = defineMessages({
     id: 'views.Config.LabelsAdministration.evidenceType',
     defaultMessage: 'Tipo de evidencia'
   },
+  evidenceTypeAll: {
+    id: 'views.Config.LabelsAdministration.evidenceTypeAll',
+    defaultMessage: 'Todas las evidencias'
+  },
+  evidenceTypeAudio: {
+    id: 'views.Config.LabelsAdministration.evidenceTypeAudio',
+    defaultMessage: 'Evidencia de audio'
+  },
+  evidenceTypeImage: {
+    id: 'views.Config.LabelsAdministration.evidenceTypeImage',
+    defaultMessage: 'Evidencia de imagen'
+  },
+  evidenceTypeVideo: {
+    id: 'views.Config.LabelsAdministration.evidenceTypeVideo',
+    defaultMessage: 'Evidencia de video'
+  },
+  evidenceTypeDocument: {
+    id: 'views.Config.LabelsAdministration.evidenceTypeDocument',
+    defaultMessage: 'Evidencia de documento'
+  },
   labelName: {
     id: 'views.Config.LabelsAdministration.labelName',
     defaultMessage: 'Nombre del rótulo'

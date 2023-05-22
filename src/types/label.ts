@@ -1,9 +1,9 @@
-export type EvidenceType = 'audio' | 'video' | 'image' | 'document'
+export type LabelType = 'audio' | 'video' | 'image' | 'document'
 
 export interface Label {
   id: string
   name: string
-  evidence_type: EvidenceType
+  label_type: LabelType
   color: string
   created_at: string
 }
