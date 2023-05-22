@@ -19,6 +19,7 @@ const Navigator = (): ReactElement => {
 
   useEffect(() => {
     if (!isSocketConnected) return
+    if (!auth.profile.id) return
     socket?.on('close_session', (data) => {
       const ids: string[] = data.ids
       const logout = ids.some((id) => auth.profile.id === id)
@@ -28,7 +29,7 @@ const Navigator = (): ReactElement => {
     return () => {
       socket?.off('close_session')
     }
-  }, [isSocketConnected])
+  }, [isSocketConnected, auth.profile.id])
 
   useEffect(() => {
     if (!isSocketConnected) return
