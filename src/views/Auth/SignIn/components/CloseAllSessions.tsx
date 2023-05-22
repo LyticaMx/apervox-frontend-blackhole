@@ -37,7 +37,7 @@ const CloseAllSessions = (props: Props): ReactElement => {
   }
 
   return (
-    <Dialog open={open} onClose={onClose} size="sm">
+    <Dialog open={open} onClose={onClose} size="md">
       <div className="flex justify-center items-center flex-col">
         <InformationCircleIcon className="w-5 h-5 text-primary" />
         <Typography style="semibold" className="mt-2 text-center">
@@ -47,6 +47,7 @@ const CloseAllSessions = (props: Props): ReactElement => {
           {formatMessage(closeAllSessionsMessages.description)}
         </Typography>
         <Form
+          className="mt-2 w-9/12"
           fields={[
             {
               type: 'password',

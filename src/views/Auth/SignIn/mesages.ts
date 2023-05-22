@@ -47,6 +47,7 @@ export const closeAllSessionsMessages = defineMessages({
   },
   description: {
     id: 'views.Auth.CloseAllSessions.description',
-    defaultMessage: '¿Deseas cerrar todas y crear una nueva?'
+    defaultMessage:
+      'Si desea cerrar todas las sesiones y crear una nueva indique su contraseña'
   }
 })
