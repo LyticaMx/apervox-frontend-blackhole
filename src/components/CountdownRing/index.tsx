@@ -1,10 +1,12 @@
 import { ReactElement, useEffect, useRef } from 'react'
+import { setItem } from 'utils/persistentStorage'
 import { secondsToString } from 'utils/timeToString'
 
 interface Props {
   time: number
   onFinish: () => void
   thickness?: 'sm' | 'md' | 'l'
+  localSave?: string
   fullTime?: boolean
 }
 
@@ -106,6 +108,7 @@ const CountdownRing = (props: Props): ReactElement => {
 
     const intervalId = setInterval(() => {
       timeRef.current--
+      if (props.localSave) setItem(props.localSave, timeRef.current)
       countdown()
       if (timeRef.current === 0) {
         clearInterval(intervalId)
