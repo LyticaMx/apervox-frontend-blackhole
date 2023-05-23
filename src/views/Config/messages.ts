@@ -102,6 +102,10 @@ export const messages = defineMessages({
   telecomStations: {
     id: 'views.Config.telecomStations',
     defaultMessage: 'Estaciones de telecomunicaciones'
+  },
+  updatedSuccessfully: {
+    id: 'views.Config.updatedSuccessfully',
+    defaultMessage: 'Configuración actualizada correctamente'
   }
 })
 
