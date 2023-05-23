@@ -15,6 +15,7 @@ import { LetterheadsProvider } from './Letterheads'
 import { OverflowLineProvider } from './OverflowLines'
 import { VerificationLineProvider } from './VerificationLines'
 import { LabelsProvider } from './Labels'
+import { SettingsProvider } from './Settings'
 
 interface Props {
   children: ReactNode
@@ -26,6 +27,7 @@ export const AppContextProvider = (props: Props): any => {
     PinsProvider,
     AlertsProvider,
     /* Contextos de BH2 */
+    SettingsProvider,
     UsersProvider,
     RolesProvider,
     CarriersProvider,
