@@ -1,5 +1,4 @@
 import { useService } from 'hooks/useApi'
-import { omit } from 'lodash'
 import { ResponseData } from 'types/api'
 import { Letterhead } from 'types/letterhead'
 import { actions } from './constants'
@@ -13,7 +12,7 @@ const orderByMapper = {
 
 export const useActions = (state: State, dispatch): Actions => {
   const { pagination, dateFilter, searchFilter } = state
-  const resource = useService('mediums')
+  const resource = useService('letterheads')
 
   const getData = async (params?: getDataPayload): Promise<void> => {
     try {
@@ -78,9 +77,20 @@ export const useActions = (state: State, dispatch): Actions => {
 
   const create = async (payload: Omit<Letterhead, 'id'>): Promise<boolean> => {
     try {
-      await resource.post({
-        body: payload
-      })
+      const formData = new FormData()
+      formData.append('name', payload.name)
+      formData.append('doc_type', payload.doc_type)
+      formData.append('image', payload.file ?? '', payload.file?.name)
+      formData.append('organization_name', payload.organization_name)
+
+      await resource.post(
+        {
+          body: formData
+        },
+        {
+          'Content-Type': 'multipart/form-data'
+        }
+      )
 
       return true
     } catch (e) {
@@ -91,10 +101,23 @@ export const useActions = (state: State, dispatch): Actions => {
 
   const update = async (payload: Letterhead): Promise<boolean> => {
     try {
-      await resource.put({
-        queryString: payload.id,
-        body: omit(payload, ['id', 'users', 'scopes'])
-      })
+      const formData = new FormData()
+      formData.append('name', payload.name)
+      formData.append('doc_type', payload.doc_type)
+      formData.append('organization_name', payload.organization_name)
+      if (payload.file) {
+        formData.append('image', payload.file ?? '', payload.file.name)
+      }
+
+      await resource.put(
+        {
+          queryString: payload.id,
+          body: formData
+        },
+        {
+          'Content-Type': 'multipart/form-data'
+        }
+      )
 
       return true
     } catch {
@@ -104,9 +127,10 @@ export const useActions = (state: State, dispatch): Actions => {
 
   const deleteOne = async (id: string): Promise<boolean> => {
     try {
-      await resource.delete({
+      const response = await resource.delete({
         queryString: id
       })
+      console.log(response)
       return true
     } catch {
       return false

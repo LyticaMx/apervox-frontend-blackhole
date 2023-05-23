@@ -7,8 +7,8 @@ export interface Letterhead {
   image: string
   organization_name: string
 
+  file?: File | null
   status?: boolean
   created_by?: string
   created_at?: string
-  updated_at?: string
 }

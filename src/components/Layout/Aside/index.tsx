@@ -63,6 +63,8 @@ export const Aside = (): ReactElement | null => {
     return rTitle
   }
 
+  if (type !== 'aside') return null // ! No eliminar esto porque causa conflictos con el type drawer
+
   return (
     <aside
       style={{

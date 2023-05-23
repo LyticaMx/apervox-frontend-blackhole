@@ -11,7 +11,7 @@ import * as yup from 'yup'
 import clsx from 'clsx'
 
 interface FormValues {
-  documentType: 'pdf' | 'xls' | 'word' | 'csv'
+  documentType: 'pdf' | 'excel' | 'word' | 'csv'
   letterheadName: string
   organizationName: string
   file: File | null
@@ -79,7 +79,7 @@ const LetterheadDrawer = (props: Props): ReactElement => {
         options: {
           items: [
             { text: 'PDF', value: 'pdf' },
-            { text: 'XLS', value: 'xls' },
+            { text: 'XLS', value: 'excel' },
             { text: 'CSV', value: 'csv' },
             { text: 'Word', value: 'word' }
           ],
@@ -108,51 +108,53 @@ const LetterheadDrawer = (props: Props): ReactElement => {
         section: 'template',
         name: 'file',
         type: 'custom',
-        children: ({ values, errors, touched }) => (
-          <div>
-            <label
-              className={clsx(
-                'bg-white flex mt-4 rounded border-2 border-dashed text-center px-5 py-4 hover:cursor-pointer justify-center',
-                errors.file && touched.file
-                  ? 'border-red-500'
-                  : 'border-primary'
-              )}
-              htmlFor="file"
-            >
-              {!!values.file || !!fileName ? (
-                <span className="bloc text-primary">
-                  {fileName ?? values.file?.name}
-                </span>
-              ) : (
-                <span className="text-secondary-gray block">
-                  {formatMessage(letterheadAdministrationMessages.uploadFile, {
-                    clickHere: (
-                      <span className="text-primary underline lowercase">
-                        {formatMessage(actionsMessages.clickHere)}
-                      </span>
-                    )
-                  })}
-                </span>
-              )}
-            </label>
-            <input
-              type="file"
-              name="file"
-              id="file"
-              accept="image/*"
-              onChange={(e) =>
-                formikRef.current?.setFieldValue(
-                  'file',
-                  e.currentTarget.files?.[0]
-                )
-              }
-              className="hidden"
-            />
-            {errors.file && touched.file ? (
-              <span className="text-xs text-red-500">{errors.file}</span>
-            ) : null}
-          </div>
-        )
+        children: ({ values, errors, touched, setFieldValue }) => {
+          return (
+            <div>
+              <label
+                className={clsx(
+                  'bg-white flex mt-4 rounded border-2 border-dashed text-center px-5 py-4 hover:cursor-pointer justify-center',
+                  errors.file && touched.file
+                    ? 'border-red-500'
+                    : 'border-primary'
+                )}
+                htmlFor="file"
+              >
+                {!!values.file || !!fileName ? (
+                  <span className="bloc text-primary">
+                    {values.file?.name ?? fileName}
+                  </span>
+                ) : (
+                  <span className="text-secondary-gray block">
+                    {formatMessage(
+                      letterheadAdministrationMessages.uploadFile,
+                      {
+                        clickHere: (
+                          <span className="text-primary underline lowercase">
+                            {formatMessage(actionsMessages.clickHere)}
+                          </span>
+                        )
+                      }
+                    )}
+                  </span>
+                )}
+              </label>
+              <input
+                type="file"
+                name="file"
+                id="file"
+                accept="image/*"
+                onChange={(e) =>
+                  setFieldValue('file', e.currentTarget.files?.[0] ?? null)
+                }
+                className="hidden"
+              />
+              {errors.file && touched.file ? (
+                <span className="text-xs text-red-500">{errors.file}</span>
+              ) : null}
+            </div>
+          )
+        }
       },
       {
         section: 'template',
