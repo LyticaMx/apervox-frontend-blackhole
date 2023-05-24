@@ -397,7 +397,7 @@ export const telecomMessages = defineMessages({
   },
   actualTelecomStations: {
     id: 'views.Config.Telecom.actualTelecomStations',
-    defaultMessage: '{total} estaciones telecom existentes en la plataforma'
+    defaultMessage: 'estaciones telecom existentes en la plataforma'
   },
   downloadFormat: {
     id: 'views.Config.Telecom.downloadFormat',

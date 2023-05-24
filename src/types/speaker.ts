@@ -2,8 +2,6 @@ import { CallModel } from './call'
 import { ControlGroup } from './control'
 import { DatesFilterForm } from './datesFilter'
 import { DateFilter, PaginationFilter } from './filters'
-import { Location } from './location'
-import { Penitentiary } from './penitentiaries'
 
 export enum Status {
   NOTSTARTED,
@@ -25,9 +23,7 @@ export interface Speaker {
   mothers_name: string
   age: number
   gender: Gender
-  location: Location
   location_id: string
-  penitentiary: Penitentiary
   penitentiary_id: string
   registered_at: string
   control_groups: ControlGroup[]

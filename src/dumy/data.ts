@@ -3,14 +3,12 @@ import { ControlGroup, ControlAudio, ControlCall } from 'types/control'
 import { Penitentiary } from 'types/penitentiaries'
 import { Chunk, Pin } from 'types/pin'
 import { Speaker } from 'types/speaker'
-import { State, Country, Location } from 'types/location'
 import { PinActivity, TimeChartValues } from 'types/statistics'
 
 export const calls: CallVM[] = []
 export const speakers: Speaker[] = []
 export const penitentiaries: Penitentiary[] = []
 export const locations: Location[] = [] // Ready
-export const states: State[] = [] // Ready
 export const pins: Pin[] = [] // Ready
 export const pinActivity: PinActivity[] = [] // Ready
 export const chunks: Chunk[] = [] // Ready
@@ -18,60 +16,7 @@ export const callChartValues: TimeChartValues[] = [] // Ready
 export const alertChartValues: TimeChartValues[] = [] // Ready
 export const tags: TagModel[] = []
 
-export const countries: Country[] = [
-  {
-    id: 'country-0',
-    code_country: 0
-  },
-  {
-    id: 'country-1',
-    code_country: 1
-  },
-  {
-    id: 'country-2',
-    code_country: 2
-  },
-  {
-    id: 'country-3',
-    code_country: 3
-  }
-] // Ready
-
 /* ----- CreationData ----- */
-
-/* States */
-for (let index = 0; index < 3; index++) {
-  states.push({
-    id: `state-${index}`,
-    name: `State ${index}`,
-    country: countries[index],
-    country_id: countries[index].id
-  })
-}
-
-/* Locations */
-for (let index = 0; index < 3; index++) {
-  locations.push({
-    id: `location-${index}`,
-    name: `Location ${index}`,
-    state: states[index],
-    state_id: states[index].id
-  })
-}
-
-/* Penitentiaries */
-for (let index = 0; index < 5; index++) {
-  penitentiaries.push({
-    id: `peni-${index}`,
-    name: `Peniten-${index},`,
-    location: locations[0],
-    location_id: locations[0].id,
-    speakers,
-    deleted: false,
-    created_at: 'Date',
-    updated_at: 'Date'
-  })
-}
 
 /* Speakers */
 for (let index = 0; index < 50; index++) {
@@ -84,11 +29,9 @@ for (let index = 0; index < 50; index++) {
     mothers_name: `Mothers Name ${index}`,
     age: Math.random() * 100,
     gender: 0,
-    location: locations[0],
-    location_id: locations[0].id,
-    penitentiary: penitentiaries[0],
     penitentiary_id: penitentiaries[0].id,
     registered_at: 'Dates',
+    location_id: '1',
     control_groups: [],
     deleted: false,
     created_at: 'Dates',

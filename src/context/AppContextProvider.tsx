@@ -16,6 +16,7 @@ import { OverflowLineProvider } from './OverflowLines'
 import { VerificationLineProvider } from './VerificationLines'
 import { LabelsProvider } from './Labels'
 import { SettingsProvider } from './Settings'
+import { LocationProvider } from './Locations'
 
 interface Props {
   children: ReactNode
@@ -40,7 +41,8 @@ export const AppContextProvider = (props: Props): any => {
     OverflowLineProvider,
     VerificationLineProvider,
     TechniqueProvider,
-    TechniquesProvider
+    TechniquesProvider,
+    LocationProvider
   ]
 
   const CombinedProviders = providers.reduce(
