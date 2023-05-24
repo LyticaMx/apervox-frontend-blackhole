@@ -9,7 +9,7 @@ import Typography from 'components/Typography'
 import ViewFilter from 'components/ViewFilter'
 import { useDrawer } from 'context/Drawer'
 import { format } from 'date-fns'
-import { formMessages, generalMessages } from 'globalMessages'
+import { generalMessages } from 'globalMessages'
 import { ReactElement, useEffect, useMemo, useState } from 'react'
 import { useIntl } from 'react-intl'
 import { letterheadAdministrationMessages, messages } from '../messages'
@@ -24,7 +24,13 @@ type SelectedLetterheads = Record<string, boolean>
 const LetterheadAdministration = (): ReactElement => {
   const { formatMessage } = useIntl()
   const { actions } = useDrawer()
-  const { data, pagination, actions: letterheadActions } = useLetterheads()
+  const {
+    data,
+    pagination,
+    dateFilter,
+    searchFilter,
+    actions: letterheadActions
+  } = useLetterheads()
   const { actions: authActions } = useAuth()
   const [selected, setSelected] = useState<SelectedLetterheads>({})
   const [deleteIds, setDeleteIds] = useState<string[]>([])
@@ -157,13 +163,25 @@ const LetterheadAdministration = (): ReactElement => {
         fields={[
           {
             name: 'name',
-            label: formatMessage(formMessages.name)
+            label: formatMessage(
+              letterheadAdministrationMessages.letterheadName
+            )
           },
           {
             name: 'organization_name',
-            label: 'Nombre de la organización'
+            label: formatMessage(
+              letterheadAdministrationMessages.organizationName
+            )
           }
         ]}
+        initialValues={{
+          dateRange: {
+            start_time: dateFilter.start_time,
+            end_time: dateFilter.end_time
+          },
+          search: searchFilter.query,
+          fields: searchFilter.filters
+        }}
         onChange={(data) =>
           letterheadActions?.getData({
             start_time: data.dateRange[0],
