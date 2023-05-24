@@ -9,7 +9,7 @@ import Typography from 'components/Typography'
 import ViewFilter from 'components/ViewFilter'
 import { useDrawer } from 'context/Drawer'
 import { format } from 'date-fns'
-import { generalMessages } from 'globalMessages'
+import { formMessages, generalMessages } from 'globalMessages'
 import { ReactElement, useEffect, useMemo, useState } from 'react'
 import { useIntl } from 'react-intl'
 import { letterheadAdministrationMessages, messages } from '../messages'
@@ -156,10 +156,23 @@ const LetterheadAdministration = (): ReactElement => {
       <ViewFilter
         fields={[
           {
-            name: 'xls',
-            label: 'XLS'
+            name: 'name',
+            label: formatMessage(formMessages.name)
+          },
+          {
+            name: 'organization_name',
+            label: 'Nombre de la organización'
           }
         ]}
+        onChange={(data) =>
+          letterheadActions?.getData({
+            start_time: data.dateRange[0],
+            end_time: data.dateRange[1],
+            clearDates: data.clearDates,
+            filters: data.filterByField.fields,
+            query: data.filterByField.search
+          })
+        }
       />
       <div className="mt-3">
         {totalSelected > 0 && (
