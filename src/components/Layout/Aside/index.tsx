@@ -16,7 +16,10 @@ export const Aside = (): ReactElement | null => {
     title
   } = useDrawer()
 
-  const isShowing = useMemo(() => show && type === 'aside', [show, type])
+  const isShowing = useMemo(
+    () => show && type === 'aside', // && false,
+    [show, type]
+  )
   const width = useMemo(
     () => config?.width ?? DEFAULT_DRAWER_WIDTH,
     [config?.width]
@@ -68,14 +71,18 @@ export const Aside = (): ReactElement | null => {
   return (
     <aside
       style={{
-        maxWidth: isShowing ? width : '0px'
+        transform: isShowing ? 'translateX(0%)' : 'translateX(125%)',
+        width: isShowing ? width : '0px'
       }}
       className={clsx(
-        'z-50 overflow-x-hidden overflow-y-auto bg-neutral-200 bg-opacity-60 transition-all duration-500 outline-none shadow-md shadow-gray-300 sticky top-0',
+        'z-50 shrink-0 overflow-x-hidden overflow-y-auto bg-neutral-200 bg-opacity-60 outline-none shadow-md shadow-gray-300 sticky top-0',
         config?.className
       )}
     >
-      <div className="p-4" style={{ minWidth: width }}>
+      <div
+        className="p-4"
+        style={{ width, maxWidth: isShowing ? width : '0px' }}
+      >
         <div className="h-full flex flex-col">
           <header className="flex items-center gap-1">
             {title && renderTitle()}

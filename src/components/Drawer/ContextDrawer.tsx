@@ -19,7 +19,7 @@ const placements: Placements = {
   bottom: 'inset-x-0 bottom-0'
 }
 
-const ContextDrawer = (): ReactElement => {
+const ContextDrawer = (): ReactElement | null => {
   const {
     body,
     show,
@@ -85,6 +85,7 @@ const ContextDrawer = (): ReactElement => {
 
     return rTitle
   }
+
   return createPortal(
     [
       <div
