@@ -1,6 +1,5 @@
 import { MexicoFlag, UsaFlag } from 'assets/SVG'
 import Button from 'components/Button'
-import Checkbox from 'components/Form/Checkbox'
 import Radio from 'components/Form/Radio'
 import Switch from 'components/Form/Switch'
 import TextField from 'components/Form/Textfield'
@@ -13,7 +12,7 @@ import {
   generalMessages,
   timeMessages
 } from 'globalMessages'
-import { ReactElement } from 'react'
+import { ReactElement, useEffect } from 'react'
 import { useIntl } from 'react-intl'
 import NavOptions from './components/NavOptions'
 import { messages } from './messages'
@@ -21,11 +20,12 @@ import * as yup from 'yup'
 import LabelsAdministration from './components/LabelsAdministration'
 import LetterheadAdministration from './components/LetterheadAdministration'
 import SelectField from 'components/Form/Select'
+import { useSettings } from 'context/Settings'
+import useToast from 'hooks/useToast'
 
 interface FormValues {
   language: 'es-mx' | 'en-us'
-  summarizedDataEvidence: boolean
-  fullDataEvidence: boolean
+  dataEvidence: 'simple' | 'full'
   url: string
   doubleStepDelete: boolean
   inactivityTime: number
@@ -34,6 +34,12 @@ interface FormValues {
 
 const GeneralConfig = (): ReactElement => {
   const { formatMessage } = useIntl()
+  const { settings, actions: settingsActions } = useSettings()
+  const toast = useToast()
+
+  useEffect(() => {
+    settingsActions?.get()
+  }, [])
 
   const validationSchema = yup.object({
     url: yup.string().required(formatMessage(formMessages.required)),
@@ -58,14 +64,24 @@ const GeneralConfig = (): ReactElement => {
   const formik = useFormik<FormValues>({
     initialValues: {
       language: 'es-mx',
-      summarizedDataEvidence: true,
-      fullDataEvidence: false,
-      doubleStepDelete: true,
-      openSessions: 1,
-      inactivityTime: 10,
-      url: 'C:\\Users\\user12\\BlackHole\\evidenciasdescargadas'
+      dataEvidence: settings.fullEvidenceView ? 'full' : 'simple',
+      doubleStepDelete: settings.doubleValidation,
+      openSessions: settings.concurrentSessions,
+      inactivityTime: settings.inactivityTime,
+      url: settings.downloadPath
     },
-    onSubmit: (values) => console.log(values),
+    onSubmit: async (values) => {
+      const updated = await settingsActions?.update({
+        concurrentSessions: values.openSessions,
+        doubleValidation: values.doubleStepDelete,
+        downloadPath: values.url,
+        fullEvidenceView: values.dataEvidence === 'full',
+        inactivityTime: values.inactivityTime
+      })
+      if (!updated) return // TODO: revisar cuando falle si es necesario un toast
+
+      toast.success(formatMessage(messages.updatedSuccessfully))
+    },
     enableReinitialize: true,
     validationSchema
   })
@@ -135,20 +151,22 @@ const GeneralConfig = (): ReactElement => {
               {formatMessage(messages.selectAudioEvidenceViewType)}
             </Typography>
             <div className="mt-2">
-              <Checkbox
+              <Radio
+                value="simple"
                 label={formatMessage(messages.summarizedView)}
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                name="summarizedDataEvidence"
-                checked={formik.values.summarizedDataEvidence}
+                name="dataEvidence"
+                checked={formik.values.dataEvidence === 'simple'}
               />
-              <Checkbox
+              <Radio
+                value="full"
                 label={formatMessage(messages.fullView)}
                 className="ml-2"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                name="fullDataEvidence"
-                checked={formik.values.fullDataEvidence}
+                name="dataEvidence"
+                checked={formik.values.dataEvidence === 'full'}
               />
             </div>
           </Grid>

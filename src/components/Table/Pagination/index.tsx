@@ -96,6 +96,7 @@ const Pagination = ({
           )}
         >
           <button
+            type="button"
             className="p-1 hover:text-primary hover:font-semibold disabled:text-secondary-gray disabled:hover:bg-inherit"
             disabled={currentPage === 0}
             onClick={goToStart}
@@ -103,6 +104,7 @@ const Pagination = ({
             <ChevronDoubleLeftIcon className="h-5 w-5" aria-hidden="true" />
           </button>
           <button
+            type="button"
             className="p-1 hover:text-primary hover:font-semibold disabled:text-secondary-gray disabled:hover:bg-inherit"
             onClick={onPrevious}
             disabled={currentPage === 0}
@@ -123,6 +125,7 @@ const Pagination = ({
 
             return (
               <button
+                type="button"
                 key={index}
                 className={clsx(
                   'p-1 shadow-none inline-flex',
@@ -137,6 +140,7 @@ const Pagination = ({
             )
           })}
           <button
+            type="button"
             className="p-1 hover:text-primary hover:font-semibold disabled:text-secondary-gray disabled:hover:bg-inherit disabled:"
             onClick={onNext}
             disabled={currentPage + 1 === lastPage}
@@ -144,6 +148,7 @@ const Pagination = ({
             <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
           </button>
           <button
+            type="button"
             className="p-1 hover:text-primary hover:font-semibold disabled:text-secondary-gray disabled:hover:bg-inherit"
             disabled={currentPage + 1 === lastPage}
             onClick={goToEnd}

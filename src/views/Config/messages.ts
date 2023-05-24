@@ -102,6 +102,10 @@ export const messages = defineMessages({
   telecomStations: {
     id: 'views.Config.telecomStations',
     defaultMessage: 'Estaciones de telecomunicaciones'
+  },
+  updatedSuccessfully: {
+    id: 'views.Config.updatedSuccessfully',
+    defaultMessage: 'Configuración actualizada correctamente'
   }
 })
 
@@ -239,12 +243,25 @@ export const letterheadAdministrationMessages = defineMessages({
   firstDeleteStep: {
     id: 'views.Config.LetterheadAdministration.firstDeleteStep',
     defaultMessage:
-      '¿Estás seguro de querer eliminar el(los) membrete(s) seleccionado(s)?'
+      '¿Estás seguro de querer eliminar {total, plural, one{el membrete seleccionado} other{los membretes seleccionados}}?'
   },
   secondDeleteStep: {
     id: 'views.Config.LetterheadAdministration.secondDeleteStep',
     defaultMessage:
-      'Ingresa tu contraseña para validar la eliminación de(los) membrete(s) seleccionado(s).'
+      'Ingresa tu contraseña para validar la eliminación {total, plural, one{del membrete seleccionado} other{de los membretes seleccionados}}.'
+  },
+  successfullyCreated: {
+    id: 'views.Config.LetterheadAdministration.successfullyCreated',
+    defaultMessage: 'Membrete creado correctamente'
+  },
+  successfullyUpdated: {
+    id: 'views.Config.LetterheadAdministration.successfullyUpdated',
+    defaultMessage: 'Membrete actualizado correctamente'
+  },
+  successfullyDeleted: {
+    id: 'views.Config.LetterheadAdministration.successfullyDeleted',
+    defaultMessage:
+      '{total, plural, one{Membrete eliminado} other{Membretes eliminados}} correctamente'
   }
 })
 

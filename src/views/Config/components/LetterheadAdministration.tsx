@@ -10,40 +10,29 @@ import ViewFilter from 'components/ViewFilter'
 import { useDrawer } from 'context/Drawer'
 import { format } from 'date-fns'
 import { generalMessages } from 'globalMessages'
-import { ReactElement, useMemo, useState } from 'react'
+import { ReactElement, useEffect, useMemo, useState } from 'react'
 import { useIntl } from 'react-intl'
 import { letterheadAdministrationMessages, messages } from '../messages'
 import LetterheadDrawer from './LetterheadDrawer'
+import { useLetterheads } from 'context/Letterheads'
+import Pagination from 'components/Table/Pagination'
+import useToast from 'hooks/useToast'
+import { useAuth } from 'context/Auth'
 
 type SelectedLetterheads = Record<string, boolean>
-
-interface Letterhead {
-  id: string
-  name: string
-  organizationName: string
-  documentType: 'xls' | 'pdf' | 'csv' | 'word'
-  date: string
-  fileName: string
-}
 
 const LetterheadAdministration = (): ReactElement => {
   const { formatMessage } = useIntl()
   const { actions } = useDrawer()
+  const { data, pagination, actions: letterheadActions } = useLetterheads()
+  const { actions: authActions } = useAuth()
   const [selected, setSelected] = useState<SelectedLetterheads>({})
-  const [openDeleteDrawer, setOpenDeleteDrawer] = useState<boolean>(false)
-  const demo = useMemo<Letterhead[]>(
-    () => [
-      {
-        id: '000',
-        documentType: 'pdf',
-        fileName: 'FBI_logo.png',
-        name: 'FBI',
-        organizationName: 'Federal Bureau Intelligence',
-        date: '2022-12-02T16:00:00.000Z'
-      }
-    ],
-    []
-  )
+  const [deleteIds, setDeleteIds] = useState<string[]>([])
+  const toast = useToast()
+
+  useEffect(() => {
+    letterheadActions?.getData()
+  }, [])
 
   const handleSelected = (id, val): void => {
     if (val) {
@@ -59,7 +48,7 @@ const LetterheadAdministration = (): ReactElement => {
   const toggleSelection = (selectAll): void => {
     if (selectAll) {
       setSelected(
-        demo.reduce((carry, item) => {
+        data.reduce((carry, item) => {
           if (!carry[item.id]) carry[item.id] = true
           return carry
         }, {})
@@ -69,23 +58,49 @@ const LetterheadAdministration = (): ReactElement => {
     setSelected({})
   }
 
-  const totalSelected = useMemo(() => Object.keys(selected).length, [selected])
+  const handleDelete = async (password: string): Promise<void> => {
+    try {
+      const isCorrectPassword = await authActions?.verifyPassword(password)
+      if (!isCorrectPassword) {
+        toast.danger(formatMessage(generalMessages.incorrectPassword))
+        return
+      }
+      let deleted = false
+      if (deleteIds.length === 1) {
+        deleted = (await letterheadActions?.delete(deleteIds[0])) ?? false
+      } else {
+        deleted = (await letterheadActions?.deleteAll(deleteIds)) ?? false
+        if (deleted) setSelected({})
+      }
+      if (!deleted) return
+      toast.success(
+        formatMessage(letterheadAdministrationMessages.successfullyDeleted, {
+          total: deleteIds.length
+        })
+      )
+      setDeleteIds([])
+      await letterheadActions?.getData({ page: 1 })
+    } catch {}
+  }
+
+  const selectedIds = useMemo(() => Object.keys(selected), [selected])
+
+  const totalSelected = selectedIds.length
 
   return (
     <div>
       <DeleteDialog
-        onAccept={(data) => {
-          console.log(data)
-          setOpenDeleteDrawer(false)
-        }}
-        open={openDeleteDrawer}
-        onClose={() => setOpenDeleteDrawer(false)}
+        onAccept={async (data) => await handleDelete(data.password)}
+        open={deleteIds.length > 0}
+        onClose={() => setDeleteIds([])}
         title={formatMessage(letterheadAdministrationMessages.deleteLetterhead)}
         question={formatMessage(
-          letterheadAdministrationMessages.firstDeleteStep
+          letterheadAdministrationMessages.firstDeleteStep,
+          { total: deleteIds.length }
         )}
         confirmation={formatMessage(
-          letterheadAdministrationMessages.secondDeleteStep
+          letterheadAdministrationMessages.secondDeleteStep,
+          { total: deleteIds.length }
         )}
       />
       <div className="flex items-center justify-between mb-3">
@@ -109,12 +124,29 @@ const LetterheadAdministration = (): ReactElement => {
               ),
               body: (
                 <LetterheadDrawer
-                  onAccept={async () => {}}
+                  onAccept={async (values) => {
+                    const created = await letterheadActions?.create({
+                      doc_type: values.documentType,
+                      image: '',
+                      file: values.file,
+                      name: values.letterheadName,
+                      organization_name: values.organizationName
+                    })
+                    if (!created) return
+                    actions.handleCloseDrawer()
+                    toast.success(
+                      formatMessage(
+                        letterheadAdministrationMessages.successfullyCreated
+                      )
+                    )
+                    await letterheadActions?.getData()
+                  }}
                   subtitle={formatMessage(
                     letterheadAdministrationMessages.createLetterheadSubtitle
                   )}
                 />
-              )
+              ),
+              type: 'drawer'
             })
           }
         >
@@ -135,9 +167,9 @@ const LetterheadAdministration = (): ReactElement => {
             <div className="flex items-center">
               <IndeterminateCheckbox
                 indeterminate={
-                  demo.length !== totalSelected && totalSelected > 0
+                  data.length !== totalSelected && totalSelected > 0
                 }
-                checked={demo.length === totalSelected}
+                checked={data.length === totalSelected}
                 onChange={(e) => toggleSelection(e.currentTarget.checked)}
               />
               <Typography className="ml-4">
@@ -148,14 +180,14 @@ const LetterheadAdministration = (): ReactElement => {
             </div>
             <IconButton
               className="!hover:text-primary"
-              onClick={() => setOpenDeleteDrawer(true)}
+              onClick={() => setDeleteIds(selectedIds)}
             >
               <TrashIcon className="w-5 h-5" />
             </IconButton>
           </div>
         )}
         <Grid spacing={2} className="max-h-[15rem] overflow-y-auto pb-2">
-          {demo.map((item) => (
+          {data.map((item) => (
             <Grid
               item
               xs={12}
@@ -178,17 +210,34 @@ const LetterheadAdministration = (): ReactElement => {
                     ),
                     body: (
                       <LetterheadDrawer
-                        onAccept={async () => {}}
+                        onAccept={async (values) => {
+                          const updated = await letterheadActions?.update({
+                            id: item.id,
+                            doc_type: values.documentType,
+                            image: item.image,
+                            name: values.letterheadName,
+                            organization_name: values.organizationName,
+                            file: values.file
+                          })
+                          if (!updated) return
+                          actions.handleCloseDrawer()
+                          toast.success(
+                            formatMessage(
+                              letterheadAdministrationMessages.successfullyUpdated
+                            )
+                          )
+                          await letterheadActions?.getData()
+                        }}
                         subtitle={formatMessage(
                           letterheadAdministrationMessages.letterheadDataSubtitle
                         )}
                         initialValues={{
-                          documentType: item.documentType,
+                          documentType: item.doc_type as any,
                           letterheadName: item.name,
-                          organizationName: item.organizationName,
+                          organizationName: item.organization_name,
                           file: null
                         }}
-                        fileName={item.fileName}
+                        fileName={item.image}
                       />
                     )
                   })
@@ -198,7 +247,10 @@ const LetterheadAdministration = (): ReactElement => {
                   {item.name}
                 </Typography>
                 <Typography className="text-secondary">
-                  {format(new Date(item.date), 'dd/MM/yyyy - hh:mm:ss')}
+                  {format(
+                    new Date(item.created_at ?? 0),
+                    'dd/MM/yyyy - hh:mm:ss'
+                  )}
                 </Typography>
               </div>
               <div className="flex items-center justify-between">
@@ -209,7 +261,8 @@ const LetterheadAdministration = (): ReactElement => {
                 />
                 <IconButton
                   className="!hover:text-primary"
-                  onClick={() => setOpenDeleteDrawer(true)}
+                  onClick={() => setDeleteIds([item.id])}
+                  disabled={totalSelected > 0}
                 >
                   <TrashIcon className="w-5 h-5" />
                 </IconButton>
@@ -217,6 +270,19 @@ const LetterheadAdministration = (): ReactElement => {
             </Grid>
           ))}
         </Grid>
+        <Pagination
+          currentPage={pagination.page}
+          onPageChange={(page) =>
+            letterheadActions?.getData({ page: page + 1 })
+          }
+          pageSize={pagination.limit}
+          manualLimit={{
+            options: pagination.limitOptions ?? [15],
+            onChangeLimit: (page, limit) =>
+              letterheadActions?.getData({ page: page + 1, limit })
+          }}
+          totalCount={pagination.totalRecords}
+        />
       </div>
     </div>
   )
