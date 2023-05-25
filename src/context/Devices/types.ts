@@ -7,6 +7,9 @@ export type getDataPayload = PaginationParams &
   SearchParams &
   DateFilter & { sort?: SortingState }
 
+export type createPayload = Omit<Device, 'id'>
+export type updatePayload = Device
+
 export interface State {
   data: Device[]
   pagination: PaginationSortFilter
@@ -16,8 +19,8 @@ export interface State {
 
 export interface Actions {
   getData: (params?: getDataPayload) => Promise<void>
-  create: (payload: Omit<Device, 'id'>) => Promise<boolean>
-  update: (payload: Device) => Promise<boolean>
+  create: (payload: createPayload) => Promise<boolean>
+  update: (payload: updatePayload) => Promise<boolean>
   delete: (id: string) => Promise<boolean>
   deleteAll: (ids: string[]) => Promise<boolean>
   toggleStatus: (id: string, status: boolean) => Promise<boolean>
