@@ -29,7 +29,7 @@ for (let index = 0; index < 50; index++) {
     mothers_name: `Mothers Name ${index}`,
     age: Math.random() * 100,
     gender: 0,
-    penitentiary_id: penitentiaries[0].id,
+    penitentiary_id: '1',
     registered_at: 'Dates',
     location_id: '1',
     control_groups: [],
@@ -48,8 +48,8 @@ for (let index = 0; index < 50; index++) {
     speaker_id: speakers[index].id,
     transmission_number: '5539308643',
     reception_number: '5531234643',
-    penitentiary: penitentiaries[0],
-    penitentiary_id: penitentiaries[0].id,
+    penitentiary: '1',
+    penitentiary_id: '1',
     call_status: 0,
     // transmited_audio TransmitedAudio?
     // received_audio ReceivedAudio?
