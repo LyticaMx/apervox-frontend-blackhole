@@ -24,7 +24,13 @@ type SelectedLetterheads = Record<string, boolean>
 const LetterheadAdministration = (): ReactElement => {
   const { formatMessage } = useIntl()
   const { actions } = useDrawer()
-  const { data, pagination, actions: letterheadActions } = useLetterheads()
+  const {
+    data,
+    pagination,
+    dateFilter,
+    searchFilter,
+    actions: letterheadActions
+  } = useLetterheads()
   const { actions: authActions } = useAuth()
   const [selected, setSelected] = useState<SelectedLetterheads>({})
   const [deleteIds, setDeleteIds] = useState<string[]>([])
@@ -156,10 +162,35 @@ const LetterheadAdministration = (): ReactElement => {
       <ViewFilter
         fields={[
           {
-            name: 'xls',
-            label: 'XLS'
+            name: 'name',
+            label: formatMessage(
+              letterheadAdministrationMessages.letterheadName
+            )
+          },
+          {
+            name: 'organization_name',
+            label: formatMessage(
+              letterheadAdministrationMessages.organizationName
+            )
           }
         ]}
+        initialValues={{
+          dateRange: {
+            start_time: dateFilter.start_time,
+            end_time: dateFilter.end_time
+          },
+          search: searchFilter.query,
+          fields: searchFilter.filters
+        }}
+        onChange={(data) =>
+          letterheadActions?.getData({
+            start_time: data.dateRange[0],
+            end_time: data.dateRange[1],
+            clearDates: data.clearDates,
+            filters: data.filterByField.fields,
+            query: data.filterByField.search
+          })
+        }
       />
       <div className="mt-3">
         {totalSelected > 0 && (

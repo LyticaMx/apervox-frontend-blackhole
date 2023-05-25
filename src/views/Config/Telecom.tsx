@@ -1,39 +1,37 @@
-import { TrashIcon } from '@heroicons/react/24/outline'
-import IconButton from 'components/Button/IconButton'
-import DeleteDialog from 'components/DeleteDialog'
 import Grid from 'components/Grid'
 import Table from 'components/Table'
-import Tooltip from 'components/Tooltip'
 import Typography from 'components/Typography'
 import ViewFilter from 'components/ViewFilter'
 import { useDrawer } from 'context/Drawer'
 import { format } from 'date-fns'
-import {
-  actionsMessages,
-  generalMessages,
-  platformMessages
-} from 'globalMessages'
+import { generalMessages, platformMessages } from 'globalMessages'
 import useTableColumns from 'hooks/useTableColumns'
-import { ReactElement, useMemo, useState } from 'react'
+import { ReactElement, useEffect } from 'react'
 import { useIntl } from 'react-intl'
 import GeoreferenceDrawer from './components/GeoreferenceDrawer'
 import NavOptions from './components/NavOptions'
 import { telecomMessages } from './messages'
-
-interface Georeference {
-  id: string
-  cellId: string
-  latitude: string
-  longitude: string
-  date: string
-}
+import { Location } from 'types/location'
+import { useLocations } from 'context/Locations'
+import { formatTotal } from 'utils/formatTotal'
 
 const Telecom = (): ReactElement => {
   const { formatMessage } = useIntl()
   const { actions } = useDrawer()
-  const [openDeleteGeo, setOpenDeleteGeo] = useState<boolean>(false)
+  const {
+    data,
+    dateFilter,
+    pagination,
+    searchFilter,
+    total,
+    actions: locationActions
+  } = useLocations()
 
-  const columns = useTableColumns<Georeference>(() => [
+  useEffect(() => {
+    locationActions?.get()
+  }, [])
+
+  const columns = useTableColumns<Location>(() => [
     {
       header: '',
       accessorKey: 'cellId',
@@ -69,80 +67,18 @@ const Telecom = (): ReactElement => {
     },
     {
       header: '',
-      accessorKey: 'date',
+      accessorKey: 'createdAt',
       cell: ({ getValue }) => (
         <span className="text-secondary-gray">
           {format(new Date(getValue<string>()), 'dd/MM/yyyy - hh:mm')}
         </span>
       )
-    },
-    {
-      header: '',
-      accessorKey: 'id',
-      cell: ({ row }) => (
-        <Tooltip
-          content={formatMessage(actionsMessages.delete)}
-          floatProps={{ offset: 10, arrow: true }}
-          classNames={{
-            panel:
-              'bg-secondary text-white py-1 px-2 rounded-md text-sm whitespace-nowrap',
-            arrow: 'absolute bg-white w-2 h-2 rounded-full bg-secondary'
-          }}
-          placement="top"
-        >
-          <IconButton
-            className="hover:text-primary"
-            disabled={row.getIsSelected()}
-            onClick={() => setOpenDeleteGeo(true)}
-          >
-            <TrashIcon className="w-5 h-5" />
-          </IconButton>
-        </Tooltip>
-      )
     }
   ])
-
-  const demo = useMemo<Georeference[]>(
-    () => [
-      {
-        id: '001',
-        cellId: '135098745',
-        latitude: '-56.987656',
-        longitude: '90.187654',
-        date: '2023-01-12T16:04:27.161Z'
-      },
-      {
-        id: '002',
-        cellId: '120654680',
-        latitude: '-45.123456',
-        longitude: '145.109187',
-        date: '2023-01-12T15:04:27.161Z'
-      },
-      {
-        id: '003',
-        cellId: '135452976',
-        latitude: '-30.122675',
-        longitude: '150.112345',
-        date: '2023-01-12T14:04:27.161Z'
-      }
-    ],
-    []
-  )
 
   return (
     <div>
       <NavOptions />
-      <DeleteDialog
-        onAccept={(data) => {
-          console.log(data)
-          setOpenDeleteGeo(false)
-        }}
-        open={openDeleteGeo}
-        onClose={() => setOpenDeleteGeo(false)}
-        title={formatMessage(telecomMessages.deleteGeo)}
-        question={formatMessage(telecomMessages.deleteQuestion)}
-        confirmation={formatMessage(telecomMessages.deleteConfirmation)}
-      />
       <Grid>
         <Grid item xs={12} md={5}>
           <Typography
@@ -155,54 +91,30 @@ const Telecom = (): ReactElement => {
             variant="subtitle"
             className="text-secondary uppercase font-semibold"
           >
-            {formatMessage(telecomMessages.actualTelecomStations, {
-              total: '03'
-            })}
+            {formatTotal(
+              total,
+              formatMessage(telecomMessages.actualTelecomStations)
+            )}
           </Typography>
         </Grid>
-        <Grid item xs={12} md={7}>
+        <Grid item xs={12} md={7} className="flex justify-end">
           <ViewFilter
             fields={[{ label: 'Latitud', name: 'lat' }]}
-            action={[
-              {
-                label: formatMessage(telecomMessages.downloadFormat)
+            initialValues={{
+              dateRange: {
+                start_time: dateFilter.start_time,
+                end_time: dateFilter.end_time
               },
-              {
-                label: formatMessage(telecomMessages.addGeoreference),
-                onClick: () =>
-                  actions?.handleOpenDrawer({
-                    title: (
-                      <Typography
-                        className="text-secondary font-extrabold uppercase !text-lg"
-                        variant="title"
-                      >
-                        {formatMessage(telecomMessages.addGeoreference)}
-                      </Typography>
-                    ),
-                    body: (
-                      <GeoreferenceDrawer
-                        subtitle={formatMessage(telecomMessages.addGeoSubtitle)}
-                        onAccept={async () => {}}
-                      />
-                    )
-                  })
-              }
-            ]}
+              search: searchFilter.query,
+              fields: searchFilter.filters
+            }}
           />
         </Grid>
         <Grid item xs={12}>
           <Table
             columns={columns}
-            data={demo}
-            withCheckbox
+            data={data}
             rowConfig={{ paddingSize: 'sm' }}
-            actionsForSelectedItems={[
-              {
-                action: () => setOpenDeleteGeo(true),
-                Icon: TrashIcon,
-                name: 'deleteGeo'
-              }
-            ]}
             onRowClicked={(row) =>
               actions?.handleOpenDrawer({
                 title: (
@@ -227,6 +139,21 @@ const Telecom = (): ReactElement => {
                 )
               })
             }
+            maxHeight={500}
+            manualLimit={{
+              options: [15, 25, 50, 100],
+              onChangeLimit: (page, limit) =>
+                locationActions?.get({
+                  page: page + 1,
+                  limit
+                })
+            }}
+            pageSize={pagination.limit}
+            manualPagination={{
+              currentPage: pagination.page,
+              totalRecords: pagination.totalRecords,
+              onChange: (page) => locationActions?.get({ page: page + 1 })
+            }}
           />
         </Grid>
       </Grid>

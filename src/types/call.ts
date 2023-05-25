@@ -2,7 +2,6 @@ import { MultipleUpdateEntity } from './api'
 import { ReceivedAudio, TransmitedAudio } from './audio'
 import { DatesFilterForm } from './datesFilter'
 import { DateFilter, PaginationFilter } from './filters'
-import { Penitentiary } from './penitentiaries'
 import { Speaker, Status } from './speaker'
 import { ComparativeValues, PinActivity, TimeChartValues } from './statistics'
 
@@ -24,7 +23,7 @@ export interface CallModel {
   speaker_id: string
   transmission_number: string
   reception_number: string
-  penitentiary: Penitentiary
+  penitentiary: string
   penitentiary_id: string
   call_status: CallStatus
   transmited_audio?: TransmitedAudio

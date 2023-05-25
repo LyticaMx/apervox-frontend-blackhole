@@ -496,7 +496,7 @@
   "views.Config.Media.selectMediaorDevice": "Selecciona si quieres agregar un medio o un equipo.",
   "views.Config.Media.title": "Medios y compañias para medios de adquisición",
   "views.Config.Telecom.actualGeoData": "Datos actuales de la georeferencia seleccionada",
-  "views.Config.Telecom.actualTelecomStations": "{total} estaciones telecom existentes en la plataforma",
+  "views.Config.Telecom.actualTelecomStations": "estaciones telecom existentes en la plataforma",
   "views.Config.Telecom.addGeoSubtitle": "Completa los siguientes campos para agregar una georeferencia de una estación de telecomunicaciones.",
   "views.Config.Telecom.addGeoreference": "Agregar georeferencia",
   "views.Config.Telecom.deleteConfirmation": "Ingresa tu contraseña para validar la eliminación de la(s) georeferencia(s) seleccionada(s)",

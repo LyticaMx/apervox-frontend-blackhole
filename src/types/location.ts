@@ -1,26 +1,34 @@
-
-export enum CodeCountry {
-  USA,
-  MEX,
-  COL,
-  BRZ
-}
-
-export interface Country {
-  id: string
-  code_country: CodeCountry
-}
-
-export interface State {
-  id: string
-  name: string
-  country: Country
-  country_id: string
-}
+import { PaginationParams } from './api'
+import { DateFilter, PaginationFilter, SearchFilter } from './filters'
 
 export interface Location {
   id: string
-  name: string
-  state: State
-  state_id: string
+  cellId: string
+  latitude: string
+  longitude: string
+  country?: string
+  createdAt: string
+}
+
+interface LocationPagination extends PaginationFilter {
+  totalRecords: number
+}
+
+export interface LocationContextState {
+  data: Location[]
+  total: number
+  pagination: LocationPagination
+  dateFilter: DateFilter
+  searchFilter: SearchFilter
+}
+
+export interface LocationContextActions {
+  get: (
+    params?: PaginationParams & SearchFilter & DateFilter,
+    getTotal?: boolean
+  ) => Promise<void>
+}
+
+export interface LocationContextType extends LocationContextState {
+  actions?: LocationContextActions
 }
