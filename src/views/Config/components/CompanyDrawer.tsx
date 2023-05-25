@@ -9,6 +9,7 @@ import Form from 'components/Form'
 import { Field } from 'types/form'
 
 interface FormValues {
+  id?: string
   name: string
 }
 

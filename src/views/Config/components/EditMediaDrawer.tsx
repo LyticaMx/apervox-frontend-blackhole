@@ -9,6 +9,7 @@ import { mediaMessages } from '../messages'
 import * as yup from 'yup'
 
 interface FormValues {
+  id?: string
   name: string
 }
 
@@ -45,7 +46,6 @@ const EditMediaDrawer = (props: Props): ReactElement => {
   const formikConfig: FormikConfig<FormValues> = {
     initialValues,
     onSubmit: async (values) => {
-      console.log(values)
       onAccept(values)
     },
     validationSchema

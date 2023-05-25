@@ -8,23 +8,37 @@ import { Field } from 'types/form'
 import { mediaMessages } from '../messages'
 import * as yup from 'yup'
 
-interface FormValues {
+interface FormMedium {
+  id?: string
   name: string
-  media?: string
 }
 
-interface Props {
-  onAccept: (data: FormValues, type: 'media' | 'device') => Promise<void>
+interface FormDevice {
+  id?: string
+  name: string
+  medium: any
+  medium_id?: string
+}
+
+const initialsValues = {
+  media: { name: '' },
+  device: { medium_id: '', name: '' }
+}
+
+interface Props<T> {
+  onAccept: (data: T) => Promise<void>
   formType: 'media' | 'device'
 }
 
-const MediaDrawer = (props: Props): ReactElement => {
+const MediaDrawer = <FormValues extends FormMedium | FormDevice>(
+  props: Props<FormValues>
+): ReactElement => {
   const { onAccept } = props
   const { formatMessage } = useIntl()
 
   const validationSchema = yup.object({
     name: yup.string().required(formatMessage(formMessages.required)),
-    media: yup.string().test({
+    medium: yup.object().test({
       name: 'ifRequired',
       message: formatMessage(formMessages.required),
       test: (value) => !!value || props.formType === 'media'
@@ -45,27 +59,22 @@ const MediaDrawer = (props: Props): ReactElement => {
         }
       ]
     }
+
     return [
       {
-        type: 'select',
-        name: 'media',
+        name: 'medium',
+        type: 'async-select',
         options: {
-          clearable: false,
-          items: [
-            {
-              text: 'ETSI',
-              value: 'etsi'
-            },
-            {
-              text: 'FXS/FXSO',
-              value: 'fxs/fxso'
-            }
-          ],
-          textField: 'text',
-          valueField: 'value',
           label: formatMessage(mediaMessages.mediaName),
+          asyncProps: {
+            api: { endpoint: 'acquisition-mediums', method: 'get' },
+            value: 'id',
+            label: 'name',
+            searchField: 'name'
+          },
+          debounceTimeout: 300,
           placeholder: formatMessage(mediaMessages.mediaNamePlaceholder),
-          optionsContainerClassname: 'w-[95%]'
+          requiredMarker: true
         }
       },
       {
@@ -81,10 +90,9 @@ const MediaDrawer = (props: Props): ReactElement => {
   }, [props.formType])
 
   const formikConfig: FormikConfig<FormValues> = {
-    initialValues: { name: '', media: '' },
+    initialValues: initialsValues[props.formType] as FormValues,
     onSubmit: async (values) => {
-      console.log(values)
-      onAccept(values, props.formType)
+      onAccept(values)
     },
     validationSchema
   }

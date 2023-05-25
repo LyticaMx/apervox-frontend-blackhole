@@ -1,29 +1,89 @@
 import DeleteDialog from 'components/DeleteDialog'
 import { useDrawer } from 'context/Drawer'
-import { ReactElement, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { useIntl } from 'react-intl'
 import { mediaMessages } from '../messages'
 import Grid from 'components/Grid'
 import Typography from 'components/Typography'
 import ViewFilter from 'components/ViewFilter'
-import { formMessages } from 'globalMessages'
+import { formMessages, generalMessages } from 'globalMessages'
 import GeneralMediaList from './GeneralMediaList'
 import CompanyDrawer from './CompanyDrawer'
 import { useCarriers } from 'context/Carriers'
+import { useAuth } from 'context/Auth'
+import useToast from 'hooks/useToast'
+
+interface FormValues {
+  id?: string
+  name: string
+}
 
 const CarrierTab = (): ReactElement => {
-  const { data } = useCarriers()
-  const [openDeleteCarrier, setOpenDeleteCarrier] = useState(false)
+  const { data, actions } = useCarriers()
   const { actions: drawerActions } = useDrawer()
+  const { actions: authActions } = useAuth()
+
   const { formatMessage } = useIntl()
+  const toast = useToast()
+
+  const [openDeleteCarrier, setOpenDeleteCarrier] = useState(false)
+  const [deleteIds, setDeleteIds] = useState<string[]>([])
+
+  useEffect(() => {
+    actions?.getData()
+  }, [])
+
+  const handleDelete = async (password: string): Promise<void> => {
+    try {
+      const isCorrectPassword = await authActions?.verifyPassword(password)
+      if (!isCorrectPassword) {
+        toast.danger(formatMessage(generalMessages.incorrectPassword))
+        return
+      }
+
+      let deleted = false
+      if (deleteIds.length === 1) {
+        deleted = (await actions?.delete(deleteIds[0])) ?? false
+      } else {
+        deleted = (await actions?.deleteAll(deleteIds)) ?? false
+
+        if (deleted) setDeleteIds([])
+      }
+
+      if (!deleted) return
+
+      setDeleteIds([])
+      setOpenDeleteCarrier(false)
+      await actions?.getData({ page: 1 })
+    } catch {}
+  }
+  const handleUpdate = async (data: FormValues): Promise<void> => {
+    const res = await actions?.update({
+      id: data.id as string,
+      name: data.name
+    })
+
+    if (res) {
+      await actions?.getData()
+      drawerActions?.handleCloseDrawer()
+    }
+  }
+
+  const handleCreate = async (data: FormValues): Promise<void> => {
+    const res = await actions?.create({
+      name: data.name
+    })
+
+    if (res) {
+      await actions?.getData()
+      drawerActions?.handleCloseDrawer()
+    }
+  }
 
   return (
     <div className="mt-2">
       <DeleteDialog
-        onAccept={(data) => {
-          console.log(data)
-          setOpenDeleteCarrier(false)
-        }}
+        onAccept={async (data) => await handleDelete(data.password)}
         open={openDeleteCarrier}
         onClose={() => setOpenDeleteCarrier(false)}
         title={formatMessage(mediaMessages.deleteMedia)}
@@ -58,7 +118,7 @@ const CarrierTab = (): ReactElement => {
                   ),
                   body: (
                     <CompanyDrawer
-                      onAccept={async () => {}}
+                      onAccept={handleCreate}
                       subtitle={formatMessage(
                         mediaMessages.createCarrierSubtitle
                       )}
@@ -84,15 +144,24 @@ const CarrierTab = (): ReactElement => {
                 ),
                 body: (
                   <CompanyDrawer
-                    onAccept={async () => {}}
+                    onAccept={handleUpdate}
                     subtitle={formatMessage(mediaMessages.actualCarrierData)}
-                    initialValues={{ name: row.name }}
+                    initialValues={{
+                      id: row.id,
+                      name: row.name
+                    }}
                   />
                 )
               })
             }
-            handleDelete={() => setOpenDeleteCarrier(true)}
-            handleMultipleDelete={async () => true}
+            handleDelete={(row) => {
+              setDeleteIds([row.id])
+              setOpenDeleteCarrier(true)
+            }}
+            handleMultipleDelete={(items) => {
+              setDeleteIds(items.map((item) => item.id))
+              setOpenDeleteCarrier(true)
+            }}
           />
         </Grid>
       </Grid>
