@@ -14,7 +14,7 @@ const orderByMapper = {
 
 export const useActions = (state: State, dispatch): Actions => {
   const { pagination, dateFilter, searchFilter } = state
-  const resource = useService('mediums')
+  const resource = useService('acquisition-mediums')
 
   const getData = async (params?: getDataPayload): Promise<void> => {
     try {
@@ -96,7 +96,7 @@ export const useActions = (state: State, dispatch): Actions => {
     try {
       await resource.put({
         queryString: payload.id,
-        body: omit(payload, ['id', 'users', 'scopes'])
+        body: omit(payload, ['id'])
       })
 
       return true
