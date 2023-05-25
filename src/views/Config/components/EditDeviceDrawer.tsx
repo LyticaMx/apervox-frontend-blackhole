@@ -9,8 +9,10 @@ import { mediaMessages } from '../messages'
 import * as yup from 'yup'
 
 interface FormValues {
+  id?: string
+  medium_id: string
   name: string
-  media: string
+  medium: any
 }
 
 interface Props {
@@ -25,31 +27,29 @@ const EditDeviceDrawer = (props: Props): ReactElement => {
 
   const validationSchema = yup.object({
     name: yup.string().required(formatMessage(formMessages.required)),
-    media: yup.string().required(formatMessage(formMessages.required))
+    medium: yup.object().test({
+      name: 'ifRequired',
+      message: formatMessage(formMessages.required),
+      test: (value) => !!value
+    })
   })
 
   const fields = useMemo<Array<Field<FormValues>>>(
     () => [
       {
-        type: 'select',
-        name: 'media',
+        name: 'medium',
+        type: 'async-select',
         options: {
-          clearable: false,
-          items: [
-            {
-              text: 'ETSI',
-              value: 'etsi'
-            },
-            {
-              text: 'FXS/FXSO',
-              value: 'fxs/fxso'
-            }
-          ],
-          textField: 'text',
-          valueField: 'value',
           label: formatMessage(mediaMessages.mediaName),
+          asyncProps: {
+            api: { endpoint: 'acquisition-mediums', method: 'get' },
+            value: 'id',
+            label: 'name',
+            searchField: 'name'
+          },
+          debounceTimeout: 300,
           placeholder: formatMessage(mediaMessages.mediaNamePlaceholder),
-          optionsContainerClassname: 'w-[95%]'
+          requiredMarker: true
         }
       },
       {
@@ -68,7 +68,6 @@ const EditDeviceDrawer = (props: Props): ReactElement => {
   const formikConfig: FormikConfig<FormValues> = {
     initialValues,
     onSubmit: async (values) => {
-      console.log(values)
       onAccept(values)
     },
     validationSchema

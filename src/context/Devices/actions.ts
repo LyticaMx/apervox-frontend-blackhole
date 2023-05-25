@@ -1,9 +1,14 @@
 import { useService } from 'hooks/useApi'
 import { omit } from 'lodash'
-import { AcquisitionMedium } from 'types/acquisitionMedium'
 import { ResponseData } from 'types/api'
 import { actions } from './constants'
-import { Actions, getDataPayload, State } from './types'
+import {
+  Actions,
+  createPayload,
+  getDataPayload,
+  State,
+  updatePayload
+} from './types'
 
 const orderByMapper = {
   name: 'name',
@@ -13,7 +18,7 @@ const orderByMapper = {
 
 export const useActions = (state: State, dispatch): Actions => {
   const { pagination, dateFilter, searchFilter } = state
-  const resource = useService('mediums')
+  const resource = useService('devices')
 
   const getData = async (params?: getDataPayload): Promise<void> => {
     try {
@@ -76,9 +81,7 @@ export const useActions = (state: State, dispatch): Actions => {
     }
   }
 
-  const create = async (
-    payload: Omit<AcquisitionMedium, 'id'>
-  ): Promise<boolean> => {
+  const create = async (payload: createPayload): Promise<boolean> => {
     try {
       await resource.post({
         body: payload
@@ -91,11 +94,11 @@ export const useActions = (state: State, dispatch): Actions => {
     }
   }
 
-  const update = async (payload: AcquisitionMedium): Promise<boolean> => {
+  const update = async (payload: updatePayload): Promise<boolean> => {
     try {
       await resource.put({
         queryString: payload.id,
-        body: omit(payload, ['id', 'users', 'scopes'])
+        body: omit(payload, ['id'])
       })
 
       return true
