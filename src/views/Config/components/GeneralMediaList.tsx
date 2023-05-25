@@ -13,13 +13,14 @@ import Table from 'components/Table'
 import { Carrier } from 'types/Carrier'
 import { Device } from 'types/device'
 import { AcquisitionMedium } from 'types/acquisitionMedium'
+import { get } from 'lodash'
 
 interface Props<T> {
   type: 'carrier' | 'medium' | 'device'
   data: T[]
-  handleDelete: () => void
+  handleDelete: (row: T) => void | Promise<void>
   handleEdit: (row: T, event: any) => void
-  handleMultipleDelete: (items: T[]) => Promise<boolean>
+  handleMultipleDelete: ((items: T[]) => void) | ((items: T[]) => Promise<void>)
 }
 
 const GeneralMediaList = <
@@ -31,7 +32,7 @@ const GeneralMediaList = <
 
   const renderMediaType = useCallback(
     ({ row }: CellContext<DataType, unknown>): ReactElement => {
-      const data = row.original
+      const data: any = row.original
       const config = { color: '', letter: '', caption: '' }
 
       switch (props.type) {
@@ -44,7 +45,7 @@ const GeneralMediaList = <
           config.color = '#E8D903'
           config.letter = 'E'
           config.caption = formatMessage(mediaMessages.deviceCaption, {
-            device: ''
+            device: get(data, 'medium')
           })
           break
         }
@@ -115,7 +116,7 @@ const GeneralMediaList = <
             className="hover:text-primary"
             disabled={row.getIsSelected()}
             onClick={() => {
-              props.handleDelete()
+              props.handleDelete(row.original)
             }}
           >
             <TrashIcon className="h-5 w-5" />
