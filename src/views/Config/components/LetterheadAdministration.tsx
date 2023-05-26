@@ -18,6 +18,7 @@ import { useLetterheads } from 'context/Letterheads'
 import Pagination from 'components/Table/Pagination'
 import useToast from 'hooks/useToast'
 import { useAuth } from 'context/Auth'
+import { useSettings } from 'context/Settings'
 
 type SelectedLetterheads = Record<string, boolean>
 
@@ -32,6 +33,7 @@ const LetterheadAdministration = (): ReactElement => {
     actions: letterheadActions
   } = useLetterheads()
   const { actions: authActions } = useAuth()
+  const { settings } = useSettings()
   const [selected, setSelected] = useState<SelectedLetterheads>({})
   const [deleteIds, setDeleteIds] = useState<string[]>([])
   const toast = useToast()
@@ -66,7 +68,9 @@ const LetterheadAdministration = (): ReactElement => {
 
   const handleDelete = async (password: string): Promise<void> => {
     try {
-      const isCorrectPassword = await authActions?.verifyPassword(password)
+      const isCorrectPassword = settings.doubleValidation
+        ? await authActions?.verifyPassword(password)
+        : true
       if (!isCorrectPassword) {
         toast.danger(formatMessage(generalMessages.incorrectPassword))
         return

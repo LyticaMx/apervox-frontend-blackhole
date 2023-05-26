@@ -9,6 +9,7 @@ import { Role } from 'types/auth'
 import Dialog from 'components/DeleteDialog'
 
 import { rolesMessages, rolesDeleteMessages } from '../messages'
+import { useSettings } from 'context/Settings'
 
 interface Props {
   open: boolean
@@ -19,6 +20,7 @@ interface Props {
 const DeleteDialog = ({ open, role, onClose }: Props): ReactElement => {
   const { actions } = useRoles()
   const { actions: authActions } = useAuth()
+  const { settings } = useSettings()
   const toast = useToast()
 
   const getMessage = useFormatMessage(rolesMessages)
@@ -31,7 +33,9 @@ const DeleteDialog = ({ open, role, onClose }: Props): ReactElement => {
     password: string
   }): Promise<void> => {
     try {
-      const isCorrect = (await authActions?.verifyPassword(password)) ?? false
+      const isCorrect = settings.doubleValidation
+        ? (await authActions?.verifyPassword(password)) ?? false
+        : true
       if (!isCorrect) {
         toast.danger(getGlobalMessage('incorrectPassword', 'generalMessages'))
 
