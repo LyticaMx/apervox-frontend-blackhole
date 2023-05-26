@@ -5,26 +5,18 @@ import { mediaMessages } from '../messages'
 import Grid from 'components/Grid'
 import Typography from 'components/Typography'
 import ViewFilter from 'components/ViewFilter'
-import { formMessages, generalMessages } from 'globalMessages'
+import { formMessages } from 'globalMessages'
 import { useDrawer } from 'context/Drawer'
 import MediaDrawer from './MediaDrawer'
 import GeneralMediaList from './GeneralMediaList'
 import EditDeviceDrawer from './EditDeviceDrawer'
 import { useDevices } from 'context/Devices'
 import { get } from 'lodash'
-import useToast from 'hooks/useToast'
-import { useAuth } from 'context/Auth'
-import { useSettings } from 'context/Settings'
 
 const DeviceTab = (): ReactElement => {
   const { data, actions } = useDevices()
   const { actions: drawerActions } = useDrawer()
-  const { actions: authActions } = useAuth()
-  const { settings } = useSettings()
-
   const { formatMessage } = useIntl()
-  const toast = useToast()
-
   const [openDelete, setOpenDelete] = useState(false)
   const [deleteIds, setDeleteIds] = useState<string[]>([])
 
@@ -32,16 +24,8 @@ const DeviceTab = (): ReactElement => {
     actions?.getData()
   }, [])
 
-  const handleDelete = async (password: string): Promise<void> => {
+  const handleDelete = async (): Promise<void> => {
     try {
-      const isCorrectPassword = settings.doubleValidation
-        ? await authActions?.verifyPassword(password)
-        : true
-      if (!isCorrectPassword) {
-        toast.danger(formatMessage(generalMessages.incorrectPassword))
-        return
-      }
-
       let deleted = false
       if (deleteIds.length === 1) {
         deleted = (await actions?.delete(deleteIds[0])) ?? false
@@ -86,7 +70,7 @@ const DeviceTab = (): ReactElement => {
   return (
     <div className="mt-2">
       <DeleteDialog
-        onAccept={async (data) => await handleDelete(data.password)}
+        onAccept={handleDelete}
         open={openDelete}
         onClose={() => setOpenDelete(false)}
         title={formatMessage(mediaMessages.deleteMedia)}

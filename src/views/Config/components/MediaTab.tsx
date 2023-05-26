@@ -6,14 +6,11 @@ import { mediaMessages } from '../messages'
 import Grid from 'components/Grid'
 import Typography from 'components/Typography'
 import ViewFilter from 'components/ViewFilter'
-import { formMessages, generalMessages } from 'globalMessages'
+import { formMessages } from 'globalMessages'
 import MediaDrawer from './MediaDrawer'
 import GeneralMediaList from './GeneralMediaList'
 import EditMediaDrawer from './EditMediaDrawer'
 import { useAcquisitionMediums } from 'context/AcquisitionMediums'
-import { useAuth } from 'context/Auth'
-import useToast from 'hooks/useToast'
-import { useSettings } from 'context/Settings'
 
 interface FormValues {
   id?: string
@@ -23,12 +20,7 @@ interface FormValues {
 const MediaTab = (): ReactElement => {
   const { data, actions } = useAcquisitionMediums()
   const { actions: drawerActions } = useDrawer()
-  const { actions: authActions } = useAuth()
-  const { settings } = useSettings()
-
   const { formatMessage } = useIntl()
-  const toast = useToast()
-
   const [openDeleteMedia, setOpenDeleteMedia] = useState(false)
   const [deleteIds, setDeleteIds] = useState<string[]>([])
 
@@ -36,16 +28,8 @@ const MediaTab = (): ReactElement => {
     actions?.getData()
   }, [])
 
-  const handleDelete = async (password: string): Promise<void> => {
+  const handleDelete = async (): Promise<void> => {
     try {
-      const isCorrectPassword = settings.doubleValidation
-        ? await authActions?.verifyPassword(password)
-        : true
-      if (!isCorrectPassword) {
-        toast.danger(formatMessage(generalMessages.incorrectPassword))
-        return
-      }
-
       let deleted = false
       if (deleteIds.length === 1) {
         deleted = (await actions?.delete(deleteIds[0])) ?? false
@@ -90,7 +74,7 @@ const MediaTab = (): ReactElement => {
   return (
     <div className="mt-2">
       <DeleteDialog
-        onAccept={async (data) => await handleDelete(data.password)}
+        onAccept={handleDelete}
         open={openDeleteMedia}
         onClose={() => setOpenDeleteMedia(false)}
         title={formatMessage(mediaMessages.deleteMedia)}

@@ -2,10 +2,8 @@ import { ReactElement } from 'react'
 import { useFormatMessage } from 'hooks/useIntl'
 import { workGroupsDeleteDialogMessages } from '../messages'
 import { useWorkGroups } from 'context/WorkGroups'
-import { useAuth } from 'context/Auth'
 import useToast from 'hooks/useToast'
 import DeleteDialogTemplate from 'components/DeleteDialog'
-import { useSettings } from 'context/Settings'
 
 interface Props {
   ids: string[]
@@ -23,16 +21,10 @@ const DeleteDialog = ({
 }: Props): ReactElement => {
   const getMessage = useFormatMessage(workGroupsDeleteDialogMessages)
   const { actions } = useWorkGroups()
-  const { actions: authActions } = useAuth()
-  const { settings } = useSettings()
   const { launchToast } = useToast()
 
-  const handleDelete = async (password: string): Promise<void> => {
+  const handleDelete = async (): Promise<void> => {
     try {
-      const isValidPassword = settings.doubleValidation
-        ? await authActions?.verifyPassword(password)
-        : true
-      if (!isValidPassword) resolve(false)
       let deleted = false
       if (ids.length === 1) {
         deleted = (await actions?.deleteWorkGroup(ids[0])) ?? false
@@ -64,7 +56,7 @@ const DeleteDialog = ({
         selectedGroups: ids.length
       })}
       open={ids.length > 0}
-      onAccept={async ({ password }) => await handleDelete(password)}
+      onAccept={handleDelete}
       onClose={onClose}
     />
   )

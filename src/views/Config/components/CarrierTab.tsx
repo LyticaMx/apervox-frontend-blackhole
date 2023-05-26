@@ -6,13 +6,10 @@ import { mediaMessages } from '../messages'
 import Grid from 'components/Grid'
 import Typography from 'components/Typography'
 import ViewFilter from 'components/ViewFilter'
-import { formMessages, generalMessages } from 'globalMessages'
+import { formMessages } from 'globalMessages'
 import GeneralMediaList from './GeneralMediaList'
 import CompanyDrawer from './CompanyDrawer'
 import { useCarriers } from 'context/Carriers'
-import { useAuth } from 'context/Auth'
-import useToast from 'hooks/useToast'
-import { useSettings } from 'context/Settings'
 
 interface FormValues {
   id?: string
@@ -22,11 +19,7 @@ interface FormValues {
 const CarrierTab = (): ReactElement => {
   const { data, actions } = useCarriers()
   const { actions: drawerActions } = useDrawer()
-  const { actions: authActions } = useAuth()
-  const { settings } = useSettings()
-
   const { formatMessage } = useIntl()
-  const toast = useToast()
 
   const [openDeleteCarrier, setOpenDeleteCarrier] = useState(false)
   const [deleteIds, setDeleteIds] = useState<string[]>([])
@@ -35,16 +28,8 @@ const CarrierTab = (): ReactElement => {
     actions?.getData()
   }, [])
 
-  const handleDelete = async (password: string): Promise<void> => {
+  const handleDelete = async (): Promise<void> => {
     try {
-      const isCorrectPassword = settings.doubleValidation
-        ? await authActions?.verifyPassword(password)
-        : true
-      if (!isCorrectPassword) {
-        toast.danger(formatMessage(generalMessages.incorrectPassword))
-        return
-      }
-
       let deleted = false
       if (deleteIds.length === 1) {
         deleted = (await actions?.delete(deleteIds[0])) ?? false
@@ -87,7 +72,7 @@ const CarrierTab = (): ReactElement => {
   return (
     <div className="mt-2">
       <DeleteDialog
-        onAccept={async (data) => await handleDelete(data.password)}
+        onAccept={handleDelete}
         open={openDeleteCarrier}
         onClose={() => setOpenDeleteCarrier(false)}
         title={formatMessage(mediaMessages.deleteMedia)}

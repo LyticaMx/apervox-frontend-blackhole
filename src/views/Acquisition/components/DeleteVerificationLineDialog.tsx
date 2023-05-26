@@ -2,11 +2,8 @@ import DeleteDialog from 'components/DeleteDialog'
 import { ReactElement } from 'react'
 import { useIntl } from 'react-intl'
 import { deleteVerificationLineMessages } from '../messages'
-import { useAuth } from 'context/Auth'
 import { useVerificationLine } from 'context/VerificationLines'
 import useToast from 'hooks/useToast'
-import { platformMessages } from 'globalMessages'
-import { useSettings } from 'context/Settings'
 
 interface Props {
   ids: string[]
@@ -23,23 +20,11 @@ const DeleteVerificationLineDialog = ({
 }: Props): ReactElement => {
   const { formatMessage } = useIntl()
   const { actions: verificationLineActions } = useVerificationLine()
-  const { actions: authActions } = useAuth()
-  const { settings } = useSettings()
   const toast = useToast()
   const open = ids.length > 0
 
-  const handleDelete = async (password: string): Promise<void> => {
+  const handleDelete = async (): Promise<void> => {
     try {
-      const isValidPassword = settings.doubleValidation
-        ? await authActions?.verifyPassword(password)
-        : true
-      if (!isValidPassword) {
-        toast.danger(formatMessage(platformMessages.incorrectPassword))
-        resolve(false)
-        onClose()
-        return
-      }
-
       let deleted = false
 
       if (ids.length === 1) {
@@ -68,7 +53,7 @@ const DeleteVerificationLineDialog = ({
   return (
     <DeleteDialog
       open={open}
-      onAccept={async ({ password }) => await handleDelete(password)}
+      onAccept={handleDelete}
       title={formatMessage(deleteVerificationLineMessages.title, {
         selectedLines: ids.length
       })}
