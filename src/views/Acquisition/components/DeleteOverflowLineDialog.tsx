@@ -6,6 +6,7 @@ import { useOverflowLine } from 'context/OverflowLines'
 import { useAuth } from 'context/Auth'
 import useToast from 'hooks/useToast'
 import { platformMessages } from 'globalMessages'
+import { useSettings } from 'context/Settings'
 
 interface Props {
   ids: string[]
@@ -23,12 +24,15 @@ const DeleteOverflowLineDialog = ({
   const { formatMessage } = useIntl()
   const { actions: overflowLineActions } = useOverflowLine()
   const { actions: authActions } = useAuth()
+  const { settings } = useSettings()
   const toast = useToast()
   const open = ids.length > 0
 
   const handleDelete = async (password: string): Promise<void> => {
     try {
-      const isValidPassword = await authActions?.verifyPassword(password)
+      const isValidPassword = settings.doubleValidation
+        ? await authActions?.verifyPassword(password)
+        : true
       if (!isValidPassword) {
         toast.danger(formatMessage(platformMessages.incorrectPassword))
         resolve(false)
