@@ -5,7 +5,6 @@ import { useWorkGroups } from 'context/WorkGroups'
 import { useAuth } from 'context/Auth'
 import useToast from 'hooks/useToast'
 import DeleteDialogTemplate from 'components/DeleteDialog'
-import { useSettings } from 'context/Settings'
 
 interface Props {
   ids: string[]
@@ -24,14 +23,11 @@ const DeleteDialog = ({
   const getMessage = useFormatMessage(workGroupsDeleteDialogMessages)
   const { actions } = useWorkGroups()
   const { actions: authActions } = useAuth()
-  const { settings } = useSettings()
   const { launchToast } = useToast()
 
   const handleDelete = async (password: string): Promise<void> => {
     try {
-      const isValidPassword = settings.doubleValidation
-        ? await authActions?.verifyPassword(password)
-        : true
+      const isValidPassword = await authActions?.verifyPassword(password)
       if (!isValidPassword) resolve(false)
       let deleted = false
       if (ids.length === 1) {
