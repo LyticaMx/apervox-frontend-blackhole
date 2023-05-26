@@ -26,15 +26,8 @@ const SettingsProvider = ({ children }: Props): ReactElement => {
     } catch {}
   }
 
-  const update = async (
-    options: Partial<SettingsState>,
-    socketUpdate?: boolean
-  ): Promise<boolean> => {
+  const update = async (options: Partial<SettingsState>): Promise<boolean> => {
     try {
-      if (socketUpdate) {
-        setSettings((old) => ({ ...old, ...options }))
-        return true
-      }
       await updateConfigService({
         body: {
           full_evidence_view:

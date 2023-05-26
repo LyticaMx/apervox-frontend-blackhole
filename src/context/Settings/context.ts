@@ -3,10 +3,10 @@ import { SettingsContextType, SettingsState } from 'types/settings'
 
 export const initialState: SettingsState = {
   concurrentSessions: 0,
-  doubleValidation: true,
+  doubleValidation: false,
   downloadPath: '',
   fullEvidenceView: false,
-  inactivityTime: 5
+  inactivityTime: 0
 }
 
 export const SettingsContext: Context<SettingsContextType> = createContext({

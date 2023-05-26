@@ -13,14 +13,12 @@ import ContextDrawer from 'components/Drawer/ContextDrawer'
 import useToast from 'hooks/useToast'
 import { Aside } from 'components/Layout/Aside'
 import { DEFAULT_DRAWER_WIDTH, useDrawer } from 'context/Drawer'
-import { useSettings } from 'context/Settings'
 
 const BaseLayout = ({ children }: Layout): ReactElement => {
   const intl = useIntl()
   const { actions } = useAuth()
   const toast = useToast()
   const { show, type, config } = useDrawer()
-  const { settings } = useSettings()
 
   const onIdle = (): void => {
     toast.danger(intl.formatMessage(apiMessages.sessionExpired))
@@ -28,7 +26,7 @@ const BaseLayout = ({ children }: Layout): ReactElement => {
   }
 
   useIdleTimer({
-    timeout: 1000 * 60 * settings.inactivityTime,
+    timeout: 1000 * 60 * 15,
     onIdle
   })
 
