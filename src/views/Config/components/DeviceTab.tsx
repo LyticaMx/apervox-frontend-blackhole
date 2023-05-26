@@ -14,13 +14,11 @@ import { useDevices } from 'context/Devices'
 import { get } from 'lodash'
 import useToast from 'hooks/useToast'
 import { useAuth } from 'context/Auth'
-import { useSettings } from 'context/Settings'
 
 const DeviceTab = (): ReactElement => {
   const { data, actions } = useDevices()
   const { actions: drawerActions } = useDrawer()
   const { actions: authActions } = useAuth()
-  const { settings } = useSettings()
 
   const { formatMessage } = useIntl()
   const toast = useToast()
@@ -34,9 +32,7 @@ const DeviceTab = (): ReactElement => {
 
   const handleDelete = async (password: string): Promise<void> => {
     try {
-      const isCorrectPassword = settings.doubleValidation
-        ? await authActions?.verifyPassword(password)
-        : true
+      const isCorrectPassword = await authActions?.verifyPassword(password)
       if (!isCorrectPassword) {
         toast.danger(formatMessage(generalMessages.incorrectPassword))
         return
