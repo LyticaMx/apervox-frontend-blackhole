@@ -3,6 +3,8 @@ import { FormProfile, Profile } from './profile'
 export interface SignedIn {
   successLogin: boolean
   firstLogin: boolean
+  lockLogin?: boolean
+  maximumSessionsOpened?: boolean
 }
 export interface Role {
   id: string
@@ -62,6 +64,7 @@ export interface AuthContextType {
       oldPassword: string,
       newPassword: string
     ) => Promise<boolean>
+    closeAllSessions: (params: SignIn) => Promise<SignedIn>
     signOut: () => Promise<boolean>
     getProfile: () => Promise<void>
     updateProfile: (profile: FormProfile) => Promise<boolean>

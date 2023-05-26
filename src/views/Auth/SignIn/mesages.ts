@@ -39,3 +39,15 @@ export const forgotPasswordMessages = defineMessages({
       'Para recuperar tu contraseña es necesario contactar a un administrador.'
   }
 })
+
+export const closeAllSessionsMessages = defineMessages({
+  title: {
+    id: 'views.Auth.CloseAllSessions.title',
+    defaultMessage: 'Has llegado al límite máximo de sesiones'
+  },
+  description: {
+    id: 'views.Auth.CloseAllSessions.description',
+    defaultMessage:
+      'Si desea cerrar todas las sesiones y crear una nueva indique su contraseña'
+  }
+})
