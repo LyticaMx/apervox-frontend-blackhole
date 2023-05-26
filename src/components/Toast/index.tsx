@@ -12,7 +12,7 @@ const Toast = (props: Props): ReactElement => {
   const { title, body } = props
   const { locale } = useLanguage()
   return (
-    <div>
+    <div onClick={(e) => e.preventDefault()}>
       <Typography className="text-secondary" style="semibold" variant="body1">
         {title}
       </Typography>

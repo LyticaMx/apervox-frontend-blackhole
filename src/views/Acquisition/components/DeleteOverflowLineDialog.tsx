@@ -3,9 +3,7 @@ import { ReactElement } from 'react'
 import { useIntl } from 'react-intl'
 import { deleteMessages } from '../messages'
 import { useOverflowLine } from 'context/OverflowLines'
-import { useAuth } from 'context/Auth'
 import useToast from 'hooks/useToast'
-import { platformMessages } from 'globalMessages'
 
 interface Props {
   ids: string[]
@@ -22,19 +20,11 @@ const DeleteOverflowLineDialog = ({
 }: Props): ReactElement => {
   const { formatMessage } = useIntl()
   const { actions: overflowLineActions } = useOverflowLine()
-  const { actions: authActions } = useAuth()
   const toast = useToast()
   const open = ids.length > 0
 
-  const handleDelete = async (password: string): Promise<void> => {
+  const handleDelete = async (): Promise<void> => {
     try {
-      const isValidPassword = await authActions?.verifyPassword(password)
-      if (!isValidPassword) {
-        toast.danger(formatMessage(platformMessages.incorrectPassword))
-        resolve(false)
-        onClose()
-        return
-      }
       let deleted = false
       if (ids.length === 1) {
         deleted = (await overflowLineActions?.deleteOne(ids[0])) ?? false
@@ -58,7 +48,7 @@ const DeleteOverflowLineDialog = ({
   return (
     <DeleteDialog
       open={open}
-      onAccept={async ({ password }) => await handleDelete(password)}
+      onAccept={handleDelete}
       title={formatMessage(deleteMessages.title, {
         selectedLines: ids.length
       })}

@@ -8,7 +8,10 @@ export interface SettingsState {
 
 export interface SettingsActions {
   get: () => Promise<void>
-  update: (options: Partial<SettingsState>) => Promise<boolean>
+  update: (
+    options: Partial<SettingsState>,
+    socketUpdate?: boolean
+  ) => Promise<boolean>
 }
 
 export interface SettingsContextType {

@@ -3,11 +3,14 @@ import Button from 'components/Button'
 import Dialog from 'components/Dialog'
 import PasswordField from 'components/Form/PasswordField'
 import { useFormik } from 'formik'
-import { actionsMessages, formMessages } from 'globalMessages'
+import { actionsMessages, formMessages, platformMessages } from 'globalMessages'
 import { ReactElement, useEffect, useState } from 'react'
 import { useIntl } from 'react-intl'
 import { messages } from './messages'
 import * as yup from 'yup'
+import { useSettings } from 'context/Settings'
+import { useAuth } from 'context/Auth'
+import useToast from 'hooks/useToast'
 
 interface FormValues {
   password: string
@@ -18,7 +21,7 @@ interface Props {
   title: string
   question: string
   confirmation: string
-  onAccept: (data: FormValues) => void
+  onAccept: () => void
   onClose?: () => void
 }
 
@@ -33,16 +36,30 @@ const DeleteDialog = (props: Props): ReactElement => {
   } = props
   const [accepted, setAccepted] = useState<boolean>(false)
   const { formatMessage } = useIntl()
+  const { actions: authActions } = useAuth()
+  const { settings } = useSettings()
+  const toast = useToast()
 
   const validationSchema = yup.object({
     password: yup.string().required(formatMessage(formMessages.required))
   })
 
+  const handlePasswordVerification = async (
+    values: FormValues
+  ): Promise<void> => {
+    const isValidPassword = await authActions?.verifyPassword(values.password)
+    if (!isValidPassword) {
+      toast.danger(formatMessage(platformMessages.incorrectPassword))
+      onClose()
+      return
+    }
+
+    onAccept()
+  }
+
   const formik = useFormik<FormValues>({
     initialValues: { password: '' },
-    onSubmit: (values) => {
-      onAccept(values)
-    },
+    onSubmit: handlePasswordVerification,
     validationSchema
   })
 
@@ -55,6 +72,15 @@ const DeleteDialog = (props: Props): ReactElement => {
       }, 300)
     }
   }, [open])
+
+  const handleAccept = (): void => {
+    if (!settings.doubleValidation) {
+      onAccept()
+      return
+    }
+
+    if (!accepted) setAccepted(true)
+  }
 
   return (
     <Dialog open={open} onClose={onClose} size="sm" padding="none">
@@ -95,9 +121,7 @@ const DeleteDialog = (props: Props): ReactElement => {
             variant="contained"
             color="red"
             type={accepted ? 'submit' : 'button'}
-            onClick={() => {
-              if (!accepted) setAccepted(true)
-            }}
+            onClick={handleAccept}
           >
             {accepted
               ? formatMessage(actionsMessages.delete)

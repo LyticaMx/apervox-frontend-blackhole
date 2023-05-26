@@ -17,7 +17,6 @@ import LetterheadDrawer from './LetterheadDrawer'
 import { useLetterheads } from 'context/Letterheads'
 import Pagination from 'components/Table/Pagination'
 import useToast from 'hooks/useToast'
-import { useAuth } from 'context/Auth'
 
 type SelectedLetterheads = Record<string, boolean>
 
@@ -31,7 +30,6 @@ const LetterheadAdministration = (): ReactElement => {
     searchFilter,
     actions: letterheadActions
   } = useLetterheads()
-  const { actions: authActions } = useAuth()
   const [selected, setSelected] = useState<SelectedLetterheads>({})
   const [deleteIds, setDeleteIds] = useState<string[]>([])
   const toast = useToast()
@@ -64,13 +62,8 @@ const LetterheadAdministration = (): ReactElement => {
     setSelected({})
   }
 
-  const handleDelete = async (password: string): Promise<void> => {
+  const handleDelete = async (): Promise<void> => {
     try {
-      const isCorrectPassword = await authActions?.verifyPassword(password)
-      if (!isCorrectPassword) {
-        toast.danger(formatMessage(generalMessages.incorrectPassword))
-        return
-      }
       let deleted = false
       if (deleteIds.length === 1) {
         deleted = (await letterheadActions?.delete(deleteIds[0])) ?? false
@@ -96,7 +89,7 @@ const LetterheadAdministration = (): ReactElement => {
   return (
     <div>
       <DeleteDialog
-        onAccept={async (data) => await handleDelete(data.password)}
+        onAccept={handleDelete}
         open={deleteIds.length > 0}
         onClose={() => setDeleteIds([])}
         title={formatMessage(letterheadAdministrationMessages.deleteLetterhead)}

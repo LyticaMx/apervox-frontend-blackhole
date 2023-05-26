@@ -1,9 +1,8 @@
 import { ReactElement } from 'react'
 
-import { useAuth } from 'context/Auth'
 import { useRoles } from 'context/Roles'
 
-import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
+import { useFormatMessage } from 'hooks/useIntl'
 import useToast from 'hooks/useToast'
 import { Role } from 'types/auth'
 import Dialog from 'components/DeleteDialog'
@@ -18,26 +17,13 @@ interface Props {
 
 const DeleteDialog = ({ open, role, onClose }: Props): ReactElement => {
   const { actions } = useRoles()
-  const { actions: authActions } = useAuth()
   const toast = useToast()
 
   const getMessage = useFormatMessage(rolesMessages)
   const getDeleteMessage = useFormatMessage(rolesDeleteMessages)
-  const getGlobalMessage = useGlobalMessage()
 
-  const handleDelete = async ({
-    password
-  }: {
-    password: string
-  }): Promise<void> => {
+  const handleDelete = async (): Promise<void> => {
     try {
-      const isCorrect = (await authActions?.verifyPassword(password)) ?? false
-      if (!isCorrect) {
-        toast.danger(getGlobalMessage('incorrectPassword', 'generalMessages'))
-
-        return
-      }
-
       if (role) await actions?.delete(role.id)
 
       toast.success(getMessage('deleteSuccess'))

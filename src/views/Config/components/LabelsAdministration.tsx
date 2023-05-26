@@ -19,9 +19,6 @@ import IndeterminateCheckbox from 'components/Table/IndeterminateCheckbox'
 import LabelDrawer, { FormValues } from './LabelDrawer'
 import { labelsAdministrationMessages, messages } from '../messages'
 import { useLabels } from 'context/Labels'
-import { useAuth } from 'context/Auth'
-import { useGlobalMessage } from 'hooks/useIntl'
-import useToast from 'hooks/useToast'
 import { Label } from 'types/label'
 import { StaticFilter } from 'components/FilterByField'
 
@@ -30,11 +27,7 @@ type SelectedLabels = Record<string, boolean>
 const LabelsAdministration = (): ReactElement => {
   const { formatMessage } = useIntl()
   const { data, actions } = useLabels()
-  const { actions: authActions } = useAuth()
-  const toast = useToast()
-  const getGlobalMessage = useGlobalMessage()
   const { actions: aDrawer } = useDrawer()
-
   const [label, setLabel] = useState<Label | undefined>()
   const [selected, setSelected] = useState<SelectedLabels>({})
   const [openDeleteDrawer, setOpenDeleteDrawer] = useState<boolean>(false)
@@ -101,19 +94,8 @@ const LabelsAdministration = (): ReactElement => {
 
   const totalSelected = useMemo(() => Object.keys(selected).length, [selected])
 
-  const handleDelete = async ({
-    password
-  }: {
-    password: string
-  }): Promise<void> => {
+  const handleDelete = async (): Promise<void> => {
     try {
-      const isCorrect = (await authActions?.verifyPassword(password)) ?? false
-      if (!isCorrect) {
-        toast.danger(getGlobalMessage('incorrectPassword', 'generalMessages'))
-
-        return
-      }
-
       if (label) await actions?.delete(label.id)
       if (totalSelected) await actions?.deleteAll(Object.keys(selected))
 
