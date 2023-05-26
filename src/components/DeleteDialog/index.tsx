@@ -8,7 +8,6 @@ import { ReactElement, useEffect, useState } from 'react'
 import { useIntl } from 'react-intl'
 import { messages } from './messages'
 import * as yup from 'yup'
-import { useSettings } from 'context/Settings'
 
 interface FormValues {
   password: string
@@ -34,7 +33,6 @@ const DeleteDialog = (props: Props): ReactElement => {
   } = props
   const [accepted, setAccepted] = useState<boolean>(false)
   const { formatMessage } = useIntl()
-  const { settings } = useSettings()
 
   const validationSchema = yup.object({
     password: yup.string().required(formatMessage(formMessages.required))
@@ -57,15 +55,6 @@ const DeleteDialog = (props: Props): ReactElement => {
       }, 300)
     }
   }, [open])
-
-  const handleAccept = (): void => {
-    if (!settings.doubleValidation) {
-      onAccept({ password: '' })
-      return
-    }
-
-    if (!accepted) setAccepted(true)
-  }
 
   return (
     <Dialog open={open} onClose={onClose} size="sm" padding="none">
@@ -106,7 +95,9 @@ const DeleteDialog = (props: Props): ReactElement => {
             variant="contained"
             color="red"
             type={accepted ? 'submit' : 'button'}
-            onClick={handleAccept}
+            onClick={() => {
+              if (!accepted) setAccepted(true)
+            }}
           >
             {accepted
               ? formatMessage(actionsMessages.delete)
