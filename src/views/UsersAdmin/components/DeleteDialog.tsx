@@ -5,6 +5,7 @@ import { useUsers } from 'context/Users'
 import useToast from 'hooks/useToast'
 import { useAuth } from 'context/Auth'
 import DeleteDialogTemplate from 'components/DeleteDialog'
+import { useSettings } from 'context/Settings'
 
 interface Props {
   ids: string[]
@@ -21,6 +22,7 @@ const DeleteDialog = ({
 }: Props): ReactElement => {
   const getMessage = useFormatMessage(usersDeleteMessages)
   const { actions } = useUsers()
+  const { settings } = useSettings()
   const { actions: authActions } = useAuth()
   const { launchToast } = useToast()
 
@@ -28,8 +30,9 @@ const DeleteDialog = ({
 
   const handleDelete = async (password: string): Promise<void> => {
     try {
-      const isCorrectPassword =
-        (await authActions?.verifyPassword(password)) ?? false
+      const isCorrectPassword = settings.doubleValidation
+        ? (await authActions?.verifyPassword(password)) ?? false
+        : true
       if (!isCorrectPassword) {
         launchToast({
           title: getMessage('incorrectPassword'),
