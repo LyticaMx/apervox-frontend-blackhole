@@ -3,6 +3,7 @@ import Navbar from 'components/Layout/Navbar'
 import Sidebar from 'components/Layout/Sidebar'
 import Loader from 'components/Loader'
 import { useAuth } from 'context/Auth'
+import { useSettings } from 'context/Settings'
 import { apiMessages } from 'globalMessages'
 import useToast from 'hooks/useToast'
 import { ReactElement } from 'react'
@@ -13,8 +14,8 @@ import { Layout } from 'types/layout'
 const EvidenceLayout = ({ children }: Layout): ReactElement => {
   const intl = useIntl()
   const { actions } = useAuth()
-
   const toast = useToast()
+  const { settings } = useSettings()
 
   const onIdle = (): void => {
     toast.danger(intl.formatMessage(apiMessages.sessionExpired))
@@ -22,7 +23,7 @@ const EvidenceLayout = ({ children }: Layout): ReactElement => {
   }
 
   useIdleTimer({
-    timeout: 1000 * 60 * 15,
+    timeout: 1000 * 60 * settings.inactivityTime,
     onIdle
   })
 

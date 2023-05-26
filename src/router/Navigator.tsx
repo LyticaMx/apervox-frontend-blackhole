@@ -1,4 +1,4 @@
-import { ReactElement, useEffect } from 'react'
+import { ReactElement, useEffect, useRef } from 'react'
 import { Switch, Redirect, Route } from 'react-router-dom'
 
 import { useAuth } from 'context/Auth'
@@ -6,9 +6,13 @@ import { useAuth } from 'context/Auth'
 import { pathRoute, routes } from './routes'
 import { useSocket } from 'hooks/useSocket'
 import { getItem } from 'utils/persistentStorage'
+import { useSettings } from 'context/Settings'
 
 const Navigator = (): ReactElement => {
   const { auth, actions: authActions } = useAuth()
+  const { actions: settingsActions } = useSettings()
+  // Se declara el ref para que quede el valor correcto en el socket
+  const settingsActionsRef = useRef(settingsActions)
 
   const { socket, isSocketConnected } = useSocket({
     namespace: 'sessions',
@@ -23,6 +27,13 @@ const Navigator = (): ReactElement => {
       const ids: string[] = data.ids
       const logout = ids.some((id) => auth.profile.id === id)
       if (logout) authActions?.killSession(true)
+    })
+
+    socket?.on('settings', (data) => {
+      settingsActionsRef.current?.update({
+        inactivityTime: data.inactivity_time,
+        doubleValidation: data.double_validation
+      })
     })
 
     return () => {
