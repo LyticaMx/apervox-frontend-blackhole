@@ -13,6 +13,7 @@ import EditMediaDrawer from './EditMediaDrawer'
 import { useAcquisitionMediums } from 'context/AcquisitionMediums'
 import { useAuth } from 'context/Auth'
 import useToast from 'hooks/useToast'
+import { useSettings } from 'context/Settings'
 
 interface FormValues {
   id?: string
@@ -23,6 +24,7 @@ const MediaTab = (): ReactElement => {
   const { data, actions } = useAcquisitionMediums()
   const { actions: drawerActions } = useDrawer()
   const { actions: authActions } = useAuth()
+  const { settings } = useSettings()
 
   const { formatMessage } = useIntl()
   const toast = useToast()
@@ -36,7 +38,9 @@ const MediaTab = (): ReactElement => {
 
   const handleDelete = async (password: string): Promise<void> => {
     try {
-      const isCorrectPassword = await authActions?.verifyPassword(password)
+      const isCorrectPassword = settings.doubleValidation
+        ? await authActions?.verifyPassword(password)
+        : true
       if (!isCorrectPassword) {
         toast.danger(formatMessage(generalMessages.incorrectPassword))
         return

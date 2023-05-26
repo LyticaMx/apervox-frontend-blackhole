@@ -12,6 +12,7 @@ import CompanyDrawer from './CompanyDrawer'
 import { useCarriers } from 'context/Carriers'
 import { useAuth } from 'context/Auth'
 import useToast from 'hooks/useToast'
+import { useSettings } from 'context/Settings'
 
 interface FormValues {
   id?: string
@@ -22,6 +23,7 @@ const CarrierTab = (): ReactElement => {
   const { data, actions } = useCarriers()
   const { actions: drawerActions } = useDrawer()
   const { actions: authActions } = useAuth()
+  const { settings } = useSettings()
 
   const { formatMessage } = useIntl()
   const toast = useToast()
@@ -35,7 +37,9 @@ const CarrierTab = (): ReactElement => {
 
   const handleDelete = async (password: string): Promise<void> => {
     try {
-      const isCorrectPassword = await authActions?.verifyPassword(password)
+      const isCorrectPassword = settings.doubleValidation
+        ? await authActions?.verifyPassword(password)
+        : true
       if (!isCorrectPassword) {
         toast.danger(formatMessage(generalMessages.incorrectPassword))
         return

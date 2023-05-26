@@ -24,6 +24,7 @@ import { useGlobalMessage } from 'hooks/useIntl'
 import useToast from 'hooks/useToast'
 import { Label } from 'types/label'
 import { StaticFilter } from 'components/FilterByField'
+import { useSettings } from 'context/Settings'
 
 type SelectedLabels = Record<string, boolean>
 
@@ -34,6 +35,7 @@ const LabelsAdministration = (): ReactElement => {
   const toast = useToast()
   const getGlobalMessage = useGlobalMessage()
   const { actions: aDrawer } = useDrawer()
+  const { settings } = useSettings()
 
   const [label, setLabel] = useState<Label | undefined>()
   const [selected, setSelected] = useState<SelectedLabels>({})
@@ -107,7 +109,9 @@ const LabelsAdministration = (): ReactElement => {
     password: string
   }): Promise<void> => {
     try {
-      const isCorrect = (await authActions?.verifyPassword(password)) ?? false
+      const isCorrect = settings.doubleValidation
+        ? (await authActions?.verifyPassword(password)) ?? false
+        : true
       if (!isCorrect) {
         toast.danger(getGlobalMessage('incorrectPassword', 'generalMessages'))
 
