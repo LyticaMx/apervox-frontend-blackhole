@@ -210,7 +210,8 @@ const AuthProvider = ({ children }: Props): ReactElement => {
         phone: res.data?.company?.phone_extension ?? '',
         position: res.data?.company?.position ?? '',
         groups: res.data?.groups ?? [],
-        role: res.data?.role ?? ''
+        role: res.data?.role ?? '',
+        closeByInactivity: res.data?.close_session ?? true
       }
 
       setAuth((auth) => ({ ...auth, profile }))

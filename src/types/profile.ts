@@ -20,4 +20,5 @@ export interface Profile {
   position: string
   groups: ProfileGroup[]
   role: string
+  closeByInactivity: boolean
 }

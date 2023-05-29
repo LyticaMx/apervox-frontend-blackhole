@@ -16,7 +16,8 @@ export const initialState: Auth = {
     phone: '',
     position: '',
     groups: [],
-    role: ''
+    role: '',
+    closeByInactivity: true
   }
 }
 
