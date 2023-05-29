@@ -1,7 +1,7 @@
 import { useState, ReactElement } from 'react'
 import { useHistory } from 'react-router-dom'
 import { format } from 'date-fns'
-import { SortingState, ColumnDef } from '@tanstack/react-table'
+import { ColumnDef } from '@tanstack/react-table'
 
 import { TrashIcon } from '@heroicons/react/24/outline'
 
@@ -32,12 +32,10 @@ import { techniquesDeleteDialogMessages } from '../messages'
 
 const TechniqueList = (): ReactElement => {
   const history = useHistory()
-  const { techniques } = useTechniques()
+  const { data, pagination, actions: techniquesActions } = useTechniques()
   const { actions } = useTechnique()
   const getMessage = useFormatMessage(generalMessages)
   const getDeleteMessage = useFormatMessage(techniquesDeleteDialogMessages)
-
-  const [sortingState, setSortingState] = useState<SortingState>([])
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
   const [openActionNotification, setOpenActionNotification] = useState(false)
   const [techinqueToDelete, setTechinqueToDelete] = useState<string | null>(
@@ -64,10 +62,6 @@ const TechniqueList = (): ReactElement => {
     history.push(pathRoute.technique)
   }
   const normalModeColumns: NonEmptyArray<ColumnDef<Technique>> = [
-    {
-      accessorKey: 'id',
-      header: 'ID'
-    },
     {
       accessorKey: 'name',
       header: getMessage('name')
@@ -111,7 +105,7 @@ const TechniqueList = (): ReactElement => {
       }
     },
     {
-      accessorKey: 'turn_of_attention',
+      accessorKey: 'attention_turn',
       header: getMessage('turnOfAttention'),
       cell: ({ getValue }) => {
         const turn = getValue<Turn>()
@@ -125,6 +119,7 @@ const TechniqueList = (): ReactElement => {
     },
     {
       accessorKey: 'id',
+      enableSorting: false,
       header: getMessage('action'),
       cell: ({ getValue }) => {
         const id = getValue<string>()
@@ -164,14 +159,25 @@ const TechniqueList = (): ReactElement => {
     <>
       <Table
         columns={columns}
-        data={techniques}
+        data={data}
         className="overflow-x-auto shadow rounded-lg"
         manualSorting={{
-          onSortingChange: setSortingState,
-          sorting: sortingState
+          onSortingChange: (sort) => techniquesActions?.get({ sort }),
+          sorting: pagination.sort
         }}
         maxHeight={500}
         withCheckbox
+        manualLimit={{
+          options: [15, 25, 50, 100],
+          onChangeLimit: (page, limit) =>
+            techniquesActions?.get({ page: page + 1, limit })
+        }}
+        pageSize={pagination.limit}
+        manualPagination={{
+          currentPage: pagination.page,
+          totalRecords: pagination.totalRecords,
+          onChange: (page) => techniquesActions?.get({ page: page + 1 })
+        }}
         actionsForSelectedItems={[
           {
             name: 'Eliminar',

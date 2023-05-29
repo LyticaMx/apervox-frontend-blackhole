@@ -38,10 +38,10 @@ export interface Technique {
   expires_at: string
   registered_by: string
   time_on_platform: string
-  total_target: number
   priority: Priority
-  turn_of_attention: Turn
   status: Status
+  attention_turn: Turn
+  total_target: number
 }
 
 export interface Target {
