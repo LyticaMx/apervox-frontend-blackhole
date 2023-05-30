@@ -60,13 +60,13 @@ const TargetCard = ({
           <Typography variant="body2" style="semibold">
             {`${formatMessage(targetCardMessages.creation)}:`}
             <span className="font-normal ml-1">
-              {format(new Date(data.created_at), 'dd/mm/yyyy - HH:mm:ss')}
+              {format(new Date(data.created_at ?? 0), 'dd/mm/yyyy - HH:mm:ss')}
             </span>
           </Typography>
           <Typography variant="body2" style="semibold">
             {`${formatMessage(targetCardMessages.finalization)}:`}
             <span className="font-normal ml-1">
-              {format(new Date(data.expires_at), 'dd/mm/yyyy - HH:mm:ss')}
+              {format(new Date(data.expires_at ?? 0), 'dd/mm/yyyy - HH:mm:ss')}
             </span>
           </Typography>
         </div>

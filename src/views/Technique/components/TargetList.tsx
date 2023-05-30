@@ -45,7 +45,7 @@ const TargetList = ({ data, onSelectItem }: Props): ReactElement => {
     if (alreadyChecked) {
       newList = targetsChecked.filter((id) => id !== target.id)
     } else {
-      newList = [...targetsChecked, target.id]
+      newList = [...targetsChecked, target.id ?? '']
     }
 
     setTargetsChecked(newList)

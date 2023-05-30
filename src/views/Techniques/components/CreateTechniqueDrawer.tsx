@@ -32,6 +32,7 @@ const CreateTechniqueDrawer = ({ open, onClose }: Props): ReactElement => {
           onSubmit={async (values) => {
             console.log('Create workgroup', values)
           }}
+          open={open}
         />
       </div>
     </Drawer>

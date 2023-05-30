@@ -17,7 +17,7 @@ import { targetFormMessages } from '../messages'
 
 type TargetType = 'etsi' | 'conventional'
 
-interface FormValues {
+export interface FormValues {
   name: string
   number: string
   phoneCompany: string

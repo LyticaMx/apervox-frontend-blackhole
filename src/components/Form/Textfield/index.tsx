@@ -29,6 +29,7 @@ export interface Props {
   ref?: React.RefObject<HTMLInputElement>
   labelClassname?: string
   requiredMarker?: boolean
+  disabled?: boolean
 }
 
 const TextField = ({

@@ -1,9 +1,8 @@
 import { ReactElement } from 'react'
 
 import Dialog from 'components/Dialog'
-import { Target } from 'types/technique'
 import Typography from 'components/Typography'
-import TargetForm from './TargetForm'
+import TargetForm, { FormValues } from './TargetForm'
 import { useIntl } from 'react-intl'
 import { createTargetDialogMessages } from '../messages'
 
@@ -11,7 +10,7 @@ interface Props {
   open?: boolean
   selected?: Number
   onClose?: (event?: any) => void
-  onAccept?: (target: Target) => void
+  onAccept?: (target: FormValues) => void
 }
 
 const CreateTargetDialog = ({
