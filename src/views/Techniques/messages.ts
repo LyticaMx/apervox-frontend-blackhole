@@ -193,6 +193,14 @@ export const techniqueFormMessages = defineMessages({
   startEndDate: {
     id: 'views.techniques.TechniqueForm.startEndDate',
     defaultMessage: 'Fecha de inicio y finalización'
+  },
+  loadingGroups: {
+    id: 'views.techniques.CreateTechniqueDrawer.loadingGroups',
+    defaultMessage: 'Cargando grupos'
+  },
+  noGroupsFound: {
+    id: 'views.techniques.CreateTechniqueDrawer.noGroupsFound',
+    defaultMessage: 'No se encontraron grupos'
   }
 })
 
