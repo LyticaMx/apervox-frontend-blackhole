@@ -1,21 +1,18 @@
-import { ReactElement, useMemo, useState } from 'react'
-import { FormikConfig } from 'formik'
+import { ReactElement, useMemo, useRef, useState } from 'react'
+import { FormikConfig, FormikContextType } from 'formik'
 import * as yup from 'yup'
-
 import Form from 'components/Form'
 import { Field } from 'types/form'
 import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
 import Typography from 'components/Typography'
-import Grid from 'components/Grid'
-import MultiChipSelect from 'components/Form/Selectmultiple/MultiChip'
-import { workGroups } from '../mocks'
-import Radio from 'components/Form/Radio'
 import TextField from 'components/Form/Textfield'
 import Button from 'components/Button'
 import { PlusCircleIcon } from '@heroicons/react/24/outline'
 import { Target } from 'types/technique'
 import CreateTargetDialog from './CreateTargetDialog'
 import { techniqueFormMessages } from '../messages'
+import useSections from 'hooks/useSections'
+import { useDidMountEffect } from 'hooks/useDidMountEffect'
 
 type AdvanceTimeType = 'days' | 'hours'
 type PriorityType = 'urgent' | 'high' | 'medium' | 'low'
@@ -24,26 +21,30 @@ export interface FormValues {
   name: string
   description: string
   dates: Date[]
+  groups: any[]
   shift: string
   court: string
+  advanceTimeType: AdvanceTimeType
+  priority: PriorityType
+  advanceTime: string
+  targets: Target[]
 }
 
 interface Props {
   initialValues?: FormValues
   onSubmit: (values: FormValues) => Promise<void>
+  open: boolean
 }
 
-const TechniqueForm = ({ initialValues, onSubmit }: Props): ReactElement => {
+const TechniqueForm = ({
+  initialValues,
+  onSubmit,
+  open
+}: Props): ReactElement => {
   const getMessage = useFormatMessage(techniqueFormMessages)
   const getGlobalMessage = useGlobalMessage()
-
-  const [selectedGroups, setSelectedGroups] = useState([])
-  const [targetsLinked, setTargetsLinked] = useState<Target[]>([])
-  const [advanceTimeType, setAdvanceTimeType] =
-    useState<AdvanceTimeType>('days')
-  const [advanceTime, setAdvanceTime] = useState('')
-  const [priority, setPriority] = useState<PriorityType>('urgent')
   const [openTargetForm, setOpenTargetForm] = useState(false)
+  const formikRef = useRef<FormikContextType<FormValues>>()
 
   const fields: Array<Field<FormValues>> = [
     {
@@ -52,7 +53,8 @@ const TechniqueForm = ({ initialValues, onSubmit }: Props): ReactElement => {
       options: {
         id: 'technique-name',
         label: getMessage('name'),
-        placeholder: getMessage('namePlaceholder')
+        placeholder: getMessage('namePlaceholder'),
+        requiredMarker: true
       },
       breakpoints: { xs: 12 }
     },
@@ -64,7 +66,8 @@ const TechniqueForm = ({ initialValues, onSubmit }: Props): ReactElement => {
         label: getMessage('description'),
         placeholder: getMessage('groupDescription'),
         multiline: true,
-        rows: 4
+        rows: 4,
+        requiredMarker: true
       },
       breakpoints: { xs: 12 }
     },
@@ -74,121 +77,128 @@ const TechniqueForm = ({ initialValues, onSubmit }: Props): ReactElement => {
       options: {
         id: 'techinque-date-start-end',
         label: getMessage('date'),
-        formatDisplay: 'dd/mm/yyyy'
+        formatDisplay: 'dd/MM/yyyy',
+        minDate: new Date().toISOString(),
+        requiredMarker: true
       },
       breakpoints: { xs: 12 }
     },
     {
-      type: 'custom',
+      type: 'async-select',
       name: 'groups',
-      children: (
-        <div className="mt-2">
-          <Grid spacing={1} className="mb-3">
-            <Grid item xs={12}>
-              <MultiChipSelect
-                label={getMessage('groups')}
-                selected={selectedGroups}
-                onChange={setSelectedGroups}
-                items={workGroups}
-                textField="name"
-                valueField="id"
-                chipProps={{
-                  variant: 'caption',
-                  className: 'bg-primary-50'
-                }}
-              />
-            </Grid>
-          </Grid>
-          <Typography
-            variant="body2"
-            style="medium"
-            className="uppercase text-primary-500"
-          >
-            {getMessage('notification')}
-          </Typography>
-
-          <Typography variant="body2" className="mb-2">
-            {getMessage('notificationTime')}
-          </Typography>
-          <Grid spacing={1} className="mb-3">
-            <Grid item xs={6}>
-              <Radio
-                label={getMessage('days')}
-                value="days"
-                checked={advanceTimeType === 'days'}
-                onChange={() => setAdvanceTimeType('days')}
-              />
-              <TextField
-                placeholder={getMessage('daysPlaceholder')}
-                type="number"
-                value={advanceTimeType === 'days' ? advanceTime : ''}
-                onChange={(e) => setAdvanceTime(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <Radio
-                label={getMessage('hours')}
-                value="hours"
-                checked={advanceTimeType === 'hours'}
-                onChange={() => setAdvanceTimeType('hours')}
-              />
-              <TextField
-                placeholder={getMessage('hoursPlaceholder')}
-                type="number"
-                value={advanceTimeType === 'hours' ? advanceTime : ''}
-                onChange={(e) => setAdvanceTime(e.target.value)}
-              />
-            </Grid>
-          </Grid>
-          <Typography
-            variant="body2"
-            style="medium"
-            className="uppercase text-primary-500"
-          >
-            {getMessage('priority')}
-          </Typography>
-          <div className="flex mt-2">
-            <Radio
-              label={getMessage('urgent')}
-              value="urgent"
-              checked={priority === 'urgent'}
-              onChange={() => setPriority('urgent')}
-              className="mr-4"
-            />
-            <Radio
-              label={getMessage('high')}
-              value="high"
-              checked={priority === 'high'}
-              onChange={() => setPriority('high')}
-              className="mr-4"
-            />
-            <Radio
-              label={getMessage('normal')}
-              value="urgent"
-              checked={priority === 'medium'}
-              onChange={() => setPriority('urgent')}
-              className="mr-4"
-            />
-            <Radio
-              label={getMessage('low')}
-              value="low"
-              checked={priority === 'low'}
-              onChange={() => setPriority('low')}
-            />
-          </div>
-          <Typography
-            variant="body2"
-            style="medium"
-            className="uppercase text-primary-500 mt-2"
-          >
-            {getMessage('follow')}
-          </Typography>
-          <Typography variant="body2" className="mb-2">
-            {getMessage('cutSubtitle')}
-          </Typography>
-        </div>
+      options: {
+        asyncProps: {
+          api: {
+            endpoint: 'groups',
+            method: 'get'
+          },
+          value: 'id',
+          label: 'name',
+          searchField: 'name'
+        },
+        debounceTimeout: 300,
+        label: getMessage('groups'),
+        isMulti: true,
+        placeholder: `${getMessage('search')}...`,
+        loadingMessage: () => getMessage('loadingGroups'),
+        noOptionsMessage: () => getMessage('noGroupsFound')
+      }
+    },
+    {
+      name: 'advanceTimeType',
+      type: 'radio',
+      options: {
+        label: getMessage('days'),
+        value: 'days'
+      },
+      breakpoints: {
+        xs: 6
+      },
+      section: 'notification'
+    },
+    {
+      name: 'advanceTimeType',
+      type: 'radio',
+      options: {
+        label: getMessage('hours'),
+        value: 'hours'
+      },
+      breakpoints: {
+        xs: 6
+      },
+      section: 'notification'
+    },
+    {
+      name: 'advanceTime',
+      type: 'custom',
+      children: ({ name, setFieldValue, values, errors, touched }) => (
+        <TextField
+          value={values.advanceTimeType === 'days' ? values[name] : ''}
+          disabled={values.advanceTimeType !== 'days'}
+          placeholder={getMessage('daysPlaceholder')}
+          onChange={(e) => setFieldValue(name, e.target.value)}
+          error={Boolean(errors[name] && touched[name])}
+          helperText={errors[name] && touched[name] ? errors[name] : ''}
+        />
       ),
-      breakpoints: { xs: 12 }
+      breakpoints: { xs: 6 },
+      section: 'notification'
+    },
+    {
+      name: 'advanceTime',
+      type: 'custom',
+      children: ({ name, setFieldValue, values, errors, touched }) => (
+        <TextField
+          value={values.advanceTimeType === 'hours' ? values[name] : ''}
+          disabled={values.advanceTimeType !== 'hours'}
+          placeholder={getMessage('hoursPlaceholder')}
+          onChange={(e) => setFieldValue(name, e.target.value)}
+          error={Boolean(errors[name] && touched[name])}
+          helperText={errors[name] && touched[name] ? errors[name] : ''}
+        />
+      ),
+      breakpoints: { xs: 6 },
+      section: 'notification'
+    },
+    {
+      name: 'priority',
+      type: 'radio',
+      options: {
+        label: getMessage('urgent'),
+        value: 'urgent'
+      },
+      breakpoints: { xs: 12, md: 3 },
+      section: 'priority'
+    },
+    {
+      name: 'priority',
+      type: 'radio',
+      options: {
+        label: getMessage('high'),
+        value: 'high'
+      },
+      breakpoints: { xs: 12, md: 3 },
+      section: 'priority'
+    },
+    {
+      name: 'priority',
+      type: 'radio',
+      options: {
+        label: getMessage('medium'),
+        value: 'medium'
+      },
+      breakpoints: { xs: 12, md: 3 },
+      section: 'priority'
+    },
+    {
+      name: 'priority',
+      type: 'radio',
+      options: {
+        label: getMessage('low'),
+        value: 'low'
+      },
+      breakpoints: { xs: 12, md: 3 },
+      section: 'priority'
     },
     {
       type: 'select',
@@ -214,31 +224,27 @@ const TechniqueForm = ({ initialValues, onSubmit }: Props): ReactElement => {
         textField: 'label',
         valueField: 'id'
       },
-      breakpoints: { xs: 6 }
+      breakpoints: { xs: 12, md: 6 },
+      section: 'follow'
     },
     {
       type: 'text',
       name: 'court',
       options: {
         label: getMessage('court'),
-        placeholder: getMessage('courtPlaceholder')
+        placeholder: getMessage('courtPlaceholder'),
+        labelSpacing: '1'
       },
-      breakpoints: { xs: 6 }
+      breakpoints: { xs: 12, md: 6 },
+      section: 'follow'
     },
     {
       type: 'custom',
-      name: 'groups',
-      children: (
+      name: 'targets',
+      children: ({ values, name }) => (
         <div className="mt-2">
-          <Typography
-            variant="body2"
-            style="medium"
-            className="uppercase text-primary-500 mt-2"
-          >
-            {getMessage('associatedTargets')}
-          </Typography>
           <div className="my-2">
-            {targetsLinked.map((target, index) => (
+            {values[name].map((target, index) => (
               <Typography key={`new-target-${index}`}>
                 {target.phone_number}
               </Typography>
@@ -253,9 +259,69 @@ const TechniqueForm = ({ initialValues, onSubmit }: Props): ReactElement => {
           </Button>
         </div>
       ),
-      breakpoints: { xs: 12 }
+      breakpoints: { xs: 12 },
+      section: 'targets'
     }
   ]
+
+  const sections = useSections(() => [
+    {
+      name: 'notification',
+      title: {
+        text: getMessage('notification'),
+        style: 'medium',
+        variant: 'body2',
+        className: 'uppercase text-primary-500'
+      },
+      description: {
+        text: getMessage('notificationTime'),
+        variant: 'body2',
+        className: 'text-secondary'
+      },
+      spacing: 2
+    },
+    {
+      name: 'priority',
+      title: {
+        text: getMessage('priority'),
+        style: 'medium',
+        variant: 'body2',
+        className: 'uppercase text-primary-500'
+      }
+    },
+    {
+      name: 'follow',
+      title: {
+        text: getMessage('follow'),
+        style: 'medium',
+        variant: 'body2',
+        className: 'uppercase text-primary-500'
+      },
+      description: {
+        text: getMessage('cutSubtitle'),
+        variant: 'body2',
+        className: 'text-secondary'
+      },
+      spacing: 2
+    },
+    {
+      name: 'targets',
+      title: {
+        text: getMessage('associatedTargets'),
+        style: 'medium',
+        variant: 'body2',
+        className: 'uppercase text-primary-500'
+      }
+    }
+  ])
+
+  useDidMountEffect(() => {
+    if (!open) {
+      setTimeout(() => {
+        formikRef.current?.resetForm()
+      }, 100)
+    }
+  }, [open])
 
   const validationSchema = yup.object({
     name: yup.string().required(getMessage('required')),
@@ -269,14 +335,15 @@ const TechniqueForm = ({ initialValues, onSubmit }: Props): ReactElement => {
         description: initialValues?.description ?? '',
         dates: initialValues?.dates ?? [],
         court: initialValues?.court ?? '',
-        shift: initialValues?.shift ?? ''
+        shift: initialValues?.shift ?? '',
+        groups: initialValues?.groups ?? [],
+        advanceTimeType: initialValues?.advanceTimeType ?? 'days',
+        advanceTime: initialValues?.advanceTime ?? '',
+        priority: initialValues?.priority ?? 'medium',
+        targets: initialValues?.targets ?? []
       },
       validationSchema,
-      onSubmit: (values) => {
-        console.log(values)
-
-        onSubmit(values)
-      }
+      onSubmit
     }),
     [initialValues]
   )
@@ -285,6 +352,7 @@ const TechniqueForm = ({ initialValues, onSubmit }: Props): ReactElement => {
     <div>
       <Form
         formikConfig={formikConfig}
+        formikRef={formikRef}
         fields={fields}
         submitButtonPosition="right"
         submitButtonLabel={getGlobalMessage('save', 'actionsMessages')}
@@ -293,13 +361,25 @@ const TechniqueForm = ({ initialValues, onSubmit }: Props): ReactElement => {
           variant: 'contained',
           className: 'mt-6 mb-2'
         }}
+        withSections={{
+          sections,
+          renderMainSection: true
+        }}
       />
       <CreateTargetDialog
         open={openTargetForm}
         onClose={() => setOpenTargetForm(false)}
-        onAccept={(target: Target) => {
-          const newTargetLinkedList = [...targetsLinked, target]
-          setTargetsLinked(newTargetLinkedList)
+        onAccept={(target) => {
+          const newTarget: Target = {
+            name: target.name,
+            phone_company: target.phoneCompany,
+            phone_number: target.number
+          }
+
+          formikRef.current?.setFieldValue(
+            'targets',
+            formikRef.current.values.targets.concat([newTarget])
+          )
           setOpenTargetForm(false)
         }}
       />

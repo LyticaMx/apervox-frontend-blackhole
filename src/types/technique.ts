@@ -45,14 +45,15 @@ export interface Technique {
 }
 
 export interface Target {
-  id: string
+  id?: string
   name: string
   phone_number: string
-  expires_at: string
-  created_at: string
-  phone_company: PhoneCompany
-  liid: string
-  liid_v: string
+  expires_at?: string
+  created_at?: string
+  phone_company: string
+  overflow_id?: string
+  liid?: string
+  liid_v?: string
 }
 
 export interface Evidence {

@@ -9,7 +9,13 @@ import {
   useFormik
 } from 'formik'
 import { actionsMessages } from 'globalMessages'
-import { MutableRefObject, ReactElement, useEffect, useMemo } from 'react'
+import {
+  MutableRefObject,
+  ReactElement,
+  ReactNode,
+  useEffect,
+  useMemo
+} from 'react'
 import { useIntl } from 'react-intl'
 import { Field, Section, SubmitButtonProps } from 'types/form'
 import { fieldMapper } from './helpers'
@@ -30,6 +36,7 @@ interface Props<T> {
   className?: string
   initialValuesCanChange?: boolean
   onChangeValues?: (values: FormikContextType<T>) => void
+  buttons?: ReactNode
 }
 
 const Form = <DataType extends FormikValues = FormikValues>(
@@ -153,7 +160,7 @@ const Form = <DataType extends FormikValues = FormikValues>(
       )}
 
       <div className={clsx('flex items-center', buttonPosition)}>
-        {renderSubmitButton && (
+        {renderSubmitButton && !props.buttons && (
           <Button
             {...submitButtonProps}
             type="submit"
@@ -162,6 +169,7 @@ const Form = <DataType extends FormikValues = FormikValues>(
             {submitButtonLabel ?? formatMessage(actionsMessages.send)}
           </Button>
         )}
+        {props.buttons}
       </div>
     </form>
   )

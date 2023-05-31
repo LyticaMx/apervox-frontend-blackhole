@@ -70,7 +70,7 @@ export type MultiChipSelectProps = Omit<
 
 export type AsyncSelectProps = Omit<
   AsyncSelectPropsOrigin,
-  'value' | 'onChange'
+  'value' | 'onChange' | 'error' | 'helperText'
 >
 
 export type SwitchProps = Omit<SwitchPropsOrigin, 'value' | 'onChange'> & {

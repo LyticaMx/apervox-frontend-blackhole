@@ -50,6 +50,11 @@ const AuthProvider = ({ children }: Props): ReactElement => {
     method: 'post'
   })
 
+  const userSessionsService = useApi({
+    endpoint: 'auth/user-sessions',
+    method: 'delete'
+  })
+
   const signOutService = useApi({
     endpoint: 'auth/logout',
     method: 'post'
@@ -102,11 +107,19 @@ const AuthProvider = ({ children }: Props): ReactElement => {
         successLogin: false,
         firstLogin: true
       }
-    } catch (error) {
-      return {
+    } catch (error: any) {
+      const signedIn: SignedIn = {
         successLogin: false,
         firstLogin: true
       }
+
+      if (error.response.status === 429) {
+        signedIn.lockLogin = true
+      } else if (error.response.status === 418) {
+        signedIn.maximumSessionsOpened = true
+      }
+
+      return signedIn
     }
   }
 
@@ -166,6 +179,28 @@ const AuthProvider = ({ children }: Props): ReactElement => {
       return true
     } catch (e) {
       return false
+    }
+  }
+
+  const closeAllSessions = async (params: SignIn): Promise<SignedIn> => {
+    try {
+      const response = await userSessionsService({
+        body: params
+      })
+
+      if (response.data.success) {
+        return await signIn(params)
+      }
+
+      return {
+        firstLogin: false,
+        successLogin: false
+      }
+    } catch {
+      return {
+        firstLogin: false,
+        successLogin: false
+      }
     }
   }
 
@@ -294,6 +329,7 @@ const AuthProvider = ({ children }: Props): ReactElement => {
         signUp,
         changePassword,
         verifyPassword,
+        closeAllSessions,
         signOut,
         getProfile,
         updateProfile,
