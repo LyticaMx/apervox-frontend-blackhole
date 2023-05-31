@@ -77,7 +77,7 @@ const TechniqueForm = ({
       type: 'date',
       name: 'startDate',
       options: {
-        label: getMessage('date'),
+        label: getMessage('startDate'),
         formatDisplay: 'dd/MM/yyyy',
         minDate: format(new Date(), 'yyyy-MM-dd'),
         requiredMarker: true,
@@ -89,7 +89,7 @@ const TechniqueForm = ({
       type: 'date',
       name: 'endDate',
       options: {
-        label: getMessage('date'),
+        label: getMessage('endDate'),
         formatDisplay: 'dd/MM/yyyy',
         minDate: format(addDays(new Date(), 1), 'yyyy-MM-dd'),
         requiredMarker: true

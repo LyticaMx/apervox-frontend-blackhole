@@ -32,7 +32,7 @@ const CreateTechniqueDrawer = ({ open, onClose }: Props): ReactElement => {
           {formatMessage(createTechniqueDrawerMessages.completeFields)}
         </Typography>
 
-        <TechniqueForm onSubmit={handleSubmit} />
+        <TechniqueForm onSubmit={handleSubmit} open={open} />
       </div>
     </Drawer>
   )
