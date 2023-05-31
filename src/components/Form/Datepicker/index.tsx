@@ -31,6 +31,7 @@ export interface Props {
   minDate?: string
   maxDate?: string
   requiredMarker?: boolean
+  disabled?: boolean
 }
 
 const Datepicker = ({
@@ -45,6 +46,7 @@ const Datepicker = ({
   minDate,
   maxDate,
   requiredMarker,
+  disabled,
   ...props
 }: Props): ReactElement => {
   const ref = useRef(null)
@@ -108,7 +110,9 @@ const Datepicker = ({
     setType('date')
   }
 
-  const toggleDatepicker = (): void => setShowDatepicker((prev) => !prev)
+  const toggleDatepicker = (): void => {
+    if (!disabled) setShowDatepicker((prev) => !prev)
+  }
 
   const showMonthPicker = (): void => setType('month')
 
@@ -137,10 +141,15 @@ const Datepicker = ({
           id={id}
           type="text"
           readOnly
-          className={clsx('cursor-pointer', formClasses, {
-            'border-red-500 border-2': error
-          })}
+          className={clsx(
+            disabled ? 'cursor-not-allowed' : 'cursor-pointer',
+            formClasses,
+            {
+              'border-red-500 border-2': error
+            }
+          )}
           {...props}
+          disabled={disabled}
           value={inputValue}
           onClick={toggleDatepicker}
         />
@@ -156,7 +165,10 @@ const Datepicker = ({
           )}
           <CalendarDaysIcon
             onClick={toggleDatepicker}
-            className="cursor-pointer h-6 w-6 text-gray-400"
+            className={clsx(
+              disabled ? 'cursor-not-allowed' : 'cursor-pointer',
+              'h-6 w-6 text-gray-400'
+            )}
           />
         </div>
         {showDatepicker && (
