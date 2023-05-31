@@ -49,7 +49,6 @@ export interface Actions {
       TechniquesStaticFilter,
     getTotal?: boolean
   ) => Promise<void>
-  // create: (technique: TechniqueCreator) => Promise<boolean>
   deleteOne: (id: string, full?: boolean) => Promise<boolean>
   deleteMany: (ids: string[], full?: boolean) => Promise<boolean>
 }

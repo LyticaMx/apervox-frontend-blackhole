@@ -86,9 +86,8 @@ const useActions = (state: State, dispatch): Actions => {
         })
       )
 
-      console.log('====================================')
+      // Es necesario hasta la integración
       console.log({ sort, mappedFilters, data: { startTime, endTime } })
-      console.log('====================================')
     } catch {}
   }
 
