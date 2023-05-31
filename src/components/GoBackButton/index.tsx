@@ -1,4 +1,5 @@
 import { ArrowUturnLeftIcon } from '@heroicons/react/24/outline'
+import clsx from 'clsx'
 import Tooltip from 'components/Tooltip'
 import { actionsMessages } from 'globalMessages'
 import { ReactElement, ReactNode } from 'react'
@@ -7,6 +8,7 @@ import { Link } from 'react-router-dom'
 
 interface Props {
   route: string | (() => void)
+  className?: string
 }
 
 const GoBackButton = (props: Props): ReactElement => {
@@ -33,7 +35,11 @@ const GoBackButton = (props: Props): ReactElement => {
   }
 
   return (
-    <div className="absolute top-2 right-4 xl:right-16 2xl:right-32">
+    <div
+      className={clsx(
+        props.className ?? 'absolute top-2 right-4 xl:right-16 2xl:right-32'
+      )}
+    >
       <Tooltip
         content={formatMessage(actionsMessages.goBack)}
         floatProps={{ offset: 10, arrow: true }}

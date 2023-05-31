@@ -23,10 +23,10 @@ export const colorByPriority = {
 
 const TechniqueList = (): ReactElement => {
   const { technique, actions } = useTechnique()
-  const { techniques, actions: actionsTechniques } = useTechniques()
+  const { data, actions: actionsTechniques } = useTechniques()
   const getMessage = useGlobalMessage()
   useEffect(() => {
-    actionsTechniques?.getTechniques()
+    actionsTechniques?.get()
   }, [])
 
   return (
@@ -35,7 +35,7 @@ const TechniqueList = (): ReactElement => {
         {getMessage('techniques', 'sidebarMessages')}
       </Typography>
       <Scroller>
-        {techniques?.map((item) => (
+        {data?.map((item) => (
           <button
             onClick={() => actions?.setTechnique(item)}
             className={clsx(

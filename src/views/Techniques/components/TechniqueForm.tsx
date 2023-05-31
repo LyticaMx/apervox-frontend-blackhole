@@ -17,7 +17,7 @@ import { useDidMountEffect } from 'hooks/useDidMountEffect'
 type AdvanceTimeType = 'days' | 'hours'
 type PriorityType = 'urgent' | 'high' | 'medium' | 'low'
 
-interface FormValues {
+export interface FormValues {
   name: string
   description: string
   dates: Date[]
