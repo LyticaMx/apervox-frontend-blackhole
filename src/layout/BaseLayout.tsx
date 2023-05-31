@@ -17,7 +17,7 @@ import { useSettings } from 'context/Settings'
 
 const BaseLayout = ({ children }: Layout): ReactElement => {
   const intl = useIntl()
-  const { actions } = useAuth()
+  const { actions, auth } = useAuth()
   const toast = useToast()
   const { show, type, config } = useDrawer()
   const { settings } = useSettings()
@@ -29,7 +29,8 @@ const BaseLayout = ({ children }: Layout): ReactElement => {
 
   useIdleTimer({
     timeout: 1000 * 60 * settings.inactivityTime,
-    onIdle
+    onIdle,
+    startManually: !auth.profile.closeByInactivity
   })
 
   return (

@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useEffect } from 'react'
 import { useToggle } from 'usehooks-ts'
 
 import Title from 'components/Title'
 
 import { useFormatMessage } from 'hooks/useIntl'
-import { Target, Technique } from 'types/technique'
 
 import TechniqueFilter from './components/TechniqueFilter'
 import TechniqueList from './components/TechniqueList'
@@ -22,7 +21,7 @@ const Techniques = (): ReactElement => {
   const [openCreateDrawer, toggleOpenCreateDrawer] = useToggle(false)
 
   useEffect(() => {
-    actions?.getTechniques()
+    actions?.get()
   }, [])
 
   return (

@@ -13,7 +13,7 @@ export const techniquesData: Technique[] = [
     time_on_platform: '1 día',
     total_target: 3,
     priority: Priority.HIGH,
-    turn_of_attention: Turn.MORNING,
+    attention_turn: Turn.MORNING,
     status: Status.TO_COMPLETE
   },
   {
@@ -25,7 +25,7 @@ export const techniquesData: Technique[] = [
     time_on_platform: '25 días',
     total_target: 24,
     priority: Priority.HIGH,
-    turn_of_attention: Turn.EVENING,
+    attention_turn: Turn.EVENING,
     status: Status.TO_COMPLETE
   },
   {
@@ -37,7 +37,7 @@ export const techniquesData: Technique[] = [
     time_on_platform: '10 días',
     total_target: 10,
     priority: Priority.LOW,
-    turn_of_attention: Turn.NIGHTNING,
+    attention_turn: Turn.NIGHTNING,
     status: Status.CURRENT
   },
   {
@@ -49,7 +49,7 @@ export const techniquesData: Technique[] = [
     time_on_platform: '1 mes',
     total_target: 20,
     priority: Priority.LOW,
-    turn_of_attention: Turn.EVENING,
+    attention_turn: Turn.EVENING,
     status: Status.CURRENT
   },
   {
@@ -61,7 +61,7 @@ export const techniquesData: Technique[] = [
     time_on_platform: '12 días',
     total_target: 44,
     priority: Priority.MEDIUM,
-    turn_of_attention: Turn.MORNING,
+    attention_turn: Turn.MORNING,
     status: Status.COMPLETED
   }
 ]
@@ -181,7 +181,7 @@ export const evidencesData: Evidence[] = [
     follow_up: 'ggarcia',
     obtained_from: 'ETZI',
     tag: 1,
-    clasification: 3,
+    clasification: 2,
     type: 3
   }
 ]

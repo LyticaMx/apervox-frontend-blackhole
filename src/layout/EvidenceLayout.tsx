@@ -13,7 +13,7 @@ import { Layout } from 'types/layout'
 
 const EvidenceLayout = ({ children }: Layout): ReactElement => {
   const intl = useIntl()
-  const { actions } = useAuth()
+  const { actions, auth } = useAuth()
   const toast = useToast()
   const { settings } = useSettings()
 
@@ -24,7 +24,8 @@ const EvidenceLayout = ({ children }: Layout): ReactElement => {
 
   useIdleTimer({
     timeout: 1000 * 60 * settings.inactivityTime,
-    onIdle
+    onIdle,
+    startManually: auth.profile.closeByInactivity
   })
 
   return (

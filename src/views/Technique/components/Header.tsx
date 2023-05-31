@@ -13,7 +13,7 @@ const Header = (): ReactElement => {
   return (
     <div className="flex justify-between">
       <div className="flex justify-start items-center">
-        <GoBackButton route={pathRoute.techniques} />
+        <GoBackButton route={pathRoute.techniques} className="self-center" />
 
         <div className="ml-2 flex flex-col justify-center">
           <Title className="uppercase">{technique?.name}</Title>

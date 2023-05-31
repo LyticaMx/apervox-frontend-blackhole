@@ -1,7 +1,7 @@
 import { ReactElement } from 'react'
 import Drawer from 'components/Drawer'
 import Typography from 'components/Typography'
-import TechniqueForm from './TechniqueForm'
+import TechniqueForm, { FormValues } from './TechniqueForm'
 import { useIntl } from 'react-intl'
 import { createTechniqueDrawerMessages } from '../messages'
 
@@ -11,6 +11,10 @@ interface Props {
 }
 const CreateTechniqueDrawer = ({ open, onClose }: Props): ReactElement => {
   const { formatMessage } = useIntl()
+
+  const handleSubmit = async (values: FormValues): Promise<void> => {
+    console.log(values)
+  }
 
   return (
     <Drawer
@@ -28,12 +32,7 @@ const CreateTechniqueDrawer = ({ open, onClose }: Props): ReactElement => {
           {formatMessage(createTechniqueDrawerMessages.completeFields)}
         </Typography>
 
-        <TechniqueForm
-          onSubmit={async (values) => {
-            console.log('Create workgroup', values)
-          }}
-          open={open}
-        />
+        <TechniqueForm onSubmit={handleSubmit} />
       </div>
     </Drawer>
   )
