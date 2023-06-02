@@ -141,9 +141,13 @@ export const techniqueFormMessages = defineMessages({
     id: 'views.techniques.TechniqueForm.groupdDescription',
     defaultMessage: 'Escribe aquí la descripción del grupo.'
   },
-  date: {
-    id: 'views.techniques.TechniqueForm.date',
-    defaultMessage: 'Fecha de inicio y finalización'
+  startDate: {
+    id: 'views.techniques.TechniqueForm.startDate',
+    defaultMessage: 'Fecha de inicio'
+  },
+  endDate: {
+    id: 'views.techniques.TechniqueForm.endDate',
+    defaultMessage: 'Fecha de finalización'
   },
   notification: {
     id: 'views.techniques.TechniqueForm.notification',

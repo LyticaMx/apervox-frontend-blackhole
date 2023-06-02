@@ -7,8 +7,6 @@ import { Field } from 'types/form'
 import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
 import Grid from 'components/Grid'
 import Radio from 'components/Form/Radio'
-import SelectField from 'components/Form/Select'
-import TextField from 'components/Form/Textfield'
 import Switch from 'components/Form/Switch'
 import Datepicker from 'components/Form/Datepicker'
 import Typography from 'components/Typography'
@@ -21,6 +19,11 @@ export interface FormValues {
   name: string
   number: string
   phoneCompany: string
+  endDate: Date | null
+  overflowLine?: any
+  liid?: string
+  liidVolte?: string
+  type: TargetType
 }
 
 interface Props {
@@ -34,45 +37,8 @@ const TargetForm = ({ initialValues, onSubmit }: Props): ReactElement => {
   const [state, toggle] = useToggle(false)
 
   const [targetType, setTargetType] = useState<TargetType>('etsi')
-  const [derivationLine, setDerivationLine] = useState<string>('')
-  const [endDate, setEndDate] = useState<string>('')
-  const [etsiLiid, setEtsiLiid] = useState({
-    base: '',
-    volte: ''
-  })
-
-  const handleChangeEtsiValues = (name: string, newValue: string): void => {
-    setEtsiLiid((prev) => ({ ...prev, [name]: newValue }))
-  }
 
   const fields: Array<Field<FormValues>> = [
-    {
-      type: 'custom',
-      name: 'groups',
-      children: (
-        <div className="mt-2">
-          <Grid spacing={1} className="mb-3">
-            <Grid item xs={6}>
-              <Radio
-                label={getMessage('etsiTargets')}
-                value="etsi"
-                checked={targetType === 'etsi'}
-                onChange={() => setTargetType('etsi')}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <Radio
-                label={getMessage('conventionalTargets')}
-                value="conventional"
-                checked={targetType === 'conventional'}
-                onChange={() => setTargetType('conventional')}
-              />
-            </Grid>
-          </Grid>
-        </div>
-      ),
-      breakpoints: { xs: 12 }
-    },
     {
       type: 'text',
       name: 'name',
@@ -80,7 +46,8 @@ const TargetForm = ({ initialValues, onSubmit }: Props): ReactElement => {
         id: 'target-name',
         label: getMessage('targetName'),
         placeholder: getMessage('targetNamePlaceholder'),
-        labelSpacing: '1'
+        labelSpacing: '1',
+        requiredMarker: true
       },
       breakpoints: { xs: 12 }
     },
@@ -91,14 +58,15 @@ const TargetForm = ({ initialValues, onSubmit }: Props): ReactElement => {
         id: 'target-number',
         label: getMessage('targetNumber'),
         placeholder: getMessage('targetNumberPlaceholder'),
-        labelSpacing: '1'
+        labelSpacing: '1',
+        requiredMarker: true
       },
       breakpoints: { xs: 12 }
     },
     {
       type: 'custom',
       name: 'endDate',
-      children: (
+      children: ({ name, values, setFieldValue }) => (
         <div className="mt-2">
           <div className="flex items-center">
             <Switch onChange={toggle} value={state} color="indigo" />
@@ -109,77 +77,80 @@ const TargetForm = ({ initialValues, onSubmit }: Props): ReactElement => {
           <Typography className="leading-tight mb-2">
             {getMessage('endDateWarning')}
           </Typography>
-          <Datepicker onChange={(value) => setEndDate(value)} value={endDate} />
+          <Datepicker
+            onChange={(value) => setFieldValue(name, value)}
+            value={values[name]}
+            disabled={!state}
+          />
         </div>
       ),
       breakpoints: { xs: 12 }
     },
     {
-      type: 'select',
+      type: 'async-select',
       name: 'phoneCompany',
       options: {
+        asyncProps: {
+          api: {
+            endpoint: 'carriers',
+            method: 'get'
+          },
+          value: 'id',
+          label: 'name',
+          searchField: 'name'
+        },
         label: getMessage('carrier'),
-        items: [
-          { id: '01', name: 'Telcel' },
-          { id: '02', name: 'AT&T' },
-          { id: '03', name: 'Movi' }
-        ],
-        clearable: true,
-        valueField: 'id',
-        textField: 'name'
+        debounceTimeout: 300,
+        requiredMarker: true
       },
       breakpoints: { xs: 12 }
     },
-    {
-      type: 'custom',
-      name: 'targetTypeValues',
-      children: (
-        <div className="mt-2">
-          {targetType === 'etsi' ? (
-            <div className="w-full">
-              <TextField
-                label="LIID"
-                placeholder={getMessage('phoneExample')}
-                value={etsiLiid.base}
-                labelSpacing="1"
-                onChange={(e) => {
-                  handleChangeEtsiValues('base', e.target.value)
-                }}
-              />
-              <TextField
-                className="mt-2"
-                label="LIID VoLTE"
-                placeholder={getMessage('phoneExample')}
-                value={etsiLiid.volte}
-                labelSpacing="1"
-                onChange={(e) => {
-                  handleChangeEtsiValues('volte', e.target.value)
-                }}
-              />
-            </div>
-          ) : (
-            <div className="w-full">
-              <SelectField
-                className="w-full"
-                label={getMessage('derivationLine')}
-                placeholder={getMessage('phoneExample')}
-                items={[
-                  {
-                    id: 'line_001',
-                    name: '5539454356'
-                  }
-                ]}
-                textField="name"
-                valueField="id"
-                value={derivationLine}
-                onChange={(valueSelected) => setDerivationLine(valueSelected)}
-              />
-            </div>
-          )}
-        </div>
-      ),
-      breakpoints: { xs: 12 }
-    }
+    ...((targetType === 'etsi'
+      ? [
+          {
+            type: 'text',
+            name: 'liid',
+            options: {
+              label: 'LIID',
+              placeholder: getMessage('phoneExample'),
+              labelSpacing: '1',
+              requiredMarker: true
+            },
+            breakpoints: { xs: 12 }
+          },
+          {
+            type: 'text',
+            name: 'liidVolte',
+            options: {
+              label: 'LIID VoLTE',
+              placeholder: getMessage('phoneExample'),
+              labelSpacing: '1',
+              requiredMarker: true
+            },
+            breakpoints: { xs: 12 }
+          }
+        ]
+      : [
+          {
+            type: 'async-select',
+            name: 'overflowLine',
+            options: {
+              asyncProps: {
+                api: {
+                  endpoint: 'overflow-lines',
+                  method: 'get'
+                },
+                value: 'id',
+                label: 'phone',
+                searchField: 'phone'
+              },
+              debounceTimeout: 300,
+              label: getMessage('derivationLine'),
+              placeholder: getMessage('phoneExample'),
+              requiredMarker: true
+            }
+          }
+        ]) as Array<Field<FormValues>>)
   ]
 
   const validationSchema = yup.object({
@@ -193,20 +164,46 @@ const TargetForm = ({ initialValues, onSubmit }: Props): ReactElement => {
       initialValues: {
         name: initialValues?.name ?? '',
         number: initialValues?.number ?? '',
-        phoneCompany: initialValues?.phoneCompany ?? ''
+        phoneCompany: initialValues?.phoneCompany ?? '',
+        endDate: initialValues?.endDate ?? null,
+        liid: initialValues?.liid ?? '',
+        liidVolte: initialValues?.liidVolte ?? '',
+        overflowLine: initialValues?.overflowLine ?? null,
+        type: initialValues?.type ?? targetType
       },
       validationSchema,
       onSubmit: (values) => {
         console.log(values)
 
         onSubmit(values)
-      }
+      },
+      enableReinitialize: true
     }),
     [initialValues]
   )
 
   return (
     <div>
+      <div className="mt-2">
+        <Grid spacing={1} className="mb-3">
+          <Grid item xs={6}>
+            <Radio
+              label={getMessage('etsiTargets')}
+              value="etsi"
+              checked={targetType === 'etsi'}
+              onChange={() => setTargetType('etsi')}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <Radio
+              label={getMessage('conventionalTargets')}
+              value="conventional"
+              checked={targetType === 'conventional'}
+              onChange={() => setTargetType('conventional')}
+            />
+          </Grid>
+        </Grid>
+      </div>
       <Form
         formikConfig={formikConfig}
         fields={fields}

@@ -13,6 +13,7 @@ import CreateTargetDialog from './CreateTargetDialog'
 import { techniqueFormMessages } from '../messages'
 import useSections from 'hooks/useSections'
 import { useDidMountEffect } from 'hooks/useDidMountEffect'
+import { addDays, format } from 'date-fns'
 
 type AdvanceTimeType = 'days' | 'hours'
 type PriorityType = 'urgent' | 'high' | 'medium' | 'low'
@@ -20,7 +21,8 @@ type PriorityType = 'urgent' | 'high' | 'medium' | 'low'
 export interface FormValues {
   name: string
   description: string
-  dates: Date[]
+  startDate: Date | null
+  endDate: Date | null
   groups: any[]
   shift: string
   court: string
@@ -72,13 +74,24 @@ const TechniqueForm = ({
       breakpoints: { xs: 12 }
     },
     {
-      type: 'date-range',
-      name: 'dates',
+      type: 'date',
+      name: 'startDate',
       options: {
-        id: 'techinque-date-start-end',
-        label: getMessage('date'),
+        label: getMessage('startDate'),
         formatDisplay: 'dd/MM/yyyy',
-        minDate: new Date().toISOString(),
+        minDate: format(new Date(), 'yyyy-MM-dd'),
+        requiredMarker: true,
+        disabled: true
+      },
+      breakpoints: { xs: 12 }
+    },
+    {
+      type: 'date',
+      name: 'endDate',
+      options: {
+        label: getMessage('endDate'),
+        formatDisplay: 'dd/MM/yyyy',
+        minDate: format(addDays(new Date(), 1), 'yyyy-MM-dd'),
         requiredMarker: true
       },
       breakpoints: { xs: 12 }
@@ -333,7 +346,8 @@ const TechniqueForm = ({
       initialValues: {
         name: initialValues?.name ?? '',
         description: initialValues?.description ?? '',
-        dates: initialValues?.dates ?? [],
+        startDate: initialValues?.startDate ?? new Date(),
+        endDate: initialValues?.endDate ?? null,
         court: initialValues?.court ?? '',
         shift: initialValues?.shift ?? '',
         groups: initialValues?.groups ?? [],
