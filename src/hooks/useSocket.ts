@@ -1,4 +1,5 @@
 import { useAuth } from 'context/Auth'
+import { useSettings } from 'context/Settings'
 import { useEffect, useRef, useState } from 'react'
 import io, { ManagerOptions, SocketOptions, Socket } from 'socket.io-client'
 
@@ -10,6 +11,9 @@ const useSocket = (
 } => {
   const socket = useRef<Socket | undefined>()
   const [isSocketConnected, setIsSocketConnected] = useState<boolean>(false)
+  const { actions: settingsActions } = useSettings()
+  // Se declara el ref para que quede el valor correcto en el socket
+  const settingsActionsRef = useRef(settingsActions)
   const { auth } = useAuth()
 
   useEffect(() => {
@@ -25,6 +29,17 @@ const useSocket = (
       socket.current.on('connect', () => {
         console.log(`Client connected: ${socket.current?.id}`)
         setIsSocketConnected(true)
+      })
+
+      socket.current.on('settings', (data) => {
+        console.log('hola', data)
+        settingsActionsRef.current?.update(
+          {
+            inactivityTime: data.inactivity_time,
+            doubleValidation: data.double_validation
+          },
+          true
+        )
       })
 
       socket.current.on('disconnect', (reason) => {

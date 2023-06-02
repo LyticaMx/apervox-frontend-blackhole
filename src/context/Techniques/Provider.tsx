@@ -1,7 +1,8 @@
 import { ReactElement, ReactNode, useMemo, useReducer } from 'react'
 import { useActions } from './actions'
 
-import { reducer, initialState, TechniquesContext } from './context'
+import { initialState, TechniquesContext } from './context'
+import { reducer } from './reducer'
 
 interface Props {
   children: ReactNode
