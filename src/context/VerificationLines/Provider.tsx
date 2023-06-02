@@ -1,6 +1,6 @@
 import { ReactElement, ReactNode, useMemo, useReducer } from 'react'
 import { useActions } from './actions'
-import { VerificationLineContextType } from 'types/verificationLine'
+import { ContextType } from 'types/verificationLine'
 import { VerificationLineContext, initialState } from './context'
 import { reducer } from './reducer'
 
@@ -13,7 +13,7 @@ const VerificationLineProvider = (props: Props): ReactElement => {
   const [state, dispatch] = useReducer(reducer, initialState)
   const actions = useActions(state, dispatch)
 
-  const contextValue = useMemo<VerificationLineContextType>(
+  const contextValue = useMemo<ContextType>(
     () => Object.assign({}, state, { actions }),
     [state, actions]
   )
