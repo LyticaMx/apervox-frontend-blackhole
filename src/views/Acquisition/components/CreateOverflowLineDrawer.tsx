@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { FormikContextType } from 'formik'
 import { ReactElement, useRef } from 'react'
 import OverflowLineForm, { FormValues } from './OverflowLineForm'
@@ -24,9 +25,7 @@ const CreateOverflowLineDrawer = ({ open, onClose }: Props): ReactElement => {
     try {
       const created = await overflowLineActions?.create({
         phone: values.phone,
-        medium: {
-          id: values.medium
-        }
+        medium_id: values.medium.value as string
       })
       if (created) {
         toast.success(formatMessage(createMessages.success))

@@ -1,5 +1,16 @@
 import { defineMessages } from 'react-intl'
 
+export const tabsMessages = defineMessages({
+  acquisitionMedium: {
+    id: 'views.acquisition.tabs.acquisitionMedium',
+    defaultMessage: 'Medios de adquisición'
+  },
+  verificationLine: {
+    id: 'views.acquisition.tabs.verificationLine',
+    defaultMessage: 'Líneas de verificación'
+  }
+})
+
 export const messages = defineMessages({
   title: {
     id: 'views.acquisition.title',
@@ -9,20 +20,20 @@ export const messages = defineMessages({
     id: 'views.acquisition.subtitle',
     defaultMessage: 'Líneas existentes en el sistema'
   },
-  bussyLines: {
-    id: 'views.acquisition.bussyLines',
+  assigned: {
+    id: 'views.acquisition.assigned',
     defaultMessage: 'Líneas ocupadas'
   },
-  availableLines: {
-    id: 'views.acquisition.availableLines',
+  available: {
+    id: 'views.acquisition.available',
     defaultMessage: 'Líneas disponibles'
   },
-  quarantineLines: {
-    id: 'views.acquisition.quarantineLines',
+  quarantine: {
+    id: 'views.acquisition.quarantine',
     defaultMessage: 'Líneas en cuarentena'
   },
-  maintenanceLines: {
-    id: 'views.acquisition.maintenanceLines',
+  maintenance: {
+    id: 'views.acquisition.maintenance',
     defaultMessage: 'Líneas en mantenimiento'
   },
   verificationLines: {
@@ -32,6 +43,34 @@ export const messages = defineMessages({
   button: {
     id: 'view.acquisition.button',
     defaultMessage: 'Agregar línea'
+  },
+  updatedStatus: {
+    id: 'view.acquisition.updatedStatus',
+    defaultMessage:
+      '{enabled, select, true{Habilitado} other{Deshabilitado}} correctamente'
+  }
+})
+
+export const statusMessages = defineMessages({
+  all: {
+    id: 'views.acquisition.statusMessages.all',
+    defaultMessage: 'Todas'
+  },
+  assigned: {
+    id: 'views.acquisition.statusMessages.assigned',
+    defaultMessage: 'Ocupadas'
+  },
+  available: {
+    id: 'views.acquisition.statusMessages.available',
+    defaultMessage: 'Disponibles'
+  },
+  quarantine: {
+    id: 'views.acquisition.statusMessages.quarantine',
+    defaultMessage: 'Cuarentena'
+  },
+  maintenance: {
+    id: 'views.acquisition.statusMessages.maintenance',
+    defaultMessage: 'Mantenimiento'
   }
 })
 
@@ -119,18 +158,22 @@ export const deleteMessages = defineMessages({
   }
 })
 
-export const disableOverflowLineDialogMessages = defineMessages({
-  title: {
-    id: 'views.acquisition.DisableOverflowLineDialog.title',
+export const disableDialogMessages = defineMessages({
+  overflowTitle: {
+    id: 'views.acquisition.DisableDialog.overflowTitle',
     defaultMessage: 'Habilitar / deshabilitar línea de derivación'
   },
+  verificationTitle: {
+    id: 'views.acquisition.DisableDialog.verificationTitle',
+    defaultMessage: 'Habilitar / deshabilitar línea de verificación'
+  },
   message: {
-    id: 'views.acquisition.DisableOverflowLineDialog.message',
+    id: 'views.acquisition.DisableDialog.message',
     defaultMessage:
       '¿Quieres {status, select, false{deshabilitar} other{habilitar}} la línea seleccionada?'
   },
   success: {
-    id: 'views.acquisition.DisableOverflowLineDialog.success',
+    id: 'views.acquisition.DisableDialog.success',
     defaultMessage:
       'Línea {status, select, false{deshabilitada} other{habilitada}} correctamente'
   }

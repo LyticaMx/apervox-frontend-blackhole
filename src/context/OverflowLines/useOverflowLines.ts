@@ -1,6 +1,6 @@
 import { useContext } from 'react'
-import { OverflowLineContextType } from 'types/overflowLine'
+import { ContextType } from 'types/overflowLine'
 import { OverflowLineContext } from './context'
 
-export const useOverflowLine = (): OverflowLineContextType =>
+export const useOverflowLine = (): ContextType =>
   useContext(OverflowLineContext)

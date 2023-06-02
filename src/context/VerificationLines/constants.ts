@@ -1,8 +1,6 @@
 import { Filters, createAction } from 'types/contextReducer'
-import {
-  VerificationLine,
-  VerificationLinePagination
-} from 'types/verificationLine'
+import { PaginationSortFilter } from 'types/filters'
+import { VerificationLine } from 'types/verificationLine'
 
 export enum Types {
   SET_VERIFICATION_LINES = 'verificationLines/setVerificationLines',
@@ -18,10 +16,9 @@ export const actions = {
       total?: number
     }
   >(Types.SET_VERIFICATION_LINES),
-  setVerificationLinePagination: createAction<
-    Types,
-    VerificationLinePagination
-  >(Types.SET_VERIFICATION_LINES_PAGINATION),
+  setVerificationLinePagination: createAction<Types, PaginationSortFilter>(
+    Types.SET_VERIFICATION_LINES_PAGINATION
+  ),
   setVerificationLineFilters: createAction<Types, Filters>(
     Types.SET_VERIFICATION_LINES_FILTERS
   )

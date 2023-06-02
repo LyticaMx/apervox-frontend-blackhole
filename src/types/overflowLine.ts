@@ -1,10 +1,12 @@
 import { SortingState } from '@tanstack/react-table'
-import { DateFilter, PaginationFilter, SearchFilter } from './filters'
+import { DateFilter, PaginationSortFilter, SearchFilter } from './filters'
 import { PaginationParams, SearchParams } from './api'
 
+export type LineStatus = 'available' | 'assigned' | 'quarantine' | 'maintenance'
 export interface OverflowLine {
   id?: string
   phone: string // Derivación
+  medium_id: string
   medium: {
     id: string
     name?: string
@@ -14,50 +16,44 @@ export interface OverflowLine {
     carrier: string
     technique: string
   }
-  createdBy?: string
-  createdOn?: string
+  created_by?: string
+  created_at?: string
   releaseDate?: string
-  status?: 'available' | 'assigned' | 'quarantine' | 'maintenance'
-  enabled?: boolean
+  line_status: LineStatus
+  status: boolean
 }
 
-export interface OverflowLinePaginaton extends PaginationFilter {
-  totalRecords: number
-  sort: SortingState
+export interface StaticFilter {
+  line_status?: string[]
 }
 
-export interface OverflowLinePaginationParams extends PaginationParams {
-  sort?: SortingState
-}
+export type GetPayload = PaginationParams &
+  SearchParams &
+  DateFilter &
+  StaticFilter & { sort?: SortingState }
 
-export interface OverflowLineStaticFilter {
-  status?: string[]
-}
+export type CreatePayload = Pick<OverflowLine, 'phone' | 'medium_id'>
+export type UpdatePayload = Pick<OverflowLine, 'id' | 'phone' | 'medium_id'>
+export type TotalsLines = Record<'all' | LineStatus, number>
 
-export interface OverflowLineContextState {
+export interface State {
   data: OverflowLine[]
-  total: number
-  pagination: OverflowLinePaginaton
+  totals: TotalsLines
+  pagination: PaginationSortFilter
   dateFilter: DateFilter
   searchFilter: SearchFilter
-  staticFilter: OverflowLineStaticFilter
+  staticFilter: StaticFilter
 }
 
-export interface OverflowLineContextActions {
-  get: (
-    params?: OverflowLinePaginationParams &
-      SearchParams &
-      DateFilter &
-      OverflowLineStaticFilter,
-    getTotal?: boolean
-  ) => Promise<void>
-  create: (line: OverflowLine) => Promise<boolean>
-  update: (line: OverflowLine) => Promise<boolean>
+export interface Actions {
+  get: (params?: GetPayload, getTotal?: boolean) => Promise<void>
+  create: (payload: CreatePayload) => Promise<boolean>
+  update: (payload: UpdatePayload) => Promise<boolean>
   deleteOne: (id: string) => Promise<boolean>
-  deleteMany: (id: string[]) => Promise<boolean>
-  toggleDisable: (id: string, enabled: boolean) => Promise<boolean>
+  deleteMany: (ids: string[]) => Promise<boolean>
+  toggleDisable: (id: string, status: boolean) => Promise<boolean>
 }
 
-export interface OverflowLineContextType extends OverflowLineContextState {
-  actions?: OverflowLineContextActions
+export interface ContextType extends State {
+  actions?: Actions
 }

@@ -55,11 +55,11 @@ const EditVerificationLineDrawer = ({
         <span className="text-sm mb-4 text-gray-400">
           {formatMessage(generalMessages.createdOn, {
             date: format(
-              new Date(verificationLine?.createdOn ?? 0),
+              new Date(verificationLine?.created_at ?? 0),
               'dd/MM/yyyy - hh:mm'
             )
           })}
-          <span className="ml-2">{verificationLine?.createdBy ?? ''}</span>
+          <span className="ml-2">{verificationLine?.created_by ?? ''}</span>
         </span>
         <VerificationLineForm
           onSubmit={handleEdit}

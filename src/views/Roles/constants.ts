@@ -73,5 +73,16 @@ export const scopes: Module[] = [
       delete: false,
       export: false
     }
+  },
+  {
+    id: 'overflow_lines',
+    label: 'Medios de Adquisición',
+    permissions: {
+      read: false,
+      create: false,
+      update: false,
+      delete: false,
+      export: false
+    }
   }
 ]

@@ -1,9 +1,15 @@
 import { Context, createContext } from 'react'
-import { OverflowLineContextState } from 'types/overflowLine'
+import { State } from 'types/overflowLine'
 
-export const initialState: OverflowLineContextState = {
+export const initialState: State = {
   data: [],
-  total: 0,
+  totals: {
+    all: 0,
+    assigned: 0,
+    available: 0,
+    maintenance: 0,
+    quarantine: 0
+  },
   pagination: {
     limit: 15,
     limitOptions: [15, 25, 50, 100],
@@ -16,5 +22,4 @@ export const initialState: OverflowLineContextState = {
   staticFilter: {}
 }
 
-export const OverflowLineContext: Context<OverflowLineContextState> =
-  createContext(initialState)
+export const OverflowLineContext: Context<State> = createContext(initialState)

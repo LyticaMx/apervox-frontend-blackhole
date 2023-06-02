@@ -5,6 +5,7 @@ export type Resource =
   | 'roles'
   | 'groups'
   | 'techniques'
+  | 'overflow_lines'
 
 export interface Scope {
   name: Resource
