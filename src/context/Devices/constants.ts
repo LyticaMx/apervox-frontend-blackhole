@@ -3,9 +3,9 @@ import { Device } from 'types/device'
 import { PaginationSortFilter } from 'types/filters'
 
 export enum Types {
-  SET_DATA = 'labels/setData',
-  SET_PAGINATION = 'labels/setPagination',
-  SET_FILTERS = 'labels/setFilters'
+  SET_DATA = 'devices/setData',
+  SET_PAGINATION = 'devices/setPagination',
+  SET_FILTERS = 'devices/setFilters'
 }
 
 export const actions = {

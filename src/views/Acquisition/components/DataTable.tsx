@@ -1,7 +1,4 @@
-import {
-  DocumentMagnifyingGlassIcon,
-  TrashIcon
-} from '@heroicons/react/24/outline'
+import { DocumentMagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import IconButton from 'components/Button/IconButton'
 import Switch from 'components/Form/Switch'
 import Table from 'components/Table'
@@ -14,13 +11,8 @@ import { OverflowLine } from 'types/overflowLine'
 import { useOverflowLine } from 'context/OverflowLines'
 import { useToggle } from 'hooks/useToggle'
 import EditOverflowLineDrawer from './EditOverflowLineDrawer'
-import DeleteOverflowLineDialog from './DeleteOverflowLineDialog'
 import DisableOverflowLineDialog from './DisableOverflowLineDialog'
-
-interface SynchroEditIds {
-  ids: string[]
-  resolve: ((value: boolean | PromiseLike<boolean>) => void) | null
-}
+import { get } from 'lodash'
 
 const DataTable = (): ReactElement => {
   const getMessage = useFormatMessage(tableMessages)
@@ -30,22 +22,19 @@ const DataTable = (): ReactElement => {
     id: string
     status: boolean
   }>({ id: '', status: false })
-  const [deleteOverflowLines, setDeleteOverflowLines] =
-    useState<SynchroEditIds>({ ids: [], resolve: null })
+
   const [open, toggle] = useToggle()
 
   const columns = useTableColumns<OverflowLine>(() => [
     {
-      accessorKey: 'id',
-      header: 'ID'
-    },
-    {
       accessorKey: 'target.phone',
-      header: getMessage('target')
+      header: getMessage('target'),
+      cell: ({ row }) => get(row.original, 'target.phone')
     },
     {
       accessorKey: 'target.carrier',
-      header: getMessage('company')
+      header: getMessage('company'),
+      cell: ({ row }) => get(row.original, 'target.carrier.name')
     },
     {
       accessorKey: 'medium.name',
@@ -56,21 +45,22 @@ const DataTable = (): ReactElement => {
       header: getMessage('derivation')
     },
     {
-      accessorKey: 'createdBy',
+      accessorKey: 'created_by',
       header: getMessage('createdBy')
     },
     {
-      accessorKey: 'createdOn',
+      accessorKey: 'created_at',
       header: getMessage('date'),
       cell: ({ getValue }) =>
         format(new Date(getValue<string>()), 'dd/MM/yyyy - hh:mm')
     },
     {
       accessorKey: 'target.technique',
-      header: getMessage('technique')
+      header: getMessage('technique'),
+      cell: ({ row }) => get(row.original, 'target.technique.name')
     },
     {
-      accessorKey: 'status',
+      accessorKey: 'line_status',
       header: getMessage('status'),
       cell: ({ getValue }) => (
         <div>
@@ -81,15 +71,20 @@ const DataTable = (): ReactElement => {
       )
     },
     {
-      accessorKey: 'releaseDate',
+      accessorKey: 'target.end_date',
       header: getMessage('releaseDate'),
-      cell: ({ getValue }) =>
-        format(new Date(getValue<string>()), 'dd/MM/yyyy - hh:mm')
+      cell: ({ row }) => {
+        const value = get(row.original, 'target.end_date')
+
+        if (value) return format(new Date(value), 'dd/MM/yyyy - hh:mm')
+
+        return ''
+      }
     },
     {
       header: getMessage('actions'),
       enableSorting: false,
-      accessorKey: 'enabled',
+      accessorKey: 'status',
       cell: ({ getValue, row }) => (
         <div className="flex gap-2 items-center">
           <Switch
@@ -126,15 +121,6 @@ const DataTable = (): ReactElement => {
         overflowLine={rowSelected}
         onClose={toggle}
       />
-      <DeleteOverflowLineDialog
-        ids={deleteOverflowLines.ids}
-        resolve={deleteOverflowLines.resolve ?? (() => {})}
-        onConfirm={() => setDeleteOverflowLines({ ids: [], resolve: null })}
-        onClose={() => {
-          if (deleteOverflowLines.resolve) deleteOverflowLines.resolve(false)
-          setDeleteOverflowLines({ ids: [], resolve: null })
-        }}
-      />
       <DisableOverflowLineDialog
         id={disableOverflowLine.id}
         currentStatus={disableOverflowLine.status}
@@ -152,19 +138,6 @@ const DataTable = (): ReactElement => {
           setRowSelected(row)
           toggle()
         }}
-        actionsForSelectedItems={[
-          {
-            name: 'delete',
-            action: async (items) =>
-              await new Promise<boolean>((resolve) =>
-                setDeleteOverflowLines({
-                  ids: items.map((item) => item.id ?? ''),
-                  resolve
-                })
-              ),
-            Icon: TrashIcon
-          }
-        ]}
       />
     </>
   )

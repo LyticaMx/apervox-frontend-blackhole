@@ -1,38 +1,40 @@
-import { useOverflowLine } from 'context/OverflowLines'
 import useToast from 'hooks/useToast'
 import { ReactElement, useEffect, useState } from 'react'
 import { useIntl } from 'react-intl'
-import { disableDialogMessages } from '../messages'
 import Dialog from 'components/Dialog'
 import { InformationCircleIcon } from '@heroicons/react/24/outline'
 import Switch from 'components/Form/Switch'
 import Button from 'components/Button'
 import { actionsMessages } from 'globalMessages'
+import { VerificationLine } from 'types/verificationLine'
+import { useVerificationLine } from 'context/VerificationLines'
+
+import { disableDialogMessages } from '../messages'
 
 interface Props {
-  id: string
-  currentStatus?: boolean
+  open: boolean
+  data: VerificationLine | null
   onClose?: () => void
 }
 
-const DisableOverflowLineDialog = (props: Props): ReactElement => {
+const DisableVerificationLineDialog = (props: Props): ReactElement => {
   const { onClose = () => {} } = props
   const { formatMessage } = useIntl()
-  const { actions: overflowLineActions } = useOverflowLine()
+  const { actions } = useVerificationLine()
   const [currentStatus, setCurrentStatus] = useState<boolean>(
-    props.currentStatus ?? true
+    props.data?.status ?? true
   )
   const toast = useToast()
 
   const handleDisable = async (): Promise<void> => {
     try {
-      const updated = await overflowLineActions?.toggleDisable(
-        props.id,
+      const updated = await actions?.toggleStatus(
+        props.data?.id ?? '',
         currentStatus
       )
 
       if (updated) {
-        await overflowLineActions?.get({ page: 1 })
+        await actions?.get({ page: 1 })
         toast.success(
           formatMessage(disableDialogMessages.success, {
             status: currentStatus
@@ -44,17 +46,17 @@ const DisableOverflowLineDialog = (props: Props): ReactElement => {
   }
 
   useEffect(() => {
-    setCurrentStatus(props.currentStatus ?? false)
-  }, [props.currentStatus])
+    setCurrentStatus(props.data?.status ?? false)
+  }, [props.data])
 
   return (
-    <Dialog open={Boolean(props.id)} onClose={onClose} size="sm" padding="none">
+    <Dialog open={props.open} onClose={onClose} size="sm" padding="none">
       <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
         <div className="text-center sm:mt-0">
           <InformationCircleIcon className="h-6 w-6 text-primary m-auto mb-2" />
 
           <h3 className="text-lg font-medium leading-6 text-gray-900">
-            {formatMessage(disableDialogMessages.overflowTitle, {
+            {formatMessage(disableDialogMessages.verificationTitle, {
               status: currentStatus
             })}
           </h3>
@@ -85,4 +87,4 @@ const DisableOverflowLineDialog = (props: Props): ReactElement => {
   )
 }
 
-export default DisableOverflowLineDialog
+export default DisableVerificationLineDialog

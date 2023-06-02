@@ -1,26 +1,29 @@
-import Title from 'components/Title'
-import ViewCounter from 'components/ViewCounter'
 import { ReactElement, useEffect, useState } from 'react'
-import { pathRoute } from 'router/routes'
-import { messages, tableMessages } from './messages'
-import ViewFilter from 'components/ViewFilter'
-import GoBackButton from 'components/GoBackButton'
-import useTableColumns from 'hooks/useTableColumns'
 import { format } from 'date-fns'
-import Table from 'components/Table'
 import { useIntl } from 'react-intl'
+import { RectangleGroupIcon } from '@heroicons/react/24/outline'
+
+import Table from 'components/Table'
+import Tooltip from 'components/Tooltip'
+import Switch from 'components/Form/Switch'
+
+import useTableColumns from 'hooks/useTableColumns'
+
 import {
   actionsMessages,
   generalMessages,
   platformMessages
 } from 'globalMessages'
-import CreateVerificationLineDrawer from './components/CreateVerificationLineDrawer'
-import Tooltip from 'components/Tooltip'
-import { TrashIcon } from '@heroicons/react/24/outline'
-import EditVerificationLineDrawer from './components/EditVerificationLineDrawer'
-import { VerificationLine } from 'types/verificationLine'
+import { tableMessages } from './messages'
+
 import { useVerificationLine } from 'context/VerificationLines/useVerificationLine'
+import { VerificationLine } from 'types/verificationLine'
+
+import EditVerificationLineDrawer from './components/EditVerificationLineDrawer'
 import DeleteVerificationLineDialog from './components/DeleteVerificationLineDialog'
+import Tabs from './components/Tabs'
+import DisableVerificationLineDialog from './components/DisableVerificationLineDialog'
+import VerificationHeader from './components/VerificationHeader'
 
 interface SynchroEditIds {
   ids: string[]
@@ -29,24 +32,15 @@ interface SynchroEditIds {
 
 const Verification = (): ReactElement => {
   const { formatMessage } = useIntl()
-  const [openCreate, setOpenCreate] = useState(false)
-  const [selectedLine, setSelectedLine] = useState<VerificationLine | null>(
-    null
-  )
-  const [deleteVerificationLines, setDeleteVerificationLines] =
-    useState<SynchroEditIds>({ ids: [], resolve: null })
+
+  const [openDisable, setOpenDisable] = useState(false)
+  const [selected, setSelected] = useState<VerificationLine | null>(null)
+  const [deleteLines, setDeleteLines] = useState<SynchroEditIds>({
+    ids: [],
+    resolve: null
+  })
   const [openEdit, setOpenEdit] = useState(false)
-  const {
-    data,
-    pagination,
-    actions: verificationLineActions
-  } = useVerificationLine()
-  const counters = {
-    bussyLines: 5,
-    availableLines: 5,
-    quarantineLines: 5,
-    maintenanceLines: 5
-  }
+  const { data, pagination, actions } = useVerificationLine()
 
   const columns = useTableColumns<VerificationLine>(() => [
     {
@@ -55,98 +49,94 @@ const Verification = (): ReactElement => {
     },
     {
       header: formatMessage(tableMessages.createdBy),
-      accessorKey: 'createdBy'
+      accessorKey: 'created_by'
     },
     {
       header: formatMessage(tableMessages.date),
-      accessorKey: 'createdOn',
+      accessorKey: 'created_at',
       cell: ({ getValue }) =>
         format(new Date(getValue<string>() ?? ''), 'dd/MM/yyyy hh:mm')
     },
     {
       header: formatMessage(generalMessages.actions),
       accessorKey: 'id',
-      cell: ({ getValue, table }) => (
-        <div className="flex items-center">
-          <Tooltip
-            content={formatMessage(actionsMessages.delete)}
-            floatProps={{ offset: 10, arrow: true }}
-            classNames={{
-              panel:
-                'bg-secondary text-white py-1 px-2 rounded-md text-sm whitespace-nowrap',
-              arrow: 'absolute bg-white w-2 h-2 rounded-full bg-secondary'
-            }}
-            placement="top"
-          >
-            <button
-              className="mx-1 text-muted hover:text-primary flex items-center"
-              onClick={async () =>
-                await new Promise<boolean>((resolve) =>
-                  setDeleteVerificationLines({
-                    ids: [getValue<string>() ?? ''],
-                    resolve
-                  })
-                )
-              }
-              disabled={
-                table.getIsSomeRowsSelected() || table.getIsAllRowsSelected()
-              }
+      cell: ({ getValue, cell, row }) => {
+        const isActive = cell.row.original.status
+
+        return (
+          <div className="flex pt-1" onClick={(e) => e.stopPropagation()}>
+            <Tooltip
+              content={formatMessage(
+                actionsMessages[isActive ? 'disable' : 'enable']
+              )}
+              floatProps={{ offset: 10, arrow: true }}
+              classNames={{
+                panel:
+                  'bg-secondary text-white py-1 px-2 rounded-md text-sm whitespace-nowrap',
+                arrow: 'absolute bg-white w-2 h-2 rounded-full bg-secondary'
+              }}
+              placement="top"
             >
-              <TrashIcon className="h-5 w-5" />
-            </button>
-          </Tooltip>
-        </div>
-      )
+              <Switch
+                size="sm"
+                value={isActive}
+                onChange={() => {
+                  setSelected(row.original)
+                  setOpenDisable(true)
+                }}
+                color="primary"
+              />
+            </Tooltip>
+
+            <Tooltip
+              content={formatMessage(generalMessages.history)}
+              floatProps={{ offset: 10, arrow: true }}
+              classNames={{
+                panel:
+                  'bg-secondary text-white py-1 px-2 rounded-md text-sm whitespace-nowrap',
+                arrow: 'absolute bg-white w-2 h-2 rounded-full bg-secondary'
+              }}
+              placement="top"
+            >
+              <RectangleGroupIcon className="h-5 w-5 mx-1 ml-2 text-muted hover:text-primary cursor-pointer" />
+            </Tooltip>
+          </div>
+        )
+      }
     }
   ])
 
   useEffect(() => {
-    verificationLineActions?.get({}, true)
+    actions?.get({}, true)
   }, [])
 
   return (
     <div>
-      <GoBackButton route={pathRoute.acquisition.acquisitionMedium} />
-      <div className="flex justify-between">
-        <Title className="uppercase">
-          {formatMessage(messages.verificationLines)}
-        </Title>
-        <ViewFilter
-          fields={[]}
-          action={{
-            label: formatMessage(messages.button),
-            onClick: () => setOpenCreate(true)
-          }}
-        />
-      </div>
-      <div className="flex gap-2 mt-2">
-        {Object.entries(counters).map(([key, value]) => (
-          <ViewCounter count={value} key={key}>
-            {formatMessage(messages[key])}
-          </ViewCounter>
-        ))}
-        <ViewCounter count={5} to={pathRoute.acquisition.verificationLine}>
-          {formatMessage(messages.verificationLines)}
-        </ViewCounter>{' '}
-      </div>
-      <CreateVerificationLineDrawer
-        open={openCreate}
-        onClose={() => setOpenCreate(false)}
-      />
+      <Tabs />
+      <VerificationHeader />
+
       <EditVerificationLineDrawer
-        verificationLine={selectedLine}
+        verificationLine={selected}
         onClose={() => setOpenEdit(false)}
         open={openEdit}
       />
       <DeleteVerificationLineDialog
-        ids={deleteVerificationLines.ids}
-        resolve={deleteVerificationLines.resolve ?? (() => {})}
-        onConfirm={() => setDeleteVerificationLines({ ids: [], resolve: null })}
+        ids={deleteLines.ids}
+        resolve={deleteLines.resolve ?? (() => {})}
+        onConfirm={() => setDeleteLines({ ids: [], resolve: null })}
         onClose={() => {
-          if (deleteVerificationLines.resolve) {
-            deleteVerificationLines.resolve(false)
+          if (deleteLines.resolve) {
+            deleteLines.resolve(false)
           }
-          setDeleteVerificationLines({ ids: [], resolve: null })
+          setDeleteLines({ ids: [], resolve: null })
+        }}
+      />
+      <DisableVerificationLineDialog
+        open={openDisable}
+        data={selected}
+        onClose={() => {
+          setSelected(null)
+          setOpenDisable(false)
         }}
       />
       <div className="mt-2">
@@ -155,23 +145,23 @@ const Verification = (): ReactElement => {
           data={data}
           maxHeight={500}
           onRowClicked={(row) => {
-            setSelectedLine(row)
+            setSelected(row)
             setOpenEdit(true)
           }}
           manualSorting={{
-            onSortingChange: (sort) => verificationLineActions?.get({ sort }),
+            onSortingChange: (sort) => actions?.get({ sort }),
             sorting: pagination.sort
           }}
           pageSize={pagination.limit}
           manualLimit={{
             onChangeLimit: (page, limit) =>
-              verificationLineActions?.get({ page: page + 1, limit }),
+              actions?.get({ page: page + 1, limit }),
             options: pagination.limitOptions ?? [15]
           }}
           manualPagination={{
             currentPage: pagination.page,
             totalRecords: pagination.totalRecords,
-            onChange: (page) => verificationLineActions?.get({ page: page + 1 })
+            onChange: (page) => actions?.get({ page: page + 1 })
           }}
         />
       </div>

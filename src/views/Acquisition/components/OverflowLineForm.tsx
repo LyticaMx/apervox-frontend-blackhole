@@ -8,7 +8,7 @@ import * as yup from 'yup'
 
 export interface FormValues {
   phone: string
-  medium: string
+  medium: any
 }
 
 interface Props {
@@ -29,27 +29,27 @@ const OverflowLineForm = ({
 
   const fields: Array<Field<FormValues>> = [
     {
+      name: 'medium',
+      type: 'async-select',
+      options: {
+        label: formatMessage(platformMessages.acquisitionMedium),
+        asyncProps: {
+          api: { endpoint: 'acquisition-mediums', method: 'get' },
+          value: 'id',
+          label: 'name',
+          searchField: 'name'
+        },
+        debounceTimeout: 300,
+        placeholder: '',
+        requiredMarker: true
+      }
+    },
+    {
       type: 'text',
       name: 'phone',
       options: {
         label: formatMessage(platformMessages.phoneLine),
         placeholder: formatMessage(formMessages.phonePlaceholder),
-        requiredMarker: true
-      },
-      breakpoints: { xs: 12 }
-    },
-    {
-      type: 'select',
-      name: 'medium',
-      options: {
-        clearable: false,
-        items: [
-          { value: '001', label: 'ETSI' },
-          { value: '002', label: 'FXS/XO' }
-        ],
-        textField: 'label',
-        valueField: 'value',
-        label: formatMessage(platformMessages.acquisitionMedium),
         requiredMarker: true
       },
       breakpoints: { xs: 12 }
@@ -61,7 +61,11 @@ const OverflowLineForm = ({
       .string()
       .required(formatMessage(formMessages.required))
       .length(10, formatMessage(formMessages.length, { length: 10 })),
-    medium: yup.string().required(formatMessage(formMessages.required))
+    medium: yup.object().test({
+      name: 'ifRequired',
+      message: formatMessage(formMessages.required),
+      test: (value) => !!value
+    })
   })
 
   const formikConfig = useMemo<FormikConfig<FormValues>>(

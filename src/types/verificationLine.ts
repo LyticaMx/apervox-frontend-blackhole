@@ -1,43 +1,39 @@
 import { SortingState } from '@tanstack/react-table'
-import { DateFilter, PaginationFilter, SearchFilter } from './filters'
-import { PaginationParams } from './api'
+import { DateFilter, PaginationSortFilter, SearchFilter } from './filters'
+import { PaginationParams, SearchParams } from './api'
 
 export interface VerificationLine {
   id?: string
   phone: string
-  createdBy?: string
-  createdOn?: string
+  status: boolean
+  created_by?: string
+  created_at?: string
 }
 
-export interface VerificationLinePagination extends PaginationFilter {
-  totalRecords: number
-  sort: SortingState
-}
+export type GetPayload = PaginationParams &
+  SearchParams &
+  DateFilter & { sort?: SortingState }
 
-export interface VerificationLinePaginationParams extends PaginationParams {
-  sort?: SortingState
-}
+export type CreatePayload = Omit<VerificationLine, 'id' | 'status'>
+export type UpdatePayload = Omit<VerificationLine, 'status'>
 
-export interface VerificationLineContextState {
+export interface State {
   data: VerificationLine[]
   total: number
-  pagination: VerificationLinePagination
+  pagination: PaginationSortFilter
   dateFilter: DateFilter
   searchFilter: SearchFilter
 }
 
-export interface VerificationLineContextActions {
-  get: (
-    params?: VerificationLinePaginationParams & SearchFilter & DateFilter,
-    getTotal?: boolean
-  ) => Promise<void>
-  create: (line: VerificationLine) => Promise<boolean>
-  update: (line: VerificationLine) => Promise<boolean>
+export interface Actions {
+  get: (params?: GetPayload, getTotal?: boolean) => Promise<void>
+  create: (payload: CreatePayload) => Promise<boolean>
+  update: (payload: UpdatePayload) => Promise<boolean>
   deleteOne: (id: string) => Promise<boolean>
   deleteMany: (ids: string[]) => Promise<boolean>
+  toggleStatus: (id: string, status: boolean) => Promise<boolean>
 }
 
-export interface VerificationLineContextType
-  extends VerificationLineContextState {
-  actions?: VerificationLineContextActions
+export interface ContextType extends State {
+  actions?: Actions
 }
