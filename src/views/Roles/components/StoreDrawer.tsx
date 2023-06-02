@@ -221,6 +221,7 @@ const StoreDrawer = ({ open, role, onClose }: Props): ReactElement => {
             placeholder={getMessage('usersPlaceholder')}
             debounceTimeout={300}
             value={formik.values.users}
+            isMulti={true}
             onChange={(val) => {
               formik.setFieldValue('users', val)
             }}

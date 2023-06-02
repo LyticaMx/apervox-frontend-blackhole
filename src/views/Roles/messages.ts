@@ -129,3 +129,66 @@ export const rolesDrawerMessages = defineMessages({
     defaultMessage: 'Seleccionar usuarios'
   }
 })
+
+export const scopeNamesMessages = defineMessages({
+  me: {
+    id: 'views.roles.scopes.me',
+    defaultMessage: 'Mi Cuenta'
+  },
+  users: {
+    id: 'views.roles.scopes.users',
+    defaultMessage: 'Control de usuarios'
+  },
+  sessions: {
+    id: 'views.roles.scopes.sessions',
+    defaultMessage: 'Sesiones'
+  },
+  roles: {
+    id: 'views.roles.scopes.roles',
+    defaultMessage: 'Roles de usuarios'
+  },
+  groups: {
+    id: 'views.roles.scopes.groups',
+    defaultMessage: 'Grupos de trabajo'
+  },
+  techniques: {
+    id: 'views.roles.scopes.techniques',
+    defaultMessage: 'Técnicas'
+  },
+  carriers: {
+    id: 'views.roles.scopes.carriers',
+    defaultMessage: 'Compañias telefónicas'
+  },
+  acquisition_mediums: {
+    id: 'views.roles.scopes.acquisitionMediums',
+    defaultMessage: 'Medios de adquisición'
+  },
+  devices: {
+    id: 'views.roles.scopes.devices',
+    defaultMessage: 'Equipos'
+  },
+  settings: {
+    id: 'views.roles.scopes.settings',
+    defaultMessage: 'Configuración'
+  },
+  labels: {
+    id: 'views.roles.scopes.labels',
+    defaultMessage: 'Rótulos'
+  },
+  letterheads: {
+    id: 'views.roles.scopes.letterheads',
+    defaultMessage: 'Membretes'
+  },
+  overflow_lines: {
+    id: 'views.roles.scopes.overflowLines',
+    defaultMessage: 'Líneas'
+  },
+  verification_lines: {
+    id: 'views.roles.scopes.verificationLines',
+    defaultMessage: 'Líneas de verificación'
+  },
+  targets: {
+    id: 'views.roles.scopes.targets',
+    defaultMessage: 'Objetivos'
+  }
+})

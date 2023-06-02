@@ -1,4 +1,4 @@
-import { ReactElement, useCallback } from 'react'
+import { ReactElement, useCallback, useEffect } from 'react'
 import clsx from 'clsx'
 
 import { useFormatMessage } from 'hooks/useIntl'
@@ -13,7 +13,7 @@ import {
   Permissions,
   ResourcesPermissions
 } from '../constants'
-import { rolesPermissionsMessages } from '../messages'
+import { rolesPermissionsMessages, scopeNamesMessages } from '../messages'
 
 interface Props {
   items: Module[]
@@ -22,7 +22,7 @@ interface Props {
 
 const AccordionModules = ({ items, onChange }: Props): ReactElement => {
   const getMessage = useFormatMessage(rolesPermissionsMessages)
-  const permissions: Permission[] = ['create', 'update', 'delete', 'export']
+  const getScopeName = useFormatMessage(scopeNamesMessages)
 
   const classes = {
     button: 'bg-white',
@@ -88,6 +88,10 @@ const AccordionModules = ({ items, onChange }: Props): ReactElement => {
     []
   )
 
+  useEffect(() => {
+    console.log(items)
+  }, [items])
+
   return (
     <div>
       {items.map((item, index) => [
@@ -100,7 +104,7 @@ const AccordionModules = ({ items, onChange }: Props): ReactElement => {
                 togglePerimssion(item, 'read')
               }}
             >
-              {item.label}
+              {getScopeName(item.id)}
             </Item>
           }
           classNames={classes}
@@ -109,16 +113,19 @@ const AccordionModules = ({ items, onChange }: Props): ReactElement => {
             <h5 className="text-primary mb-1 text-sm">
               {getMessage('general')}
             </h5>
-            {permissions.map((permission, index) => (
-              <Checkbox
-                key={index}
-                label={getMessage(permission)}
-                checked={item.permissions[permission]}
-                onChange={() => {
-                  togglePerimssion(item, permission)
-                }}
-              />
-            ))}
+            {Object.keys(item.permissions).map((permission, index) =>
+              permission !== 'read' ? (
+                <Checkbox
+                  key={index}
+                  label={getMessage(permission)}
+                  disabled={!item.permissions.read}
+                  checked={item.permissions[permission]}
+                  onChange={() => {
+                    togglePerimssion(item, permission as Permission)
+                  }}
+                />
+              ) : null
+            )}
           </div>
         </Accordion>
       ])}

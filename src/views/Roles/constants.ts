@@ -2,7 +2,7 @@ import { Resource } from 'types/scope'
 
 export type Permission = 'read' | 'create' | 'update' | 'delete' | 'export'
 export type Permissions = {
-  [P in Permission]: boolean
+  [P in Permission]?: boolean
 }
 
 export type ResourcePermission = `${Resource}.${keyof Permissions}`
@@ -15,25 +15,20 @@ export type Action = {
 
 export interface Module {
   id: Resource
-  label: string
   permissions: Permissions
   actions?: Action
 }
 export const scopes: Module[] = [
   {
     id: 'me',
-    label: 'Mi Cuenta',
     permissions: {
-      read: false,
-      create: false,
-      update: false,
-      delete: false,
-      export: false
+      read: true,
+      update: true,
+      delete: true
     }
   },
   {
     id: 'users',
-    label: 'Control de usuarios',
     permissions: {
       read: false,
       create: false,
@@ -53,8 +48,68 @@ export const scopes: Module[] = [
     }
   },
   {
+    id: 'sessions',
+    permissions: {
+      read: true,
+      delete: true
+    }
+  },
+  {
     id: 'roles',
-    label: 'Roles de usuarios',
+    permissions: {
+      read: false,
+      create: false,
+      update: false,
+      delete: false,
+      export: false
+    },
+    actions: {
+      create: {
+        'users.read': true
+      },
+      update: {
+        'users.read': true
+      }
+    }
+  },
+  {
+    id: 'groups',
+    permissions: {
+      read: false,
+      create: false,
+      update: false,
+      delete: false,
+      export: false
+    },
+    actions: {
+      create: {
+        'users.read': true
+      },
+      update: {
+        'users.read': true
+      }
+    }
+  },
+  {
+    id: 'techniques',
+    permissions: {
+      read: false,
+      create: false,
+      update: false,
+      delete: false,
+      export: false
+    },
+    actions: {
+      create: {
+        'groups.read': true
+      },
+      update: {
+        'groups.read': true
+      }
+    }
+  },
+  {
+    id: 'carriers',
     permissions: {
       read: false,
       create: false,
@@ -64,14 +119,90 @@ export const scopes: Module[] = [
     }
   },
   {
-    id: 'groups',
-    label: 'Grupos de trabajo',
+    id: 'acquisition_mediums',
     permissions: {
       read: false,
       create: false,
       update: false,
       delete: false,
       export: false
+    }
+  },
+  {
+    id: 'devices',
+    permissions: {
+      read: false,
+      create: false,
+      update: false,
+      delete: false,
+      export: false
+    },
+    actions: {
+      create: {
+        'acquisition_mediums.read': true
+      },
+      update: {
+        'acquisition_mediums.read': true
+      }
+    }
+  },
+  {
+    id: 'settings',
+    permissions: {
+      read: false,
+      update: false
+    }
+  },
+  {
+    id: 'labels',
+    permissions: {
+      read: false,
+      create: false,
+      update: false,
+      delete: false
+    }
+  },
+  {
+    id: 'letterheads',
+    permissions: {
+      read: false,
+      create: false,
+      update: false,
+      delete: false
+    }
+  },
+  {
+    id: 'overflow_lines',
+    permissions: {
+      read: false,
+      create: false,
+      update: false,
+      delete: false,
+      export: false
+    }
+  },
+  {
+    id: 'verification_lines',
+    permissions: {
+      read: false,
+      create: false,
+      update: false,
+      delete: false,
+      export: false
+    }
+  },
+  {
+    id: 'targets',
+    permissions: {
+      read: false,
+      create: false,
+      update: false,
+      delete: false,
+      export: false
+    },
+    actions: {
+      create: { 'overflow_lines.read': true },
+      update: { 'overflow_lines.read': true }
     }
   }
 ]
