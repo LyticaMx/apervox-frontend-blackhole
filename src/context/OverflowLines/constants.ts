@@ -1,29 +1,19 @@
 import { Filters, createAction } from 'types/contextReducer'
-import {
-  OverflowLine,
-  OverflowLineStaticFilter,
-  OverflowLinePaginaton
-} from 'types/overflowLine'
+import { PaginationSortFilter } from 'types/filters'
+import { OverflowLine, StaticFilter, TotalsLines } from 'types/overflowLine'
 
 export enum Types {
-  SET_OVERFLOW_LINES = 'overflowLines/setOverflowLines',
-  SET_OVERFLOW_LINES_PAGINATION = 'overflowLines/setOverflowLinesPagination',
-  SET_OVERFLOW_LINES_FILTERS = 'overflowLines/setOverflowLinesFilters'
+  SET_DATA = 'overflowLines/setOverflowLines',
+  SET_PAGINATION = 'overflowLines/setOverflowLinesPagination',
+  SET_FILTERS = 'overflowLines/setOverflowLinesFilters',
+  SET_TOTALS = 'overflowLines/setTotals'
 }
 
 export const actions = {
-  setOverflowLines: createAction<
-    Types,
-    {
-      data: OverflowLine[]
-      total?: number
-    }
-  >(Types.SET_OVERFLOW_LINES),
-  setOverflowLinePagination: createAction<Types, OverflowLinePaginaton>(
-    Types.SET_OVERFLOW_LINES_PAGINATION
+  setData: createAction<Types, OverflowLine[]>(Types.SET_DATA),
+  setPagination: createAction<Types, PaginationSortFilter>(
+    Types.SET_PAGINATION
   ),
-  setOverflowLineFilters: createAction<
-    Types,
-    Filters<OverflowLineStaticFilter>
-  >(Types.SET_OVERFLOW_LINES_FILTERS)
+  setFilters: createAction<Types, Filters<StaticFilter>>(Types.SET_FILTERS),
+  setTotals: createAction<Types, TotalsLines>(Types.SET_TOTALS)
 }

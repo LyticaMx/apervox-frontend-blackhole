@@ -1,111 +1,174 @@
-import { SearchParams } from 'types/api'
-import { DateFilter } from 'types/filters'
-import {
-  OverflowLine,
-  OverflowLineContextActions,
-  OverflowLineContextState,
-  OverflowLinePaginationParams,
-  OverflowLineStaticFilter
-} from 'types/overflowLine'
+import { useService } from 'hooks/useApi'
+import { omit, pick } from 'lodash'
+import { getMappedFilters, getSort } from 'utils/table'
 import { actions } from './constants'
+import {
+  Actions,
+  CreatePayload,
+  GetPayload,
+  State,
+  UpdatePayload
+} from 'types/overflowLine'
 
-export const useActions = (
-  state: OverflowLineContextState,
-  dispatch
-): OverflowLineContextActions => {
+export const useActions = (state: State, dispatch): Actions => {
+  const { pagination, dateFilter, searchFilter } = state
+  const resource = useService('overflow-lines')
+
   const get = async (
-    params?: OverflowLinePaginationParams &
-      SearchParams &
-      DateFilter &
-      OverflowLineStaticFilter,
+    params?: GetPayload,
     getTotal?: boolean
   ): Promise<void> => {
-    dispatch(
-      actions.setOverflowLines({
-        data: [
-          {
-            id: '001',
-            target: {
-              phone: '5623456908',
-              carrier: 'Telcel',
-              technique: 'T.I.45/2022-2'
-            },
-            medium: {
-              id: '001',
-              name: 'ETSI'
-            },
-
-            phone: '5623456908',
-            createdBy: 'e.cuadras',
-            createdOn: '2023-02-14T18:58:02.626Z',
-            status: 'available',
-            releaseDate: '2023-02-14T18:58:02.626Z'
-          },
-          {
-            id: '002',
-            target: {
-              phone: '5623456908',
-              carrier: 'Telcel',
-              technique: 'T.I.45/2022-2'
-            },
-            medium: {
-              id: '001',
-              name: 'ETSI'
-            },
-            phone: '5623456908',
-            createdBy: 'e.cuadras',
-            createdOn: '2023-02-14T18:58:02.626Z',
-            status: 'available',
-            releaseDate: '2023-02-14T18:58:02.626Z'
-          },
-          {
-            id: '003',
-            target: {
-              phone: '5623456908',
-              carrier: 'Telcel',
-              technique: 'T.I.45/2022-2'
-            },
-            medium: {
-              id: '001',
-              name: 'ETSI'
-            },
-            phone: '5623456908',
-            createdBy: 'e.cuadras',
-            createdOn: '2023-02-14T18:58:02.626Z',
-            status: 'assigned',
-            releaseDate: '2023-02-14T18:58:02.626Z'
-          },
-          {
-            id: '004',
-            target: {
-              phone: '5623456908',
-              carrier: 'Telcel',
-              technique: 'T.I.45/2022-2'
-            },
-            medium: {
-              id: '001',
-
-              name: 'ETSI'
-            },
-            phone: '5623456908',
-            createdBy: 'e.cuadras',
-            createdOn: '2023-02-14T18:58:02.626Z',
-            status: 'assigned',
-            releaseDate: '2023-02-14T18:58:02.626Z'
-          }
-        ],
-        total: 4
+    try {
+      const sort = getSort(params?.sort ?? pagination.sort, {
+        by: 'created_at',
+        order: 'desc'
       })
-    )
+
+      const mappedFilters = getMappedFilters({
+        ...searchFilter,
+        ...pick(params, ['query', 'filters'])
+      })
+
+      // TODO: cambiar el response data
+      const [response] = await Promise.all([
+        resource.get({
+          urlParams: {
+            ...sort,
+            ...mappedFilters,
+            line_status: params?.line_status,
+            page: params?.page ?? pagination.page,
+            limit: params?.limit ?? pagination.limit,
+            start_time: params?.start_time ?? dateFilter.start_time,
+            end_time: params?.end_time ?? dateFilter.end_time
+          }
+        }),
+        getTotal ? getTotales() : null
+      ])
+
+      dispatch(actions.setData(response.data))
+
+      dispatch(
+        actions.setPagination({
+          page: response.page,
+          limit: params?.limit ?? pagination.limit,
+          totalRecords: response.size,
+          sort: params?.sort ?? pagination.sort
+        })
+      )
+
+      dispatch(
+        actions.setFilters({
+          search: {
+            query: params?.query ?? searchFilter.query,
+            filters: params?.filters ?? searchFilter.filters
+          },
+          date: {
+            start_time: params?.start_time ?? dateFilter.start_time,
+            end_time: params?.end_time ?? dateFilter.end_time
+          }
+        })
+      )
+    } catch (e) {
+      console.log(e)
+    }
   }
-  const create = async (line: OverflowLine): Promise<boolean> => true
-  const update = async (line: OverflowLine): Promise<boolean> => true
-  const deleteOne = async (id: string): Promise<boolean> => true
-  const deleteMany = async (ids: string[]): Promise<boolean> => true
+
+  const getTotales = async (): Promise<void> => {
+    try {
+      const res = await Promise.all([
+        resource.get({
+          urlParams: { page: 1, limit: 1 }
+        }),
+        resource.get({
+          urlParams: { page: 1, limit: 1, line_status: 'available' }
+        }),
+        resource.get({
+          urlParams: { page: 1, limit: 1, line_status: 'assigned' }
+        }),
+        resource.get({
+          urlParams: { page: 1, limit: 1, line_status: 'quarantine' }
+        }),
+        resource.get({
+          urlParams: { page: 1, limit: 1, line_status: 'maintenance' }
+        })
+      ])
+
+      const [all, available, assigned, quarantine, maintenance] = res.map(
+        (item) => item.size
+      )
+
+      dispatch(
+        actions.setTotals({
+          all,
+          available,
+          assigned,
+          quarantine,
+          maintenance
+        })
+      )
+    } catch (error) {}
+  }
+  const create = async (payload: CreatePayload): Promise<boolean> => {
+    try {
+      await resource.post({
+        body: payload
+      })
+
+      return true
+    } catch (e) {
+      console.error(e)
+      return false
+    }
+  }
+  const update = async (payload: UpdatePayload): Promise<boolean> => {
+    try {
+      await resource.put({
+        queryString: payload.id,
+        body: omit(payload, ['id'])
+      })
+
+      return true
+    } catch {
+      return false
+    }
+  }
+
+  const deleteOne = async (id: string): Promise<boolean> => {
+    try {
+      await resource.delete({
+        queryString: id
+      })
+      return true
+    } catch {
+      return false
+    }
+  }
+  const deleteMany = async (ids: string[]): Promise<boolean> => {
+    try {
+      await resource.delete({
+        body: { ids }
+      })
+      return true
+    } catch {
+      return false
+    }
+  }
+
   const toggleDisable = async (
     id: string,
-    enabled: boolean
-  ): Promise<boolean> => true
+    status: boolean
+  ): Promise<boolean> => {
+    try {
+      await resource.put({
+        queryString: id,
+        body: { status }
+      })
+
+      return true
+    } catch {
+      return false
+    }
+  }
 
   return {
     get,

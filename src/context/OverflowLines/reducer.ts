@@ -1,19 +1,15 @@
-import { OverflowLineContextState } from 'types/overflowLine'
+import { State } from 'types/overflowLine'
 import { Types } from './constants'
 import { Action } from 'types/contextReducer'
 
-export const reducer = (
-  state: OverflowLineContextState,
-  action: Action<Types>
-): OverflowLineContextState => {
+export const reducer = (state: State, action: Action<Types>): State => {
   switch (action.type) {
-    case Types.SET_OVERFLOW_LINES:
+    case Types.SET_DATA:
       return {
         ...state,
-        data: action.payload.data,
-        total: action.payload.total
+        data: action.payload
       }
-    case Types.SET_OVERFLOW_LINES_FILTERS:
+    case Types.SET_FILTERS:
       return {
         ...state,
         dateFilter: { ...state.dateFilter, ...action.payload.date },
@@ -21,10 +17,15 @@ export const reducer = (
         /* TODO: Descomentar cuando los filtros sean OR y no AND */
         staticFilter: { /* ...state.staticFilter, */ ...action.payload.static }
       }
-    case Types.SET_OVERFLOW_LINES_PAGINATION:
+    case Types.SET_PAGINATION:
       return {
         ...state,
         pagination: { ...state.pagination, ...action.payload }
+      }
+    case Types.SET_TOTALS:
+      return {
+        ...state,
+        totals: { ...state.totals, ...action.payload }
       }
 
     default:
