@@ -3,6 +3,7 @@ import { LocationContext, initialState } from './context'
 import { LocationContextType } from 'types/location'
 import { DateFilter, SearchFilter } from 'types/filters'
 import { PaginationParams } from 'types/api'
+import { Params } from 'utils/ParamsBuilder'
 
 interface Props {
   children: ReactNode
@@ -16,35 +17,15 @@ const LocationProvider = ({ children }: Props): ReactElement => {
     getTotal?: boolean
   ): Promise<void> => {
     try {
-      const query = params?.query ?? location.searchFilter.query
-      const filters = params?.filters ?? location.searchFilter.filters
-
-      const mappedFilters = {}
-
-      if (filters && filters.length > 0 && query) {
-        Object.assign(
-          mappedFilters,
-          filters.reduce((old, key) => {
-            old[key] = query
-            return old
-          }, {})
-        )
-      }
-
-      const startTime =
-        params?.start_time ??
-        (!params?.clearDates ? location.dateFilter.start_time : undefined)
-
-      const endTime =
-        params?.end_time ??
-        (!params?.clearDates ? location.dateFilter.end_time : undefined)
+      const urlParams = Params.Builder(params)
+        .paginateAndSeach({ ...location.pagination, ...location.searchFilter })
+        .dates(location.dateFilter)
+        .build()
 
       console.log({
-        ...mappedFilters,
+        ...urlParams,
         page: params?.page ?? location.pagination.page,
-        limit: params?.limit ?? location.pagination.limit,
-        start_time: startTime,
-        end_time: endTime
+        limit: params?.limit ?? location.pagination.limit
       })
 
       setLocation({
@@ -72,8 +53,8 @@ const LocationProvider = ({ children }: Props): ReactElement => {
           }
         ],
         dateFilter: {
-          start_time: startTime,
-          end_time: endTime
+          start_time: urlParams.start_time,
+          end_time: urlParams.end_time
         },
         pagination: {
           page: 1,
