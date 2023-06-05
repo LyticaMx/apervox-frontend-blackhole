@@ -1,6 +1,6 @@
 import { useContext } from 'react'
-import { VerificationLineContextType } from 'types/verificationLine'
+import { ContextType } from 'types/verificationLine'
 import { VerificationLineContext } from './context'
 
-export const useVerificationLine = (): VerificationLineContextType =>
+export const useVerificationLine = (): ContextType =>
   useContext(VerificationLineContext)

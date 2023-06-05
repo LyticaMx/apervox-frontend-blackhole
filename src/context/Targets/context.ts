@@ -1,9 +1,8 @@
 import { Context, createContext } from 'react'
-import { State } from 'types/verificationLine'
+import { State } from 'types/target'
 
 export const initialState: State = {
   data: [],
-  total: 0,
   pagination: {
     limit: 15,
     limitOptions: [15, 25, 50, 100],
@@ -15,5 +14,4 @@ export const initialState: State = {
   dateFilter: {}
 }
 
-export const VerificationLineContext: Context<State> =
-  createContext(initialState)
+export const TargetsContext: Context<State> = createContext(initialState)

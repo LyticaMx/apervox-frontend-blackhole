@@ -30,9 +30,7 @@ const EditOverflowLineDrawer = ({
       const updated = await overflowLineActions?.update({
         id: overflowLine?.id ?? '',
         phone: values.phone,
-        medium: {
-          id: values.medium
-        }
+        medium_id: values.medium.value
       })
       if (updated) {
         toast.success(formatMessage(editMessages.success))
@@ -61,16 +59,19 @@ const EditOverflowLineDrawer = ({
         <span className="text-sm mb-4 text-gray-400">
           {formatMessage(generalMessages.createdOn, {
             date: format(
-              new Date(overflowLine?.createdOn ?? 0),
+              new Date(overflowLine?.created_at ?? 0),
               'dd/MM/yyyy - hh:mm'
             )
           })}
-          <span className="ml-2">{overflowLine?.createdBy ?? ''}</span>
+          <span className="ml-2">{overflowLine?.created_by ?? ''}</span>
         </span>
         <OverflowLineForm
           onSubmit={handleEdit}
           initialvalues={{
-            medium: overflowLine?.medium.id ?? '',
+            medium: {
+              value: overflowLine?.medium.id ?? '',
+              label: overflowLine?.medium.name ?? ''
+            },
             phone: overflowLine?.phone ?? ''
           }}
         />
