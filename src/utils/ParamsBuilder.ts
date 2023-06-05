@@ -1,5 +1,5 @@
 import { SortingState } from '@tanstack/react-table'
-import { PaginationParams, SearchParams } from 'types/api'
+import { SearchParams } from 'types/api'
 import { DateFilter, PaginationFilter } from 'types/filters'
 import { camelToSnakeCase } from './string'
 
@@ -21,34 +21,32 @@ export class Params {
     this.limit = 15
   }
 
-  static Builder(): ParamsBuilder {
-    return new ParamsBuilder()
+  static Builder<T extends Record<string, any> | undefined>(
+    newParams: T
+  ): ParamsBuilder<T> {
+    return new ParamsBuilder(newParams)
   }
 }
 
-class ParamsBuilder {
+class ParamsBuilder<T extends Record<string, any> | undefined> {
   private params: Params
+  private readonly newParams: T | undefined
 
-  constructor() {
+  constructor(newParams: T) {
     this.params = new Params()
+    this.newParams = newParams
   }
 
-  public pagination(
-    actualFilter: PaginationFilter,
-    newFilter?: PaginationParams
-  ): ParamsBuilder {
-    this.params.page = newFilter?.page ?? actualFilter.page
-    this.params.limit = newFilter?.limit ?? actualFilter.limit
+  public pagination(actualFilter: PaginationFilter): ParamsBuilder<T> {
+    this.params.page = this.newParams?.page ?? actualFilter.page
+    this.params.limit = this.newParams?.limit ?? actualFilter.limit
 
     return this
   }
 
-  public searchFilters(
-    actualFilter: SearchParams,
-    newFilter?: SearchParams
-  ): ParamsBuilder {
-    const query = newFilter?.query ?? actualFilter.query
-    const filters = newFilter?.filters ?? actualFilter.filters
+  public searchFilters(actualFilter: SearchParams): ParamsBuilder<T> {
+    const query = this.newParams?.query ?? actualFilter.query
+    const filters = this.newParams?.filters ?? actualFilter.filters
 
     if (filters && filters.length > 0 && query) {
       Object.assign(
@@ -62,22 +60,26 @@ class ParamsBuilder {
     return this
   }
 
-  public putStaticFilter<T extends any>(key: string, value: T): ParamsBuilder {
+  public putStaticFilter<S extends any>(
+    key: string,
+    value: S
+  ): ParamsBuilder<T> {
     this.params[key] = value
     return this
   }
 
-  public putManyStaticFilters<T extends {}>(staticFilters: T): ParamsBuilder {
+  public putManyStaticFilters<S extends {}>(
+    staticFilters: S
+  ): ParamsBuilder<T> {
     Object.assign(this.params, staticFilters)
     return this
   }
 
-  public sort<T extends Object>(
+  public sort<S extends Object>(
     actualFilter: SortingState,
-    newFilter?: SortingState,
-    orderByMapper?: T
-  ): ParamsBuilder {
-    const [sort] = newFilter ?? actualFilter
+    orderByMapper?: S
+  ): ParamsBuilder<T> {
+    const [sort] = this.newParams?.sort ?? actualFilter
 
     if (sort) {
       this.params.by = orderByMapper
@@ -89,19 +91,22 @@ class ParamsBuilder {
     return this
   }
 
-  public dates(
-    actualFilter?: DateFilter,
-    newFilter?: DateFilter
-  ): ParamsBuilder {
+  public dates(actualFilter?: DateFilter): ParamsBuilder<T> {
     this.params.start_time =
-      newFilter?.start_time ??
-      (!newFilter?.clearDates ? actualFilter?.start_time : undefined)
+      this.newParams?.start_time ??
+      (!this.newParams?.clearDates ? actualFilter?.start_time : undefined)
 
     this.params.end_time =
-      newFilter?.end_time ??
-      (!newFilter?.clearDates ? actualFilter?.end_time : undefined)
+      this.newParams?.end_time ??
+      (!this.newParams?.clearDates ? actualFilter?.end_time : undefined)
 
     return this
+  }
+
+  public paginateAndSeach(
+    filters: PaginationFilter & SearchParams
+  ): ParamsBuilder<T> {
+    return this.pagination(filters).searchFilters(filters)
   }
 
   public build(): Params {
