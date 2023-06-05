@@ -47,10 +47,9 @@ export const useActions = (
     getTotal?: boolean
   ): Promise<void> => {
     try {
-      const urlParams = Params.Builder()
-        .pagination(usersPagination, params)
-        .sort(usersPagination.sort, params?.sort, orderByMapper)
-        .searchFilters(searchFilter, params)
+      const urlParams = Params.Builder(params)
+        .paginateAndSeach({ ...usersPagination, ...searchFilter })
+        .sort(usersPagination.sort, orderByMapper)
         .putStaticFilter(
           'sessions',
           (params?.sessions ?? staticFilter.sessions)?.[0] === 'logged'
@@ -67,7 +66,7 @@ export const useActions = (
             ? false
             : undefined
         )
-        .dates(dateFilter, params)
+        .dates(dateFilter)
         .build()
 
       const [response, totalResponse] = await Promise.all([
