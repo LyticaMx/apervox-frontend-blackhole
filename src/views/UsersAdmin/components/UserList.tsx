@@ -48,201 +48,205 @@ const UserList = ({
     actions?.getUsers({}, true)
   }, [])
 
-  const columns = useTableColumns<User>(() => [
-    {
-      accessorKey: 'name',
-      header: getMessage('name')
-    },
-    {
-      accessorKey: 'lastName',
-      header: getMessage('surnames')
-    },
-    {
-      accessorKey: 'username',
-      header: getMessage('user')
-    },
-    {
-      accessorKey: 'groups',
-      header: getMessage('groups'),
-      cell: ({ getValue }) =>
-        getValue<UserGroup[]>()
-          .map((item) => item.name)
-          .join(', '),
-      enableSorting: false
-    },
-    {
-      accessorKey: 'role',
-      header: getMessage('profile')
-    },
-    {
-      accessorKey: 'createdBy',
-      header: getMessage('registeredBy')
-    },
-    {
-      accessorKey: 'sessions',
-      header: getMessage('session'),
-      cell: ({ getValue }) => {
-        const sessions = getValue<number>()
-        const hasSessions = sessions > 0
-
-        return (
-          <div className="flex items-center">
-            <Typography className="mr-2" variant="body2">
-              <span
-                className={clsx(
-                  'mr-1',
-                  hasSessions ? 'text-green-500' : 'text-red-500'
-                )}
-              >
-                &#9679;
-              </span>
-              {getMessage(hasSessions ? 'logguedIn' : 'notLogguedIn')}
-            </Typography>
-
-            {hasSessions && (
-              <Tag
-                label={sessions.toString()}
-                className={'px-2 py-1'}
-                variant="caption"
-                roundedClassName="rounded-md"
-              />
-            )}
-          </div>
-        )
+  const columns = useTableColumns<User>(
+    () => [
+      {
+        accessorKey: 'name',
+        header: getMessage('name')
       },
-      enableSorting: false,
-      meta: {
-        columnFilters: {
-          onChange: async (values) => {
-            await actions?.getUsers({ sessions: values })
-          },
-          options: [
-            {
-              name: getMessage('logguedIn'),
-              value: 'logged'
-            },
-            {
-              name: getMessage('notLogguedIn'),
-              value: 'not logged'
-            },
-            {
-              name: getMessage('both'),
-              value: 'both'
-            }
-          ]
-        }
-      }
-    },
-    {
-      id: 'status',
-      accessorKey: 'status',
-      header: getMessage('status'),
-      cell: ({ getValue }) => {
-        const status = getValue<string>()
-        return (
-          <Tag
-            label={getMessage(status)}
-            className={clsx(
-              'px-4 py-1 w-32 justify-center',
-              colorByStatus[status]
-            )}
-            labelColorClassName="text-white"
-            variant="caption"
-          />
-        )
+      {
+        accessorKey: 'lastName',
+        header: getMessage('surnames')
       },
-      meta: {
-        columnFilters: {
-          onChange: async (values) =>
-            await actions?.getUsers({ status: values }),
-          options: [
-            {
-              name: getMessage('enabled'),
-              value: 'enabled'
-            },
-            {
-              name: getMessage('disabled'),
-              value: 'disabled'
-            },
-            {
-              name: getMessage('both'),
-              value: 'both'
-            }
-          ]
-        }
-      }
-    },
-    {
-      accessorKey: 'createdOn',
-      header: getMessage('registrationDate'),
-      cell: ({ getValue }) => format(new Date(getValue<string>()), 'dd/MM/yyyy')
-    },
-    {
-      accessorKey: 'id',
-      header: getMessage('action'),
-      enableSorting: false,
-      cell: ({ getValue, cell, table }) => {
-        const id = getValue<string>()
-        const status = cell.row.original.status
+      {
+        accessorKey: 'username',
+        header: getMessage('user')
+      },
+      {
+        accessorKey: 'groups',
+        header: getMessage('groups'),
+        cell: ({ getValue }) =>
+          getValue<UserGroup[]>()
+            .map((item) => item.name)
+            .join(', '),
+        enableSorting: false
+      },
+      {
+        accessorKey: 'role',
+        header: getMessage('profile')
+      },
+      {
+        accessorKey: 'createdBy',
+        header: getMessage('registeredBy')
+      },
+      {
+        accessorKey: 'sessions',
+        header: getMessage('session'),
+        cell: ({ getValue }) => {
+          const sessions = getValue<number>()
+          const hasSessions = sessions > 0
 
-        return (
-          <FloatingActions
-            actions={[
+          return (
+            <div className="flex items-center">
+              <Typography className="mr-2" variant="body2">
+                <span
+                  className={clsx(
+                    'mr-1',
+                    hasSessions ? 'text-green-500' : 'text-red-500'
+                  )}
+                >
+                  &#9679;
+                </span>
+                {getMessage(hasSessions ? 'logguedIn' : 'notLogguedIn')}
+              </Typography>
+
+              {hasSessions && (
+                <Tag
+                  label={sessions.toString()}
+                  className={'px-2 py-1'}
+                  variant="caption"
+                  roundedClassName="rounded-md"
+                />
+              )}
+            </div>
+          )
+        },
+        enableSorting: false,
+        meta: {
+          columnFilters: {
+            onChange: async (values) => {
+              await actions?.getUsers({ sessions: values })
+            },
+            options: [
               {
-                label: getMessage('restorePassword'),
-                onClick: () => {
-                  onResetPasswordUser(id)
-                }
+                name: getMessage('logguedIn'),
+                value: 'logged'
               },
               {
-                label: getMessage('unlockUser'),
-                disabled:
-                  status !== 'banned' ||
-                  table.getIsSomePageRowsSelected() ||
-                  table.getIsAllRowsSelected(),
-                onClick: () => {
-                  onUnlockUser(id)
-                }
+                name: getMessage('notLogguedIn'),
+                value: 'not logged'
               },
               {
-                label: getMessage('disableUser', { disabled: status }),
-                disabled:
-                  status === 'banned' ||
-                  table.getIsSomePageRowsSelected() ||
-                  table.getIsAllRowsSelected(),
-                onClick: () => {
-                  onDisableUser([id])
-                }
-              },
-              ...(auth.profile.id === id
-                ? []
-                : [
-                    {
-                      label: getMessage('closeSession'),
-                      disabled:
-                        table.getIsSomePageRowsSelected() ||
-                        table.getIsAllRowsSelected(),
-                      onClick: () => {
-                        onRemoteLogOffUser([id])
-                      }
-                    }
-                  ]),
-              {
-                label: getMessage('delete'),
-                className: 'text-red-500',
-                disabled:
-                  table.getIsSomePageRowsSelected() ||
-                  table.getIsAllRowsSelected(),
-                onClick: () => {
-                  onDeleteUser([id])
-                }
+                name: getMessage('both'),
+                value: 'both'
               }
-            ]}
-          />
-        )
+            ]
+          }
+        }
+      },
+      {
+        id: 'status',
+        accessorKey: 'status',
+        header: getMessage('status'),
+        cell: ({ getValue }) => {
+          const status = getValue<string>()
+          return (
+            <Tag
+              label={getMessage(status)}
+              className={clsx(
+                'px-4 py-1 w-32 justify-center',
+                colorByStatus[status]
+              )}
+              labelColorClassName="text-white"
+              variant="caption"
+            />
+          )
+        },
+        meta: {
+          columnFilters: {
+            onChange: async (values) =>
+              await actions?.getUsers({ status: values }),
+            options: [
+              {
+                name: getMessage('enabled'),
+                value: 'enabled'
+              },
+              {
+                name: getMessage('disabled'),
+                value: 'disabled'
+              },
+              {
+                name: getMessage('both'),
+                value: 'both'
+              }
+            ]
+          }
+        }
+      },
+      {
+        accessorKey: 'createdOn',
+        header: getMessage('registrationDate'),
+        cell: ({ getValue }) =>
+          format(new Date(getValue<string>()), 'dd/MM/yyyy')
+      },
+      {
+        accessorKey: 'id',
+        header: getMessage('action'),
+        enableSorting: false,
+        cell: ({ getValue, cell, table }) => {
+          const id = getValue<string>()
+          const status = cell.row.original.status
+
+          return (
+            <FloatingActions
+              actions={[
+                {
+                  label: getMessage('restorePassword'),
+                  onClick: () => {
+                    onResetPasswordUser(id)
+                  }
+                },
+                {
+                  label: getMessage('unlockUser'),
+                  disabled:
+                    status !== 'banned' ||
+                    table.getIsSomePageRowsSelected() ||
+                    table.getIsAllRowsSelected(),
+                  onClick: () => {
+                    onUnlockUser(id)
+                  }
+                },
+                {
+                  label: getMessage('disableUser', { disabled: status }),
+                  disabled:
+                    status === 'banned' ||
+                    table.getIsSomePageRowsSelected() ||
+                    table.getIsAllRowsSelected(),
+                  onClick: () => {
+                    onDisableUser([id])
+                  }
+                },
+                ...(auth.profile.id === id
+                  ? []
+                  : [
+                      {
+                        label: getMessage('closeSession'),
+                        disabled:
+                          table.getIsSomePageRowsSelected() ||
+                          table.getIsAllRowsSelected(),
+                        onClick: () => {
+                          onRemoteLogOffUser([id])
+                        }
+                      }
+                    ]),
+                {
+                  label: getMessage('delete'),
+                  className: 'text-red-500',
+                  disabled:
+                    table.getIsSomePageRowsSelected() ||
+                    table.getIsAllRowsSelected(),
+                  onClick: () => {
+                    onDeleteUser([id])
+                  }
+                }
+              ]}
+            />
+          )
+        }
       }
-    }
-  ])
+    ],
+    [actions?.getUsers]
+  )
 
   return (
     <div className="flex-1">

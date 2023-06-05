@@ -9,6 +9,7 @@ import {
   UsersPaginationParams
 } from 'types/user'
 import { actions } from './constants'
+import { Params } from 'utils/ParamsBuilder'
 
 const orderByMapper = {
   name: 'profile.names',
@@ -46,69 +47,36 @@ export const useActions = (
     getTotal?: boolean
   ): Promise<void> => {
     try {
-      const sort = {
-        by: 'created_at',
-        order: 'desc'
-      }
-
-      const mappedFilters: {
-        sessions?: boolean
-        status?: boolean
-      } = {}
-
-      const [sortBy] = params?.sort ?? usersPagination.sort
-      if (sortBy) {
-        sort.by = orderByMapper[sortBy.id] ?? sortBy.id
-        sort.order = sortBy.desc ? 'desc' : 'asc'
-      }
-
-      const query = params?.query ?? searchFilter.query
-      const filters = params?.filters ?? searchFilter.filters
-
-      if (filters && filters.length > 0 && query) {
-        Object.assign(
-          mappedFilters,
-          filters.reduce((old, key) => {
-            old[key] = query
-            return old
-          }, {})
+      const urlParams = Params.Builder()
+        .pagination(usersPagination, params)
+        .sort(usersPagination.sort, params?.sort, orderByMapper)
+        .searchFilters(searchFilter, params)
+        .putStaticFilter(
+          'sessions',
+          (params?.sessions ?? staticFilter.sessions)?.[0] === 'logged'
+            ? true
+            : params?.sessions?.[0] === 'not logged'
+            ? false
+            : undefined
         )
-      }
-
-      mappedFilters.sessions =
-        params?.sessions?.[0] === 'logged'
-          ? true
-          : params?.sessions?.[0] === 'not logged'
-          ? false
-          : undefined
-
-      mappedFilters.status =
-        params?.status?.[0] === 'enabled'
-          ? true
-          : params?.status?.[0] === 'disabled'
-          ? false
-          : undefined
-
-      const startTime =
-        params?.start_time ??
-        (!params?.clearDates ? dateFilter.start_time : undefined)
-
-      const endTime =
-        params?.end_time ??
-        (!params?.clearDates ? dateFilter.end_time : undefined)
+        .putStaticFilter(
+          'status',
+          (params?.status ?? staticFilter.status)?.[0] === 'enabled'
+            ? true
+            : params?.status?.[0] === 'disabled'
+            ? false
+            : undefined
+        )
+        .dates(dateFilter, params)
+        .build()
 
       const [response, totalResponse] = await Promise.all([
         getUsersService({
-          urlParams: {
-            ...sort,
-            ...mappedFilters,
-            page: params?.page ?? usersPagination.page,
-            limit: params?.limit ?? usersPagination.limit,
-            start_time: startTime,
-            end_time: endTime
-          }
+          urlParams
         }),
-        getTotal ? getUsersService({ urlParams: { page: 1, limit: 1 } }) : null
+        getTotal
+          ? getUsersService({ urlParams: { page: 1, limit: 1 } })
+          : Promise.resolve(null)
       ])
 
       dispatch(
@@ -150,8 +118,8 @@ export const useActions = (
             filters: params?.filters ?? searchFilter.filters
           },
           date: {
-            start_time: startTime,
-            end_time: endTime
+            start_time: urlParams.start_time,
+            end_time: urlParams.end_time
           },
           static: {
             sessions: params?.sessions ?? staticFilter.sessions,
