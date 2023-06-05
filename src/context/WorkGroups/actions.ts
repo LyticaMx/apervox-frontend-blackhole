@@ -16,6 +16,7 @@ import { actions } from './constants'
 import { initialState } from './context'
 import useApi from 'hooks/useApi'
 import { ResponseData, SearchParams } from 'types/api'
+import { Params } from 'utils/ParamsBuilder'
 
 const orderByMapper = {
   registered_by: 'created_by.username',
@@ -116,74 +117,39 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
     getTotal?: boolean
   ): Promise<void> => {
     try {
-      const sort = { by: 'created_at', order: 'desc' }
-      const mappedFilters: {
-        has_techniques?: boolean
-        has_users?: boolean
-        status?: boolean
-      } = {}
-
-      const [sortBy] = params?.sort ?? workGroupsPagination.sort
-      if (sortBy) {
-        sort.by = orderByMapper[sortBy.id] ?? sortBy.id
-        sort.order = sortBy.desc ? 'desc' : 'asc'
-      }
-
-      const query = params?.query ?? searchFilter.query
-      const filters = params?.filters ?? searchFilter.filters
-
-      if (filters && filters.length > 0 && query) {
-        Object.assign(
-          mappedFilters,
-          filters.reduce((old, key) => {
-            old[key] = query
-            return old
-          }, {})
-        )
-      }
-
-      mappedFilters.has_techniques =
-        params?.hasTechniques?.[0] === 'yes'
-          ? true
-          : params?.hasTechniques?.[0] === 'no'
-          ? false
-          : undefined
-
-      mappedFilters.has_users =
-        params?.hasUsers?.[0] === 'yes'
-          ? true
-          : params?.hasUsers?.[0] === 'no'
-          ? false
-          : undefined
-
-      mappedFilters.status =
-        params?.status?.[0] === 'enabled'
-          ? true
-          : params?.status?.[0] === 'disabled'
-          ? false
-          : undefined
-
-      const startTime =
-        params?.start_time ??
-        (!params?.clearDates ? dateFilter.start_time : undefined)
-      const endTime =
-        params?.end_time ??
-        (!params?.clearDates ? dateFilter.end_time : undefined)
+      const urlParams = Params.Builder(params)
+        .paginateAndSeach({ ...searchFilter, ...workGroupsPagination })
+        .sort(workGroupsPagination.sort, orderByMapper)
+        .dates(dateFilter)
+        .putManyStaticFilters({
+          has_techniques:
+            (params?.hasTechniques ?? staticFilter.hasTechniques)?.[0] === 'yes'
+              ? true
+              : params?.hasTechniques?.[0] === 'no'
+              ? false
+              : undefined,
+          has_users:
+            (params?.hasUsers ?? staticFilter.hasUsers)?.[0] === 'yes'
+              ? true
+              : params?.hasUsers?.[0] === 'no'
+              ? false
+              : undefined,
+          status:
+            (params?.status ?? staticFilter.status)?.[0] === 'enabled'
+              ? true
+              : params?.status?.[0] === 'disabled'
+              ? false
+              : undefined
+        })
+        .build()
 
       const [response, totalResponse] = await Promise.all([
         getWorkgroupsService({
-          urlParams: {
-            ...sort,
-            ...mappedFilters,
-            page: params?.page ?? workGroupsPagination.page,
-            limit: params?.limit ?? workGroupsPagination.limit,
-            start_time: startTime,
-            end_time: endTime
-          }
+          urlParams
         }),
         getTotal
           ? getWorkgroupsService({ urlParams: { page: 1, limit: 1 } })
-          : null
+          : Promise.resolve(null)
       ])
 
       // para acceder a las funciones de array
@@ -222,8 +188,8 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
             filters: params?.filters ?? searchFilter.filters
           },
           date: {
-            start_time: startTime,
-            end_time: endTime
+            start_time: urlParams.start_time,
+            end_time: urlParams.end_time
           },
           static: {
             hasTechniques: params?.hasTechniques ?? staticFilter.hasTechniques,
@@ -241,21 +207,13 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
     params?: WorkgroupPaginationParams & SearchParams
   ): Promise<void> => {
     try {
-      const sort = { by: 'created_at', order: 'desc' }
-
-      const [sortBy] = params?.sort ?? usersPagination.sort
-      if (sortBy) {
-        sort.by = orderByMapperUsers[sortBy.id] ?? sortBy.id
-        sort.order = sortBy.desc ? 'desc' : 'asc'
-      }
-
+      const urlParams = Params.Builder(params)
+        .pagination(usersPagination)
+        .sort(usersPagination.sort, orderByMapperUsers)
+        .build()
       const response = await getWorkgroupsService({
         queryString: `${selected.id}/users`,
-        urlParams: {
-          ...sort,
-          page: params?.page ?? usersPagination.page,
-          limit: params?.limit ?? usersPagination.limit
-        }
+        urlParams
       })
 
       const list: any[] = response.data
