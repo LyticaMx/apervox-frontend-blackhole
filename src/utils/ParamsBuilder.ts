@@ -1,6 +1,7 @@
 import { SortingState } from '@tanstack/react-table'
 import { PaginationParams, SearchParams } from 'types/api'
 import { DateFilter, PaginationFilter } from 'types/filters'
+import { camelToSnakeCase } from './string'
 
 type Order = 'asc' | 'desc'
 
@@ -76,11 +77,12 @@ class ParamsBuilder {
     newFilter?: SortingState,
     orderByMapper?: T
   ): ParamsBuilder {
-    console.log({ newFilter, actualFilter })
     const [sort] = newFilter ?? actualFilter
 
     if (sort) {
-      this.params.by = orderByMapper?.[sort.id] ?? sort.id
+      this.params.by = orderByMapper
+        ? orderByMapper[sort.id] ?? sort.id
+        : camelToSnakeCase(sort.id)
       this.params.order = sort.desc ? 'desc' : 'asc'
     }
 
