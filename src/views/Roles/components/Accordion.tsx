@@ -1,4 +1,4 @@
-import { ReactElement, useCallback, useEffect } from 'react'
+import { ReactElement, useCallback } from 'react'
 import clsx from 'clsx'
 
 import { useFormatMessage } from 'hooks/useIntl'
