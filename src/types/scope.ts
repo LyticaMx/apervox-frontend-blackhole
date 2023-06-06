@@ -1,17 +1,25 @@
 export type Resource =
   | 'me'
-  | 'users'
   | 'sessions'
-  | 'roles'
-  | 'groups'
   | 'techniques'
+  | 'groups'
+  | 'users'
+  | 'roles'
+  | 'carriers'
+  | 'acquisition_mediums'
+  | 'devices'
+  | 'settings'
+  | 'labels'
+  | 'letterheads'
   | 'overflow_lines'
+  | 'verification_lines'
+  | 'targets'
 
 export interface Scope {
   name: Resource
-  create: boolean
-  read: boolean
-  update: boolean
-  delete: boolean
-  export: boolean
+  create?: boolean
+  read?: boolean
+  update?: boolean
+  delete?: boolean
+  export?: boolean
 }
