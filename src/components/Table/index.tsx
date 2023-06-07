@@ -92,6 +92,11 @@ const Table = <DataType,>({
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const tableContainerRef = useRef<HTMLDivElement>(null)
+  const manualSortingRef = useRef(manualSorting?.onSortingChange)
+
+  useEffect(() => {
+    manualSortingRef.current = manualSorting?.onSortingChange
+  }, [manualSorting?.onSortingChange])
 
   const { formatMessage } = useIntl()
 
@@ -135,7 +140,7 @@ const Table = <DataType,>({
   const onSorting = (callback): void => {
     const sortedCb = callback(manualSorting?.sorting ?? sortingState)
 
-    if (manualSorting) manualSorting.onSortingChange(sortedCb)
+    if (manualSorting) manualSortingRef.current?.(sortedCb)
     else setSortingState(callback)
   }
 

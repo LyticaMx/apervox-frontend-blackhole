@@ -70,7 +70,8 @@ const LetterheadDrawer = (props: Props): ReactElement => {
           placeholder: formatMessage(
             letterheadAdministrationMessages.letterheadNamePlaceholder
           ),
-          label: formatMessage(letterheadAdministrationMessages.letterheadName)
+          label: formatMessage(letterheadAdministrationMessages.letterheadName),
+          requiredMarker: true
         }
       },
       {
@@ -87,7 +88,8 @@ const LetterheadDrawer = (props: Props): ReactElement => {
           textField: 'text',
           valueField: 'value',
           label: formatMessage(letterheadAdministrationMessages.documentType),
-          optionsContainerClassname: 'w-[95%]'
+          optionsContainerClassname: 'w-[95%]',
+          requiredMarker: true
         }
       },
       {
@@ -100,7 +102,8 @@ const LetterheadDrawer = (props: Props): ReactElement => {
           ),
           placeholder: formatMessage(
             letterheadAdministrationMessages.organizationNamePlaceholder
-          )
+          ),
+          requiredMarker: true
         },
         section: 'template'
       },

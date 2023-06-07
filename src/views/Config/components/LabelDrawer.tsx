@@ -77,7 +77,8 @@ const LabelDrawer = (props: Props): ReactElement => {
           valueField: 'value',
           textField: 'text',
           clearable: false,
-          optionsContainerClassname: '!w-[95%]'
+          optionsContainerClassname: '!w-[95%]',
+          requiredMarker: true
         }
       },
       {
@@ -88,7 +89,8 @@ const LabelDrawer = (props: Props): ReactElement => {
           label: formatMessage(labelsAdministrationMessages.labelName),
           placeholder: formatMessage(
             labelsAdministrationMessages.labelNamePlaceholder
-          )
+          ),
+          requiredMarker: true
         }
       },
       {
