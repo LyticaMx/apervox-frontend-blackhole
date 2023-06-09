@@ -13,6 +13,7 @@ import { useToggle } from 'hooks/useToggle'
 import EditOverflowLineDrawer from './EditOverflowLineDrawer'
 import DisableOverflowLineDialog from './DisableOverflowLineDialog'
 import { get } from 'lodash'
+import clsx from 'clsx'
 
 const DataTable = (): ReactElement => {
   const getMessage = useFormatMessage(tableMessages)
@@ -25,6 +26,12 @@ const DataTable = (): ReactElement => {
 
   const [open, toggle] = useToggle()
 
+  const colorsStatus = {
+    assigned: 'bg-red-500',
+    available: 'bg-blue-500',
+    quarantine: 'bg-orange-500',
+    maintenance: 'bg-yellow-500'
+  }
   const columns = useTableColumns<OverflowLine>(() => [
     {
       accessorKey: 'target.phone',
@@ -64,8 +71,13 @@ const DataTable = (): ReactElement => {
       header: getMessage('status'),
       cell: ({ getValue }) => (
         <div>
-          <p className="px-1 py-1 rounded-3xl bg-red-500 text-white text-center text-sm leading-none font-light">
-            {getValue<string>()}
+          <p
+            className={clsx(
+              'px-1 py-1 rounded-3xl text-white text-center text-sm leading-none font-light',
+              colorsStatus[getValue<string>()]
+            )}
+          >
+            {getMessage(getValue<string>())}
           </p>
         </div>
       )

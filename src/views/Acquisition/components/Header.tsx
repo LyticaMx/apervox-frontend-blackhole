@@ -21,7 +21,7 @@ const Header = (): ReactElement => {
   const getMessage = useFormatMessage(messages)
   const [open, toggle] = useToggle(false)
 
-  const { totals, actions } = useOverflowLine()
+  const { totals, dateFilter, searchFilter, actions } = useOverflowLine()
   const counters = omit(totals, 'all')
 
   const items = [
@@ -84,6 +84,14 @@ const Header = (): ReactElement => {
               clearDates: data.clearDates,
               line_status: lineStatus === 'all' ? undefined : lineStatus
             })
+          }}
+          initialValues={{
+            dateRange: {
+              start_time: dateFilter.start_time,
+              end_time: dateFilter.end_time
+            },
+            search: searchFilter.query,
+            fields: searchFilter.filters
           }}
         />
       </div>

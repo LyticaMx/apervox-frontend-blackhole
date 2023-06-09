@@ -54,7 +54,8 @@ const MediaDrawer = <FormValues extends FormMedium | FormDevice>(
           options: {
             id: 'name',
             label: formatMessage(mediaMessages.mediaName),
-            placeholder: formatMessage(mediaMessages.mediaNamePlaceholder)
+            placeholder: formatMessage(mediaMessages.mediaNamePlaceholder),
+            requiredMarker: true
           }
         }
       ]
@@ -83,7 +84,8 @@ const MediaDrawer = <FormValues extends FormMedium | FormDevice>(
         options: {
           id: 'name',
           label: formatMessage(mediaMessages.deviceName),
-          placeholder: formatMessage(mediaMessages.deviceNamePlaceholder)
+          placeholder: formatMessage(mediaMessages.deviceNamePlaceholder),
+          requiredMarker: true
         }
       }
     ]

@@ -17,7 +17,7 @@ interface FormValues {
 }
 
 const CarrierTab = (): ReactElement => {
-  const { data, actions } = useCarriers()
+  const { data, dateFilter, searchFilter, actions } = useCarriers()
   const { actions: drawerActions } = useDrawer()
   const { formatMessage } = useIntl()
 
@@ -91,7 +91,7 @@ const CarrierTab = (): ReactElement => {
         <Grid item xs={12} md={7} className="flex justify-end">
           <ViewFilter
             fields={[
-              { label: formatMessage(formMessages.name), name: 'Nombre' }
+              { label: formatMessage(formMessages.name), name: 'name' }
             ]}
             action={{
               label: formatMessage(mediaMessages.createCarrier),
@@ -115,6 +115,23 @@ const CarrierTab = (): ReactElement => {
                   )
                 })
             }}
+            initialValues={{
+              dateRange: {
+                start_time: dateFilter.start_time,
+                end_time: dateFilter.end_time
+              },
+              search: searchFilter.query,
+              fields: searchFilter.filters
+            }}
+            onChange={(data) =>
+              actions?.getData({
+                start_time: data.dateRange[0],
+                end_time: data.dateRange[1],
+                clearDates: data.clearDates,
+                filters: data.filterByField.fields,
+                query: data.filterByField.search
+              })
+            }
           />
         </Grid>
         <Grid item xs={12} className="mt-4">
