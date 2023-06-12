@@ -102,6 +102,22 @@ export const tableMessages = defineMessages({
   callType: {
     id: 'views.acquisition.table.callType',
     defaultMessage: 'Tipo llamada'
+  },
+  assigned: {
+    id: 'views.acquisition.table.assigned',
+    defaultMessage: 'Ocupada'
+  },
+  available: {
+    id: 'views.acquisition.table.available',
+    defaultMessage: 'Disponible'
+  },
+  quarantine: {
+    id: 'views.acquisition.table.quarantine',
+    defaultMessage: 'Cuarentena'
+  },
+  maintenance: {
+    id: 'views.acquisition.table.maintenance',
+    defaultMessage: 'Mantenimiento'
   }
 })
 

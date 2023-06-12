@@ -15,7 +15,7 @@ import { generalMessages, platformMessages } from 'globalMessages'
 const VerificationHeader = (): ReactElement => {
   const { formatMessage } = useIntl()
   const [open, setOpen] = useState(false)
-  const { total, actions } = useVerificationLine()
+  const { total, dateFilter, searchFilter, actions } = useVerificationLine()
 
   useEffect(() => {
     actions?.get({}, true)
@@ -52,6 +52,14 @@ const VerificationHeader = (): ReactElement => {
             query: data.filterByField.search,
             clearDates: data.clearDates
           })
+        }}
+        initialValues={{
+          dateRange: {
+            start_time: dateFilter.start_time,
+            end_time: dateFilter.end_time
+          },
+          search: searchFilter.query,
+          fields: searchFilter.filters
         }}
       />
 

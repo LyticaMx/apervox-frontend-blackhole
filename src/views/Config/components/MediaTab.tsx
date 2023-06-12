@@ -18,7 +18,7 @@ interface FormValues {
 }
 
 const MediaTab = (): ReactElement => {
-  const { data, actions } = useAcquisitionMediums()
+  const { data, dateFilter, searchFilter, actions } = useAcquisitionMediums()
   const { actions: drawerActions } = useDrawer()
   const { formatMessage } = useIntl()
   const [openDeleteMedia, setOpenDeleteMedia] = useState(false)
@@ -60,7 +60,6 @@ const MediaTab = (): ReactElement => {
   }
 
   const handleCreate = async (data: FormValues): Promise<void> => {
-    console.log('🚀 ~ file: MediaTab.tsx:43 ~ handleCreate ~ data:', data)
     const res = await actions?.create({
       name: data.name
     })
@@ -93,7 +92,7 @@ const MediaTab = (): ReactElement => {
         <Grid item xs={12} md={7} className="flex justify-end">
           <ViewFilter
             fields={[
-              { label: formatMessage(formMessages.name), name: 'Nombre' }
+              { label: formatMessage(formMessages.name), name: 'name' }
             ]}
             action={{
               label: formatMessage(mediaMessages.addMedia),
@@ -107,6 +106,23 @@ const MediaTab = (): ReactElement => {
                   body: <MediaDrawer formType="media" onAccept={handleCreate} />
                 })
             }}
+            initialValues={{
+              dateRange: {
+                start_time: dateFilter.start_time,
+                end_time: dateFilter.end_time
+              },
+              search: searchFilter.query,
+              fields: searchFilter.filters
+            }}
+            onChange={(data) =>
+              actions?.getData({
+                start_time: data.dateRange[0],
+                end_time: data.dateRange[1],
+                clearDates: data.clearDates,
+                filters: data.filterByField.fields,
+                query: data.filterByField.search
+              })
+            }
           />
         </Grid>
         <Grid item xs={12} className="mt-4">

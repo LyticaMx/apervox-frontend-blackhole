@@ -1,5 +1,5 @@
 import { useService } from 'hooks/useApi'
-import { omit, pick } from 'lodash'
+import { omit } from 'lodash'
 import {
   Actions,
   State,
@@ -7,8 +7,8 @@ import {
   CreatePayload,
   UpdatePayload
 } from 'types/verificationLine'
-import { getMappedFilters, getSort } from 'utils/table'
 import { actions } from './constants'
+import { Params } from 'utils/ParamsBuilder'
 
 export const useActions = (state: State, dispatch): Actions => {
   const { pagination, dateFilter, searchFilter, total } = state
@@ -19,29 +19,18 @@ export const useActions = (state: State, dispatch): Actions => {
     getTotal?: boolean
   ): Promise<void> => {
     try {
-      const sort = getSort(params?.sort ?? pagination.sort, {
-        by: 'created_at',
-        order: 'desc'
-      })
-
-      const mappedFilters = getMappedFilters({
-        ...searchFilter,
-        ...pick(params, ['query', 'filters'])
-      })
+      const urlParams = Params.Builder(params)
+        .paginateAndSeach({ ...pagination, ...searchFilter })
+        .sort(pagination.sort)
+        .dates(dateFilter)
+        .build()
 
       // TODO: cambiar el response data
       const [response, totalResponse] = await Promise.all([
-        resource.get({
-          urlParams: {
-            ...sort,
-            ...mappedFilters,
-            page: params?.page ?? pagination.page,
-            limit: params?.limit ?? pagination.limit,
-            start_time: params?.start_time ?? dateFilter.start_time,
-            end_time: params?.end_time ?? dateFilter.end_time
-          }
-        }),
-        getTotal ? resource.get({ urlParams: { page: 1, limit: 1 } }) : null
+        resource.get({ urlParams }),
+        getTotal
+          ? resource.get({ urlParams: { page: 1, limit: 1 } })
+          : Promise.resolve(null)
       ])
 
       dispatch(
@@ -67,8 +56,8 @@ export const useActions = (state: State, dispatch): Actions => {
             filters: params?.filters ?? searchFilter.filters
           },
           date: {
-            start_time: params?.start_time ?? dateFilter.start_time,
-            end_time: params?.end_time ?? dateFilter.end_time
+            start_time: urlParams.start_time,
+            end_time: urlParams.end_time
           }
         })
       )

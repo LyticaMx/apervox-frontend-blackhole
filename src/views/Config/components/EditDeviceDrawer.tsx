@@ -58,7 +58,8 @@ const EditDeviceDrawer = (props: Props): ReactElement => {
         options: {
           id: 'name',
           label: formatMessage(mediaMessages.deviceName),
-          placeholder: formatMessage(mediaMessages.deviceNamePlaceholder)
+          placeholder: formatMessage(mediaMessages.deviceNamePlaceholder),
+          requiredMarker: true
         }
       }
     ],
