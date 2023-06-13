@@ -73,7 +73,7 @@ const UserList = ({
       },
       {
         accessorKey: 'role',
-        header: getMessage('profile')
+        header: getMessage('role')
       },
       {
         accessorKey: 'createdBy',
