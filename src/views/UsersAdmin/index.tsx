@@ -93,7 +93,7 @@ const UsersAdmin = (): ReactElement => {
         <UnlockDialog open={openUnlockDialog} onClose={toggleUnlockDialog} />
       </div>
 
-      <div className="flex gap-4 mt-2">
+      <div className="mt-2">
         <UserList
           onSelectUser={setSelectedUser}
           onDeleteUser={async (ids) =>
