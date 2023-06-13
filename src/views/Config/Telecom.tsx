@@ -2,13 +2,11 @@ import Grid from 'components/Grid'
 import Table from 'components/Table'
 import Typography from 'components/Typography'
 import ViewFilter from 'components/ViewFilter'
-import { useDrawer } from 'context/Drawer'
 import { format } from 'date-fns'
 import { generalMessages, platformMessages } from 'globalMessages'
 import useTableColumns from 'hooks/useTableColumns'
 import { ReactElement, useEffect } from 'react'
 import { useIntl } from 'react-intl'
-import GeoreferenceDrawer from './components/GeoreferenceDrawer'
 import NavOptions from './components/NavOptions'
 import { telecomMessages } from './messages'
 import { Location } from 'types/location'
@@ -17,7 +15,6 @@ import { formatTotal } from 'utils/formatTotal'
 
 const Telecom = (): ReactElement => {
   const { formatMessage } = useIntl()
-  const { actions } = useDrawer()
   const {
     data,
     dateFilter,
@@ -115,30 +112,6 @@ const Telecom = (): ReactElement => {
             columns={columns}
             data={data}
             rowConfig={{ paddingSize: 'sm' }}
-            onRowClicked={(row) =>
-              actions?.handleOpenDrawer({
-                title: (
-                  <Typography
-                    className="text-secondary font-extrabold uppercase !text-lg"
-                    variant="title"
-                  >
-                    {formatMessage(telecomMessages.geoData)}
-                  </Typography>
-                ),
-                body: (
-                  <GeoreferenceDrawer
-                    subtitle={formatMessage(telecomMessages.actualGeoData)}
-                    onAccept={async () => {}}
-                    editMode
-                    initialValues={{
-                      cellId: row.cellId,
-                      latitude: row.latitude,
-                      longitude: row.longitude
-                    }}
-                  />
-                )
-              })
-            }
             maxHeight={500}
             manualLimit={{
               options: [15, 25, 50, 100],
