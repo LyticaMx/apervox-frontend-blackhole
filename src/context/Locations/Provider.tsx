@@ -22,12 +22,6 @@ const LocationProvider = ({ children }: Props): ReactElement => {
         .dates(location.dateFilter)
         .build()
 
-      console.log({
-        ...urlParams,
-        page: params?.page ?? location.pagination.page,
-        limit: params?.limit ?? location.pagination.limit
-      })
-
       setLocation({
         data: [
           {

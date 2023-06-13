@@ -35,7 +35,8 @@ const EditMediaDrawer = (props: Props): ReactElement => {
         options: {
           id: 'name',
           label: formatMessage(mediaMessages.mediaName),
-          placeholder: formatMessage(mediaMessages.mediaNamePlaceholder)
+          placeholder: formatMessage(mediaMessages.mediaNamePlaceholder),
+          requiredMarker: true
         }
       }
     ],

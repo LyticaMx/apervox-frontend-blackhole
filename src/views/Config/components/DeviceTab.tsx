@@ -14,7 +14,7 @@ import { useDevices } from 'context/Devices'
 import { get } from 'lodash'
 
 const DeviceTab = (): ReactElement => {
-  const { data, actions } = useDevices()
+  const { data, dateFilter, searchFilter, actions } = useDevices()
   const { actions: drawerActions } = useDrawer()
   const { formatMessage } = useIntl()
   const [openDelete, setOpenDelete] = useState(false)
@@ -89,7 +89,7 @@ const DeviceTab = (): ReactElement => {
         <Grid item xs={12} md={7} className="flex justify-end">
           <ViewFilter
             fields={[
-              { label: formatMessage(formMessages.name), name: 'Nombre' }
+              { label: formatMessage(formMessages.name), name: 'name' }
             ]}
             action={{
               label: formatMessage(mediaMessages.addDevice),
@@ -105,6 +105,23 @@ const DeviceTab = (): ReactElement => {
                   )
                 })
             }}
+            initialValues={{
+              dateRange: {
+                start_time: dateFilter.start_time,
+                end_time: dateFilter.end_time
+              },
+              search: searchFilter.query,
+              fields: searchFilter.filters
+            }}
+            onChange={(data) =>
+              actions?.getData({
+                start_time: data.dateRange[0],
+                end_time: data.dateRange[1],
+                clearDates: data.clearDates,
+                filters: data.filterByField.fields,
+                query: data.filterByField.search
+              })
+            }
           />
         </Grid>
         <Grid item xs={12} className="mt-4">

@@ -5,9 +5,10 @@ import { Carrier } from 'types/Carrier'
 import { DateFilter } from 'types/filters'
 import { actions } from './constants'
 import { Actions, CarriersPaginationParams, State } from './types'
+import { Params } from 'utils/ParamsBuilder'
 
 const orderByMapper = {
-  name: 'names',
+  name: 'name',
   createdBy: 'created_by',
   createdOn: 'created_at',
   lastName: 'last_name'
@@ -21,36 +22,13 @@ export const useActions = (state: State, dispatch): Actions => {
     params?: CarriersPaginationParams & SearchParams & DateFilter
   ): Promise<void> => {
     try {
-      const sort = {
-        by: 'created_at',
-        order: 'desc'
-      }
+      const urlParams = Params.Builder(params)
+        .paginateAndSeach({ ...pagination, ...searchFilter })
+        .sort(pagination.sort, orderByMapper)
+        .dates(dateFilter)
+        .build()
 
-      if (params?.sort && params.sort.length > 0) {
-        const [sortBy] = params.sort
-        sort.by = orderByMapper[sortBy.id] ?? sortBy.id
-        sort.order = sortBy.desc ? 'desc' : 'asc'
-      }
-      const query = params?.query ?? searchFilter.query
-      const filters = params?.filters ?? searchFilter.filters
-      const mappedFilters = (filters ?? []).reduce((old, key) => {
-        if (!query) return old
-
-        old[key] = query
-        return old
-      }, {})
-
-      // TODO: cambiar el response data
-      const response: ResponseData = await resource.get({
-        urlParams: {
-          ...sort,
-          ...mappedFilters,
-          page: params?.page ?? pagination.page,
-          limit: params?.limit ?? pagination.limit,
-          start_time: params?.start_time ?? dateFilter.start_time,
-          end_time: params?.end_time ?? dateFilter.end_time
-        }
-      })
+      const response: ResponseData = await resource.get({ urlParams })
 
       dispatch(actions.setData(response.data))
 
@@ -70,8 +48,8 @@ export const useActions = (state: State, dispatch): Actions => {
             filters: params?.filters ?? searchFilter.filters
           },
           date: {
-            start_time: params?.start_time ?? dateFilter.start_time,
-            end_time: params?.end_time ?? dateFilter.end_time
+            start_time: urlParams.start_time,
+            end_time: urlParams.end_time
           }
         })
       )

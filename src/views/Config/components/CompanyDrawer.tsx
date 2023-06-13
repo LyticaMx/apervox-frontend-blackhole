@@ -44,7 +44,8 @@ const CompanyDrawer = (props: Props): ReactElement => {
         options: {
           id: 'name',
           label: formatMessage(mediaMessages.carrierName),
-          placeholder: formatMessage(mediaMessages.carrierNamePlaceholder)
+          placeholder: formatMessage(mediaMessages.carrierNamePlaceholder),
+          requiredMarker: true
         }
       }
     ],
