@@ -26,7 +26,7 @@ const colorByStatus = {
 interface Props {
   onSelectUser: (user: User) => void
   onDeleteUser: (ids: string[]) => Promise<boolean>
-  onDisableUser: (ids: string[]) => void
+  onDisableUser: (ids: string[], status?: string) => void
   onRemoteLogOffUser: (ids: string[]) => void
   onUnlockUser: (id: string) => void
   onResetPasswordUser: (id: string) => void
@@ -213,7 +213,7 @@ const UserList = ({
                     table.getIsSomePageRowsSelected() ||
                     table.getIsAllRowsSelected(),
                   onClick: () => {
-                    onDisableUser([id])
+                    onDisableUser([id], cell.row.original.status)
                   }
                 },
                 ...(auth.profile.id === id

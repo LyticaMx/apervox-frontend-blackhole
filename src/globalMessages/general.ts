@@ -253,7 +253,7 @@ export const generalMessages = defineMessages({
     id: 'global.general.active',
     defaultMessage: 'Activo'
   },
-  enabled: { id: 'global.general.enabled', defaultMessage: 'Activo' },
+  enabled: { id: 'global.general.enabled', defaultMessage: 'Habilitado' },
   inactives: {
     id: 'global.general.inactives',
     defaultMessage: 'Inactivos'
@@ -264,7 +264,7 @@ export const generalMessages = defineMessages({
   },
   disabled: {
     id: 'global.general.disabled',
-    defaultMessage: 'Inactivo'
+    defaultMessage: 'Deshabilitado'
   },
   archiveds: {
     id: 'global.general.archiveds',

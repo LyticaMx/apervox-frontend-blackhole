@@ -70,12 +70,12 @@ export const usersDisableMessages = defineMessages({
   title: {
     id: 'views.users.disable.title',
     defaultMessage:
-      'Deshabilitar {selectedUsers, plural, one {usuario} other {usuarios}}'
+      '{disabled, select, true{Habilitar} other{Deshabilitar}} {selectedUsers, plural, one {usuario} other {usuarios}}'
   },
   message: {
     id: 'views.users.disable.message',
     defaultMessage:
-      '{selectedUsers, plural, one {El usuario seleccionado se encuentra habilitado} other {Los # usuarios seleccionados se encuentran habilitados}}'
+      '{selectedUsers, plural, one {El usuario seleccionado se encuentra {disabled, select, true{deshabilitado} other{habilitado}}} other {Los # usuarios seleccionados se encuentran {disabled, select, true{deshabilitados} other{habilitados}}}}'
   },
   success: {
     id: 'views.users.disable.success',
