@@ -35,7 +35,7 @@ const SettingsProvider = ({ children }: Props): ReactElement => {
         setSettings((old) => ({ ...old, ...options }))
         return true
       }
-      await updateConfigService({
+      const response = await updateConfigService({
         body: {
           full_evidence_view:
             options.fullEvidenceView ?? settings.fullEvidenceView,
@@ -46,6 +46,14 @@ const SettingsProvider = ({ children }: Props): ReactElement => {
           concurrent_sessions:
             options.concurrentSessions ?? settings.concurrentSessions
         }
+      })
+
+      setSettings({
+        concurrentSessions: response.data.concurrent_sessions,
+        doubleValidation: response.data.double_validation,
+        downloadPath: response.data.download_path,
+        fullEvidenceView: response.data.full_evidence_view,
+        inactivityTime: response.data.inactivity_time
       })
       return true
     } catch {
