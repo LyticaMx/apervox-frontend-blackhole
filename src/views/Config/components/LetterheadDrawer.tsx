@@ -1,4 +1,4 @@
-import Button from 'components/Button'
+// import Button from 'components/Button'
 import Form from 'components/Form'
 import Typography from 'components/Typography'
 import { FormikConfig, FormikContextType } from 'formik'
@@ -158,7 +158,8 @@ const LetterheadDrawer = (props: Props): ReactElement => {
             </div>
           )
         }
-      },
+      }
+      /* TODO: Bloqueado temporalmente hasta definir como se previsualizaran las templates
       {
         section: 'template',
         name: 'preview',
@@ -171,6 +172,7 @@ const LetterheadDrawer = (props: Props): ReactElement => {
           </div>
         )
       }
+      */
     ],
     []
   )

@@ -11,9 +11,14 @@ import useToast from 'hooks/useToast'
 interface Props {
   ids: string[]
   onClose?: (event?: any) => void
+  disabled?: boolean
 }
 
-const DisableDialog = ({ onClose = () => {}, ids }: Props): ReactElement => {
+const DisableDialog = ({
+  onClose = () => {},
+  ids,
+  disabled
+}: Props): ReactElement => {
   const getMessage = useFormatMessage(usersDisableMessages)
   const getGlobalMessage = useGlobalMessage()
   const [enabled, setEnabled] = useState(true)
@@ -56,11 +61,11 @@ const DisableDialog = ({ onClose = () => {}, ids }: Props): ReactElement => {
           <InformationCircleIcon className="h-6 w-6 text-primary m-auto mb-2" />
 
           <h3 className="text-lg font-medium leading-6 text-gray-900">
-            {getMessage('title', { selectedUsers: ids.length })}
+            {getMessage('title', { selectedUsers: ids.length, disabled })}
           </h3>
 
           <p className="text-sm text-gray-500 mt-1">
-            {getMessage('message', { selectedUsers: ids.length })}
+            {getMessage('message', { selectedUsers: ids.length, disabled })}
           </p>
 
           <div className="flex justify-center items-center text-sm gap-2 my-4">

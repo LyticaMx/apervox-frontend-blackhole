@@ -22,9 +22,12 @@ import LetterheadAdministration from './components/LetterheadAdministration'
 import SelectField from 'components/Form/Select'
 import { useSettings } from 'context/Settings'
 import useToast from 'hooks/useToast'
+import { useLanguage } from 'context/Language'
+import { LocaleType } from 'types/language'
+import { getItem } from 'utils/persistentStorage'
 
 interface FormValues {
-  language: 'es-mx' | 'en-us'
+  language: LocaleType
   dataEvidence: 'simple' | 'full'
   url: string
   doubleStepDelete: boolean
@@ -36,6 +39,7 @@ const GeneralConfig = (): ReactElement => {
   const { formatMessage } = useIntl()
   const { settings, actions: settingsActions } = useSettings()
   const toast = useToast()
+  const { actions: languageActions } = useLanguage()
 
   useEffect(() => {
     settingsActions?.get()
@@ -63,7 +67,7 @@ const GeneralConfig = (): ReactElement => {
 
   const formik = useFormik<FormValues>({
     initialValues: {
-      language: 'es-mx',
+      language: getItem('lang') ?? 'es',
       dataEvidence: settings.fullEvidenceView ? 'full' : 'simple',
       doubleStepDelete: settings.doubleValidation,
       openSessions: settings.concurrentSessions,
@@ -71,6 +75,8 @@ const GeneralConfig = (): ReactElement => {
       url: settings.downloadPath
     },
     onSubmit: async (values) => {
+      languageActions?.changeLocale(values.language)
+
       const updated = await settingsActions?.update({
         concurrentSessions: values.openSessions,
         doubleValidation: values.doubleStepDelete,
@@ -111,9 +117,9 @@ const GeneralConfig = (): ReactElement => {
               <div className="flex gap-1 items-center">
                 <Radio
                   label=""
-                  value="es-mx"
+                  value="es"
                   onBlur={formik.handleBlur}
-                  checked={formik.values.language === 'es-mx'}
+                  checked={formik.values.language === 'es'}
                   onChange={formik.handleChange}
                   name="language"
                 />
@@ -125,9 +131,9 @@ const GeneralConfig = (): ReactElement => {
               <div className="flex gap-1 items-center">
                 <Radio
                   label=""
-                  value="en-us"
+                  value="en"
                   onBlur={formik.handleBlur}
-                  checked={formik.values.language === 'en-us'}
+                  checked={formik.values.language === 'en'}
                   onChange={formik.handleChange}
                   name="language"
                 />

@@ -24,7 +24,12 @@ interface SynchroDeleteIds {
 const UsersAdmin = (): ReactElement => {
   const getMessage = useFormatMessage(usersMessages)
   const [openCreateDrawer, toggleOpenCreateDrawer] = useToggle(false)
-  const [disableIds, setDisableIds] = useState<string[]>([])
+  const [disableUsers, setDisableUsers] = useState<{
+    ids: string[]
+    disabled?: boolean
+  }>({
+    ids: []
+  })
   const [logOutIds, setLogOutIds] = useState<string[]>([])
   const [deleteUsers, setDeleteUsers] = useState<SynchroDeleteIds>({
     ids: [],
@@ -76,7 +81,11 @@ const UsersAdmin = (): ReactElement => {
             setDeleteUsers({ ids: [], resolve: null })
           }}
         />
-        <DisableDialog ids={disableIds} onClose={() => setDisableIds([])} />
+        <DisableDialog
+          ids={disableUsers.ids}
+          onClose={() => setDisableUsers({ ids: [] })}
+          disabled={disableUsers.disabled}
+        />
         <RemoteLogOffDialog ids={logOutIds} onClose={() => setLogOutIds([])} />
         <ResetPasswordDialog
           id={resetPasswordId}
@@ -93,7 +102,7 @@ const UsersAdmin = (): ReactElement => {
         <UnlockDialog open={openUnlockDialog} onClose={toggleUnlockDialog} />
       </div>
 
-      <div className="flex gap-4 mt-2">
+      <div className="mt-2">
         <UserList
           onSelectUser={setSelectedUser}
           onDeleteUser={async (ids) =>
@@ -101,7 +110,9 @@ const UsersAdmin = (): ReactElement => {
               setDeleteUsers({ ids, resolve })
             })
           }
-          onDisableUser={setDisableIds}
+          onDisableUser={(ids, status) =>
+            setDisableUsers({ ids, disabled: status === 'disabled' })
+          }
           onRemoteLogOffUser={setLogOutIds}
           onUnlockUser={toggleUnlockDialog}
           onResetPasswordUser={setResetPasswordId}
