@@ -31,9 +31,11 @@ import { useVirtual } from 'react-virtual'
 import { useIntl } from 'react-intl'
 import { messages } from './messages'
 import ColumnFilter from './ColumnFilter'
+import Tooltip from 'components/Tooltip'
 
 export interface ActionForSelectedItems<T> {
   name: string
+  tooltip?: string
   Icon: FunctionComponent<SVGProps<SVGSVGElement> & { title?: string }>
   action:
     | ((items: T[]) => Promise<void> | Promise<boolean>)
@@ -264,21 +266,33 @@ const Table = <DataType,>({
             <div className="mr-4 last:mr-0">
               {selectedItems !== 'none' && actionsForSelectedItems
                 ? actionsForSelectedItems.map((item, index) => (
-                    <button
-                      onClick={async () => {
-                        const unselect = await item.action(
-                          data.filter((datum, index) =>
-                            selectedKeys.includes(index)
-                          )
-                        )
-                        if (unselect) setRowSelection({})
-                      }}
+                    <Tooltip
                       key={`${item.name}-${index}`}
-                      disabled={item.disabled}
-                      className="transition-colors text-secondary-gray hover:text-primary  mr-2"
+                      content={item.tooltip ?? formatMessage(messages.action)}
+                      floatProps={{ offset: 10, arrow: true }}
+                      classNames={{
+                        panel:
+                          'bg-secondary text-white py-1 px-2 rounded-md text-sm whitespace-nowrap',
+                        arrow:
+                          'absolute bg-white w-2 h-2 rounded-full bg-secondary'
+                      }}
+                      placement="top"
                     >
-                      <item.Icon className="w-4 h-4" />
-                    </button>
+                      <button
+                        onClick={async () => {
+                          const unselect = await item.action(
+                            data.filter((datum, index) =>
+                              selectedKeys.includes(index)
+                            )
+                          )
+                          if (unselect) setRowSelection({})
+                        }}
+                        disabled={item.disabled}
+                        className="transition-colors text-secondary-gray hover:text-primary  mr-2"
+                      >
+                        <item.Icon className="w-4 h-4" />
+                      </button>
+                    </Tooltip>
                   ))
                 : null}
             </div>
