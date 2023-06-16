@@ -276,17 +276,29 @@ export const mediaMessages = defineMessages({
     defaultMessage: 'Compañías telefónicas'
   },
   devices: { id: 'views.Config.Media.devices', defaultMessage: 'Equipos' },
-  mediaCounter: {
-    id: 'views.Config.Media.mediaCounter',
-    defaultMessage: '{counter} medios'
+  mediaTab: {
+    id: 'views.Config.Media.mediaTab',
+    defaultMessage: 'Medios'
   },
-  deviceCounter: {
-    id: 'views.Config.Media.deviceCounter',
-    defaultMessage: '{counter} equipos'
+  deviceTab: {
+    id: 'views.Config.Media.deviceTab',
+    defaultMessage: 'Equipos'
   },
-  carrierCounter: {
-    id: 'views.Config.media.carrierCounter',
-    defaultMessage: '{counter} compañias existentes en el sistema'
+  carrierTab: {
+    id: 'views.Config.media.carrierTab',
+    defaultMessage: 'Compañias'
+  },
+  mediaSubtitle: {
+    id: 'views.Config.Media.mediaSubtitle',
+    defaultMessage: 'Medios existentes en el sitema'
+  },
+  deviceSubtitle: {
+    id: 'views.Config.Media.deviceSubtitle',
+    defaultMessage: 'Equipos existentes en el sistema'
+  },
+  carrierSubtitle: {
+    id: 'views.Config.media.carrierSubtitle',
+    defaultMessage: 'Compañias existentes en el sistema'
   },
   carrierCaption: {
     id: 'views.Config.Media.carrierCaption',

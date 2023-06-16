@@ -17,6 +17,11 @@ export const reducer = (state: State, action: Action<Types>): State => {
         ...state,
         pagination: { ...state.pagination, ...action.payload }
       }
+    case Types.SET_TOTAL:
+      return {
+        ...state,
+        total: action.payload
+      }
     default:
       return state
   }

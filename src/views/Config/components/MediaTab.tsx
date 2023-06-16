@@ -11,6 +11,7 @@ import MediaDrawer from './MediaDrawer'
 import GeneralMediaList from './GeneralMediaList'
 import EditMediaDrawer from './EditMediaDrawer'
 import { useAcquisitionMediums } from 'context/AcquisitionMediums'
+import { formatTotal } from 'utils/formatTotal'
 
 interface FormValues {
   id?: string
@@ -18,14 +19,14 @@ interface FormValues {
 }
 
 const MediaTab = (): ReactElement => {
-  const { data, dateFilter, searchFilter, actions } = useAcquisitionMediums()
+  const { data, total, dateFilter, searchFilter, actions } = useAcquisitionMediums()
   const { actions: drawerActions } = useDrawer()
   const { formatMessage } = useIntl()
   const [openDeleteMedia, setOpenDeleteMedia] = useState(false)
   const [deleteIds, setDeleteIds] = useState<string[]>([])
 
   useEffect(() => {
-    actions?.getData()
+    actions?.getData(undefined, true)
   }, [])
 
   const handleDelete = async (): Promise<void> => {
@@ -43,7 +44,7 @@ const MediaTab = (): ReactElement => {
 
       setDeleteIds([])
       setOpenDeleteMedia(false)
-      await actions?.getData({ page: 1 })
+      await actions?.getData({ page: 1 }, true)
     } catch {}
   }
 
@@ -65,7 +66,7 @@ const MediaTab = (): ReactElement => {
     })
 
     if (res) {
-      await actions?.getData()
+      await actions?.getData(undefined, true)
       drawerActions?.handleCloseDrawer()
     }
   }
@@ -88,12 +89,13 @@ const MediaTab = (): ReactElement => {
           >
             {formatMessage(mediaMessages.media)}
           </Typography>
+          <p className="uppercase">
+            {formatTotal(total, formatMessage(mediaMessages.mediaSubtitle))}
+          </p>
         </Grid>
         <Grid item xs={12} md={7} className="flex justify-end">
           <ViewFilter
-            fields={[
-              { label: formatMessage(formMessages.name), name: 'name' }
-            ]}
+            fields={[{ label: formatMessage(formMessages.name), name: 'name' }]}
             action={{
               label: formatMessage(mediaMessages.addMedia),
               onClick: () =>

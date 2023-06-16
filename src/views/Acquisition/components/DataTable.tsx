@@ -14,6 +14,7 @@ import EditOverflowLineDrawer from './EditOverflowLineDrawer'
 import DisableOverflowLineDialog from './DisableOverflowLineDialog'
 import { get } from 'lodash'
 import clsx from 'clsx'
+import Tooltip from 'components/Tooltip'
 
 const DataTable = (): ReactElement => {
   const getMessage = useFormatMessage(tableMessages)
@@ -36,12 +37,14 @@ const DataTable = (): ReactElement => {
     {
       accessorKey: 'target.phone',
       header: getMessage('target'),
-      cell: ({ row }) => get(row.original, 'target.phone')
+      cell: ({ row }) => get(row.original, 'target.phone'),
+      enableSorting: false
     },
     {
       accessorKey: 'target.carrier',
       header: getMessage('company'),
-      cell: ({ row }) => get(row.original, 'target.carrier.name')
+      cell: ({ row }) => get(row.original, 'target.carrier.name'),
+      enableSorting: false
     },
     {
       accessorKey: 'medium.name',
@@ -64,7 +67,8 @@ const DataTable = (): ReactElement => {
     {
       accessorKey: 'target.technique',
       header: getMessage('technique'),
-      cell: ({ row }) => get(row.original, 'target.technique.name')
+      cell: ({ row }) => get(row.original, 'target.technique.name'),
+      enableSorting: false
     },
     {
       accessorKey: 'line_status',
@@ -91,7 +95,8 @@ const DataTable = (): ReactElement => {
         if (value) return format(new Date(value), 'dd/MM/yyyy - hh:mm')
 
         return ''
-      }
+      },
+      enableSorting: false
     },
     {
       header: getMessage('actions'),
@@ -99,18 +104,29 @@ const DataTable = (): ReactElement => {
       accessorKey: 'status',
       cell: ({ getValue, row }) => (
         <div className="flex gap-2 items-center">
-          <Switch
-            color="primary"
-            size="sm"
-            stopPropagation
-            value={getValue<boolean>() ?? false}
-            onChange={() =>
-              setDisableOverflowLine({
-                id: row.original.id ?? '',
-                status: getValue<boolean>() ?? false
-              })
-            }
-          />
+          <Tooltip
+            content={getMessage(getValue() ? 'disable' : 'enable')}
+            floatProps={{ offset: 10, arrow: true }}
+            classNames={{
+              panel:
+                'bg-secondary text-white py-1 px-2 rounded-md text-sm whitespace-nowrap',
+              arrow: 'absolute bg-white w-2 h-2 rounded-full bg-secondary'
+            }}
+            placement="top"
+          >
+            <Switch
+              color="primary"
+              size="sm"
+              stopPropagation
+              value={getValue<boolean>() ?? false}
+              onChange={() =>
+                setDisableOverflowLine({
+                  id: row.original.id ?? '',
+                  status: getValue<boolean>() ?? false
+                })
+              }
+            />
+          </Tooltip>
           <IconButton
             tooltip={getMessage('history')}
             className="text-muted hover:text-primary"

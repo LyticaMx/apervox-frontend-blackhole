@@ -186,7 +186,7 @@ export const disableDialogMessages = defineMessages({
   message: {
     id: 'views.acquisition.DisableDialog.message',
     defaultMessage:
-      '¿Quieres {status, select, false{deshabilitar} other{habilitar}} la línea seleccionada?'
+      '¿Quieres {status, select, false{habilitar} other{deshabilitar}} la línea seleccionada?'
   },
   success: {
     id: 'views.acquisition.DisableDialog.success',

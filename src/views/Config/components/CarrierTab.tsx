@@ -10,6 +10,7 @@ import { formMessages } from 'globalMessages'
 import GeneralMediaList from './GeneralMediaList'
 import CompanyDrawer from './CompanyDrawer'
 import { useCarriers } from 'context/Carriers'
+import { formatTotal } from 'utils/formatTotal'
 
 interface FormValues {
   id?: string
@@ -17,7 +18,7 @@ interface FormValues {
 }
 
 const CarrierTab = (): ReactElement => {
-  const { data, dateFilter, searchFilter, actions } = useCarriers()
+  const { data, total, dateFilter, searchFilter, actions } = useCarriers()
   const { actions: drawerActions } = useDrawer()
   const { formatMessage } = useIntl()
 
@@ -25,7 +26,7 @@ const CarrierTab = (): ReactElement => {
   const [deleteIds, setDeleteIds] = useState<string[]>([])
 
   useEffect(() => {
-    actions?.getData()
+    actions?.getData(undefined, true)
   }, [])
 
   const handleDelete = async (): Promise<void> => {
@@ -43,7 +44,7 @@ const CarrierTab = (): ReactElement => {
 
       setDeleteIds([])
       setOpenDeleteCarrier(false)
-      await actions?.getData({ page: 1 })
+      await actions?.getData({ page: 1 }, true)
     } catch {}
   }
   const handleUpdate = async (data: FormValues): Promise<void> => {
@@ -64,7 +65,7 @@ const CarrierTab = (): ReactElement => {
     })
 
     if (res) {
-      await actions?.getData()
+      await actions?.getData(undefined, true)
       drawerActions?.handleCloseDrawer()
     }
   }
@@ -87,12 +88,13 @@ const CarrierTab = (): ReactElement => {
           >
             {formatMessage(mediaMessages.carriers)}
           </Typography>
+          <p className="uppercase">
+            {formatTotal(total, formatMessage(mediaMessages.carrierSubtitle))}
+          </p>
         </Grid>
         <Grid item xs={12} md={7} className="flex justify-end">
           <ViewFilter
-            fields={[
-              { label: formatMessage(formMessages.name), name: 'name' }
-            ]}
+            fields={[{ label: formatMessage(formMessages.name), name: 'name' }]}
             action={{
               label: formatMessage(mediaMessages.createCarrier),
               onClick: () =>

@@ -3,6 +3,7 @@ import { State } from './types'
 
 export const initialState: State = {
   data: [],
+  total: 0,
   pagination: {
     limit: 15,
     limitOptions: [15, 25, 50, 100],

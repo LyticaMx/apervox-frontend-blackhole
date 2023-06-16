@@ -592,7 +592,7 @@
   "views.acquisition.DeleteVerificationLines.passswordConfirm": "Ingresa tu contraseña para validar la eliminación de {selectedLines, plural, one{la línea} other{las # líneas}}",
   "views.acquisition.DeleteVerificationLines.success": "{selectedLines, plural, one{Línea eliminada} other{Líneas eliminadas}} correctamente",
   "views.acquisition.DeleteVerificationLines.title": "Eliminar {selectedLines, plural, one{línea} other{líneas}} de verificación",
-  "views.acquisition.DisableDialog.message": "¿Quieres {status, select, false{deshabilitar} other{habilitar}} la línea seleccionada?",
+  "views.acquisition.DisableDialog.message": "¿Quieres {status, select, false{habilitar} other{deshabilitar}} la línea seleccionada?",
   "views.acquisition.DisableDialog.overflowTitle": "Habilitar / deshabilitar línea de derivación",
   "views.acquisition.DisableDialog.success": "Línea {status, select, false{deshabilitada} other{habilitada}} correctamente",
   "views.acquisition.DisableDialog.verificationTitle": "Habilitar / deshabilitar línea de verificación",
