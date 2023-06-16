@@ -117,20 +117,19 @@ const DeleteDialog = (props: Props): ReactElement => {
           </div>
         </div>
         <div className=" px-4 pb-8 sm:flex gap-2 justify-center">
+          <Button variant="text" color="primary" onClick={onClose}>
+            {accepted
+              ? formatMessage(actionsMessages.cancel)
+              : formatMessage(messages.noCancel)}
+          </Button>
           <Button
-            variant="contained"
-            color="red"
             type={accepted ? 'submit' : 'button'}
             onClick={handleAccept}
+            className="bg-red-200 !text-red-500 transition-colors hover:!bg-red-500 hover:!text-white"
           >
             {accepted
               ? formatMessage(actionsMessages.delete)
               : formatMessage(messages.yesDelete)}
-          </Button>
-          <Button variant="contained" color="secondary" onClick={onClose}>
-            {accepted
-              ? formatMessage(actionsMessages.cancel)
-              : formatMessage(messages.noCancel)}
           </Button>
         </div>
       </form>
