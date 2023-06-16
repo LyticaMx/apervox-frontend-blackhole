@@ -22,7 +22,7 @@ const DeviceTab = (): ReactElement => {
   const [deleteIds, setDeleteIds] = useState<string[]>([])
 
   useEffect(() => {
-    actions?.getData(undefined, true)
+    actions?.getData({}, true)
   }, [])
 
   const handleDelete = async (): Promise<void> => {
@@ -63,7 +63,7 @@ const DeviceTab = (): ReactElement => {
     })
 
     if (res) {
-      await actions?.getData(undefined, true)
+      await actions?.getData({}, true)
       drawerActions?.handleCloseDrawer()
     }
   }
