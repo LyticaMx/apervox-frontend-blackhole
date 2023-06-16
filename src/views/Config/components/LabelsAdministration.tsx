@@ -185,10 +185,14 @@ const LabelsAdministration = (): ReactElement => {
         onChange={(data) => {
           const staticF = data.filterByField.staticFilters
           const labelType = staticF?.label_type
+
           actions?.getData({
             filters: data.filterByField.fields,
             query: data.filterByField.search,
-            label_type: labelType === 'all' ? undefined : labelType
+            start_time: data.dateRange[0],
+            end_time: data.dateRange[1],
+            clearDates: data.clearDates,
+            label_type: ['', 'all'].includes(labelType) ? undefined : labelType
           })
         }}
       />

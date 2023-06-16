@@ -12,13 +12,14 @@ export type updatePayload = Device
 
 export interface State {
   data: Device[]
+  total: number
   pagination: PaginationSortFilter
   dateFilter: DateFilter
   searchFilter: SearchFilter
 }
 
 export interface Actions {
-  getData: (params?: getDataPayload) => Promise<void>
+  getData: (params?: getDataPayload, getTotal?: boolean) => Promise<void>
   create: (payload: createPayload) => Promise<boolean>
   update: (payload: updatePayload) => Promise<boolean>
   delete: (id: string) => Promise<boolean>

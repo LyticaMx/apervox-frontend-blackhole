@@ -14,6 +14,7 @@ export interface CarriersPaginationParams extends PaginationParams {
 
 export interface State {
   data: Carrier[]
+  total: number
   pagination: Pagination
   dateFilter: DateFilter
   searchFilter: SearchFilter
@@ -21,7 +22,8 @@ export interface State {
 
 export interface Actions {
   getData: (
-    params?: CarriersPaginationParams & SearchParams & DateFilter
+    params?: CarriersPaginationParams & SearchParams & DateFilter,
+    getTotal?: boolean
   ) => Promise<void>
   create: (payload: Omit<Carrier, 'id'>) => Promise<boolean>
   update: (payload: Carrier) => Promise<boolean>

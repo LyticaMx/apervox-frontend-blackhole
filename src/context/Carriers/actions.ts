@@ -19,7 +19,8 @@ export const useActions = (state: State, dispatch): Actions => {
   const resource = useService('carriers')
 
   const getData = async (
-    params?: CarriersPaginationParams & SearchParams & DateFilter
+    params?: CarriersPaginationParams & SearchParams & DateFilter,
+    getTotal?: boolean
   ): Promise<void> => {
     try {
       const urlParams = Params.Builder(params)
@@ -31,6 +32,14 @@ export const useActions = (state: State, dispatch): Actions => {
       const response: ResponseData = await resource.get({ urlParams })
 
       dispatch(actions.setData(response.data))
+
+      if (getTotal) {
+        const total: ResponseData = await resource.get({
+          urlParams: { page: 1, limit: 1 }
+        })
+
+        dispatch(actions.setTotal(total.size))
+      }
 
       dispatch(
         actions.setPagination({

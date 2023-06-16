@@ -21,7 +21,10 @@ export const useActions = (state: State, dispatch): Actions => {
   const { pagination, dateFilter, searchFilter } = state
   const resource = useService('devices')
 
-  const getData = async (params?: getDataPayload): Promise<void> => {
+  const getData = async (
+    params?: getDataPayload,
+    getTotal?: boolean
+  ): Promise<void> => {
     try {
       const urlParams = Params.Builder(params)
         .paginateAndSeach({ ...pagination, ...searchFilter })
@@ -32,6 +35,14 @@ export const useActions = (state: State, dispatch): Actions => {
       const response: ResponseData = await resource.get({ urlParams })
 
       dispatch(actions.setData(response.data))
+
+      if (getTotal) {
+        const total: ResponseData = await resource.get({
+          urlParams: { page: 1, limit: 1 }
+        })
+
+        dispatch(actions.setTotal(total.size))
+      }
 
       dispatch(
         actions.setPagination({

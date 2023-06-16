@@ -1,7 +1,7 @@
 import { ReactElement } from 'react'
 import { useIntl } from 'react-intl'
 import NavOptions from './components/NavOptions'
-import Typography from 'components/Typography'
+// import Typography from 'components/Typography'
 import { mediaMessages } from './messages'
 import MediaTab from './components/MediaTab'
 import CarrierTab from './components/CarrierTab'
@@ -12,9 +12,9 @@ import { useTabs } from 'hooks/useTabs'
 const MediaComponent = (): ReactElement => {
   const { formatMessage } = useIntl()
   const types = {
-    media: mediaMessages.mediaCounter,
-    carrier: mediaMessages.carrierCounter,
-    device: mediaMessages.deviceCounter
+    media: mediaMessages.mediaTab,
+    carrier: mediaMessages.carrierTab,
+    device: mediaMessages.deviceTab
   }
 
   const [active, setActive, Content] = useTabs<'media' | 'carrier' | 'device'>(
@@ -29,20 +29,20 @@ const MediaComponent = (): ReactElement => {
           <button
             key={index}
             className={clsx(
-              'mr-2 px-2 rounded-md hover:bg-sky-50',
-              active === 'media' && 'bg-primary-50'
+              'text-secondary-gray mr-5 font-medium px-2 py-1 rounded-md hover:bg-[#F4F9FF] hover:text-primary',
+              active === tab && 'bg-[#F4F9FF] !text-primary'
             )}
             onClick={() => setActive(tab)}
           >
-            <Typography
+            {/* <Typography
               variant="subtitle"
               className={clsx(
                 'uppercase font-semibold text-sm',
                 active === tab ? '!text-primary' : 'text-secondary'
               )}
             >
-              {formatMessage(message, { counter: '04' })}
-            </Typography>
+            </Typography> */}
+            {formatMessage(message)}
           </button>
         ))}
       </div>

@@ -21,7 +21,7 @@ export const useActions = (state: State, dispatch): Actions => {
     try {
       const urlParams = Params.Builder(params)
         .paginateAndSeach({ ...pagination, ...searchFilter })
-        .sort(pagination.sort)
+        .sort(pagination.sort, { created_by: 'created_by.username', medium_name: 'medium.name' })
         .dates(dateFilter)
         .putStaticFilter('line_status', params?.line_status)
         .build()

@@ -225,6 +225,7 @@ const FilterByField = ({
                 <TextField
                   id="search"
                   name="search"
+                  placeholder={intl.formatMessage(actionsMessages.search)}
                   outlined
                   onChange={formik.handleChange}
                   value={formik.values.search}

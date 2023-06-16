@@ -9,13 +9,14 @@ export type getDataPayload = PaginationParams &
 
 export interface State {
   data: AcquisitionMedium[]
+  total: number
   pagination: PaginationSortFilter
   dateFilter: DateFilter
   searchFilter: SearchFilter
 }
 
 export interface Actions {
-  getData: (params?: getDataPayload) => Promise<void>
+  getData: (params?: getDataPayload, getTotal?: boolean) => Promise<void>
   create: (payload: Omit<AcquisitionMedium, 'id'>) => Promise<boolean>
   update: (payload: AcquisitionMedium) => Promise<boolean>
   delete: (id: string) => Promise<boolean>

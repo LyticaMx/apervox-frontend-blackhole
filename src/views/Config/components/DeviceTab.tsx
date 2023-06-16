@@ -12,16 +12,17 @@ import GeneralMediaList from './GeneralMediaList'
 import EditDeviceDrawer from './EditDeviceDrawer'
 import { useDevices } from 'context/Devices'
 import { get } from 'lodash'
+import { formatTotal } from 'utils/formatTotal'
 
 const DeviceTab = (): ReactElement => {
-  const { data, dateFilter, searchFilter, actions } = useDevices()
+  const { data, total, dateFilter, searchFilter, actions } = useDevices()
   const { actions: drawerActions } = useDrawer()
   const { formatMessage } = useIntl()
   const [openDelete, setOpenDelete] = useState(false)
   const [deleteIds, setDeleteIds] = useState<string[]>([])
 
   useEffect(() => {
-    actions?.getData()
+    actions?.getData({}, true)
   }, [])
 
   const handleDelete = async (): Promise<void> => {
@@ -39,7 +40,7 @@ const DeviceTab = (): ReactElement => {
 
       setDeleteIds([])
       setOpenDelete(false)
-      await actions?.getData({ page: 1 })
+      await actions?.getData({ page: 1 }, true)
     } catch {}
   }
 
@@ -62,7 +63,7 @@ const DeviceTab = (): ReactElement => {
     })
 
     if (res) {
-      await actions?.getData()
+      await actions?.getData({}, true)
       drawerActions?.handleCloseDrawer()
     }
   }
@@ -85,12 +86,13 @@ const DeviceTab = (): ReactElement => {
           >
             {formatMessage(mediaMessages.devices)}
           </Typography>
+          <p className="uppercase">
+            {formatTotal(total, formatMessage(mediaMessages.deviceSubtitle))}
+          </p>
         </Grid>
         <Grid item xs={12} md={7} className="flex justify-end">
           <ViewFilter
-            fields={[
-              { label: formatMessage(formMessages.name), name: 'name' }
-            ]}
+            fields={[{ label: formatMessage(formMessages.name), name: 'name' }]}
             action={{
               label: formatMessage(mediaMessages.addDevice),
               onClick: () =>

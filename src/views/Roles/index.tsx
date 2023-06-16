@@ -21,7 +21,7 @@ const Roles = (): ReactElement => {
   const [disabledDialog, toggleDisabled] = useToggle(false)
 
   useEffect(() => {
-    actions?.getData(undefined, true)
+    actions?.getData({}, true)
   }, [])
 
   return (
