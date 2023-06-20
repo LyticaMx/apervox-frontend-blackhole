@@ -206,6 +206,14 @@ export const academicFormMessages = defineMessages({
     id: 'views.techniques.AcademicForm.academicPhone',
     defaultMessage: 'Número teléfonico'
   },
+  specialty: {
+    id: 'views.techniques.AcademicForm.specialty',
+    defaultMessage: 'Especialidad'
+  },
+  specialtyPlaceholder: {
+    id: 'views.techniques.AcademicForm.specialtyPlaceholder',
+    defaultMessage: 'Ej. Astrofísica'
+  },
   academicPhonePlaceholder: {
     id: 'views.techniques.AcademicForm.academicPhonePlaceholder',
     defaultMessage: 'Ej. número a 10 dígitos'

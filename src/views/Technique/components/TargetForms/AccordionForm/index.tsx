@@ -123,7 +123,24 @@ const AccordionForm = <T extends Object>({
             id={`${index}-${formData.data.name}`}
           >
             <GenericForm<T>
-              fields={fields}
+              fields={fields.map((field) => {
+                if (
+                  field.type === 'text' ||
+                  field.type === 'radio' ||
+                  field.type === 'checkbox'
+                ) {
+                  if (field.options.id) {
+                    return {
+                      ...field,
+                      options: {
+                        ...field.options,
+                        id: `${field.options.id}-${index}`
+                      }
+                    } as any
+                  }
+                }
+                return field
+              })}
               validationSchema={validationSchema}
               initialValues={formData ? formData.data : undefined}
               onChangeValues={(formik: FormikContextType<T>) =>
