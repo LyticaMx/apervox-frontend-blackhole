@@ -22,7 +22,7 @@ const TargetForms = (): ReactElement => {
   const [active, setActive, Tab] = useTabs(TARGET_FORMS_TABS.PERSONAL_DATA)
 
   return (
-    <div>
+    <>
       <CustomTabs
         classNames={{ container: 'mb-4' }}
         items={targetFormsTabs}
@@ -91,7 +91,7 @@ const TargetForms = (): ReactElement => {
       <Tab value={TARGET_FORMS_TABS.PERSONAL_DATA}>
         <PersonalDataForm />
       </Tab>
-    </div>
+    </>
   )
 }
 

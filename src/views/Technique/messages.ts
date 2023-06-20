@@ -450,9 +450,17 @@ export const personalDataFormMessages = defineMessages({
     id: 'views.techniques.PersonalDataForm.title',
     defaultMessage: 'Datos personales y domicilio'
   },
+  targetAlias: {
+    id: 'views.techniques.PersonalDataForm.targetAlias',
+    defaultMessage: 'Alias'
+  },
+  targetAliasPlaceholder: {
+    id: 'views.techniques.PersonalDataForm.targetAliasPlaceholder',
+    defaultMessage: 'Ej. El chapo'
+  },
   targetName: {
     id: 'views.techniques.PersonalDataForm.targetName',
-    defaultMessage: 'Alias / Nombre del objetivo'
+    defaultMessage: 'Nombre del objetivo'
   },
   targetNamePlaceholder: {
     id: 'views.techniques.PersonalDataForm.targetNamePlaceholder',
@@ -473,6 +481,30 @@ export const personalDataFormMessages = defineMessages({
   birthDatePlaceholder: {
     id: 'views.techniques.PersonalDataForm.birthDatePlaceholder',
     defaultMessage: 'Ej. 12/12/2022 - 13:00:00'
+  },
+  birthCountry: {
+    id: 'views.techniques.PersonalDataForm.birthCountry',
+    defaultMessage: 'País de nacimiento'
+  },
+  birthCountryPlaceholder: {
+    id: 'views.techniques.PersonalDataForm.birthCountryPlaceholder',
+    defaultMessage: 'Ej. México'
+  },
+  birthState: {
+    id: 'views.techniques.PersonalDataForm.birthState',
+    defaultMessage: 'Estado de nacimiento'
+  },
+  birthStatePlaceholder: {
+    id: 'views.techniques.PersonalDataForm.birthStatePlaceholder',
+    defaultMessage: 'Ej. CDMX'
+  },
+  birthCity: {
+    id: 'views.techniques.PersonalDataForm.birthCity',
+    defaultMessage: 'Ciudad de nacimiento'
+  },
+  birthCityPlaceholder: {
+    id: 'views.techniques.PersonalDataForm.birthCityPlaceholder',
+    defaultMessage: 'Ej. Iztapalapa'
   },
   age: {
     id: 'views.techniques.PersonalDataForm.age',
@@ -794,6 +826,14 @@ export const socialCircleFormMessages = defineMessages({
 })
 
 export const useAddressMessages = defineMessages({
+  country: {
+    id: 'views.techniques.useAddress.country',
+    defaultMessage: 'País'
+  },
+  countryPlaceholder: {
+    id: 'views.techniques.useAddress.countryPlaceholder',
+    defaultMessage: 'Ej. México'
+  },
   state: {
     id: 'views.techniques.useAddress.state',
     defaultMessage: 'Estado'
@@ -802,12 +842,12 @@ export const useAddressMessages = defineMessages({
     id: 'views.techniques.useAddress.statePlaceholder',
     defaultMessage: 'Ej. CDMX'
   },
-  municipality: {
-    id: 'views.techniques.useAddress.municipality',
-    defaultMessage: 'Municipio / Alcaldía'
+  city: {
+    id: 'views.techniques.useAddress.city',
+    defaultMessage: 'Ciudad'
   },
-  municipalityPlaceholder: {
-    id: 'views.techniques.useAddress.municipalityPlaceholder',
+  cityPlaceholder: {
+    id: 'views.techniques.useAddress.cityPlaceholder',
     defaultMessage: 'Ej. Iztapalapa'
   },
   zipCode: {
@@ -818,29 +858,21 @@ export const useAddressMessages = defineMessages({
     id: 'views.techniques.useAddress.zipCodePlaceholder',
     defaultMessage: 'Ej. 12345'
   },
-  colony: {
-    id: 'views.techniques.useAddress.colony',
-    defaultMessage: 'Colonia'
+  line1: {
+    id: 'views.techniques.useAddress.line1',
+    defaultMessage: 'Dirección línea 1'
   },
-  colonyPlaceholder: {
-    id: 'views.techniques.useAddress.colonyPlaceholder',
-    defaultMessage: 'Ej. Héroes de Tec'
+  line1Placeholder: {
+    id: 'views.techniques.useAddress.line1Placeholder',
+    defaultMessage: 'Ej. Héroes de Tec 123'
   },
-  street: {
-    id: 'views.techniques.useAddress.street',
-    defaultMessage: 'Nombre de la calle'
+  line2: {
+    id: 'views.techniques.useAddress.line2',
+    defaultMessage: 'Dirección línea 2'
   },
-  streetPlaceholder: {
-    id: 'views.techniques.useAddress.streetPlaceholder',
-    defaultMessage: 'Ej. Av. Ejercito Nacional'
-  },
-  number: {
-    id: 'views.techniques.useAddress.number',
-    defaultMessage: 'Número exterior'
-  },
-  numberPlaceholder: {
-    id: 'views.techniques.useAddress.numberPlaceholder',
-    defaultMessage: 'Ej. Edificio 1-A 564'
+  line2Placeholder: {
+    id: 'views.techniques.useAddress.line2Placeholder',
+    defaultMessage: 'Ej. Departamento, suite, casa'
   }
 })
 
