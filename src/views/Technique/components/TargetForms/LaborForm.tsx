@@ -86,7 +86,8 @@ const LaborForm = (): ReactElement => {
       title: {
         text: formatMessage(laborFormMessages.organizationAddress),
         className: 'text-primary uppercase mt-2'
-      }
+      },
+      spacing: 1
     }
   ]
 

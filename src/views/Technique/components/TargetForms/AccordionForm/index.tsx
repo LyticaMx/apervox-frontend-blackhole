@@ -159,30 +159,32 @@ const AccordionForm = <T extends Object>({
         />
       </div>
 
-      {forms}
+      <div className="max-h-[62vh] overflow-y-auto">
+        {forms}
 
-      <Button
-        variant="contained"
-        color="primary"
-        className="my-2 float-right"
-        onClick={() => {
-          const isValid = handleValidateAll()
+        <Button
+          variant="contained"
+          color="primary"
+          className="my-2 float-right"
+          onClick={() => {
+            const isValid = handleValidateAll()
 
-          console.log(isValid, valuesRef.current)
-        }}
-      >
-        {getGlobalMessage('save', 'actionsMessages')}
-      </Button>
+            console.log(isValid, valuesRef.current)
+          }}
+        >
+          {getGlobalMessage('save', 'actionsMessages')}
+        </Button>
 
-      <Button
-        variant="contained"
-        color="secondary"
-        className="my-2 mx-2 float-right"
-        disabled={totalForms < 2}
-        onClick={handleResetAll}
-      >
-        {getGlobalMessage('restore', 'actionsMessages')}
-      </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          className="my-2 mx-2 float-right"
+          disabled={totalForms < 2}
+          onClick={handleResetAll}
+        >
+          {getGlobalMessage('restore', 'actionsMessages')}
+        </Button>
+      </div>
     </div>
   )
 }
