@@ -9,3 +9,7 @@ export type UniqueArray<T extends unknown[], U = T> = T extends []
     ? never
     : UniqueArray<Tail, U>
   : never
+
+export type KeyofWithSymbol<T, S extends string> = keyof T extends string
+  ? `${S}${keyof T}`
+  : keyof T

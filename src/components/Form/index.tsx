@@ -144,8 +144,31 @@ const Form = <DataType extends FormikValues = FormikValues>(
             <Grid spacing={spacing}>
               {fields
                 .filter((field) => (field.section ?? 'main') === name)
-                .map((field, index) =>
-                  field.type !== 'city-selector' ? (
+                .map((field, index) => {
+                  if (field.renderIf) {
+                    if (
+                      !Object.keys(field.renderIf).some((key) => {
+                        if (key.startsWith('!')) {
+                          const formikKey = key.substring(1)
+                          return (
+                            formik.values[formikKey] !== field.renderIf?.[key]
+                          )
+                        }
+                        return formik.values[key] === field.renderIf?.[key]
+                      })
+                    ) {
+                      if (formik.values[field.name] !== '') {
+                        // Reset para cuando se vuelvan a renderizar aparezca su valor original
+                        formik.setFieldValue(
+                          field.name,
+                          formik.initialValues[field.name] ?? ''
+                        )
+                      }
+                      return null
+                    }
+                  }
+
+                  return field.type !== 'city-selector' ? (
                     <Grid
                       key={`${index}-${field.type}`}
                       item
@@ -157,7 +180,7 @@ const Form = <DataType extends FormikValues = FormikValues>(
                   ) : (
                     <>{fieldMapper({ field, formik })}</>
                   )
-                )}
+                })}
             </Grid>
           </div>
         )

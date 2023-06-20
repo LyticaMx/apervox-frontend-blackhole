@@ -16,6 +16,7 @@ import { Props as MultiChipSelectPropsOrigin } from 'components/Form/Selectmulti
 import { Props as SwitchPropsOrigin } from 'components/Form/Switch'
 import { Props as AsyncSelectPropsOrigin } from 'components/Form/SelectPaginate'
 import { Props as CitySelectorPropsOrigin } from 'components/Form/CitySelector'
+import { KeyofWithSymbol } from './utils'
 
 export type TextFieldProps = Omit<
   TextFieldPropsOrigin,
@@ -181,6 +182,8 @@ export type Field<T> = FieldTypes<T> & {
   name: string
   breakpoints?: Breakpoints
   section?: string
+  renderIf?: Partial<Record<KeyofWithSymbol<T, '!'>, any>> &
+    Partial<Record<keyof T, any>>
 }
 
 export interface SubmitButtonProps {
