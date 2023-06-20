@@ -15,6 +15,7 @@ import { Props as SelectMultiplePropsOrigin } from 'components/Form/Selectmultip
 import { Props as MultiChipSelectPropsOrigin } from 'components/Form/Selectmultiple/MultiChip'
 import { Props as SwitchPropsOrigin } from 'components/Form/Switch'
 import { Props as AsyncSelectPropsOrigin } from 'components/Form/SelectPaginate'
+import { Props as CitySelectorPropsOrigin } from 'components/Form/CitySelector'
 
 export type TextFieldProps = Omit<
   TextFieldPropsOrigin,
@@ -76,6 +77,22 @@ export type AsyncSelectProps = Omit<
 export type SwitchProps = Omit<SwitchPropsOrigin, 'value' | 'onChange'> & {
   label?: string
 }
+
+export type CitySelectorProps = Partial<
+  Omit<
+    CitySelectorPropsOrigin,
+    | 'country'
+    | 'state'
+    | 'city'
+    | 'onChange'
+    | 'countryError'
+    | 'countryHelperText'
+    | 'stateError'
+    | 'stateHelperText'
+    | 'cityError'
+    | 'cityHelperText'
+  >
+>
 
 export interface CustomFieldFunctionProps<T> {
   name: string
@@ -147,8 +164,12 @@ export declare type FieldTypes<T> =
       readonly type: 'custom'
       children: ReactNode | React.FC<CustomFieldFunctionProps<T>>
     }
+  | {
+      readonly type: 'city-selector'
+      options: CitySelectorProps
+    }
 
-interface Breakpoints {
+export interface Breakpoints {
   xs?: Columns
   sm?: Columns
   md?: Columns

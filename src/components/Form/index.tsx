@@ -144,16 +144,20 @@ const Form = <DataType extends FormikValues = FormikValues>(
             <Grid spacing={spacing}>
               {fields
                 .filter((field) => (field.section ?? 'main') === name)
-                .map((field, index) => (
-                  <Grid
-                    key={`${index}-${field.type}`}
-                    item
-                    xs={12}
-                    {...field.breakpoints}
-                  >
-                    {fieldMapper({ field, formik })}
-                  </Grid>
-                ))}
+                .map((field, index) =>
+                  field.type !== 'city-selector' ? (
+                    <Grid
+                      key={`${index}-${field.type}`}
+                      item
+                      xs={12}
+                      {...field.breakpoints}
+                    >
+                      {fieldMapper({ field, formik })}
+                    </Grid>
+                  ) : (
+                    <>{fieldMapper({ field, formik })}</>
+                  )
+                )}
             </Grid>
           </div>
         )
