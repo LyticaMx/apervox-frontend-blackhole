@@ -241,6 +241,14 @@ export const accountBankFormMessages = defineMessages({
     id: 'views.techniques.AccountBankForm.bankPlaceholder',
     defaultMessage: 'Ej. Banorte'
   },
+  accountNumber: {
+    id: 'views.techniques.AccountBankForm.accountNumber',
+    defaultMessage: 'Número de cuenta'
+  },
+  accountNumberPlaceholder: {
+    id: 'views.techniques.AccountBankForm.accountNumberPlaceholder',
+    defaultMessage: 'Ej. 1111222233334444'
+  },
   ammount: {
     id: 'views.techniques.AccountBankForm.ammount',
     defaultMessage: 'Monto'
@@ -249,33 +257,113 @@ export const accountBankFormMessages = defineMessages({
     id: 'views.techniques.AccountBankForm.ammountPlaceholder',
     defaultMessage: 'Ej. $999,999'
   },
-  cardType: {
-    id: 'views.techniques.AccountBankForm.cardType',
-    defaultMessage: 'Tipo de tarjetas'
+  accountType: {
+    id: 'views.techniques.AccountBankForm.accountType',
+    defaultMessage: 'Tipo de cuenta'
   },
-  cardTypePlaceholder: {
-    id: 'views.techniques.AccountBankForm.cardTypePlaceholder',
-    defaultMessage: 'Ej. Crédito'
+  accountTypePlaceholder: {
+    id: 'views.techniques.AccountBankForm.accountTypePlaceholder',
+    defaultMessage: 'Ej. Cuenta de ahorros'
   },
-  creditType: {
-    id: 'views.techniques.AccountBankForm.creditType',
-    defaultMessage: 'Crédito'
+  otherAccountType: {
+    id: 'views.techniques.AccountBankForm.otherAccountType',
+    defaultMessage: 'Otro tipo de cuenta'
   },
-  debitType: {
-    id: 'views.techniques.AccountBankForm.debitType',
-    defaultMessage: 'Débito'
+  otherAccountTypePlaceholder: {
+    id: 'views.techniques.AccountBankForm.otherAccountTypePlaceholder',
+    defaultMessage: 'Ej. Cuenta con chequera'
   },
-  payrollType: {
-    id: 'views.techniques.AccountBankForm.payrollType',
-    defaultMessage: 'Nómina'
+  savings: {
+    id: 'views.techniques.AccountBankForm.accountTypes.savings',
+    defaultMessage: 'Cuenta de ahorros'
   },
-  creditBank: {
-    id: 'views.techniques.AccountBankForm.creditBank',
-    defaultMessage: 'Crédito bancario'
+  creditCard: {
+    id: 'views.techniques.AccountBankForm.accountTypes.creditCard',
+    defaultMessage: 'Tarjeta de crédito'
   },
-  creditBankPlaceholder: {
-    id: 'views.techniques.AccountBankForm.creditBankPlaceholder',
-    defaultMessage: 'Ej. Auto $254,000'
+  debitCard: {
+    id: 'views.techniques.AccountBankForm.debitCard',
+    defaultMessage: 'Tarjeta de débito'
+  },
+  checking: {
+    id: 'views.techniques.AccountBankForm.accountTypes.checking',
+    defaultMessage: 'Cuenta corriente'
+  },
+  payroll: {
+    id: 'views.techniques.AccountBankForm.accountTypes.payroll',
+    defaultMessage: 'Cuenta de nómina'
+  },
+  investment: {
+    id: 'views.techniques.AccountBankForm.accountTypes.investment',
+    defaultMessage: 'Inversión'
+  },
+  loan: {
+    id: 'views.techniques.AccountBankForm.accountTypes.loan',
+    defaultMessage: 'Préstamo'
+  },
+  currency: {
+    id: 'views.techniques.AccountBankForm.currency',
+    defaultMessage: 'Divisa'
+  },
+  currencyPlaceholder: {
+    id: 'views.techniques.AccountBankForm.currencyPlaceholder',
+    defaultMessage: 'Ej. Dólar estadounidense'
+  },
+  otherCurrency: {
+    id: 'views.techniques.AccountBankForm.otherCurrency',
+    defaultMessage: 'Otra divisa'
+  },
+  otherCurrencyPlaceholder: {
+    id: 'views.techniques.AccountBankForm.otherCurrencyPlaceholder',
+    defaultMessage: 'Ej. Sol peruano'
+  },
+  usd: {
+    id: 'views.techniques.AccountBankForm.currencies.usd',
+    defaultMessage: 'Dólar estadounidense'
+  },
+  mxn: {
+    id: 'views.techniques.AccountBankForm.currencies.mxn',
+    defaultMessage: 'Peso mexicano'
+  },
+  eur: {
+    id: 'views.techniques.AccountBankForm.currencies.eur',
+    defaultMessage: 'Euro'
+  },
+  jpy: {
+    id: 'views.techniques.AccountBankForm.currencies.jpy',
+    defaultMessage: 'Yen japonés'
+  },
+  gbp: {
+    id: 'views.techniques.AccountBankForm.currencies.gbp',
+    defaultMessage: 'Libra esterlina'
+  },
+  aud: {
+    id: 'views.techniques.AccountBankForm.currencies.aud',
+    defaultMessage: 'Dólar australiano'
+  },
+  cad: {
+    id: 'views.techniques.AccountBankForm.currencies.cad',
+    defaultMessage: 'Dólar canadiense'
+  },
+  chf: {
+    id: 'views.techniques.AccountBankForm.currencies.chf',
+    defaultMessage: 'Franco suizo'
+  },
+  cny: {
+    id: 'views.techniques.AccountBankForm.currencies.cny',
+    defaultMessage: 'Yuan chino'
+  },
+  brl: {
+    id: 'views.techniques.AccountBankForm.currencies.brl',
+    defaultMessage: 'Real brasileño'
+  },
+  balance: {
+    id: 'views.techniques.AccountBankForm.balance',
+    defaultMessage: 'Balance'
+  },
+  balancePlaceholder: {
+    id: 'views.techniques.AccountBankForm.balancePlaceholder',
+    defaultMessage: 'Ej. 254,000'
   }
 })
 
