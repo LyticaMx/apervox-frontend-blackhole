@@ -416,8 +416,76 @@ export const languagesFormMessages = defineMessages({
     id: 'views.techniques.LanguagesForm.language',
     defaultMessage: 'Nombre del idioma o dialecto'
   },
+  english: {
+    id: 'views.techniques.LanguagesForm.language.english',
+    defaultMessage: 'Inglés'
+  },
+  spanish: {
+    id: 'views.techniques.LanguagesForm.language.spanish',
+    defaultMessage: 'Español'
+  },
+  french: {
+    id: 'views.techniques.LanguagesForm.language.french',
+    defaultMessage: 'Francés'
+  },
+  german: {
+    id: 'views.techniques.LanguagesForm.language.german',
+    defaultMessage: 'Alemán'
+  },
+  italian: {
+    id: 'views.techniques.LanguagesForm.language.italian',
+    defaultMessage: 'Italiano'
+  },
+  portuguese: {
+    id: 'views.techniques.LanguagesForm.language.portuguese',
+    defaultMessage: 'Portugués'
+  },
+  chinese: {
+    id: 'views.techniques.LanguagesForm.language.chinese',
+    defaultMessage: 'Chino'
+  },
+  japanese: {
+    id: 'views.techniques.LanguagesForm.language.japanese',
+    defaultMessage: 'Japonés'
+  },
+  korean: {
+    id: 'views.techniques.LanguagesForm.language.korean',
+    defaultMessage: 'Coreano'
+  },
+  arabic: {
+    id: 'views.techniques.LanguagesForm.language.arabic',
+    defaultMessage: 'Árabe'
+  },
+  russian: {
+    id: 'views.techniques.LanguagesForm.language.russian',
+    defaultMessage: 'Ruso'
+  },
+  dutch: {
+    id: 'views.techniques.LanguagesForm.language.dutch',
+    defaultMessage: 'Neerlandés'
+  },
+  swedish: {
+    id: 'views.techniques.LanguagesForm.language.swedish',
+    defaultMessage: 'Sueco'
+  },
+  greek: {
+    id: 'views.techniques.LanguagesForm.language.greek',
+    defaultMessage: 'Griego'
+  },
+  hindi: {
+    id: 'views.techniques.LanguagesForm.language.hindi',
+    defaultMessage: 'Hindi'
+  },
   languagePlaceholder: {
     id: 'views.techniques.LanguagesForm.languagePlaceholder',
+    defaultMessage: 'Ej. Inglés'
+  },
+  otherLanguage: {
+    id: 'views.techniques.LanguagesForm.otherLanguage',
+    defaultMessage: 'Otro idioma o dialecto'
+  },
+  otherLanguagePlaceholder: {
+    id: 'views.techniques.LanguagesForm.otherLanguagePlaceholder',
     defaultMessage: 'Ej. Náhuatl'
   },
   level: {
@@ -427,6 +495,26 @@ export const languagesFormMessages = defineMessages({
   levelPlaceholder: {
     id: 'views.techniques.LanguagesForm.levelPlaceholder',
     defaultMessage: 'Ej. nativo'
+  },
+  basic: {
+    id: 'views.techniques.LanguagesForm.level.basic',
+    defaultMessage: 'Básico'
+  },
+  intermediate: {
+    id: 'views.techniques.LanguagesForm.level.intermediate',
+    defaultMessage: 'Intermedio'
+  },
+  advanced: {
+    id: 'views.techniques.LanguagesForm.level.advanced',
+    defaultMessage: 'Avanzado'
+  },
+  fluent: {
+    id: 'views.techniques.LanguagesForm.level.fluent',
+    defaultMessage: 'Fluido'
+  },
+  native: {
+    id: 'views.techniques.LanguagesForm.level.native',
+    defaultMessage: 'Nativo'
   }
 })
 
