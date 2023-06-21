@@ -6,14 +6,18 @@ import { Field } from 'types/form'
 import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
 import Typography from 'components/Typography'
 import { physicalDescriptionFormMessages } from 'views/Technique/messages'
+import { usePhysicalDescriptionOptions } from './hooks/usePhysicalDescriptionOptions'
 
 interface FormValues {
   height: string
   weight: string
   bodyType: string
   skinColor: string
+  hairLength: string
+  otherBody: string
   hairType: string
   hairColor: string
+  otherHairColor: string
 }
 
 interface Props {
@@ -23,6 +27,8 @@ interface Props {
 const PhysicalDescriptionForm = ({ initialValues }: Props): ReactElement => {
   const getMessage = useFormatMessage(physicalDescriptionFormMessages)
   const getGlobalMessage = useGlobalMessage()
+  const { bodyTypes, skinTypes, hairColor, hairLength, hairTypes } =
+    usePhysicalDescriptionOptions()
 
   const fields: Array<Field<FormValues>> = [
     {
@@ -46,40 +52,57 @@ const PhysicalDescriptionForm = ({ initialValues }: Props): ReactElement => {
       breakpoints: { xs: 3 }
     },
     {
-      type: 'text',
+      type: 'select',
       name: 'bodyType',
       options: {
-        id: 'physical-description-body-type',
         label: getMessage('bodyType'),
-        placeholder: getMessage('bodyTypePlaceholder')
+        clearable: false,
+        placeholder: getMessage('bodyTypePlaceholder'),
+        items: bodyTypes,
+        textField: 'text',
+        valueField: 'value',
+        optionsContainerClassname: '!w-full'
       },
       breakpoints: { xs: 3 }
+    },
+    {
+      type: 'text',
+      name: 'otherBody',
+      options: {
+        id: 'physical-description-other-body',
+        label: getMessage('otherBody'),
+        placeholder: getMessage('otherBodyPlaceholder')
+      },
+      breakpoints: { xs: 3 },
+      renderIf: {
+        bodyType: 'other'
+      }
     },
     {
       type: 'select',
       name: 'skinColor',
       options: {
         label: getMessage('skinColor'),
-        clearable: true,
+        clearable: false,
         placeholder: getMessage('skinColorPlaceholder'),
-        items: [
-          {
-            id: '1',
-            label: getMessage('lightSkin')
-          },
-          {
-            id: '2',
-            label: getMessage('darkSkin')
-          },
-          {
-            id: '3',
-            label: getMessage('whiteSkin')
-          }
-        ],
-        textField: 'label',
-        valueField: 'id',
-        className: 'bg-white-500 mt-3',
-        optionsContainerClassname: 'w-[95%]'
+        items: skinTypes,
+        textField: 'text',
+        valueField: 'value',
+        optionsContainerClassname: '!w-full'
+      },
+      breakpoints: { xs: 3 }
+    },
+    {
+      type: 'select',
+      name: 'hairLength',
+      options: {
+        label: getMessage('hairLength'),
+        clearable: false,
+        placeholder: getMessage('hairLengthPlaceholder'),
+        items: hairLength,
+        textField: 'text',
+        valueField: 'value',
+        optionsContainerClassname: '!w-full'
       },
       breakpoints: { xs: 3 }
     },
@@ -88,42 +111,47 @@ const PhysicalDescriptionForm = ({ initialValues }: Props): ReactElement => {
       name: 'hairType',
       options: {
         label: getMessage('hairType'),
-        clearable: true,
+        clearable: false,
         placeholder: getMessage('hairTypePlaceholder'),
-        items: [
-          {
-            id: '1',
-            label: getMessage('shortCurly')
-          },
-          {
-            id: '2',
-            label: getMessage('longCurly')
-          },
-          {
-            id: '3',
-            label: getMessage('shortWavy')
-          },
-          {
-            id: '4',
-            label: getMessage('longWavy')
-          }
-        ],
-        textField: 'label',
-        valueField: 'id',
-        className: 'bg-white-500 mt-3',
-        optionsContainerClassname: 'w-[95%]'
+        items: hairTypes,
+        textField: 'text',
+        valueField: 'value',
+        optionsContainerClassname: '!w-full'
       },
-      breakpoints: { xs: 3 }
+      breakpoints: { xs: 3 },
+      renderIf: {
+        '!hairLength': 'bald'
+      }
+    },
+    {
+      type: 'select',
+      name: 'hairColor',
+      options: {
+        label: getMessage('hairColor'),
+        clearable: false,
+        placeholder: getMessage('hairColorPlaceholder'),
+        items: hairColor,
+        textField: 'text',
+        valueField: 'value',
+        optionsContainerClassname: '!w-full'
+      },
+      breakpoints: { xs: 3 },
+      renderIf: {
+        '!hairLength': 'bald'
+      }
     },
     {
       type: 'text',
-      name: 'hairColor',
+      name: 'otherHairColor',
       options: {
-        id: 'physical-description-hair-color',
-        label: getMessage('hairColor'),
-        placeholder: getMessage('hairColorPlaceholder')
+        id: 'other-hair-color',
+        label: getMessage('otherHairColor'),
+        placeholder: getMessage('otherHairColorPlaceholder')
       },
-      breakpoints: { xs: 3 }
+      breakpoints: { xs: 3 },
+      renderIf: {
+        hairColor: 'other'
+      }
     }
   ]
 
@@ -142,9 +170,12 @@ const PhysicalDescriptionForm = ({ initialValues }: Props): ReactElement => {
         height: initialValues?.height ?? '',
         weight: initialValues?.weight ?? '',
         bodyType: initialValues?.bodyType ?? '',
+        otherBody: initialValues?.otherBody ?? '',
         skinColor: initialValues?.skinColor ?? '',
         hairType: initialValues?.hairType ?? '',
-        hairColor: initialValues?.hairColor ?? ''
+        hairLength: initialValues?.hairLength ?? '',
+        hairColor: initialValues?.hairColor ?? '',
+        otherHairColor: initialValues?.otherHairColor ?? ''
       },
       validationSchema,
       onSubmit: (values) => {

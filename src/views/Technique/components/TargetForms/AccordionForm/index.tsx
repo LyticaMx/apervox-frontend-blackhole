@@ -123,7 +123,24 @@ const AccordionForm = <T extends Object>({
             id={`${index}-${formData.data.name}`}
           >
             <GenericForm<T>
-              fields={fields}
+              fields={fields.map((field) => {
+                if (
+                  field.type === 'text' ||
+                  field.type === 'radio' ||
+                  field.type === 'checkbox'
+                ) {
+                  if (field.options.id) {
+                    return {
+                      ...field,
+                      options: {
+                        ...field.options,
+                        id: `${field.options.id}-${index}`
+                      }
+                    } as any
+                  }
+                }
+                return field
+              })}
               validationSchema={validationSchema}
               initialValues={formData ? formData.data : undefined}
               onChangeValues={(formik: FormikContextType<T>) =>
@@ -159,30 +176,32 @@ const AccordionForm = <T extends Object>({
         />
       </div>
 
-      {forms}
+      <div className="max-h-[62vh] overflow-y-auto">
+        {forms}
 
-      <Button
-        variant="contained"
-        color="primary"
-        className="my-2 float-right"
-        onClick={() => {
-          const isValid = handleValidateAll()
+        <Button
+          variant="contained"
+          color="primary"
+          className="my-2 float-right"
+          onClick={() => {
+            const isValid = handleValidateAll()
 
-          console.log(isValid, valuesRef.current)
-        }}
-      >
-        {getGlobalMessage('save', 'actionsMessages')}
-      </Button>
+            console.log(isValid, valuesRef.current)
+          }}
+        >
+          {getGlobalMessage('save', 'actionsMessages')}
+        </Button>
 
-      <Button
-        variant="contained"
-        color="secondary"
-        className="my-2 mx-2 float-right"
-        disabled={totalForms < 2}
-        onClick={handleResetAll}
-      >
-        {getGlobalMessage('restore', 'actionsMessages')}
-      </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          className="my-2 mx-2 float-right"
+          disabled={totalForms < 2}
+          onClick={handleResetAll}
+        >
+          {getGlobalMessage('restore', 'actionsMessages')}
+        </Button>
+      </div>
     </div>
   )
 }

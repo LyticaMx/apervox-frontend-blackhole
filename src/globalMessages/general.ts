@@ -640,5 +640,9 @@ export const generalMessages = defineMessages({
   both: {
     id: 'global.general.both',
     defaultMessage: 'Ambos'
+  },
+  other: {
+    id: 'global.general.other',
+    defaultMessage: 'Otro'
   }
 })

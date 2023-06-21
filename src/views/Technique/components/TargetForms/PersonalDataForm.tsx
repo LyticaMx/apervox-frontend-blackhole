@@ -20,7 +20,9 @@ interface FormValues extends AddressFormValues {
   age: string
   curp: string
   rfc: string
-  nationality: string
+  birthCountry: string
+  birthState: string
+  birthCity: string
 }
 
 interface Props {
@@ -34,6 +36,16 @@ const PersonalDataForm = ({ initialValues }: Props): ReactElement => {
   const { addressFields, addressValidationSchema } = useAddressForm('address')
 
   const fields: Array<Field<FormValues | AddressFormValues>> = [
+    {
+      type: 'text',
+      name: 'alias',
+      options: {
+        id: 'alias',
+        label: getMessage('targetAlias'),
+        placeholder: getMessage('targetAliasPlaceholder')
+      },
+      breakpoints: { xs: 6 }
+    },
     {
       type: 'text',
       name: 'name',
@@ -119,14 +131,24 @@ const PersonalDataForm = ({ initialValues }: Props): ReactElement => {
       breakpoints: { xs: 3 }
     },
     {
-      type: 'text',
-      name: 'nationality',
+      type: 'city-selector',
+      name: 'birth-address-selector',
       options: {
-        id: 'personal-data-nationality',
-        label: getMessage('nationality'),
-        placeholder: getMessage('nationalityPlaceholder')
-      },
-      breakpoints: { xs: 3 }
+        countryName: '',
+        countryLabel: getMessage('birthCountry'),
+        countryPlaceholder: getMessage('birthCountryPlaceholder'),
+        countryBreakpoints: { xs: 3 },
+        stateName: '',
+        stateLabel: getMessage('birthState'),
+        statePlaceholder: getMessage('birthStatePlaceholder'),
+        stateBreakpoints: { xs: 3 },
+        cityName: '',
+        cityLabel: getMessage('birthCity'),
+        cityPlaceholder: getMessage('birthCityPlaceholder'),
+        cityBreakpoints: { xs: 3 },
+        className: 'bg-white-500 mt-3',
+        optionsContainerClassname: '!w-full'
+      }
     },
     ...addressFields
   ]
@@ -152,13 +174,15 @@ const PersonalDataForm = ({ initialValues }: Props): ReactElement => {
         age: initialValues?.age ?? '',
         curp: initialValues?.curp ?? '',
         rfc: initialValues?.rfc ?? '',
-        nationality: initialValues?.nationality ?? '',
+        birthCountry: initialValues?.birthCountry ?? '',
+        birthState: initialValues?.birthState ?? '',
+        birthCity: initialValues?.birthCity ?? '',
         state: initialValues?.state ?? '',
-        municipality: initialValues?.municipality ?? '',
-        postalCode: initialValues?.postalCode ?? '',
-        colony: initialValues?.colony ?? '',
-        street: initialValues?.street ?? '',
-        number: initialValues?.number ?? ''
+        city: initialValues?.city ?? '',
+        zipCode: initialValues?.zipCode ?? '',
+        country: initialValues?.country ?? '',
+        line1: initialValues?.line1 ?? '',
+        line2: initialValues?.line2 ?? ''
       },
       validationSchema,
       onSubmit: (values) => {
@@ -174,7 +198,8 @@ const PersonalDataForm = ({ initialValues }: Props): ReactElement => {
       title: {
         text: getMessage('actualAddress'),
         className: 'text-primary uppercase mt-2'
-      }
+      },
+      spacing: 1
     }
   ]
 
@@ -184,7 +209,7 @@ const PersonalDataForm = ({ initialValues }: Props): ReactElement => {
         {getMessage('title')}
       </Typography>
 
-      <div className="bg-white p-2 py-4 rounded-md">
+      <div className="bg-white p-2 py-4 rounded-md max-h-[62vh] overflow-y-auto">
         <Form
           formikConfig={formikConfig}
           fields={fields}

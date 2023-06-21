@@ -21,35 +21,33 @@ const FormSection = (): ReactElement => {
 
   return (
     <div id="technique-objetive-forms" className="h-full">
-      <div>
-        <CustomTabs
-          classNames={{ container: 'my-2' }}
-          items={targetInfoTabs}
-          onChange={(tabClicked) => {
-            setActive(tabClicked as TARGET_INFO_TABS)
-          }}
-          active={active}
+      <CustomTabs
+        classNames={{ container: 'my-2' }}
+        items={targetInfoTabs}
+        onChange={(tabClicked) => {
+          setActive(tabClicked as TARGET_INFO_TABS)
+        }}
+        active={active}
+      />
+
+      <Tab value={TARGET_INFO_TABS.EVIDENCE}>
+        <EvidenceList
+          data={evidencesData}
+          onSelectItem={(evidence) =>
+            history.push(pathRoute.evidence, {
+              type: evidenceTypes[evidence.type]
+            })
+          }
         />
+      </Tab>
 
-        <Tab value={TARGET_INFO_TABS.EVIDENCE}>
-          <EvidenceList
-            data={evidencesData}
-            onSelectItem={(evidence) =>
-              history.push(pathRoute.evidence, {
-                type: evidenceTypes[evidence.type]
-              })
-            }
-          />
-        </Tab>
+      <Tab value={TARGET_INFO_TABS.GENERAL_DATA}>
+        <GeneralDataForm />
+      </Tab>
 
-        <Tab value={TARGET_INFO_TABS.GENERAL_DATA}>
-          <GeneralDataForm />
-        </Tab>
-
-        <Tab value={TARGET_INFO_TABS.FORMS}>
-          <TargetForms />
-        </Tab>
-      </div>
+      <Tab value={TARGET_INFO_TABS.FORMS}>
+        <TargetForms />
+      </Tab>
     </div>
   )
 }

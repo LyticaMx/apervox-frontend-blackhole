@@ -15,6 +15,7 @@ import MultiChip from './Selectmultiple/MultiChip'
 import Switch from './Switch'
 import TextField from './Textfield'
 import SelectPaginate from './SelectPaginate'
+import CitySelector from './CitySelector'
 
 interface Params<T> {
   field: Field<T>
@@ -130,6 +131,41 @@ export const fieldMapper = <T,>({ field, formik }: Params<T>): ReactNode => {
           )}
         </div>
       )
+    case 'city-selector': {
+      const countryName = field.options.countryName ?? 'country'
+      const stateName = field.options.stateName ?? 'state'
+      const cityName = field.options.cityName ?? 'city'
+
+      return (
+        <CitySelector
+          {...field.options}
+          country={formik.values[countryName]}
+          state={formik.values[stateName]}
+          city={formik.values[cityName]}
+          onChange={formik.setFieldValue}
+          countryError={
+            !!formik.errors[countryName] && !!formik.touched[countryName]
+          }
+          countryHelperText={
+            !!formik.errors[countryName] && !!formik.touched[countryName]
+              ? formik.errors[countryName]
+              : ''
+          }
+          stateError={!!formik.errors[stateName] && !!formik.touched[stateName]}
+          stateHelperText={
+            !!formik.errors[stateName] && !!formik.touched[stateName]
+              ? formik.errors[stateName]
+              : ''
+          }
+          cityError={!!formik.errors[cityName] && !!formik.touched[cityName]}
+          cityHelperText={
+            !!formik.errors[cityName] && !!formik.touched[cityName]
+              ? formik.errors[cityName]
+              : ''
+          }
+        />
+      )
+    }
     case 'autocomplete':
       return (
         <div>

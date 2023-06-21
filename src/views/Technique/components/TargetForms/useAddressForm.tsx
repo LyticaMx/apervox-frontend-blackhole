@@ -5,12 +5,12 @@ import { Field } from 'types/form'
 import { useAddressMessages } from 'views/Technique/messages'
 
 export interface AddressFormValues {
+  country: string
   state: string
-  municipality: string
-  postalCode: string
-  colony: string
-  street: string
-  number: string
+  city: string
+  zipCode: string
+  line1: string
+  line2: string
 }
 
 interface AddressForm {
@@ -23,113 +23,56 @@ export const useAddressForm = (section?: string): AddressForm => {
 
   const addressFields: Array<Field<AddressFormValues>> = [
     {
-      type: 'select',
-      name: 'state',
+      type: 'city-selector',
+      name: 'city-selector',
       options: {
-        label: formatMessage(useAddressMessages.state),
-        clearable: true,
-        placeholder: formatMessage(useAddressMessages.statePlaceholder),
-        items: [
-          {
-            id: '1',
-            label: 'Estado de México'
-          },
-          {
-            id: '2',
-            label: 'CDMX'
-          },
-          {
-            id: '3',
-            label: 'Quintana Roo'
-          }
-        ],
-        textField: 'label',
-        valueField: 'id',
+        countryLabel: formatMessage(useAddressMessages.country),
+        countryPlaceholder: formatMessage(
+          useAddressMessages.countryPlaceholder
+        ),
+        countryBreakpoints: { xs: 12, md: 6 },
+        stateLabel: formatMessage(useAddressMessages.state),
+        statePlaceholder: formatMessage(useAddressMessages.statePlaceholder),
+        stateBreakpoints: { xs: 12, md: 6 },
+        cityLabel: formatMessage(useAddressMessages.city),
+        cityPlaceholder: formatMessage(useAddressMessages.cityPlaceholder),
+        cityBreakpoints: { xs: 12, md: 6 },
         className: 'bg-white-500 mt-3',
-        optionsContainerClassname: 'w-[95%]'
+        optionsContainerClassname: '!w-full'
       },
-      breakpoints: { xs: 12, md: 3 },
-      section
-    },
-    {
-      type: 'select',
-      name: 'municipality',
-      options: {
-        label: formatMessage(useAddressMessages.municipality),
-        clearable: true,
-        placeholder: formatMessage(useAddressMessages.municipalityPlaceholder),
-        items: [
-          {
-            id: '1',
-            label: 'Atizepán de Zaragoza'
-          },
-          {
-            id: '2',
-            label: 'Iztapalapa'
-          },
-          {
-            id: '3',
-            label: 'Chimalhuacán'
-          },
-          {
-            id: '4',
-            label: 'Benito Juarez'
-          },
-          {
-            id: '5',
-            label: 'Nezahualcoyotl'
-          }
-        ],
-        textField: 'label',
-        valueField: 'id',
-        className: 'bg-white-500 mt-3',
-        optionsContainerClassname: 'w-[95%]'
-      },
-      breakpoints: { xs: 12, md: 3 },
       section
     },
     {
       type: 'text',
-      name: 'postalCode',
+      name: 'zipCode',
       options: {
-        id: 'company-postalCode',
+        id: 'zipCode',
         label: formatMessage(useAddressMessages.zipCode),
         placeholder: formatMessage(useAddressMessages.zipCodePlaceholder)
       },
-      breakpoints: { xs: 12, md: 3 },
+      breakpoints: { xs: 12, md: 6 },
       section
     },
     {
       type: 'text',
-      name: 'colony',
+      name: 'line1',
       options: {
-        id: 'company-colony',
-        label: formatMessage(useAddressMessages.colony),
-        placeholder: formatMessage(useAddressMessages.colonyPlaceholder)
+        id: 'line1',
+        label: formatMessage(useAddressMessages.line1),
+        placeholder: formatMessage(useAddressMessages.line1Placeholder)
       },
-      breakpoints: { xs: 12, md: 3 },
+      breakpoints: { xs: 12 },
       section
     },
     {
       type: 'text',
-      name: 'street',
+      name: 'line2',
       options: {
-        id: 'company-street',
-        label: formatMessage(useAddressMessages.street),
-        placeholder: formatMessage(useAddressMessages.streetPlaceholder)
+        id: 'line2',
+        label: formatMessage(useAddressMessages.line2),
+        placeholder: formatMessage(useAddressMessages.line2Placeholder)
       },
-      breakpoints: { xs: 12, md: 3 },
-      section
-    },
-    {
-      type: 'text',
-      name: 'number',
-      options: {
-        id: 'company-number',
-        label: formatMessage(useAddressMessages.number),
-        placeholder: formatMessage(useAddressMessages.numberPlaceholder)
-      },
-      breakpoints: { xs: 12, md: 3 },
+      breakpoints: { xs: 12 },
       section
     }
   ]

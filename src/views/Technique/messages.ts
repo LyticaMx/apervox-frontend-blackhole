@@ -206,6 +206,14 @@ export const academicFormMessages = defineMessages({
     id: 'views.techniques.AcademicForm.academicPhone',
     defaultMessage: 'Número teléfonico'
   },
+  specialty: {
+    id: 'views.techniques.AcademicForm.specialty',
+    defaultMessage: 'Especialidad'
+  },
+  specialtyPlaceholder: {
+    id: 'views.techniques.AcademicForm.specialtyPlaceholder',
+    defaultMessage: 'Ej. Astrofísica'
+  },
   academicPhonePlaceholder: {
     id: 'views.techniques.AcademicForm.academicPhonePlaceholder',
     defaultMessage: 'Ej. número a 10 dígitos'
@@ -450,9 +458,17 @@ export const personalDataFormMessages = defineMessages({
     id: 'views.techniques.PersonalDataForm.title',
     defaultMessage: 'Datos personales y domicilio'
   },
+  targetAlias: {
+    id: 'views.techniques.PersonalDataForm.targetAlias',
+    defaultMessage: 'Alias'
+  },
+  targetAliasPlaceholder: {
+    id: 'views.techniques.PersonalDataForm.targetAliasPlaceholder',
+    defaultMessage: 'Ej. El chapo'
+  },
   targetName: {
     id: 'views.techniques.PersonalDataForm.targetName',
-    defaultMessage: 'Alias / Nombre del objetivo'
+    defaultMessage: 'Nombre del objetivo'
   },
   targetNamePlaceholder: {
     id: 'views.techniques.PersonalDataForm.targetNamePlaceholder',
@@ -473,6 +489,30 @@ export const personalDataFormMessages = defineMessages({
   birthDatePlaceholder: {
     id: 'views.techniques.PersonalDataForm.birthDatePlaceholder',
     defaultMessage: 'Ej. 12/12/2022 - 13:00:00'
+  },
+  birthCountry: {
+    id: 'views.techniques.PersonalDataForm.birthCountry',
+    defaultMessage: 'País de nacimiento'
+  },
+  birthCountryPlaceholder: {
+    id: 'views.techniques.PersonalDataForm.birthCountryPlaceholder',
+    defaultMessage: 'Ej. México'
+  },
+  birthState: {
+    id: 'views.techniques.PersonalDataForm.birthState',
+    defaultMessage: 'Estado de nacimiento'
+  },
+  birthStatePlaceholder: {
+    id: 'views.techniques.PersonalDataForm.birthStatePlaceholder',
+    defaultMessage: 'Ej. CDMX'
+  },
+  birthCity: {
+    id: 'views.techniques.PersonalDataForm.birthCity',
+    defaultMessage: 'Ciudad de nacimiento'
+  },
+  birthCityPlaceholder: {
+    id: 'views.techniques.PersonalDataForm.birthCityPlaceholder',
+    defaultMessage: 'Ej. Iztapalapa'
   },
   age: {
     id: 'views.techniques.PersonalDataForm.age',
@@ -511,19 +551,19 @@ export const physicalDescriptionFormMessages = defineMessages({
   },
   height: {
     id: 'views.techniques.PhysicalDescriptionForm.height',
-    defaultMessage: 'Altura'
+    defaultMessage: 'Altura (cm)'
   },
   heightPlaceholder: {
     id: 'views.techniques.PhysicalDescriptionForm.heightPlaceholder',
-    defaultMessage: 'Ej. 170 cm'
+    defaultMessage: 'Ej. 170'
   },
   weight: {
     id: 'views.techniques.PhysicalDescriptionForm.weight',
-    defaultMessage: 'Peso'
+    defaultMessage: 'Peso (kg)'
   },
   weightPlaceholder: {
     id: 'views.techniques.PhysicalDescriptionForm.weightPlaceholder',
-    defaultMessage: 'Ej. 70 kg'
+    defaultMessage: 'Ej. 70'
   },
   bodyType: {
     id: 'views.techniques.PhysicalDescriptionForm.bodyType',
@@ -531,7 +571,51 @@ export const physicalDescriptionFormMessages = defineMessages({
   },
   bodyTypePlaceholder: {
     id: 'views.techniques.PhysicalDescriptionForm.bodyTypePlaceholder',
-    defaultMessage: 'Ej. Ectomorfo'
+    defaultMessage: 'Ej. Delgado'
+  },
+  thin: {
+    id: 'views.techniques.PhysicalDescriptionForm.bodyType.thin',
+    defaultMessage: 'Delgado'
+  },
+  slim: {
+    id: 'views.techniques.PhysicalDescriptionForm.bodyType.slim',
+    defaultMessage: 'Esbelto'
+  },
+  athletic: {
+    id: 'views.techniques.PhysicalDescriptionForm.bodyType.athletic',
+    defaultMessage: 'Atlético'
+  },
+  muscular: {
+    id: 'views.techniques.PhysicalDescriptionForm.bodyType.muscular',
+    defaultMessage: 'Musculoso'
+  },
+  curvy: {
+    id: 'views.techniques.PhysicalDescriptionForm.bodyType.curvy',
+    defaultMessage: 'Con curvas'
+  },
+  average: {
+    id: 'views.techniques.PhysicalDescriptionForm.bodyType.average',
+    defaultMessage: 'Promedio'
+  },
+  chubby: {
+    id: 'views.techniques.PhysicalDescriptionForm.bodyType.chubby',
+    defaultMessage: 'Rellenito'
+  },
+  overweight: {
+    id: 'views.techniques.PhysicalDescriptionForm.bodyType.overweight',
+    defaultMessage: 'Con sobrepeso'
+  },
+  obese: {
+    id: 'views.techniques.PhysicalDescriptionForm.bodyType.obese',
+    defaultMessage: 'Obeso'
+  },
+  otherBody: {
+    id: 'views.techniques.PhysicalDescriptionForm.otherBody',
+    defaultMessage: 'Otro tipo de cuerpo'
+  },
+  otherBodyPlaceholder: {
+    id: 'views.techniques.PhysicalDescriptionForm.otherBodyPlaceholder',
+    defaultMessage: 'Ej. Otro tipo'
   },
   skinColor: {
     id: 'views.techniques.PhysicalDescriptionForm.skinColor',
@@ -541,17 +625,57 @@ export const physicalDescriptionFormMessages = defineMessages({
     id: 'views.techniques.PhysicalDescriptionForm.skinColorPlaceholder',
     defaultMessage: 'Ej. Piel clara'
   },
-  whiteSkin: {
-    id: 'views.techniques.PhysicalDescriptionForm.whiteSkin',
-    defaultMessage: 'Piel blanca'
+  lighter: {
+    id: 'views.techniques.PhysicalDescriptionForm.skinType.lighter',
+    defaultMessage: 'Muy clara'
   },
-  darkSkin: {
-    id: 'views.techniques.PhysicalDescriptionForm.darkSkin',
-    defaultMessage: 'Piel oscura'
+  light: {
+    id: 'views.techniques.PhysicalDescriptionForm.skinType.light',
+    defaultMessage: 'Clara'
   },
-  lightSkin: {
-    id: 'views.techniques.PhysicalDescriptionForm.lightSkin',
-    defaultMessage: 'Piel clara'
+  lightBrown: {
+    id: 'views.techniques.PhysicalDescriptionForm.skinType.light_brown',
+    defaultMessage: 'Morena clara'
+  },
+  darkBrown: {
+    id: 'views.techniques.PhysicalDescriptionForm.skinType.dark_brown',
+    defaultMessage: 'Morena oscura'
+  },
+  dark: {
+    id: 'views.techniques.PhysicalDescriptionForm.skinType.dark',
+    defaultMessage: 'Oscura'
+  },
+  darker: {
+    id: 'views.techniques.PhysicalDescriptionForm.skinType.darker',
+    defaultMessage: 'Muy oscura'
+  },
+  hairLength: {
+    id: 'views.techniques.PhysicalDescriptionForm.hairLength',
+    defaultMessage: 'Largo del cabello'
+  },
+  hairLengthPlaceholder: {
+    id: 'views.techniques.PhysicalDescriptionForm.hairLengthPlaceholder',
+    defaultMessage: 'Ej. Corto'
+  },
+  bald: {
+    id: 'views.techniques.PhysicalDescriptionForm.hairLength.bald',
+    defaultMessage: 'Calvo'
+  },
+  short: {
+    id: 'views.techniques.PhysicalDescriptionForm.hairLength.short',
+    defaultMessage: 'Corto'
+  },
+  medium: {
+    id: 'views.techniques.PhysicalDescriptionForm.hairLength.medium',
+    defaultMessage: 'Mediano'
+  },
+  long: {
+    id: 'views.techniques.PhysicalDescriptionForm.hairLength.long',
+    defaultMessage: 'Largo'
+  },
+  extraLong: {
+    id: 'views.techniques.PhysicalDescriptionForm.hairLength.extraLong',
+    defaultMessage: 'Muy largo'
   },
   hairType: {
     id: 'views.techniques.PhysicalDescriptionForm.hairType',
@@ -560,6 +684,22 @@ export const physicalDescriptionFormMessages = defineMessages({
   hairTypePlaceholder: {
     id: 'views.techniques.PhysicalDescriptionForm.hairTypePlaceholder',
     defaultMessage: 'Ej. Corto, ondulado'
+  },
+  straight: {
+    id: 'views.techniques.PhysicalDescriptionForm.hairType.straight',
+    defaultMessage: 'Liso'
+  },
+  wavy: {
+    id: 'views.techniques.PhysicalDescriptionForm.hairType.wavy',
+    defaultMessage: 'Ondulado'
+  },
+  curly: {
+    id: 'views.techniques.PhysicalDescriptionForm.hairType.curly',
+    defaultMessage: 'Ondulado'
+  },
+  kinky: {
+    id: 'views.techniques.PhysicalDescriptionForm.hairType.kinky',
+    defaultMessage: 'Afro'
   },
   shortCurly: {
     id: 'views.techniques.PhysicalDescriptionForm.shortCurly',
@@ -584,6 +724,50 @@ export const physicalDescriptionFormMessages = defineMessages({
   hairColorPlaceholder: {
     id: 'views.techniques.PhysicalDescriptionForm.hairColorPlaceholder',
     defaultMessage: 'Ej. Castaño'
+  },
+  white: {
+    id: 'views.techniques.PhysicalDescriptionForm.hairColor.white',
+    defaultMessage: 'Blanco'
+  },
+  lightBlonde: {
+    id: 'views.techniques.PhysicalDescriptionForm.hairColor.lightBlonde',
+    defaultMessage: 'Rubio claro'
+  },
+  darkBlonde: {
+    id: 'views.techniques.PhysicalDescriptionForm.hairColor.darkBlonde',
+    defaultMessage: 'Rubio oscuro'
+  },
+  auburn: {
+    id: 'views.techniques.PhysicalDescriptionForm.hairColor.auburn',
+    defaultMessage: 'Marrón rojizo'
+  },
+  chestnut: {
+    id: 'views.techniques.PhysicalDescriptionForm.hairColor.chestnut',
+    defaultMessage: 'Castaño'
+  },
+  brown: {
+    id: 'views.techniques.PhysicalDescriptionForm.hairColor.brown',
+    defaultMessage: 'Marrón'
+  },
+  red: {
+    id: 'views.techniques.PhysicalDescriptionForm.hairColor.red',
+    defaultMessage: 'Rojo'
+  },
+  gray: {
+    id: 'views.techniques.PhysicalDescriptionForm.hairColor.gray',
+    defaultMessage: 'Gris'
+  },
+  black: {
+    id: 'views.techniques.PhysicalDescriptionForm.hairColor.black',
+    defaultMessage: 'Negro'
+  },
+  otherHairColor: {
+    id: 'views.techniques.PhysicalDescriptionForm.otherHairColor',
+    defaultMessage: 'Otro color de cabello'
+  },
+  otherHairColorPlaceholder: {
+    id: 'views.techniques.PhysicalDescriptionForm.otherHairColorPlaceholder',
+    defaultMessage: 'Ej. Morado'
   }
 })
 
@@ -794,6 +978,14 @@ export const socialCircleFormMessages = defineMessages({
 })
 
 export const useAddressMessages = defineMessages({
+  country: {
+    id: 'views.techniques.useAddress.country',
+    defaultMessage: 'País'
+  },
+  countryPlaceholder: {
+    id: 'views.techniques.useAddress.countryPlaceholder',
+    defaultMessage: 'Ej. México'
+  },
   state: {
     id: 'views.techniques.useAddress.state',
     defaultMessage: 'Estado'
@@ -802,12 +994,12 @@ export const useAddressMessages = defineMessages({
     id: 'views.techniques.useAddress.statePlaceholder',
     defaultMessage: 'Ej. CDMX'
   },
-  municipality: {
-    id: 'views.techniques.useAddress.municipality',
-    defaultMessage: 'Municipio / Alcaldía'
+  city: {
+    id: 'views.techniques.useAddress.city',
+    defaultMessage: 'Ciudad'
   },
-  municipalityPlaceholder: {
-    id: 'views.techniques.useAddress.municipalityPlaceholder',
+  cityPlaceholder: {
+    id: 'views.techniques.useAddress.cityPlaceholder',
     defaultMessage: 'Ej. Iztapalapa'
   },
   zipCode: {
@@ -818,29 +1010,21 @@ export const useAddressMessages = defineMessages({
     id: 'views.techniques.useAddress.zipCodePlaceholder',
     defaultMessage: 'Ej. 12345'
   },
-  colony: {
-    id: 'views.techniques.useAddress.colony',
-    defaultMessage: 'Colonia'
+  line1: {
+    id: 'views.techniques.useAddress.line1',
+    defaultMessage: 'Dirección línea 1'
   },
-  colonyPlaceholder: {
-    id: 'views.techniques.useAddress.colonyPlaceholder',
-    defaultMessage: 'Ej. Héroes de Tec'
+  line1Placeholder: {
+    id: 'views.techniques.useAddress.line1Placeholder',
+    defaultMessage: 'Ej. Héroes de Tec 123'
   },
-  street: {
-    id: 'views.techniques.useAddress.street',
-    defaultMessage: 'Nombre de la calle'
+  line2: {
+    id: 'views.techniques.useAddress.line2',
+    defaultMessage: 'Dirección línea 2'
   },
-  streetPlaceholder: {
-    id: 'views.techniques.useAddress.streetPlaceholder',
-    defaultMessage: 'Ej. Av. Ejercito Nacional'
-  },
-  number: {
-    id: 'views.techniques.useAddress.number',
-    defaultMessage: 'Número exterior'
-  },
-  numberPlaceholder: {
-    id: 'views.techniques.useAddress.numberPlaceholder',
-    defaultMessage: 'Ej. Edificio 1-A 564'
+  line2Placeholder: {
+    id: 'views.techniques.useAddress.line2Placeholder',
+    defaultMessage: 'Ej. Departamento, suite, casa'
   }
 })
 

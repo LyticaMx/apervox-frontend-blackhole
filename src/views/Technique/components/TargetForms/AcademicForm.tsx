@@ -10,6 +10,7 @@ import { academicFormMessages } from 'views/Technique/messages'
 
 interface FormValues extends AddressFormValues {
   name: string
+  specialty: string
   phone: string
   email: string
 }
@@ -27,6 +28,16 @@ const AcademicForm = (): ReactElement => {
         id: 'academic-name',
         label: formatMessage(academicFormMessages.academicName),
         placeholder: formatMessage(academicFormMessages.academicNamePlaceholder)
+      },
+      breakpoints: { xs: 6 }
+    },
+    {
+      type: 'text',
+      name: 'specialty',
+      options: {
+        id: 'academic-specialty',
+        label: formatMessage(academicFormMessages.specialty),
+        placeholder: formatMessage(academicFormMessages.specialtyPlaceholder)
       },
       breakpoints: { xs: 6 }
     },
@@ -75,7 +86,8 @@ const AcademicForm = (): ReactElement => {
       title: {
         text: formatMessage(academicFormMessages.institutionAddress),
         className: 'text-primary uppercase mt-2'
-      }
+      },
+      spacing: 1
     }
   ]
 
