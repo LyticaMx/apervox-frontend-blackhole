@@ -21,8 +21,8 @@ export enum EvidenceTag {
 
 export enum Turn {
   MORNING = 'morning',
-  EVENING = 'evening',
-  NIGHTNING = 'nightning'
+  EVENING = 'afternoon',
+  NIGHTNING = 'night'
 }
 
 export enum PhoneCompany {
@@ -37,10 +37,9 @@ export interface Technique {
   created_at: string
   expires_at: string
   registered_by: string
-  time_on_platform: string
   priority: Priority
   status: Status
-  attention_turn: Turn
+  attention_turn: Turn | ''
   total_target: number
 }
 
@@ -54,6 +53,7 @@ export interface Target {
   overflow_id?: string
   liid?: string
   liid_v?: string
+  type?: 'etsi' | 'conventional'
 }
 
 export interface Evidence {

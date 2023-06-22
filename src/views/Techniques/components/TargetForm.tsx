@@ -7,10 +7,6 @@ import { Field } from 'types/form'
 import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
 import Grid from 'components/Grid'
 import Radio from 'components/Form/Radio'
-import Switch from 'components/Form/Switch'
-import Datepicker from 'components/Form/Datepicker'
-import Typography from 'components/Typography'
-import { useToggle } from 'usehooks-ts'
 import { targetFormMessages } from '../messages'
 
 type TargetType = 'etsi' | 'conventional'
@@ -18,8 +14,7 @@ type TargetType = 'etsi' | 'conventional'
 export interface FormValues {
   name: string
   number: string
-  phoneCompany: string
-  endDate: Date | null
+  phoneCompany: any
   overflowLine?: any
   liid?: string
   liidVolte?: string
@@ -34,7 +29,6 @@ interface Props {
 const TargetForm = ({ initialValues, onSubmit }: Props): ReactElement => {
   const getMessage = useFormatMessage(targetFormMessages)
   const getGlobalMessage = useGlobalMessage()
-  const [state, toggle] = useToggle(false)
 
   const [targetType, setTargetType] = useState<TargetType>('etsi')
 
@@ -61,29 +55,6 @@ const TargetForm = ({ initialValues, onSubmit }: Props): ReactElement => {
         labelSpacing: '1',
         requiredMarker: true
       },
-      breakpoints: { xs: 12 }
-    },
-    {
-      type: 'custom',
-      name: 'endDate',
-      children: ({ name, values, setFieldValue }) => (
-        <div className="mt-2">
-          <div className="flex items-center">
-            <Switch onChange={toggle} value={state} color="indigo" />
-            <Typography className="ml-2 uppercase text-indigo-500 font-semibold">
-              {getMessage('endDate')}
-            </Typography>
-          </div>
-          <Typography className="leading-tight mb-2">
-            {getMessage('endDateWarning')}
-          </Typography>
-          <Datepicker
-            onChange={(value) => setFieldValue(name, value)}
-            value={values[name]}
-            disabled={!state}
-          />
-        </div>
-      ),
       breakpoints: { xs: 12 }
     },
     {
@@ -156,7 +127,7 @@ const TargetForm = ({ initialValues, onSubmit }: Props): ReactElement => {
   const validationSchema = yup.object({
     name: yup.string().required(getMessage('required')),
     number: yup.string().required(getMessage('required')),
-    phoneCompany: yup.string().required(getMessage('required'))
+    phoneCompany: yup.mixed().required(getMessage('required'))
   })
 
   const formikConfig = useMemo<FormikConfig<FormValues>>(
@@ -165,7 +136,6 @@ const TargetForm = ({ initialValues, onSubmit }: Props): ReactElement => {
         name: initialValues?.name ?? '',
         number: initialValues?.number ?? '',
         phoneCompany: initialValues?.phoneCompany ?? '',
-        endDate: initialValues?.endDate ?? null,
         liid: initialValues?.liid ?? '',
         liidVolte: initialValues?.liidVolte ?? '',
         overflowLine: initialValues?.overflowLine ?? null,
@@ -173,13 +143,11 @@ const TargetForm = ({ initialValues, onSubmit }: Props): ReactElement => {
       },
       validationSchema,
       onSubmit: (values) => {
-        console.log(values)
-
-        onSubmit(values)
+        onSubmit(Object.assign(values, { type: targetType }))
       },
       enableReinitialize: true
     }),
-    [initialValues]
+    [initialValues, targetType]
   )
 
   return (

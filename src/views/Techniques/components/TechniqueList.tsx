@@ -1,6 +1,6 @@
 import { useState, ReactElement } from 'react'
 import { useHistory } from 'react-router-dom'
-import { format } from 'date-fns'
+import { format, formatDistanceToNow } from 'date-fns'
 import { ColumnDef } from '@tanstack/react-table'
 
 import { TrashIcon } from '@heroicons/react/24/outline'
@@ -29,6 +29,7 @@ import { generalMessages } from 'globalMessages'
 
 import DeleteTechinqueDialog, { EliminationType } from './DeleteTechinqueDialog'
 import { techniquesDeleteDialogMessages } from '../messages'
+import { useLanguage } from 'context/Language'
 
 const TechniqueList = (): ReactElement => {
   const history = useHistory()
@@ -41,6 +42,7 @@ const TechniqueList = (): ReactElement => {
   const [techinqueToDelete, setTechinqueToDelete] = useState<string | null>(
     null
   )
+  const { locale } = useLanguage()
 
   const handleOpenDeleteDialog = (e): void => {
     e.preventDefault()
@@ -83,8 +85,16 @@ const TechniqueList = (): ReactElement => {
       header: getMessage('registeredBy')
     },
     {
-      accessorKey: 'time_on_platform',
-      header: getMessage('timeOnPlatform')
+      id: 'time_on_platform',
+      accessorKey: 'created_at',
+      header: getMessage('timeOnPlatform'),
+      cell: ({ getValue }) => {
+        const time = formatDistanceToNow(new Date(getValue<string>()), {
+          locale
+        })
+
+        return <>{`${time.charAt(0).toUpperCase()}${time.substring(1)}`}</>
+      }
     },
     {
       accessorKey: 'priority',

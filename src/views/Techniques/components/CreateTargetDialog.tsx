@@ -10,7 +10,7 @@ interface Props {
   open?: boolean
   selected?: Number
   onClose?: (event?: any) => void
-  onAccept?: (target: FormValues) => void
+  onAccept?: (target: FormValues) => Promise<void>
 }
 
 const CreateTargetDialog = ({
@@ -29,7 +29,7 @@ const CreateTargetDialog = ({
         <Typography className="leading-tight my-2">
           {formatMessage(createTargetDialogMessages.selectTargetType)}
         </Typography>
-        <TargetForm onSubmit={onAccept as any} />
+        <TargetForm onSubmit={onAccept ?? (async () => {})} />
       </div>
     </Dialog>
   )

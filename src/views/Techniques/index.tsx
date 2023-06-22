@@ -13,15 +13,16 @@ import { techniquesMessages } from './messages'
 
 import CreateTechniqueDrawer from './components/CreateTechniqueDrawer'
 import { useTechniques } from 'context/Techniques'
+import { formatTotal } from 'utils/formatTotal'
 
 const Techniques = (): ReactElement => {
   const getMessage = useFormatMessage(techniquesMessages)
-  const { actions } = useTechniques()
+  const { actions, total } = useTechniques()
 
   const [openCreateDrawer, toggleOpenCreateDrawer] = useToggle(false)
 
   useEffect(() => {
-    actions?.get()
+    actions?.get({}, true)
   }, [])
 
   return (
@@ -30,7 +31,9 @@ const Techniques = (): ReactElement => {
         <div className="flex justify-start items-center">
           <div className="ml-2">
             <Title className="uppercase">{getMessage('title')}</Title>
-            <p className="uppercase">04 {getMessage('subtitle')}</p>
+            <p className="uppercase">
+              {formatTotal(total, getMessage('subtitle'))}
+            </p>
           </div>
         </div>
 

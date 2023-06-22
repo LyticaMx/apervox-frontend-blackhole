@@ -53,6 +53,10 @@ export const createTechniqueDrawerMessages = defineMessages({
     id: 'views.techniques.CreateTechniqueDrawer.completeFields',
     defaultMessage:
       'Completa los siguientes campos para crear una nueva técnica.'
+  },
+  success: {
+    id: 'views.techniques.CreateTechniqueDrawer.success',
+    defaultMessage: 'T.I. creada correctamente'
   }
 })
 
