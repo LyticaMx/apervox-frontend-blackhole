@@ -66,6 +66,13 @@ const LanguagesForm = (): ReactElement => {
 
   const validationSchema = yup.object({
     language: yup.string().required(formatMessage(formMessages.required)),
+    otherLanguage: yup
+      .string()
+      .when('language', (value, field) =>
+        value === 'other'
+          ? yup.string().required(formatMessage(formMessages.required))
+          : field
+      ),
     level: yup.string().required(formatMessage(formMessages.required))
   })
 

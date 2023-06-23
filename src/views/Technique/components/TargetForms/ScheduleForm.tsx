@@ -23,23 +23,25 @@ const ScheduleForm = (): ReactElement => {
   const fields: Array<Field<FormValues | AddressFormValues>> = [
     {
       type: 'text',
-      name: 'contactName',
+      name: 'name',
       options: {
+        labelSpacing: '1',
         id: 'contact-name',
         label: formatMessage(scheduleFormMessages.name),
         placeholder: formatMessage(scheduleFormMessages.namePlaceholder)
       },
-      breakpoints: { xs: 3 }
+      breakpoints: { xs: 12, sm: 6, md: 4 }
     },
     {
       type: 'text',
-      name: 'contactPhoneNumber',
+      name: 'phone',
       options: {
-        id: 'contact-number',
+        labelSpacing: '1',
+        id: 'contact-phone',
         label: formatMessage(targetFormsGeneralMessages.phone),
         placeholder: formatMessage(targetFormsGeneralMessages.phonePlaceholder)
       },
-      breakpoints: { xs: 3 }
+      breakpoints: { xs: 12, sm: 6, md: 4 }
     },
 
     ...addressFields
@@ -47,8 +49,8 @@ const ScheduleForm = (): ReactElement => {
 
   const validationSchema = yup
     .object({
-      contactName: yup.string().required(formatMessage(formMessages.required)),
-      contactPhoneNumber: yup
+      name: yup.string().required(formatMessage(formMessages.required)),
+      phone: yup
         .string()
         .required(formatMessage(formMessages.required))
     })
@@ -60,7 +62,8 @@ const ScheduleForm = (): ReactElement => {
       title: {
         text: formatMessage(scheduleFormMessages.address),
         className: 'text-primary uppercase mt-2'
-      }
+      },
+      spacing: 2
     }
   ]
 

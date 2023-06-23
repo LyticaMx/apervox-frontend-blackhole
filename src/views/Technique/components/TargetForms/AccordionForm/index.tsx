@@ -119,7 +119,7 @@ const AccordionForm = <T extends Object>({
           error={!!errors[index]}
         >
           <div
-            className="bg-white rounded-b-md p-2 mb-6"
+            className="bg-white rounded-b-md p-4 mb-6"
             id={`${index}-${formData.data.name}`}
           >
             <GenericForm<T>
@@ -143,9 +143,10 @@ const AccordionForm = <T extends Object>({
               })}
               validationSchema={validationSchema}
               initialValues={formData ? formData.data : undefined}
-              onChangeValues={(formik: FormikContextType<T>) =>
+              onChangeValues={(formik: FormikContextType<T>) => {
+                console.log(formik)
                 handleUpdateForm(index, formik)
-              }
+              }}
               withSections={withSections}
             />
 
