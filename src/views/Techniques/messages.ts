@@ -30,29 +30,22 @@ export const techniquesMessages = defineMessages({
 export const techniquesDeleteDialogMessages = defineMessages({
   title: {
     id: 'views.techniques.deleteDialog.title',
-    defaultMessage: 'Eliminar técnica'
+    defaultMessage: 'Eliminar {selected, plural, one{técnica} other={técnicas}}'
   },
   message: {
     id: 'views.techniques.deleteDialog.message',
     defaultMessage:
-      '¿Qué tipo de eliminación te gustaría realizar a esta técnica?'
+      '¿Estás seguro de querer eliminar {selected, plural, one{la técnica seleccionada} other{las # técnicas sleccionadas}}?'
   },
-  removeCompletely: {
-    id: 'views.techniques.deleteDialog.removeCompletely',
-    defaultMessage: 'Eliminar completamente la técnica'
-  },
-  removeOnlyFiles: {
-    id: 'views.techniques.deleteDialog.removeOnlyFiles',
-    defaultMessage: 'Eliminar únicamente archivos'
-  },
-  hazardConfirmation: {
-    id: 'views.techniques.deleteDialog.hazardConfirmation',
+  passwordConfirm: {
+    id: 'views.techniques.deleteDialog.passwordConfirm',
     defaultMessage:
-      'Acepto y comprendo los riesgos legales y de autorías derivados de la acción de eliminar el registro.'
+      'Ingresa tu contraseña para validar la eliminación {selected, plural, one{de la técnica seleccionada} other{de las # técnicas seleccionadas}}'
   },
-  passwordConfirmMessage: {
-    id: 'views.techniques.deleteDialog.passwordConfirmMessage',
-    defaultMessage: 'Ingresa tu contraseña para validar la eliminación.'
+  success: {
+    id: 'views.techniques.deleteDialog.success',
+    defaultMessage:
+      '{selected, plural, one{Técnica eliminada} other{Técnicas eliminadas}} correctamente'
   }
 })
 

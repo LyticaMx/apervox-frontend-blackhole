@@ -152,15 +152,27 @@ const useActions = (state: State, dispatch): Actions => {
     }
   }
 
-  const deleteOne = async (
-    id: string,
-    full: boolean = false
-  ): Promise<boolean> => true
+  const deleteOne = async (id: string): Promise<boolean> => {
+    try {
+      await techniquesService.delete({
+        queryString: id
+      })
 
-  const deleteMany = async (
-    ids: string[],
-    full: boolean = false
-  ): Promise<boolean> => true
+      return true
+    } catch {
+      return false
+    }
+  }
+
+  const deleteMany = async (ids: string[]): Promise<boolean> => {
+    try {
+      await techniquesService.delete({ body: { ids } })
+
+      return true
+    } catch {
+      return false
+    }
+  }
 
   return {
     get,

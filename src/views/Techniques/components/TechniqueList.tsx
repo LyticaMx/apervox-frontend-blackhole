@@ -27,10 +27,15 @@ import useTableColumns from 'hooks/useTableColumns'
 
 import { generalMessages } from 'globalMessages'
 
-import DeleteTechinqueDialog, { EliminationType } from './DeleteTechinqueDialog'
+import DeleteTechinqueDialog from './DeleteTechinqueDialog'
 import { techniquesDeleteDialogMessages, techniquesMessages } from '../messages'
 import { useLanguage } from 'context/Language'
 import { useIntl } from 'react-intl'
+
+interface SynchroDeleteIds {
+  ids: string[]
+  resolve: ((value: boolean | PromiseLike<boolean>) => void) | null
+}
 
 const TechniqueList = (): ReactElement => {
   const history = useHistory()
@@ -39,26 +44,21 @@ const TechniqueList = (): ReactElement => {
   const { actions } = useTechnique()
   const getMessage = useFormatMessage(generalMessages)
   const getDeleteMessage = useFormatMessage(techniquesDeleteDialogMessages)
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
+  const [deletedTechniques, setDeletedTechniques] = useState<SynchroDeleteIds>({
+    ids: [],
+    resolve: null
+  })
   const [openActionNotification, setOpenActionNotification] = useState(false)
-  const [techinqueToDelete, setTechinqueToDelete] = useState<string | null>(
-    null
-  )
   const { locale } = useLanguage()
 
-  const handleOpenDeleteDialog = (e): void => {
-    e.preventDefault()
-    setOpenDeleteDialog(true)
-  }
-  const handleCloseDeleteDialog = (): void => {
-    setOpenDeleteDialog(false)
-    setTechinqueToDelete(null)
-  }
+  const handleDelete = async (ids: string[]): Promise<boolean> =>
+    await new Promise<boolean>((resolve) =>
+      setDeletedTechniques({ ids, resolve })
+    )
 
-  const handleDeleteTechinque = (eliminationType: EliminationType): void => {
-    setOpenDeleteDialog(false)
-    setOpenActionNotification(true)
-    console.log('techinque_id: ', techinqueToDelete, eliminationType)
+  const handleCloseDeleteDialog = (): void => {
+    if (deletedTechniques.resolve) deletedTechniques.resolve(false)
+    setDeletedTechniques({ ids: [], resolve: null })
   }
 
   const handleClick = (item: Technique): void => {
@@ -188,7 +188,7 @@ const TechniqueList = (): ReactElement => {
       accessorKey: 'id',
       enableSorting: false,
       header: getMessage('action'),
-      cell: ({ getValue }) => {
+      cell: ({ getValue, table }) => {
         const id = getValue<string>()
 
         return (
@@ -204,12 +204,14 @@ const TechniqueList = (): ReactElement => {
               placement="top"
             >
               <IconButton
-                onClick={(e) => {
+                onClick={async (e) => {
                   e?.stopPropagation()
-                  handleOpenDeleteDialog(e)
-                  setTechinqueToDelete(id)
+                  await handleDelete([id])
                 }}
                 className="text-muted hover:text-primary"
+                disabled={
+                  table.getIsSomeRowsSelected() || table.getIsAllRowsSelected()
+                }
               >
                 <TrashIcon className="h-5 w-5 mx-1" />
               </IconButton>
@@ -248,22 +250,19 @@ const TechniqueList = (): ReactElement => {
         actionsForSelectedItems={[
           {
             name: 'Eliminar',
-            action: (items) => {
-              console.log(
-                `onDeleteTechniquesFromWorkGroup(${items.map(
-                  (user) => user.id
-                )})`
-              )
-            },
+            tooltip: getMessage('delete'),
+            action: async (items) =>
+              await handleDelete(items.map((item) => item.id ?? '')),
             Icon: TrashIcon
           }
         ]}
         onRowClicked={handleClick}
       />
       <DeleteTechinqueDialog
-        open={openDeleteDialog}
+        ids={deletedTechniques.ids}
+        resolve={deletedTechniques.resolve ?? (() => {})}
         onClose={handleCloseDeleteDialog}
-        onAccept={handleDeleteTechinque}
+        onAccept={() => setDeletedTechniques({ ids: [], resolve: null })}
       />
       <ActionNotification
         open={openActionNotification}
