@@ -64,6 +64,7 @@ export const fieldMapper = <T,>({ field, formik }: Params<T>): ReactNode => {
           {...field.options}
           value={formik.values[name]}
           onChange={(val) => formik.setFieldValue(name, val)}
+          onTouched={() => formik.setFieldTouched(name)}
           error={!!formik.errors[name] && !!formik.touched[name]}
           helperText={
             !!formik.errors[name] && !!formik.touched[name]
@@ -143,6 +144,7 @@ export const fieldMapper = <T,>({ field, formik }: Params<T>): ReactNode => {
           state={formik.values[stateName]}
           city={formik.values[cityName]}
           onChange={formik.setFieldValue}
+          onTouched={formik.setFieldTouched}
           countryError={
             !!formik.errors[countryName] && !!formik.touched[countryName]
           }
