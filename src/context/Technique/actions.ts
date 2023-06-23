@@ -24,7 +24,8 @@ const useActions = (state: State, dispatch): Actions => {
         priority: response.data.priority,
         registered_by: response.data.created_by.username,
         total_target: 0,
-        status: response.data.status
+        status: response.data.status,
+        groups: response.data.groups ?? []
       })
       return true
     } catch {
@@ -64,7 +65,41 @@ const useActions = (state: State, dispatch): Actions => {
     return true
   }
 
-  const update = async (technique: InnerTechnique): Promise<boolean> => true
+  const update = async (
+    newTechnique: Omit<
+      InnerTechnique,
+      'description' | 'attention_turn' | 'status' | 'total_target'
+    >
+  ): Promise<boolean> => {
+    try {
+      if (!technique) return false
+      const body: Record<string, any> = {}
+      body.name = newTechnique.name
+      body.end_date = newTechnique.expires_at
+      body.priority = newTechnique.priority
+      body.groups = newTechnique.groups
+      if (
+        newTechnique.notificationTime ||
+        !isNaN(newTechnique.notificationTime)
+      ) {
+        body.notification_type = newTechnique.notificationTimeUnit
+        body.notification_time = newTechnique.notificationTime
+      }
+      if (newTechnique.shift) {
+        body.shift = newTechnique.shift
+        body.shift_cutoff = newTechnique.reportEvidenceEvery
+      }
+
+      await techniqueService.put({
+        queryString: technique.id,
+        body
+      })
+
+      return true
+    } catch {
+      return false
+    }
+  }
 
   const setTechnique = (payload: Technique): void => {
     dispatch(actions.setTechnique(payload))

@@ -34,7 +34,7 @@ const Techniques = (): ReactElement => {
         <div className="p-4 flex-grow w-0">
           <FormSection />
         </div>
-        <div className="px-3 py-4 w-[300px] bg-neutral-200 bg-opacity-60 rounded-md">
+        <div className="px-3 py-4 w-[325px] bg-neutral-200 bg-opacity-60 rounded-md overflow-y-auto">
           <TechniqueInfo />
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import { ReactElement, useRef } from 'react'
 import { useIntl } from 'react-intl'
 
 import { useTabs } from 'hooks/useTabs'
@@ -11,20 +11,28 @@ import Button from 'components/Button'
 import TargetList from './TargetList'
 import CustomTabs from './CustomTabs'
 import { techiniqueInfoTabs, TECHNIQUE_INFO_TABS } from '../constants'
-import TechniqueUpdateForm from './TechniqueUpdateForm'
+import TechniqueUpdateForm, {
+  FormValues as TechniqueUpdateValues
+} from './TechniqueUpdateForm'
 import { techniqueInfoMessages } from '../messages'
 import TechniqueSummary from './TechniqueSummary'
+import { FormikContextType } from 'formik'
 
 const TechniqueInfo = (): ReactElement => {
   const { targets, actions } = useTechnique()
   const [active, setActive, Tab] = useTabs(TECHNIQUE_INFO_TABS.TARGET)
+  const formikRef = useRef<
+    FormikContextType<TechniqueUpdateValues> | undefined
+  >()
 
   const { formatMessage } = useIntl()
 
   return (
     <div className="flex flex-col h-full">
       <CustomTabs
-        classNames={{ container: 'mb-2' }}
+        classNames={{
+          container: 'mb-2'
+        }}
         items={techiniqueInfoTabs}
         onChange={(tabClicked) => {
           setActive(tabClicked as TECHNIQUE_INFO_TABS)
@@ -32,7 +40,7 @@ const TechniqueInfo = (): ReactElement => {
         active={active}
       />
 
-      <Tab className="flex-1 h-0" value={TECHNIQUE_INFO_TABS.TARGET}>
+      <Tab className="flex-1 h-0 " value={TECHNIQUE_INFO_TABS.TARGET}>
         <TargetList
           data={targets}
           onSelectItem={(item) => {
@@ -51,11 +59,14 @@ const TechniqueInfo = (): ReactElement => {
           <Typography variant="body2">
             {formatMessage(techniqueInfoMessages.techniqueData)}
           </Typography>
-          <Button color="indigo">{formatMessage(actionsMessages.save)}</Button>
+          <Button
+            color="indigo"
+            onClick={() => formikRef.current?.submitForm()}
+          >
+            {formatMessage(actionsMessages.save)}
+          </Button>
         </div>
-        <TechniqueUpdateForm
-          onSubmit={async (values) => console.log('values', values)}
-        />
+        <TechniqueUpdateForm formikRef={formikRef} />
       </Tab>
     </div>
   )

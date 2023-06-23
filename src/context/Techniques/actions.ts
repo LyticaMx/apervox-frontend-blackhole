@@ -105,7 +105,7 @@ const useActions = (state: State, dispatch): Actions => {
       body.end_date = technique.expires_at
       body.priority = technique.priority
       body.groups = technique.groups
-      if (body.notification_time || !isNaN(body.notification_time)) {
+      if (technique.notificationTime || !isNaN(technique.notificationTime)) {
         body.notification_type = technique.notificationTimeUnit
         body.notification_time = technique.notificationTime
       }

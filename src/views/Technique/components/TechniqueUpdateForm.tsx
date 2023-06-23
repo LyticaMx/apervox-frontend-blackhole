@@ -1,45 +1,52 @@
-import { ReactElement, useMemo, useState } from 'react'
-import { FormikConfig } from 'formik'
+import { MutableRefObject, ReactElement, useEffect, useMemo } from 'react'
+import { FormikConfig, FormikContextType } from 'formik'
 import * as yup from 'yup'
 
 import { Field } from 'types/form'
 import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
 
 import Form from 'components/Form'
-import Typography from 'components/Typography'
-import Grid from 'components/Grid'
-import Radio from 'components/Form/Radio'
 import TextField from 'components/Form/Textfield'
 
-import { workGroups } from 'views/Techniques/mocks'
 import { techniqueFormMessages } from '../messages'
+import { Turn } from 'types/technique'
+import { addDays, format } from 'date-fns'
+import { useTechnique } from 'context/Technique'
+import useSections from 'hooks/useSections'
+import useToast from 'hooks/useToast'
+import { Priority } from 'types/priority'
+import { useTechniques } from 'context/Techniques'
 
 type AdvanceTimeType = 'days' | 'hours'
 type PriorityType = 'urgent' | 'high' | 'medium' | 'low'
 
-interface FormValues {
+export interface FormValues {
   name: string
-  dates: Date[]
+  description: string
+  startDate: Date | null
+  endDate: Date | null
+  groups: any[]
   shift: string
   court: string
+  advanceTimeType: AdvanceTimeType
+  priority: PriorityType
+  advanceTime: string
 }
 
 interface Props {
-  initialValues?: FormValues
-  onSubmit: (values: FormValues) => Promise<void>
+  formikRef: MutableRefObject<FormikContextType<FormValues> | undefined>
 }
 
-const TechniqueUpdateForm = ({
-  initialValues,
-  onSubmit
-}: Props): ReactElement => {
+const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
+  const { technique, actions: techniqueActions } = useTechnique()
+  const { actions: techniquesActions } = useTechniques()
   const getMessage = useFormatMessage(techniqueFormMessages)
   const getGlobalMessage = useGlobalMessage()
+  const { launchToast } = useToast()
 
-  const [advanceTimeType, setAdvanceTimeType] =
-    useState<AdvanceTimeType>('days')
-  const [advanceTime, setAdvanceTime] = useState('')
-  const [priority, setPriority] = useState<PriorityType>('urgent')
+  useEffect(() => {
+    techniqueActions?.get()
+  }, [])
 
   const fields: Array<Field<FormValues>> = [
     {
@@ -53,187 +60,285 @@ const TechniqueUpdateForm = ({
       breakpoints: { xs: 12 }
     },
     {
-      type: 'date-range',
-      name: 'dates',
+      type: 'date',
+      name: 'startDate',
       options: {
-        id: 'techinque-date-start-end',
-        label: getMessage('startEndDate'),
-        formatDisplay: 'dd/mm/yyyy'
+        label: getMessage('startDate'),
+        formatDisplay: 'dd/MM/yyyy',
+        minDate: format(new Date(), 'yyyy-MM-dd'),
+        requiredMarker: true,
+        disabled: true
       },
-      breakpoints: { xs: 6 }
-    },
-    {
-      type: 'multi-chip-select',
-      name: 'groups',
-      options: {
-        label: getMessage('groups'),
-        items: workGroups,
-        textField: 'name',
-        valueField: 'id'
-      },
-      breakpoints: { xs: 6 }
-    },
-    {
-      type: 'custom',
-      name: 'groups',
-      children: (
-        <div className="mt-2">
-          <Typography
-            variant="body2"
-            style="medium"
-            className="uppercase text-primary-500"
-          >
-            {getMessage('notification')}
-          </Typography>
-
-          <Typography variant="body2" className="mb-2">
-            {getMessage('notificationTime')}
-          </Typography>
-          <Grid spacing={1} className="mb-3">
-            <Grid item xs={6}>
-              <Radio
-                label={getMessage('days')}
-                value="days"
-                checked={advanceTimeType === 'days'}
-                onChange={() => setAdvanceTimeType('days')}
-              />
-              <TextField
-                placeholder={getMessage('daysPlaceholder')}
-                type="number"
-                value={advanceTimeType === 'days' ? advanceTime : ''}
-                onChange={(e) => setAdvanceTime(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <Radio
-                label={getMessage('hours')}
-                value="hours"
-                checked={advanceTimeType === 'hours'}
-                onChange={() => setAdvanceTimeType('hours')}
-              />
-              <TextField
-                placeholder={getMessage('hoursPlaceholder')}
-                type="number"
-                value={advanceTimeType === 'hours' ? advanceTime : ''}
-                onChange={(e) => setAdvanceTime(e.target.value)}
-              />
-            </Grid>
-          </Grid>
-          <Typography
-            variant="body2"
-            style="medium"
-            className="uppercase text-primary-500"
-          >
-            {getMessage('priority')}
-          </Typography>
-          <div className="flex mt-2">
-            <Radio
-              label={getMessage('urgent')}
-              value="urgent"
-              checked={priority === 'urgent'}
-              onChange={() => setPriority('urgent')}
-              className="mr-4"
-            />
-            <Radio
-              label={getMessage('high')}
-              value="high"
-              checked={priority === 'high'}
-              onChange={() => setPriority('high')}
-              className="mr-4"
-            />
-            <Radio
-              label={getMessage('normal')}
-              value="urgent"
-              checked={priority === 'medium'}
-              onChange={() => setPriority('urgent')}
-              className="mr-4"
-            />
-            <Radio
-              label={getMessage('low')}
-              value="low"
-              checked={priority === 'low'}
-              onChange={() => setPriority('low')}
-            />
-          </div>
-          <Typography
-            variant="body2"
-            style="medium"
-            className="uppercase text-primary-500 mt-2"
-          >
-            {getMessage('follow')}
-          </Typography>
-          <Typography variant="body2" className="mb-2">
-            {getMessage('cutSubtitle')}
-          </Typography>
-        </div>
-      ),
       breakpoints: { xs: 12 }
+    },
+    {
+      type: 'date',
+      name: 'endDate',
+      options: {
+        label: getMessage('endDate'),
+        formatDisplay: 'dd/MM/yyyy',
+        minDate: format(addDays(new Date(), 1), 'yyyy-MM-dd'),
+        requiredMarker: true
+      },
+      breakpoints: { xs: 12 }
+    },
+    {
+      type: 'async-select',
+      name: 'groups',
+      options: {
+        asyncProps: {
+          api: {
+            endpoint: 'groups',
+            method: 'get'
+          },
+          value: 'id',
+          label: 'name',
+          searchField: 'name'
+        },
+        debounceTimeout: 300,
+        label: getMessage('groups'),
+        isMulti: true,
+        placeholder: `${getMessage('search')}...`,
+        loadingMessage: () => getMessage('loadingGroups'),
+        noOptionsMessage: () => getMessage('noGroupsFound')
+      }
+    },
+    {
+      name: 'advanceTimeType',
+      type: 'radio',
+      options: {
+        label: getMessage('days'),
+        value: 'days'
+      },
+      breakpoints: {
+        xs: 6
+      },
+      section: 'notification'
+    },
+    {
+      name: 'advanceTimeType',
+      type: 'radio',
+      options: {
+        label: getMessage('hours'),
+        value: 'hours'
+      },
+      breakpoints: {
+        xs: 6
+      },
+      section: 'notification'
+    },
+    {
+      name: 'advanceTime',
+      type: 'custom',
+      children: ({ name, setFieldValue, values, errors, touched }) => (
+        <TextField
+          value={values.advanceTimeType === 'days' ? values[name] : ''}
+          disabled={values.advanceTimeType !== 'days'}
+          placeholder={getMessage('daysPlaceholder')}
+          onChange={(e) => setFieldValue(name, e.target.value)}
+          error={Boolean(errors[name] && touched[name])}
+          helperText={errors[name] && touched[name] ? errors[name] : ''}
+        />
+      ),
+      breakpoints: { xs: 6 },
+      section: 'notification'
+    },
+    {
+      name: 'advanceTime',
+      type: 'custom',
+      children: ({ name, setFieldValue, values, errors, touched }) => (
+        <TextField
+          value={values.advanceTimeType === 'hours' ? values[name] : ''}
+          disabled={values.advanceTimeType !== 'hours'}
+          placeholder={getMessage('hoursPlaceholder')}
+          onChange={(e) => setFieldValue(name, e.target.value)}
+          error={Boolean(errors[name] && touched[name])}
+          helperText={errors[name] && touched[name] ? errors[name] : ''}
+        />
+      ),
+      breakpoints: { xs: 6 },
+      section: 'notification'
+    },
+    {
+      name: 'priority',
+      type: 'radio',
+      options: {
+        label: getMessage('urgent'),
+        value: 'urgent'
+      },
+      breakpoints: { xs: 12, md: 3 },
+      section: 'priority'
+    },
+    {
+      name: 'priority',
+      type: 'radio',
+      options: {
+        label: getMessage('high'),
+        value: 'high'
+      },
+      breakpoints: { xs: 12, md: 3 },
+      section: 'priority'
+    },
+    {
+      name: 'priority',
+      type: 'radio',
+      options: {
+        label: getMessage('medium'),
+        value: 'medium'
+      },
+      breakpoints: { xs: 12, md: 3 },
+      section: 'priority'
+    },
+    {
+      name: 'priority',
+      type: 'radio',
+      options: {
+        label: getMessage('low'),
+        value: 'low'
+      },
+      breakpoints: { xs: 12, md: 3 },
+      section: 'priority'
     },
     {
       type: 'select',
       name: 'shift',
       options: {
         label: getMessage('shift'),
-        clearable: true,
+        clearable: false,
         placeholder: getMessage('shiftPlaceholder'),
         items: [
           {
-            id: 'm',
+            id: Turn.MORNING,
             label: getMessage('morning')
           },
           {
-            id: 'v',
-            label: getMessage('evening')
+            id: Turn.EVENING,
+            label: getMessage('afternoon')
           },
           {
-            id: 'n',
-            label: getMessage('nightning')
+            id: Turn.NIGHTNING,
+            label: getMessage('night')
           }
         ],
         textField: 'label',
         valueField: 'id'
       },
-      breakpoints: { xs: 6 }
+      breakpoints: { xs: 12, md: 6 },
+      section: 'follow'
     },
     {
       type: 'text',
       name: 'court',
       options: {
         label: getMessage('court'),
+        labelSpacing: '1',
         placeholder: getMessage('courtPlaceholder')
       },
-      breakpoints: { xs: 6 }
+      breakpoints: { xs: 6 },
+      section: 'follow'
     }
   ]
 
+  const sections = useSections(() => [
+    {
+      name: 'notification',
+      title: {
+        text: getMessage('notification'),
+        style: 'medium',
+        variant: 'body2',
+        className: 'uppercase text-primary-500'
+      },
+      description: {
+        text: getMessage('notificationTime'),
+        variant: 'body2',
+        className: 'text-secondary'
+      },
+      spacing: 2
+    },
+    {
+      name: 'priority',
+      title: {
+        text: getMessage('priority'),
+        style: 'medium',
+        variant: 'body2',
+        className: 'uppercase text-primary-500'
+      }
+    },
+    {
+      name: 'follow',
+      title: {
+        text: getMessage('follow'),
+        style: 'medium',
+        variant: 'body2',
+        className: 'uppercase text-primary-500'
+      },
+      description: {
+        text: getMessage('cutSubtitle'),
+        variant: 'body2',
+        className: 'text-secondary'
+      },
+      spacing: 2
+    }
+  ])
+
   const validationSchema = yup.object({
-    name: yup.string().required(getMessage('required')),
-    description: yup.string().required(getMessage('required'))
+    name: yup.string().required(getMessage('required'))
   })
 
   const formikConfig = useMemo<FormikConfig<FormValues>>(
     () => ({
       initialValues: {
-        name: initialValues?.name ?? '',
-        dates: initialValues?.dates ?? [],
-        court: initialValues?.court ?? '',
-        shift: initialValues?.shift ?? ''
+        name: technique?.name ?? '',
+        description: technique?.description ?? '',
+        startDate: technique?.created_at
+          ? new Date(technique.created_at)
+          : new Date(),
+        endDate: technique?.expires_at
+          ? new Date(technique.expires_at)
+          : new Date(),
+        court: technique?.reportEvidenceEvery ?? '',
+        shift: technique?.attention_turn ?? '',
+        groups:
+          technique?.groups?.map((item) => ({
+            label: item.name,
+            value: item.id
+          })) ?? [],
+        advanceTimeType: technique?.notificationTimeUnit ?? 'days',
+        advanceTime: technique?.notificationTime?.toString() ?? '',
+        priority: technique?.priority ?? 'medium'
       },
       validationSchema,
-      onSubmit: (values) => {
-        console.log(values)
-
-        onSubmit(values)
-      }
+      onSubmit: async (values) => {
+        const updated = await techniqueActions?.update({
+          name: values.name,
+          expires_at: values.endDate?.toISOString(),
+          priority: values.priority as Priority,
+          shift: values.shift as Turn,
+          reportEvidenceEvery: values.court,
+          notificationTime: parseInt(values.advanceTime),
+          notificationTimeUnit: values.advanceTimeType,
+          groups: values.groups.map((item) => item.value)
+        })
+        if (updated) {
+          launchToast({
+            title: 'Datos actualizados',
+            type: 'Success'
+          })
+          await techniquesActions?.get()
+        }
+      },
+      enableReinitialize: true
     }),
-    [initialValues]
+    [technique]
   )
 
   return (
     <div>
       <Form
         formikConfig={formikConfig}
+        formikRef={formikRef}
         fields={fields}
+        withSections={{ sections, renderMainSection: true }}
         submitButtonPosition="right"
         submitButtonLabel={getGlobalMessage('save', 'actionsMessages')}
         submitButtonProps={{
