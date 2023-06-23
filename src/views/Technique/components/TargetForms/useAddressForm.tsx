@@ -48,7 +48,8 @@ export const useAddressForm = (section?: string): AddressForm => {
       options: {
         id: 'zipCode',
         label: formatMessage(useAddressMessages.zipCode),
-        placeholder: formatMessage(useAddressMessages.zipCodePlaceholder)
+        placeholder: formatMessage(useAddressMessages.zipCodePlaceholder),
+        labelSpacing: '1'
       },
       breakpoints: { xs: 12, md: 6 },
       section
@@ -59,7 +60,8 @@ export const useAddressForm = (section?: string): AddressForm => {
       options: {
         id: 'line1',
         label: formatMessage(useAddressMessages.line1),
-        placeholder: formatMessage(useAddressMessages.line1Placeholder)
+        placeholder: formatMessage(useAddressMessages.line1Placeholder),
+        labelSpacing: '1'
       },
       breakpoints: { xs: 12 },
       section
@@ -70,7 +72,8 @@ export const useAddressForm = (section?: string): AddressForm => {
       options: {
         id: 'line2',
         label: formatMessage(useAddressMessages.line2),
-        placeholder: formatMessage(useAddressMessages.line2Placeholder)
+        placeholder: formatMessage(useAddressMessages.line2Placeholder),
+        labelSpacing: '1'
       },
       breakpoints: { xs: 12 },
       section

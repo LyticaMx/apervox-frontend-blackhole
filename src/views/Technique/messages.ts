@@ -241,6 +241,14 @@ export const accountBankFormMessages = defineMessages({
     id: 'views.techniques.AccountBankForm.bankPlaceholder',
     defaultMessage: 'Ej. Banorte'
   },
+  accountNumber: {
+    id: 'views.techniques.AccountBankForm.accountNumber',
+    defaultMessage: 'Número de cuenta'
+  },
+  accountNumberPlaceholder: {
+    id: 'views.techniques.AccountBankForm.accountNumberPlaceholder',
+    defaultMessage: 'Ej. 1111222233334444'
+  },
   ammount: {
     id: 'views.techniques.AccountBankForm.ammount',
     defaultMessage: 'Monto'
@@ -249,33 +257,113 @@ export const accountBankFormMessages = defineMessages({
     id: 'views.techniques.AccountBankForm.ammountPlaceholder',
     defaultMessage: 'Ej. $999,999'
   },
-  cardType: {
-    id: 'views.techniques.AccountBankForm.cardType',
-    defaultMessage: 'Tipo de tarjetas'
+  accountType: {
+    id: 'views.techniques.AccountBankForm.accountType',
+    defaultMessage: 'Tipo de cuenta'
   },
-  cardTypePlaceholder: {
-    id: 'views.techniques.AccountBankForm.cardTypePlaceholder',
-    defaultMessage: 'Ej. Crédito'
+  accountTypePlaceholder: {
+    id: 'views.techniques.AccountBankForm.accountTypePlaceholder',
+    defaultMessage: 'Ej. Cuenta de ahorros'
   },
-  creditType: {
-    id: 'views.techniques.AccountBankForm.creditType',
-    defaultMessage: 'Crédito'
+  otherAccountType: {
+    id: 'views.techniques.AccountBankForm.otherAccountType',
+    defaultMessage: 'Otro tipo de cuenta'
   },
-  debitType: {
-    id: 'views.techniques.AccountBankForm.debitType',
-    defaultMessage: 'Débito'
+  otherAccountTypePlaceholder: {
+    id: 'views.techniques.AccountBankForm.otherAccountTypePlaceholder',
+    defaultMessage: 'Ej. Cuenta con chequera'
   },
-  payrollType: {
-    id: 'views.techniques.AccountBankForm.payrollType',
-    defaultMessage: 'Nómina'
+  savings: {
+    id: 'views.techniques.AccountBankForm.accountTypes.savings',
+    defaultMessage: 'Cuenta de ahorros'
   },
-  creditBank: {
-    id: 'views.techniques.AccountBankForm.creditBank',
-    defaultMessage: 'Crédito bancario'
+  creditCard: {
+    id: 'views.techniques.AccountBankForm.accountTypes.creditCard',
+    defaultMessage: 'Tarjeta de crédito'
   },
-  creditBankPlaceholder: {
-    id: 'views.techniques.AccountBankForm.creditBankPlaceholder',
-    defaultMessage: 'Ej. Auto $254,000'
+  debitCard: {
+    id: 'views.techniques.AccountBankForm.debitCard',
+    defaultMessage: 'Tarjeta de débito'
+  },
+  checking: {
+    id: 'views.techniques.AccountBankForm.accountTypes.checking',
+    defaultMessage: 'Cuenta corriente'
+  },
+  payroll: {
+    id: 'views.techniques.AccountBankForm.accountTypes.payroll',
+    defaultMessage: 'Cuenta de nómina'
+  },
+  investment: {
+    id: 'views.techniques.AccountBankForm.accountTypes.investment',
+    defaultMessage: 'Inversión'
+  },
+  loan: {
+    id: 'views.techniques.AccountBankForm.accountTypes.loan',
+    defaultMessage: 'Préstamo'
+  },
+  currency: {
+    id: 'views.techniques.AccountBankForm.currency',
+    defaultMessage: 'Divisa'
+  },
+  currencyPlaceholder: {
+    id: 'views.techniques.AccountBankForm.currencyPlaceholder',
+    defaultMessage: 'Ej. Dólar estadounidense'
+  },
+  otherCurrency: {
+    id: 'views.techniques.AccountBankForm.otherCurrency',
+    defaultMessage: 'Otra divisa'
+  },
+  otherCurrencyPlaceholder: {
+    id: 'views.techniques.AccountBankForm.otherCurrencyPlaceholder',
+    defaultMessage: 'Ej. Sol peruano'
+  },
+  usd: {
+    id: 'views.techniques.AccountBankForm.currencies.usd',
+    defaultMessage: 'Dólar estadounidense'
+  },
+  mxn: {
+    id: 'views.techniques.AccountBankForm.currencies.mxn',
+    defaultMessage: 'Peso mexicano'
+  },
+  eur: {
+    id: 'views.techniques.AccountBankForm.currencies.eur',
+    defaultMessage: 'Euro'
+  },
+  jpy: {
+    id: 'views.techniques.AccountBankForm.currencies.jpy',
+    defaultMessage: 'Yen japonés'
+  },
+  gbp: {
+    id: 'views.techniques.AccountBankForm.currencies.gbp',
+    defaultMessage: 'Libra esterlina'
+  },
+  aud: {
+    id: 'views.techniques.AccountBankForm.currencies.aud',
+    defaultMessage: 'Dólar australiano'
+  },
+  cad: {
+    id: 'views.techniques.AccountBankForm.currencies.cad',
+    defaultMessage: 'Dólar canadiense'
+  },
+  chf: {
+    id: 'views.techniques.AccountBankForm.currencies.chf',
+    defaultMessage: 'Franco suizo'
+  },
+  cny: {
+    id: 'views.techniques.AccountBankForm.currencies.cny',
+    defaultMessage: 'Yuan chino'
+  },
+  brl: {
+    id: 'views.techniques.AccountBankForm.currencies.brl',
+    defaultMessage: 'Real brasileño'
+  },
+  balance: {
+    id: 'views.techniques.AccountBankForm.balance',
+    defaultMessage: 'Balance'
+  },
+  balancePlaceholder: {
+    id: 'views.techniques.AccountBankForm.balancePlaceholder',
+    defaultMessage: 'Ej. 254,000'
   }
 })
 
@@ -416,8 +504,76 @@ export const languagesFormMessages = defineMessages({
     id: 'views.techniques.LanguagesForm.language',
     defaultMessage: 'Nombre del idioma o dialecto'
   },
+  english: {
+    id: 'views.techniques.LanguagesForm.language.english',
+    defaultMessage: 'Inglés'
+  },
+  spanish: {
+    id: 'views.techniques.LanguagesForm.language.spanish',
+    defaultMessage: 'Español'
+  },
+  french: {
+    id: 'views.techniques.LanguagesForm.language.french',
+    defaultMessage: 'Francés'
+  },
+  german: {
+    id: 'views.techniques.LanguagesForm.language.german',
+    defaultMessage: 'Alemán'
+  },
+  italian: {
+    id: 'views.techniques.LanguagesForm.language.italian',
+    defaultMessage: 'Italiano'
+  },
+  portuguese: {
+    id: 'views.techniques.LanguagesForm.language.portuguese',
+    defaultMessage: 'Portugués'
+  },
+  chinese: {
+    id: 'views.techniques.LanguagesForm.language.chinese',
+    defaultMessage: 'Chino'
+  },
+  japanese: {
+    id: 'views.techniques.LanguagesForm.language.japanese',
+    defaultMessage: 'Japonés'
+  },
+  korean: {
+    id: 'views.techniques.LanguagesForm.language.korean',
+    defaultMessage: 'Coreano'
+  },
+  arabic: {
+    id: 'views.techniques.LanguagesForm.language.arabic',
+    defaultMessage: 'Árabe'
+  },
+  russian: {
+    id: 'views.techniques.LanguagesForm.language.russian',
+    defaultMessage: 'Ruso'
+  },
+  dutch: {
+    id: 'views.techniques.LanguagesForm.language.dutch',
+    defaultMessage: 'Neerlandés'
+  },
+  swedish: {
+    id: 'views.techniques.LanguagesForm.language.swedish',
+    defaultMessage: 'Sueco'
+  },
+  greek: {
+    id: 'views.techniques.LanguagesForm.language.greek',
+    defaultMessage: 'Griego'
+  },
+  hindi: {
+    id: 'views.techniques.LanguagesForm.language.hindi',
+    defaultMessage: 'Hindi'
+  },
   languagePlaceholder: {
     id: 'views.techniques.LanguagesForm.languagePlaceholder',
+    defaultMessage: 'Ej. Inglés'
+  },
+  otherLanguage: {
+    id: 'views.techniques.LanguagesForm.otherLanguage',
+    defaultMessage: 'Otro idioma o dialecto'
+  },
+  otherLanguagePlaceholder: {
+    id: 'views.techniques.LanguagesForm.otherLanguagePlaceholder',
     defaultMessage: 'Ej. Náhuatl'
   },
   level: {
@@ -427,6 +583,26 @@ export const languagesFormMessages = defineMessages({
   levelPlaceholder: {
     id: 'views.techniques.LanguagesForm.levelPlaceholder',
     defaultMessage: 'Ej. nativo'
+  },
+  basic: {
+    id: 'views.techniques.LanguagesForm.level.basic',
+    defaultMessage: 'Básico'
+  },
+  intermediate: {
+    id: 'views.techniques.LanguagesForm.level.intermediate',
+    defaultMessage: 'Intermedio'
+  },
+  advanced: {
+    id: 'views.techniques.LanguagesForm.level.advanced',
+    defaultMessage: 'Avanzado'
+  },
+  fluent: {
+    id: 'views.techniques.LanguagesForm.level.fluent',
+    defaultMessage: 'Fluido'
+  },
+  native: {
+    id: 'views.techniques.LanguagesForm.level.native',
+    defaultMessage: 'Nativo'
   }
 })
 

@@ -27,6 +27,7 @@ export interface Props {
   className?: string
   optionsContainerClassname?: string
   requiredMarker?: boolean
+  portal?: boolean
 }
 
 const defaultProps: Props = {
@@ -53,6 +54,7 @@ const SelectField = ({
   size = 'md',
   className,
   requiredMarker,
+  portal = false,
   optionsContainerClassname
 }: Props): ReactElement => {
   const sizeClasses = useMemo(
@@ -94,6 +96,7 @@ const SelectField = ({
         as="div"
         className="relative"
         placement="bottom-start"
+        portal={portal}
         offset={5}
         shift={6}
         flip={10}
