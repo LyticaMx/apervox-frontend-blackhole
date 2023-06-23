@@ -13,7 +13,13 @@ import { useService } from 'hooks/useApi'
 import { Params } from 'utils/ParamsBuilder'
 import useToast from 'hooks/useToast'
 
-// const orderByMapper = {}
+const orderByMapper = {
+  created_at: 'start_date',
+  expires_at: 'end_date',
+  registered_by: 'created_by.username',
+  time_on_platform: 'start_date',
+  attention_turn: 'shift'
+}
 
 const useActions = (state: State, dispatch): Actions => {
   const { pagination, searchFilter, dateFilter, staticFilter } = state
@@ -32,7 +38,7 @@ const useActions = (state: State, dispatch): Actions => {
         .pagination(pagination)
         .dates(dateFilter)
         .searchFilters(searchFilter)
-        .sort(pagination.sort)
+        .sort(pagination.sort, orderByMapper)
         .putStaticFilter('priority', params?.priority)
         .putStaticFilter('status', params?.status)
         .putStaticFilter('shift', params?.turn)

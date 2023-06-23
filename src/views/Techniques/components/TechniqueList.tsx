@@ -162,6 +162,7 @@ const TechniqueList = (): ReactElement => {
     {
       accessorKey: 'total_target',
       header: formatMessage(techniquesMessages.totalTargets),
+      enableSorting: false,
       meta: {
         columnFilters: {
           options: [
