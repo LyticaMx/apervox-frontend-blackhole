@@ -57,7 +57,8 @@ const SocialCircleForm = (): ReactElement => {
       title: {
         text: formatMessage(socialCircleFormMessages.address),
         className: 'text-primary uppercase mt-2'
-      }
+      },
+      spacing: 2
     }
   ]
 

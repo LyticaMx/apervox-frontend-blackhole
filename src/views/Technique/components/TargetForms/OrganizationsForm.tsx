@@ -75,7 +75,8 @@ const OrganizationsForm = (): ReactElement => {
       title: {
         text: formatMessage(organizationFormMessages.organizationAddress),
         className: 'text-primary uppercase mt-2'
-      }
+      },
+      spacing: 2
     }
   ]
 

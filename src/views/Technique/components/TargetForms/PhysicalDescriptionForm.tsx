@@ -161,7 +161,14 @@ const PhysicalDescriptionForm = ({ initialValues }: Props): ReactElement => {
     bodyType: yup.string().required(getMessage('required')),
     skinColor: yup.string().required(getMessage('required')),
     hairType: yup.string().required(getMessage('required')),
-    hairColor: yup.array().required(getMessage('required'))
+    hairColor: yup.array().required(getMessage('required')),
+    otherBody: yup
+      .string()
+      .when('bodyType', (value, field) =>
+        value === 'other'
+          ? yup.string().required(getMessage('required'))
+          : field
+      )
   })
 
   const formikConfig = useMemo<FormikConfig<FormValues>>(
