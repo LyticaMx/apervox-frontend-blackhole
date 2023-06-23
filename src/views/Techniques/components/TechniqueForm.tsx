@@ -227,11 +227,11 @@ const TechniqueForm = ({
           },
           {
             id: Turn.EVENING,
-            label: getMessage('evening')
+            label: getMessage('afternoon')
           },
           {
             id: Turn.NIGHTNING,
-            label: getMessage('nightning')
+            label: getMessage('night')
           }
         ],
         textField: 'label',

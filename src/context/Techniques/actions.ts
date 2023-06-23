@@ -13,7 +13,13 @@ import { useService } from 'hooks/useApi'
 import { Params } from 'utils/ParamsBuilder'
 import useToast from 'hooks/useToast'
 
-// const orderByMapper = {}
+const orderByMapper = {
+  created_at: 'start_date',
+  expires_at: 'end_date',
+  registered_by: 'created_by.username',
+  time_on_platform: 'start_date',
+  attention_turn: 'shift'
+}
 
 const useActions = (state: State, dispatch): Actions => {
   const { pagination, searchFilter, dateFilter, staticFilter } = state
@@ -32,7 +38,7 @@ const useActions = (state: State, dispatch): Actions => {
         .pagination(pagination)
         .dates(dateFilter)
         .searchFilters(searchFilter)
-        .sort(pagination.sort)
+        .sort(pagination.sort, orderByMapper)
         .putStaticFilter('priority', params?.priority)
         .putStaticFilter('status', params?.status)
         .putStaticFilter('shift', params?.turn)
@@ -105,7 +111,7 @@ const useActions = (state: State, dispatch): Actions => {
       body.end_date = technique.expires_at
       body.priority = technique.priority
       body.groups = technique.groups
-      if (body.notification_time || !isNaN(body.notification_time)) {
+      if (technique.notificationTime || !isNaN(technique.notificationTime)) {
         body.notification_type = technique.notificationTimeUnit
         body.notification_time = technique.notificationTime
       }
@@ -152,15 +158,27 @@ const useActions = (state: State, dispatch): Actions => {
     }
   }
 
-  const deleteOne = async (
-    id: string,
-    full: boolean = false
-  ): Promise<boolean> => true
+  const deleteOne = async (id: string): Promise<boolean> => {
+    try {
+      await techniquesService.delete({
+        queryString: id
+      })
 
-  const deleteMany = async (
-    ids: string[],
-    full: boolean = false
-  ): Promise<boolean> => true
+      return true
+    } catch {
+      return false
+    }
+  }
+
+  const deleteMany = async (ids: string[]): Promise<boolean> => {
+    try {
+      await techniquesService.delete({ body: { ids } })
+
+      return true
+    } catch {
+      return false
+    }
+  }
 
   return {
     get,

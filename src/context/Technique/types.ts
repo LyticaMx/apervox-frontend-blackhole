@@ -8,7 +8,12 @@ export interface TechniqueGroup {
 export interface InnerTechnique
   extends Omit<
     Technique,
-    'id' | 'created_at' | 'expires_at' | 'registered_by' | 'time_on_platform'
+    | 'id'
+    | 'created_at'
+    | 'expires_at'
+    | 'registered_by'
+    | 'time_on_platform'
+    | 'groups'
   > {
   id?: string
   description: string
@@ -27,17 +32,25 @@ export interface InnerTechnique
 
 export interface State {
   technique?: InnerTechnique
+  summary: string
   target?: Target
   targets: Target[]
 }
 
 export interface Actions {
-  get: (id: string) => Promise<void>
+  get: () => Promise<boolean>
+  getDescription: () => Promise<boolean>
+  updateDescription: (data: string) => Promise<boolean>
   setTechnique: (params: Technique) => void
   setTarget: (params: Target) => void
   getTargets: () => void
   create: (technique: InnerTechnique) => Promise<boolean>
-  update: (technique: InnerTechnique) => Promise<boolean>
+  update: (
+    technique: Omit<
+      InnerTechnique,
+      'description' | 'attention_turn' | 'status' | 'total_target'
+    >
+  ) => Promise<boolean>
 }
 
 export interface ContextType extends State {

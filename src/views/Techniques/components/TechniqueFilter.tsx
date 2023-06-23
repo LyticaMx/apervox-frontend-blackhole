@@ -20,28 +20,12 @@ const TechniqueFilter = ({ toggleOpen }: Props): ReactElement => {
 
   const filterItems = [
     {
-      name: 'id',
-      label: 'ID'
-    },
-    {
       name: 'name',
       label: getGeneralMessage('name')
     },
     {
-      name: 'description',
-      label: getGeneralMessage('description')
-    },
-    {
-      name: 'registeredBy',
+      name: 'created_by',
       label: getGeneralMessage('registeredBy')
-    },
-    {
-      name: 'techniques',
-      label: getGeneralMessage('techniques')
-    },
-    {
-      name: 'status',
-      label: getGeneralMessage('status')
     }
   ]
 

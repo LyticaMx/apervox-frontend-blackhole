@@ -4,8 +4,7 @@ import { State, ContextType } from './types'
 import { Types } from './constants'
 
 export const initialState: State = {
-  technique: undefined,
-  target: undefined,
+  summary: '',
   targets: []
 }
 
@@ -17,6 +16,8 @@ export const reducer = (state: State, action: Action): State => {
       return { ...state, target: action.payload }
     case Types.GET_TARGETS:
       return { ...state, targets: action.payload }
+    case Types.SET_SUMMARY:
+      return { ...state, summary: action.payload }
     default:
       return state
   }

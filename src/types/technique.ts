@@ -31,6 +31,11 @@ export enum PhoneCompany {
   MOVISTAR = 2
 }
 
+export interface TechniqueGroup {
+  id: string
+  name: string
+}
+
 export interface Technique {
   id: string
   name: string
@@ -41,6 +46,7 @@ export interface Technique {
   status: Status
   attention_turn: Turn | ''
   total_target: number
+  groups?: []
 }
 
 export interface Target {
