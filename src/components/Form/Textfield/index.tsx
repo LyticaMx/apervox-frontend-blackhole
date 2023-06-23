@@ -38,7 +38,7 @@ const TextField = ({
   type = 'text',
   className,
   error,
-  outlined,
+  outlined = true,
   helperText,
   multiline,
   rows = 5,

@@ -1,7 +1,7 @@
 import { SortingState } from '@tanstack/react-table'
 import { PaginationParams, SearchParams } from 'types/api'
 import { DateFilter, PaginationFilter, SearchFilter } from 'types/filters'
-import { Technique } from 'types/technique'
+import { Target, Technique } from 'types/technique'
 
 export interface TechniquesPagination extends PaginationFilter {
   totalRecords: number
@@ -13,9 +13,10 @@ export interface TechniquesPaginationParams extends PaginationParams {
 }
 
 export interface TechniquesStaticFilter {
-  priotiry?: string[]
+  priority?: string[]
   status?: string[]
   turn?: string[]
+  withTargets?: boolean
 }
 
 export interface State {
@@ -30,15 +31,15 @@ export interface State {
 export interface TechniqueCreator {
   name: string
   description: string
+  starts_at: string
   expires_at: string
-  groups: any[]
+  groups: string[]
   notificationTimeUnit: 'days' | 'hours'
   notificationTime: number
   shift: string
   reportEvidenceEvery: string
   priority: string
-  targets: any[]
-  etsiTargets: any[]
+  targets: Target[]
 }
 
 export interface Actions {
@@ -49,6 +50,7 @@ export interface Actions {
       TechniquesStaticFilter,
     getTotal?: boolean
   ) => Promise<void>
+  create: (technique: TechniqueCreator) => Promise<boolean>
   deleteOne: (id: string, full?: boolean) => Promise<boolean>
   deleteMany: (ids: string[], full?: boolean) => Promise<boolean>
 }

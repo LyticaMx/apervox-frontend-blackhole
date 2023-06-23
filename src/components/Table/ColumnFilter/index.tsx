@@ -9,10 +9,19 @@ interface Props {
   options?: ReadOnlyNonEmptyArray<TableFilterOption>
   apiBackend?: string
   onChange: OnChangeTableFilter
+  multiple?: boolean
 }
 
 const ColumnFilter = (props: Props): ReactElement => {
-  if (props.options) return <StaticFilter {...props} options={props.options} /> // si lo envio sólo con el spread operator tira error
+  if (props.options) {
+    return (
+      <StaticFilter
+        {...props}
+        options={props.options}
+        multipleSelection={props.multiple}
+      />
+    ) // si lo envio sólo con el spread operator tira error
+  }
 
   return <DynamicFilter {...props} apiBackend={props.apiBackend ?? ''} />
 }

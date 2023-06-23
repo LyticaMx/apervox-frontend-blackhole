@@ -589,12 +589,12 @@ export const generalMessages = defineMessages({
     id: 'global.general.morning',
     defaultMessage: 'Matutino'
   },
-  evening: {
-    id: 'global.general.evening',
+  afternoon: {
+    id: 'global.general.afternoon',
     defaultMessage: 'Vespertino'
   },
-  nightning: {
-    id: 'global.general.nightning',
+  night: {
+    id: 'global.general.night',
     defaultMessage: 'Nocturno'
   },
   totalObjective: {

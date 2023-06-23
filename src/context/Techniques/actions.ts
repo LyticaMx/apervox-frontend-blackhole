@@ -1,19 +1,24 @@
 import {
   Actions,
   State,
+  TechniqueCreator,
   TechniquesPaginationParams,
   TechniquesStaticFilter
 } from './types'
 
 import { actions } from './constants'
-import { techniquesData } from 'views/Techniques/mocks'
 import { SearchParams } from 'types/api'
 import { DateFilter } from 'types/filters'
+import { useService } from 'hooks/useApi'
+import { Params } from 'utils/ParamsBuilder'
+import useToast from 'hooks/useToast'
 
-const orderByMapper = {}
+// const orderByMapper = {}
 
 const useActions = (state: State, dispatch): Actions => {
-  const { pagination, searchFilter, dateFilter } = state
+  const { pagination, searchFilter, dateFilter, staticFilter } = state
+  const techniquesService = useService('techniques')
+  const { launchToast } = useToast()
 
   const get = async (
     params?: TechniquesPaginationParams &
@@ -23,44 +28,41 @@ const useActions = (state: State, dispatch): Actions => {
     getTotal?: boolean
   ): Promise<void> => {
     try {
-      const sort = {
-        by: 'created_at',
-        order: 'desc'
-      }
+      const urlParams = Params.Builder(params)
+        .pagination(pagination)
+        .dates(dateFilter)
+        .searchFilters(searchFilter)
+        .sort(pagination.sort)
+        .putStaticFilter('priority', params?.priority)
+        .putStaticFilter('status', params?.status)
+        .putStaticFilter('shift', params?.turn)
+        .putStaticFilter('has_targets', params?.withTargets)
+        .build()
 
-      const mappedFilters = {}
-
-      const [sortBy] = params?.sort ?? pagination.sort
-      if (sortBy) {
-        sort.by = orderByMapper[sortBy.id] ?? sortBy.id
-        sort.order = sortBy.desc ? 'desc' : 'asc'
-      }
-
-      const query = params?.query ?? searchFilter.query
-      const filters = params?.filters ?? searchFilter.filters
-
-      if (filters && filters.length > 0 && query) {
-        Object.assign(
-          mappedFilters,
-          filters.reduce((old, key) => {
-            old[key] = query
-            return old
-          }, {})
-        )
-      }
-
-      const startTime =
-        params?.start_time ??
-        (!params?.clearDates ? dateFilter.start_time : undefined)
-
-      const endTime =
-        params?.end_time ??
-        (!params?.clearDates ? dateFilter.end_time : undefined)
+      const [response, total] = await Promise.all([
+        techniquesService.get({ urlParams }),
+        getTotal
+          ? techniquesService
+              .get({ urlParams: { page: 1, limit: 1 } })
+              .then((response) => response.size)
+              .catch(() => 0)
+          : Promise.resolve(null)
+      ])
 
       dispatch(
         actions.setTechniques({
-          data: techniquesData,
-          total: techniquesData.length
+          data: (response.data as any[]).map((item) => ({
+            id: item.id,
+            name: item.name,
+            created_at: item.created_at,
+            expires_at: item.end_date,
+            priority: item.priority,
+            registered_by: item.created_by.username,
+            total_target: item.targets.length,
+            status: item.status,
+            attention_turn: item.shift ?? ''
+          })),
+          total: total ?? 0
         })
       )
 
@@ -80,15 +82,74 @@ const useActions = (state: State, dispatch): Actions => {
             filters: params?.filters ?? searchFilter.filters
           },
           date: {
-            start_time: startTime,
-            end_time: endTime
+            start_time: urlParams.start_time,
+            end_time: urlParams.end_time
+          },
+          static: {
+            priority: params?.priority ?? staticFilter.priority,
+            status: params?.status ?? staticFilter.status,
+            turn: params?.turn ?? staticFilter.turn,
+            withTargets: params?.withTargets ?? staticFilter.withTargets
           }
         })
       )
-
-      // Es necesario hasta la integración
-      console.log({ sort, mappedFilters, data: { startTime, endTime } })
     } catch {}
+  }
+
+  const create = async (technique: TechniqueCreator): Promise<boolean> => {
+    try {
+      const body: Record<string, any> = {}
+      body.name = technique.name
+      body.description = technique.description
+      body.start_date = technique.starts_at
+      body.end_date = technique.expires_at
+      body.priority = technique.priority
+      body.groups = technique.groups
+      if (body.notification_time || !isNaN(body.notification_time)) {
+        body.notification_type = technique.notificationTimeUnit
+        body.notification_time = technique.notificationTime
+      }
+      if (technique.shift !== '') {
+        body.shift = technique.shift
+        body.shift_cutoff = technique.reportEvidenceEvery
+      }
+
+      const response = await techniquesService.post({
+        body
+      })
+
+      const targetsEndpoint = `${response.data.id}/targets`
+
+      for (const target of technique.targets) {
+        try {
+          if (target.type === 'conventional') {
+            await techniquesService.post({
+              queryString: targetsEndpoint,
+              body: {
+                alias: target.name,
+                phone: target.phone_number,
+                overflow_line_id: target.overflow_id,
+                carrier_id: target.phone_company
+              }
+            })
+          } else {
+            throw new Error('Cannot create target')
+          }
+        } catch {
+          // temporal en lo que se define la creación de objetivos ETSII
+          console.log(target)
+          launchToast({
+            title: `No se puede crear el objetivo con número: ${target.phone_number}`,
+            type: 'Danger'
+          })
+        }
+      }
+
+      return true
+    } catch (e) {
+      console.error(e)
+      return false
+    }
   }
 
   const deleteOne = async (
@@ -103,6 +164,7 @@ const useActions = (state: State, dispatch): Actions => {
 
   return {
     get,
+    create,
     deleteOne,
     deleteMany
   }

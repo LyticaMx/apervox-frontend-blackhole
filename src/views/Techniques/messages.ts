@@ -12,6 +12,18 @@ export const techniquesMessages = defineMessages({
   button: {
     id: 'views.Techniques.button',
     defaultMessage: 'Agregar técnica'
+  },
+  totalTargets: {
+    id: 'views.Techniques.totalTargets',
+    defaultMessage: 'Total de objetivos'
+  },
+  withTargets: {
+    id: 'views.Techniques.withTargets',
+    defaultMessage: 'Con objetivos'
+  },
+  withoutTargets: {
+    id: 'views.Techniques.withoutTargets',
+    defaultMessage: 'Sin objetivos'
   }
 })
 
@@ -53,6 +65,10 @@ export const createTechniqueDrawerMessages = defineMessages({
     id: 'views.techniques.CreateTechniqueDrawer.completeFields',
     defaultMessage:
       'Completa los siguientes campos para crear una nueva técnica.'
+  },
+  success: {
+    id: 'views.techniques.CreateTechniqueDrawer.success',
+    defaultMessage: 'T.I. creada correctamente'
   }
 })
 

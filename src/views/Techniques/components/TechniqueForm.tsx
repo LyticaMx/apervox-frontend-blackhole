@@ -8,7 +8,7 @@ import Typography from 'components/Typography'
 import TextField from 'components/Form/Textfield'
 import Button from 'components/Button'
 import { PlusCircleIcon } from '@heroicons/react/24/outline'
-import { Target } from 'types/technique'
+import { Target, Turn } from 'types/technique'
 import CreateTargetDialog from './CreateTargetDialog'
 import { techniqueFormMessages } from '../messages'
 import useSections from 'hooks/useSections'
@@ -222,15 +222,15 @@ const TechniqueForm = ({
         placeholder: getMessage('shiftPlaceholder'),
         items: [
           {
-            id: 'm',
+            id: Turn.MORNING,
             label: getMessage('morning')
           },
           {
-            id: 'v',
+            id: Turn.EVENING,
             label: getMessage('evening')
           },
           {
-            id: 'n',
+            id: Turn.NIGHTNING,
             label: getMessage('nightning')
           }
         ],
@@ -383,11 +383,15 @@ const TechniqueForm = ({
       <CreateTargetDialog
         open={openTargetForm}
         onClose={() => setOpenTargetForm(false)}
-        onAccept={(target) => {
+        onAccept={async (target) => {
           const newTarget: Target = {
             name: target.name,
-            phone_company: target.phoneCompany,
-            phone_number: target.number
+            phone_company: target.phoneCompany?.value,
+            phone_number: target.number,
+            liid: target.liid,
+            liid_v: target.liidVolte,
+            overflow_id: target.overflowLine?.value,
+            type: target.type
           }
 
           formikRef.current?.setFieldValue(

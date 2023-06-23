@@ -2,6 +2,7 @@
 import axios, { AxiosRequestHeaders, AxiosResponse } from 'axios'
 import { useIntl } from 'react-intl'
 import mutexify from 'mutexify/promise'
+import QS from 'query-string'
 
 import { createInstance, BaseURL } from 'providers/api'
 import { useLoader } from 'context/Loader'
@@ -59,12 +60,10 @@ const useApi = ({
       const response = await instance({
         method,
         url,
-        headers,
-        /*
-        paramsSerializer: (params) => {
-          return QueryString.stringify(params, { arrayFormat: 'repeat' })
+        paramsSerializer: {
+          serialize: (params) => QS.stringify(params, { arrayFormat: 'none' })
         },
-        */
+        headers,
         ...(urlParams
           ? acceptNulls
             ? { params: urlParams }

@@ -41,6 +41,7 @@
     "lodash": "^4.17.21",
     "mutexify": "^1.4.0",
     "postcss-focus-visible": "^7.1.0",
+    "query-string": "^8.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
