@@ -27,12 +27,15 @@ export interface InnerTechnique
 
 export interface State {
   technique?: InnerTechnique
+  summary: string
   target?: Target
   targets: Target[]
 }
 
 export interface Actions {
-  get: (id: string) => Promise<void>
+  get: () => Promise<boolean>
+  getDescription: () => Promise<boolean>
+  updateDescription: (data: string) => Promise<boolean>
   setTechnique: (params: Technique) => void
   setTarget: (params: Target) => void
   getTargets: () => void

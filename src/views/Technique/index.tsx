@@ -1,12 +1,28 @@
-import { ReactElement } from 'react'
+import { ReactElement, useEffect } from 'react'
 
 import TechniqueList from './components/TechniqueList'
 import FormSection from './components/FormSection'
 import TechniqueInfo from './components/TechinqueInfo'
 
 import Header from './components/Header'
+import { useTechnique } from 'context/Technique'
+import { useHistory } from 'react-router-dom'
+import { pathRoute } from 'router/routes'
 
 const Techniques = (): ReactElement => {
+  const { technique, actions: techniqueActions } = useTechnique()
+  const history = useHistory()
+
+  const getTechniqueInfo = async (): Promise<void> => {
+    const exist = await techniqueActions?.get()
+
+    if (!exist) history.replace(pathRoute.techniques)
+  }
+
+  useEffect(() => {
+    getTechniqueInfo()
+  }, [technique?.id ?? ''])
+
   return (
     <div className="absolute inset-0 p-4 flex flex-col">
       <Header />

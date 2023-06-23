@@ -1059,6 +1059,10 @@ export const techniqueInfoMessages = defineMessages({
   techniqueData: {
     id: 'views.techniques.TechniqueInfo.techniqueData',
     defaultMessage: 'Datos de la técnica'
+  },
+  updatedSummary: {
+    id: 'views.techniques.UpdatedTechnique.techniqueData',
+    defaultMessage: 'Descripción actualizada correctamente'
   }
 })
 
