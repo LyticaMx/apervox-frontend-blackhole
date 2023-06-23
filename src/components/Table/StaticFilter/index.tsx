@@ -19,11 +19,12 @@ interface Props {
   optionsTitle?: string
   options: ReadOnlyNonEmptyArray<TableFilterOption>
   onChange: OnChangeTableFilter
+  multipleSelection?: boolean
 }
 
 interface FormValues {
   // TODO: Cambiar cuando los filtros de back sean OR y no AND
-  filters: string
+  filters: string | string[]
 }
 
 const StaticFilter = (props: Props): ReactElement => {
@@ -46,29 +47,46 @@ const StaticFilter = (props: Props): ReactElement => {
         : options.filter((option) =>
             normalizeString(option.name).includes(query)
           )
-    return newOptions.map<Field<FormValues>>((option, index) => ({
-      // TODO: Cambiar cuando los filtros de back sean OR y no AND
-      type: 'radio' as any,
-      name: 'filters',
-      options: {
-        label: option.name,
-        value: option.value,
-        id: `${option.name}-${index}`
-      }
-    }))
+    return newOptions.map<Field<FormValues>>((option, index) => {
+      const field: Field<FormValues> = props.multipleSelection
+        ? {
+            type: 'checkbox',
+            name: 'filters',
+            options: {
+              label: option.name,
+              value: option.value,
+              id: `${option.name}-${index}`
+            }
+          }
+        : {
+            type: 'radio',
+            name: 'filters',
+            options: {
+              label: option.name,
+              value: option.value,
+              id: `${option.name}-${index}`
+            }
+          }
+      return field
+    })
   }, [options, inputSearch])
 
   const formikRef = useRef<FormikContextType<FormValues>>()
 
   const formikConfig: FormikConfig<FormValues> = {
     // se utilizan los últimos valores de los formularios como valores iniciales
-    initialValues: { filters: formikRef.current?.values.filters ?? '' },
+    initialValues: {
+      filters:
+        formikRef.current?.values.filters ?? (props.multipleSelection ? [] : '')
+    },
     onSubmit: async (values) => {
       formikRef.current?.resetForm({
         values
       })
-      // TODO: Cambiar cuando los filtros de back sean OR y no AND
-      await onChange([values.filters])
+
+      if (typeof values.filters === 'string') {
+        await onChange([values.filters])
+      } else await onChange(values.filters)
     }
   }
 

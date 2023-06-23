@@ -28,11 +28,13 @@ import useTableColumns from 'hooks/useTableColumns'
 import { generalMessages } from 'globalMessages'
 
 import DeleteTechinqueDialog, { EliminationType } from './DeleteTechinqueDialog'
-import { techniquesDeleteDialogMessages } from '../messages'
+import { techniquesDeleteDialogMessages, techniquesMessages } from '../messages'
 import { useLanguage } from 'context/Language'
+import { useIntl } from 'react-intl'
 
 const TechniqueList = (): ReactElement => {
   const history = useHistory()
+  const { formatMessage } = useIntl()
   const { data, pagination, actions: techniquesActions } = useTechniques()
   const { actions } = useTechnique()
   const getMessage = useFormatMessage(generalMessages)
@@ -103,6 +105,18 @@ const TechniqueList = (): ReactElement => {
         const priority = getValue<Priority>()
 
         return <PriorityLabel value={priority} />
+      },
+      meta: {
+        columnFilters: {
+          multiple: true,
+          options: [
+            { name: getMessage('lowPriority'), value: 'low' },
+            { name: getMessage('mediumPriority'), value: 'medium' },
+            { name: getMessage('highPriority'), value: 'high' },
+            { name: getMessage('urgentPriority'), value: 'urgent' }
+          ],
+          onChange: (value) => techniquesActions?.get({ priority: value })
+        }
       }
     },
     {
@@ -112,6 +126,17 @@ const TechniqueList = (): ReactElement => {
         const status = getValue<Status>()
 
         return <StatusTag value={status} />
+      },
+      meta: {
+        columnFilters: {
+          multiple: true,
+          options: [
+            { name: getMessage('activeStatus'), value: 'active' },
+            { name: getMessage('toCompleteStatus'), value: 'concluding' },
+            { name: getMessage('completedStatus'), value: 'concluded' }
+          ],
+          onChange: (value) => techniquesActions?.get({ status: value })
+        }
       }
     },
     {
@@ -121,11 +146,43 @@ const TechniqueList = (): ReactElement => {
         const turn = getValue<Turn>()
 
         return getMessage(`${turn}`)
+      },
+      meta: {
+        columnFilters: {
+          multiple: true,
+          options: [
+            { name: getMessage('morning'), value: 'morning' },
+            { name: getMessage('afternoon'), value: 'afternoon' },
+            { name: getMessage('night'), value: 'night' }
+          ],
+          onChange: (value) => techniquesActions?.get({ turn: value })
+        }
       }
     },
     {
       accessorKey: 'total_target',
-      header: getMessage('totalTarget')
+      header: formatMessage(techniquesMessages.totalTargets),
+      meta: {
+        columnFilters: {
+          options: [
+            {
+              name: formatMessage(techniquesMessages.withTargets),
+              value: 'withTargets'
+            },
+            {
+              name: formatMessage(techniquesMessages.withoutTargets),
+              value: 'withoutTargets'
+            },
+            { name: getMessage('both'), value: 'both' }
+          ],
+          onChange: (value) => {
+            let withTargets
+            if (value[0] === 'withTargets') withTargets = true
+            else if (value[0] === 'withoutTargets') withTargets = false
+            techniquesActions?.get({ withTargets })
+          }
+        }
+      }
     },
     {
       accessorKey: 'id',

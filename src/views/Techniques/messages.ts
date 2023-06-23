@@ -12,6 +12,18 @@ export const techniquesMessages = defineMessages({
   button: {
     id: 'views.Techniques.button',
     defaultMessage: 'Agregar técnica'
+  },
+  totalTargets: {
+    id: 'views.Techniques.totalTargets',
+    defaultMessage: 'Total de objetivos'
+  },
+  withTargets: {
+    id: 'views.Techniques.withTargets',
+    defaultMessage: 'Con objetivos'
+  },
+  withoutTargets: {
+    id: 'views.Techniques.withoutTargets',
+    defaultMessage: 'Sin objetivos'
   }
 })
 

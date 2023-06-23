@@ -22,6 +22,7 @@ declare module '@tanstack/table-core' {
       options?: ReadOnlyNonEmptyArray<TableFilterOption>
       onChange: OnChangeTableFilter
       apiBackend?: string
+      multiple?: boolean
     }
   }
 }

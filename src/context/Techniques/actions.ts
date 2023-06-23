@@ -33,7 +33,10 @@ const useActions = (state: State, dispatch): Actions => {
         .dates(dateFilter)
         .searchFilters(searchFilter)
         .sort(pagination.sort)
-        .putStaticFilter('priority', staticFilter.priority)
+        .putStaticFilter('priority', params?.priority)
+        .putStaticFilter('status', params?.status)
+        .putStaticFilter('shift', params?.turn)
+        .putStaticFilter('has_targets', params?.withTargets)
         .build()
 
       const [response, total] = await Promise.all([
@@ -85,13 +88,11 @@ const useActions = (state: State, dispatch): Actions => {
           static: {
             priority: params?.priority ?? staticFilter.priority,
             status: params?.status ?? staticFilter.status,
-            turn: params?.turn ?? staticFilter.turn
+            turn: params?.turn ?? staticFilter.turn,
+            withTargets: params?.withTargets ?? staticFilter.withTargets
           }
         })
       )
-
-      // Es necesario hasta la integración
-      console.log(urlParams)
     } catch {}
   }
 

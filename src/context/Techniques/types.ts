@@ -16,6 +16,7 @@ export interface TechniquesStaticFilter {
   priority?: string[]
   status?: string[]
   turn?: string[]
+  withTargets?: boolean
 }
 
 export interface State {

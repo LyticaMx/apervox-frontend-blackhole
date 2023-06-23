@@ -111,6 +111,15 @@ const Table = <DataType,>({
     []
   )
 
+  const checkboxPadding = useMemo(
+    () => ({
+      xs: 'py-1 px-1',
+      sm: 'py-2 px-1.5',
+      md: 'py-4 px-3'
+    }),
+    []
+  )
+
   const enhancedColumns = useMemo<Array<ColumnDef<DataType>>>(() => {
     if (!withCheckbox) return columns
     const newColumns: Array<ColumnDef<DataType>> = [
@@ -314,7 +323,12 @@ const Table = <DataType,>({
                   {headerGroup.headers.map((header, index) => {
                     return (
                       <th
-                        className="py-3.5 px-3 text-left text-sm font-semibold text-gray-900 whitespace-nowrap uppercase"
+                        className={clsx(
+                          'text-left text-sm font-semibold text-gray-900 whitespace-nowrap uppercase',
+                          index === 0 && withCheckbox
+                            ? checkboxPadding[rowConfig?.paddingSize ?? 'xs']
+                            : rowPadding[rowConfig?.paddingSize ?? 'xs']
+                        )}
                         key={header.id}
                         colSpan={header.colSpan}
                       >
@@ -353,6 +367,10 @@ const Table = <DataType,>({
                                 optionsTitle={
                                   header.column.columnDef.meta.columnFilters
                                     .optionsName
+                                }
+                                multiple={
+                                  header.column.columnDef.meta.columnFilters
+                                    .multiple
                                 }
                               />
                             ) : null}
@@ -395,7 +413,11 @@ const Table = <DataType,>({
                               key={cell.id}
                               className={clsx(
                                 'whitespace-nowrap py-4 px-3 text-sm font-medium text-gray-900',
-                                rowPadding[rowConfig?.paddingSize ?? 'xs'],
+                                index === 0 && withCheckbox
+                                  ? checkboxPadding[
+                                      rowConfig?.paddingSize ?? 'xs'
+                                    ]
+                                  : rowPadding[rowConfig?.paddingSize ?? 'xs'],
                                 rowConfig?.className,
                                 index === 0 && withCheckbox && 'text-center'
                               )}
