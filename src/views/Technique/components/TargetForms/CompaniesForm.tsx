@@ -58,6 +58,7 @@ const CompaniesForm = (): ReactElement => {
       type: 'text',
       name: 'name',
       options: {
+        labelSpacing: '1',
         id: 'company-name',
         label: formatMessage(companiesFormMessages.companyName),
         placeholder: formatMessage(companiesFormMessages.companyNamePlaceholder)
@@ -98,6 +99,7 @@ const CompaniesForm = (): ReactElement => {
       name: 'comments',
       section: 'comments',
       options: {
+        labelSpacing: '1',
         id: 'company-comments',
         label: formatMessage(targetFormsGeneralMessages.comments),
         placeholder: formatMessage(

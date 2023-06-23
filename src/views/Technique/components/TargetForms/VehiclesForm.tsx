@@ -107,6 +107,7 @@ const VehiclesForm = (): ReactElement => {
       type: 'text',
       name: 'model',
       options: {
+        labelSpacing: '1',
         id: 'vehicle-model',
         label: formatMessage(vehiclesFormMessages.model),
         placeholder: formatMessage(vehiclesFormMessages.modelPlaceholder)
@@ -117,6 +118,7 @@ const VehiclesForm = (): ReactElement => {
       type: 'text',
       name: 'year',
       options: {
+        labelSpacing: '1',
         id: 'vehicle-year',
         label: formatMessage(vehiclesFormMessages.year),
         placeholder: formatMessage(vehiclesFormMessages.yearPlaceholder)
@@ -155,6 +157,7 @@ const VehiclesForm = (): ReactElement => {
       type: 'text',
       name: 'color',
       options: {
+        labelSpacing: '1',
         id: 'vehicle-color',
         label: formatMessage(vehiclesFormMessages.color),
         placeholder: formatMessage(vehiclesFormMessages.colorPlaceholder)
@@ -175,6 +178,7 @@ const VehiclesForm = (): ReactElement => {
       type: 'text',
       name: 'comments',
       options: {
+        labelSpacing: '1',
         id: 'vehicle-comments',
         label: formatMessage(targetFormsGeneralMessages.comments),
         placeholder: formatMessage(

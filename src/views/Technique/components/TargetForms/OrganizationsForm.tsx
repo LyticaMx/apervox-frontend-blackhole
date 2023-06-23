@@ -25,6 +25,7 @@ const OrganizationsForm = (): ReactElement => {
       type: 'text',
       name: 'name',
       options: {
+        labelSpacing: '1',
         id: 'organization-name',
         label: formatMessage(organizationFormMessages.organizationName),
         placeholder: formatMessage(
@@ -47,6 +48,7 @@ const OrganizationsForm = (): ReactElement => {
       type: 'text',
       name: 'phone',
       options: {
+        labelSpacing: '1',
         id: 'organization-phone',
         label: formatMessage(targetFormsGeneralMessages.phone),
         placeholder: formatMessage(targetFormsGeneralMessages.phonePlaceholder)

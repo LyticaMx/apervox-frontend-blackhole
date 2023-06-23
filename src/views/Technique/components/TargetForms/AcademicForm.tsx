@@ -25,6 +25,7 @@ const AcademicForm = (): ReactElement => {
       type: 'text',
       name: 'name',
       options: {
+        labelSpacing: '1',
         id: 'academic-name',
         label: formatMessage(academicFormMessages.academicName),
         placeholder: formatMessage(academicFormMessages.academicNamePlaceholder)
@@ -35,6 +36,7 @@ const AcademicForm = (): ReactElement => {
       type: 'text',
       name: 'specialty',
       options: {
+        labelSpacing: '1',
         id: 'academic-specialty',
         label: formatMessage(academicFormMessages.specialty),
         placeholder: formatMessage(academicFormMessages.specialtyPlaceholder)
@@ -45,6 +47,7 @@ const AcademicForm = (): ReactElement => {
       type: 'text',
       name: 'email',
       options: {
+        labelSpacing: '1',
         id: 'academic-email',
         label: getGlobalMessage('email', 'formMessages'),
         placeholder: formatMessage(
@@ -57,6 +60,7 @@ const AcademicForm = (): ReactElement => {
       type: 'text',
       name: 'phone',
       options: {
+        labelSpacing: '1',
         id: 'academic-phone',
         label: formatMessage(academicFormMessages.academicPhone),
         placeholder: formatMessage(

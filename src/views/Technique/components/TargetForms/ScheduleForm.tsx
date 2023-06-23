@@ -25,6 +25,7 @@ const ScheduleForm = (): ReactElement => {
       type: 'text',
       name: 'name',
       options: {
+        labelSpacing: '1',
         id: 'contact-name',
         label: formatMessage(scheduleFormMessages.name),
         placeholder: formatMessage(scheduleFormMessages.namePlaceholder)
@@ -35,6 +36,7 @@ const ScheduleForm = (): ReactElement => {
       type: 'text',
       name: 'phone',
       options: {
+        labelSpacing: '1',
         id: 'contact-phone',
         label: formatMessage(targetFormsGeneralMessages.phone),
         placeholder: formatMessage(targetFormsGeneralMessages.phonePlaceholder)
@@ -60,7 +62,8 @@ const ScheduleForm = (): ReactElement => {
       title: {
         text: formatMessage(scheduleFormMessages.address),
         className: 'text-primary uppercase mt-2'
-      }
+      },
+      spacing: 2
     }
   ]
 

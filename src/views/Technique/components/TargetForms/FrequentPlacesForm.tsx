@@ -49,6 +49,7 @@ const FrequentPlacesForm = (): ReactElement => {
       type: 'text',
       name: 'placeName',
       options: {
+        labelSpacing: '1',
         id: 'place-name',
         label: formatMessage(frequentPlacesFormMessages.placeName),
         placeholder: formatMessage(
@@ -61,6 +62,7 @@ const FrequentPlacesForm = (): ReactElement => {
       type: 'text',
       name: 'placeActivity',
       options: {
+        labelSpacing: '1',
         id: 'place-activity',
         label: formatMessage(frequentPlacesFormMessages.placeActivity),
         placeholder: formatMessage(
