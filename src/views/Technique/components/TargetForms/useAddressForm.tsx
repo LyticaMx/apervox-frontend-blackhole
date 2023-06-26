@@ -13,15 +13,15 @@ export interface AddressFormValues {
   line2: string
 }
 
-interface AddressForm {
-  addressFields: Array<Field<AddressFormValues>>
+interface AddressForm<T extends any> {
+  addressFields: Array<Field<AddressFormValues & T>>
   addressValidationSchema: any
 }
 
-export const useAddressForm = (section?: string): AddressForm => {
+export const useAddressForm = <T,>(section?: string): AddressForm<T> => {
   const { formatMessage } = useIntl()
 
-  const addressFields: Array<Field<AddressFormValues>> = [
+  const addressFields: Array<Field<AddressFormValues & T>> = [
     {
       type: 'city-selector',
       name: 'city-selector',
@@ -81,13 +81,22 @@ export const useAddressForm = (section?: string): AddressForm => {
   ]
 
   const addressValidationSchema = yup.object({
+    country: yup.string().required(formatMessage(formMessages.required)),
     state: yup.string().required(formatMessage(formMessages.required)),
-    municipality: yup.string().required(formatMessage(formMessages.required)),
-    postalCode: yup.string().required(formatMessage(formMessages.required)),
-    colony: yup.string().required(formatMessage(formMessages.required)),
-    street: yup.string().required(formatMessage(formMessages.required)),
-    number: yup.string().required(formatMessage(formMessages.required))
+    city: yup.string().required(formatMessage(formMessages.required)),
+    zipCode: yup.string().required(formatMessage(formMessages.required)),
+    line1: yup.string().required(formatMessage(formMessages.required)),
+    line2: yup.string().required(formatMessage(formMessages.required))
   })
+
+  // const addressValidationSchema = yup.object({
+  //   state: yup.string().required(formatMessage(formMessages.required)),
+  //   municipality: yup.string().required(formatMessage(formMessages.required)),
+  //   postalCode: yup.string().required(formatMessage(formMessages.required)),
+  //   colony: yup.string().required(formatMessage(formMessages.required)),
+  //   street: yup.string().required(formatMessage(formMessages.required)),
+  //   number: yup.string().required(formatMessage(formMessages.required))
+  // })
 
   return {
     addressFields,

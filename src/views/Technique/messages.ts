@@ -384,9 +384,66 @@ export const companiesFormMessages = defineMessages({
     id: 'views.techniques.CompaniesForm.companyNamePlaceholder',
     defaultMessage: 'Ej. Empresa Audi'
   },
+  sector: {
+    id: 'views.techniques.CompaniesForm.sector',
+    defaultMessage: 'Giro de la empresa'
+  },
+  sectorPlaceholder: {
+    id: 'views.techniques.CompaniesForm.sectorPlaceholder',
+    defaultMessage: 'Ej. Agricultura'
+  },
+  otherSector: {
+    id: 'views.techniques.CompaniesForm.otherSector',
+    defaultMessage: 'Otro giro de la empresa'
+  },
+  otherSectorPlaceholder: {
+    id: 'views.techniques.CompaniesForm.otherSectorPlaceholder',
+    defaultMessage: 'Ej. Agricultura'
+  },
   companyAddress: {
     id: 'views.techniques.CompaniesForm.companyAddress',
     defaultMessage: 'Domicilio de la empresa'
+  },
+
+  agriculture: {
+    id: 'views.techniques.CompaniesForm.agriculture',
+    defaultMessage: 'Agricultura'
+  },
+  commerce: {
+    id: 'views.techniques.CompaniesForm.commerce',
+    defaultMessage: 'Comercio'
+  },
+  construction: {
+    id: 'views.techniques.CompaniesForm.construction',
+    defaultMessage: 'Construcción'
+  },
+  education: {
+    id: 'views.techniques.CompaniesForm.education',
+    defaultMessage: 'Educación'
+  },
+  finance: {
+    id: 'views.techniques.CompaniesForm.finance',
+    defaultMessage: 'Finanzas'
+  },
+  manufacturing: {
+    id: 'views.techniques.CompaniesForm.manufacturing',
+    defaultMessage: 'Manufactura'
+  },
+  health: {
+    id: 'views.techniques.CompaniesForm.health',
+    defaultMessage: 'Salud'
+  },
+  services: {
+    id: 'views.techniques.CompaniesForm.services',
+    defaultMessage: 'Servicios'
+  },
+  technology: {
+    id: 'views.techniques.CompaniesForm.technology',
+    defaultMessage: 'Tecnología'
+  },
+  transportation: {
+    id: 'views.techniques.CompaniesForm.transportation',
+    defaultMessage: 'Transporte'
   }
 })
 
@@ -418,6 +475,39 @@ export const frequentPlacesFormMessages = defineMessages({
   placeAddress: {
     id: 'views.techniques.FrequentPlacesForm.placeAddress',
     defaultMessage: 'Domicilio del lugar'
+  },
+  frequency: {
+    id: 'views.techniques.FrequentPlacesForm.frequency',
+    defaultMessage: 'Frecuencia'
+  },
+  frequencyPlaceholder: {
+    id: 'views.techniques.FrequentPlacesForm.frequencyPlaceholder',
+    defaultMessage: 'Ej. Diario'
+  },
+
+  daily: {
+    id: 'views.techniques.FrequentPlacesForm.daily',
+    defaultMessage: 'Diario'
+  },
+  almostDaily: {
+    id: 'views.techniques.FrequentPlacesForm.almostDaily',
+    defaultMessage: 'Casi diario'
+  },
+  twiceWeekly: {
+    id: 'views.techniques.FrequentPlacesForm.twiceWeekly',
+    defaultMessage: 'Dos veces por semana'
+  },
+  weekly: {
+    id: 'views.techniques.FrequentPlacesForm.weekly',
+    defaultMessage: 'Semanal'
+  },
+  biweekly: {
+    id: 'views.techniques.FrequentPlacesForm.biweekly',
+    defaultMessage: 'Quincenal'
+  },
+  monthly: {
+    id: 'views.techniques.FrequentPlacesForm.monthly',
+    defaultMessage: 'Mensual'
   }
 })
 
@@ -968,17 +1058,42 @@ export const propertiesFormMessages = defineMessages({
     id: 'views.techniques.PropertiesForm.typePlaceholder',
     defaultMessage: 'Ej. Departamento'
   },
-  apartment: {
-    id: 'views.techniques.PropertiesForm.apartment',
-    defaultMessage: 'Departamento'
+  otherType: {
+    id: 'views.techniques.PropertiesForm.otherType',
+    defaultMessage: 'Otro tipo de inmueble'
   },
+  otherTypePlaceholder: {
+    id: 'views.techniques.PropertiesForm.otherTypePlaceholder',
+    defaultMessage: 'Ej. Departamento'
+  },
+
   house: {
     id: 'views.techniques.PropertiesForm.house',
     defaultMessage: 'Casa'
   },
+  apartment: {
+    id: 'views.techniques.PropertiesForm.apartment',
+    defaultMessage: 'Apartamento'
+  },
   office: {
     id: 'views.techniques.PropertiesForm.office',
     defaultMessage: 'Oficina'
+  },
+  retail: {
+    id: 'views.techniques.PropertiesForm.retail',
+    defaultMessage: 'Local comercial'
+  },
+  condominium: {
+    id: 'views.techniques.PropertiesForm.condominium',
+    defaultMessage: 'Condominio'
+  },
+  building: {
+    id: 'views.techniques.PropertiesForm.building',
+    defaultMessage: 'Edificio'
+  },
+  land: {
+    id: 'views.techniques.PropertiesForm.land',
+    defaultMessage: 'Terreno'
   }
 })
 
@@ -1010,6 +1125,14 @@ export const socialMediaFormMessages = defineMessages({
   usernamePlaceholder: {
     id: 'views.techniques.SocialMediaForm.usernamePlaceholder',
     defaultMessage: 'Ej. FooBar'
+  },
+  otherSocialMedia: {
+    id: 'views.techniques.SocialMediaForm.otherSocialMedia',
+    defaultMessage: 'Otra red social'
+  },
+  otherSocialMediaPlaceholder: {
+    id: 'views.techniques.SocialMediaForm.otherSocialMediaPlaceholder',
+    defaultMessage: 'Ej. Facebook'
   }
 })
 
@@ -1053,6 +1176,14 @@ export const vehiclesFormMessages = defineMessages({
     id: 'views.techniques.VehiclesForm.brandPlaceholder',
     defaultMessage: 'Ej. Chevrolet'
   },
+  otherBrand: {
+    id: 'views.techniques.VehiclesForm.otherBrand',
+    defaultMessage: 'Otra marca'
+  },
+  otherBrandPlaceholder: {
+    id: 'views.techniques.VehiclesForm.otherBrandPlaceholder',
+    defaultMessage: 'Ej. Chevrolet'
+  },
   model: {
     id: 'views.techniques.VehiclesForm.model',
     defaultMessage: 'Módelo'
@@ -1077,21 +1208,13 @@ export const vehiclesFormMessages = defineMessages({
     id: 'views.techniques.VehiclesForm.vehicleTypePlaceholder',
     defaultMessage: 'Ej. Deportivo'
   },
-  sport: {
-    id: 'views.techniques.VehiclesForm.sport',
-    defaultMessage: 'Deportivo'
+  otherType: {
+    id: 'views.techniques.VehiclesForm.otherType',
+    defaultMessage: 'Otro tipo de vehículo'
   },
-  sedan: {
-    id: 'views.techniques.VehiclesForm.sedan',
-    defaultMessage: 'Sedán'
-  },
-  motorcycle: {
-    id: 'views.techniques.VehiclesForm.motorcycle',
-    defaultMessage: 'Motocicleta'
-  },
-  pickup: {
-    id: 'views.techniques.VehiclesForm.Pickup',
-    defaultMessage: 'Camioneta'
+  otherTypePlaceholder: {
+    id: 'views.techniques.VehiclesForm.otherTypePlaceholder',
+    defaultMessage: 'Ej. Deportivo'
   },
   plates: {
     id: 'views.techniques.VehiclesForm.plates',
@@ -1100,6 +1223,64 @@ export const vehiclesFormMessages = defineMessages({
   platesPlaceholder: {
     id: 'views.techniques.VehiclesForm.platesPlaceholder',
     defaultMessage: 'Ej. XA12BC'
+  },
+  color: {
+    id: 'views.techniques.VehiclesForm.color',
+    defaultMessage: 'Color'
+  },
+  colorPlaceholder: {
+    id: 'views.techniques.VehiclesForm.colorPlaceholder',
+    defaultMessage: 'Ej. Azul'
+  },
+
+  motorcycle: {
+    id: 'views.techniques.VehiclesForm.motorcycle',
+    defaultMessage: 'Motocicleta'
+  },
+  subcompact: {
+    id: 'views.techniques.VehiclesForm.subcompact',
+    defaultMessage: 'Subcompacto'
+  },
+  compact: {
+    id: 'views.techniques.VehiclesForm.compact',
+    defaultMessage: 'Compacto'
+  },
+  coupe: { id: 'views.techniques.VehiclesForm.coupe', defaultMessage: 'Coupé' },
+  sedan: { id: 'views.techniques.VehiclesForm.sedan', defaultMessage: 'Sedán' },
+  hatchback: {
+    id: 'views.techniques.VehiclesForm.hatchback',
+    defaultMessage: 'Hatchback'
+  },
+  sport: {
+    id: 'views.techniques.VehiclesForm.sport',
+    defaultMessage: 'Deportivo'
+  },
+  convertible: {
+    id: 'views.techniques.VehiclesForm.convertible',
+    defaultMessage: 'Convertible'
+  },
+  suv: { id: 'views.techniques.VehiclesForm.suv', defaultMessage: 'suv' },
+  wagon: {
+    id: 'views.techniques.VehiclesForm.wagon',
+    defaultMessage: 'Station Wagon'
+  },
+  minivan: {
+    id: 'views.techniques.VehiclesForm.minivan',
+    defaultMessage: 'Minivan'
+  },
+  van: { id: 'views.techniques.VehiclesForm.van', defaultMessage: 'Furgoneta' },
+  pickup: {
+    id: 'views.techniques.VehiclesForm.pickup',
+    defaultMessage: 'Camioneta'
+  },
+  bus: { id: 'views.techniques.VehiclesForm.bus', defaultMessage: 'Autobús' },
+  truck: {
+    id: 'views.techniques.VehiclesForm.truck',
+    defaultMessage: 'Camión'
+  },
+  trailer: {
+    id: 'views.techniques.VehiclesForm.trailer',
+    defaultMessage: 'Tráiler'
   }
 })
 

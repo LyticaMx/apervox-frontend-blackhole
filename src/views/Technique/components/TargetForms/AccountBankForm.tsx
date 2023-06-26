@@ -35,7 +35,7 @@ const AccountBankForm = (): ReactElement => {
         placeholder: formatMessage(accountBankFormMessages.bankPlaceholder),
         labelSpacing: '1'
       },
-      breakpoints: { xs: 12, md: 3 }
+      breakpoints: { xs: 12, sm: 6, md: 4 }
     },
     {
       type: 'text',
@@ -48,7 +48,7 @@ const AccountBankForm = (): ReactElement => {
         ),
         labelSpacing: '1'
       },
-      breakpoints: { xs: 12, md: 3 }
+      breakpoints: { xs: 12, sm: 6, md: 4 }
     },
     {
       type: 'select',
@@ -64,7 +64,7 @@ const AccountBankForm = (): ReactElement => {
         textField: 'text',
         valueField: 'value'
       },
-      breakpoints: { xs: 12, md: 3 }
+      breakpoints: { xs: 12, sm: 6, md: 4 }
     },
     {
       type: 'text',
@@ -77,7 +77,7 @@ const AccountBankForm = (): ReactElement => {
         ),
         labelSpacing: '1'
       },
-      breakpoints: { xs: 12, md: 3 },
+      breakpoints: { xs: 12, sm: 6, md: 4 },
       renderIf: {
         type: 'other'
       }
@@ -91,7 +91,7 @@ const AccountBankForm = (): ReactElement => {
         placeholder: formatMessage(accountBankFormMessages.balancePlaceholder),
         labelSpacing: '1'
       },
-      breakpoints: { xs: 12, md: 3 }
+      breakpoints: { xs: 12, sm: 6, md: 4 }
     },
     {
       type: 'select',
@@ -105,7 +105,7 @@ const AccountBankForm = (): ReactElement => {
         valueField: 'value',
         portal: true
       },
-      breakpoints: { xs: 12, md: 3 }
+      breakpoints: { xs: 12, sm: 6, md: 4 }
     },
     {
       type: 'text',
@@ -118,7 +118,7 @@ const AccountBankForm = (): ReactElement => {
         ),
         labelSpacing: '1'
       },
-      breakpoints: { xs: 12, md: 3 },
+      breakpoints: { xs: 12, sm: 6, md: 4 },
       renderIf: {
         currency: 'other'
       }
@@ -143,7 +143,15 @@ const AccountBankForm = (): ReactElement => {
   const validationSchema = yup.object({
     bankname: yup.string().required(formatMessage(formMessages.required)),
     amount: yup.string().required(formatMessage(formMessages.required)),
-    bankCredit: yup.string().required(formatMessage(formMessages.required))
+    bankCredit: yup.string().required(formatMessage(formMessages.required)),
+    type: yup.string().required(formatMessage(formMessages.required)),
+    otherType: yup
+      .string()
+      .when('type', (type, field) =>
+        type === 'other'
+          ? yup.string().required(formatMessage(formMessages.required))
+          : field
+      )
   })
 
   return (

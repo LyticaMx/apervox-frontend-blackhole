@@ -19,6 +19,7 @@ export interface Props {
   valueField: string
   value: string | number | undefined
   onChange: (value: any) => void
+  onTouched?: (e: any) => void
   clearable: boolean
   error?: boolean
   helperText?: string
@@ -36,6 +37,7 @@ const defaultProps: Props = {
   valueField: 'value',
   value: undefined,
   onChange: () => {},
+  onTouched: () => {},
   clearable: false
 }
 
@@ -47,6 +49,7 @@ const SelectField = ({
   value,
   placeholder,
   onChange,
+  onTouched,
   clearable,
   error,
   helperText,
@@ -114,7 +117,7 @@ const SelectField = ({
               'min-h-[2.625rem] relative',
               formClasses,
               {
-                'border-red-500 border-2': error
+                '!border-red-500 border-2': error
               },
               sizeClasses[size].button,
               className
@@ -152,6 +155,7 @@ const SelectField = ({
             'overflow-y-scroll max-h-52 w-auto bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden focus:outline-none',
             optionsContainerClassname
           )}
+          onBlur={onTouched}
         >
           {items.map((item, index) => (
             <Listbox.Option

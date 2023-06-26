@@ -27,6 +27,7 @@ export interface Props {
   state: string
   city: string
   onChange: (field: string, value: string) => void
+  onTouched?: (field: string) => void
   className?: string
   optionsContainerClassname?: string
   disabled?: boolean
@@ -60,6 +61,7 @@ const CitySelector = (props: Props): ReactElement => {
           onChange={(val) =>
             props.onChange(props.countryName ?? 'country', val)
           }
+          onTouched={() => props.onTouched?.(props.countryName ?? 'country')}
           textField="name"
           valueField="isoCode"
           items={Country.getAllCountries()}
@@ -74,11 +76,12 @@ const CitySelector = (props: Props): ReactElement => {
           placeholder={props.statePlaceholder}
           value={props.state}
           onChange={(val) => props.onChange(props.stateName ?? 'state', val)}
+          onTouched={() => props.onTouched?.(props.stateName ?? 'state')}
           textField="name"
           valueField="isoCode"
           items={states}
           error={props.stateError}
-          helperText={props.countryHelperText}
+          helperText={props.stateHelperText}
           optionsContainerClassname={props.optionsContainerClassname}
         />
       </Grid>
@@ -88,6 +91,7 @@ const CitySelector = (props: Props): ReactElement => {
           placeholder={props.cityPlaceholder}
           value={props.city}
           onChange={(val) => props.onChange(props.cityName ?? 'city', val)}
+          onTouched={() => props.onTouched?.(props.cityName ?? 'city')}
           textField="name"
           valueField="name"
           items={cities}
