@@ -8,89 +8,133 @@ import {
   accountBankFormMessages,
   targetFormsGeneralMessages
 } from 'views/Technique/messages'
+import { useBankAccountOptions } from './hooks/useBankAccountOptions'
 
 interface FormValues {
   bankname: string
-  amount: string
-  bankCredit: string
+  accountNumber: string
+  type: string
+  otherType: string
+  balance: string
+  currency: string
+  otherCurrency: string
   comments?: string
 }
 
 const AccountBankForm = (): ReactElement => {
   const { formatMessage } = useIntl()
+  const { bankAccountTypes, currencies } = useBankAccountOptions()
 
   const fields: Array<Field<FormValues>> = [
     {
       type: 'text',
       name: 'bankname',
       options: {
-        id: 'social-media-bankname',
+        id: 'bankname',
         label: formatMessage(accountBankFormMessages.bank),
-        placeholder: formatMessage(accountBankFormMessages.bankPlaceholder)
+        placeholder: formatMessage(accountBankFormMessages.bankPlaceholder),
+        labelSpacing: '1'
       },
       breakpoints: { xs: 12, md: 3 }
     },
     {
       type: 'text',
-      name: 'amount',
+      name: 'accountNumber',
       options: {
-        id: 'social-media-amount',
-        label: formatMessage(accountBankFormMessages.ammount),
-        placeholder: formatMessage(accountBankFormMessages.ammountPlaceholder)
+        id: 'account-number',
+        label: formatMessage(accountBankFormMessages.accountNumber),
+        placeholder: formatMessage(
+          accountBankFormMessages.accountNumberPlaceholder
+        ),
+        labelSpacing: '1'
       },
       breakpoints: { xs: 12, md: 3 }
     },
     {
       type: 'select',
-      name: 'cardstype',
+      name: 'type',
       options: {
-        label: formatMessage(accountBankFormMessages.cardType),
-        clearable: true,
-        placeholder: formatMessage(accountBankFormMessages.cardTypePlaceholder),
-        items: [
-          {
-            id: '1',
-            label: formatMessage(accountBankFormMessages.creditType)
-          },
-          {
-            id: '2',
-            label: formatMessage(accountBankFormMessages.debitType)
-          },
-          {
-            id: '3',
-            label: formatMessage(accountBankFormMessages.payrollType)
-          }
-        ],
-        textField: 'label',
-        valueField: 'id',
-        className: 'bg-white-500 mt-3',
-        optionsContainerClassname: 'w-[95%]'
+        label: formatMessage(accountBankFormMessages.accountType),
+        clearable: false,
+        placeholder: formatMessage(
+          accountBankFormMessages.accountTypePlaceholder
+        ),
+        items: bankAccountTypes,
+        portal: true,
+        textField: 'text',
+        valueField: 'value'
       },
       breakpoints: { xs: 12, md: 3 }
     },
     {
       type: 'text',
-      name: 'bankCredit',
+      name: 'otherType',
       options: {
-        id: 'social-media-bank-credit',
-        label: formatMessage(accountBankFormMessages.creditBank),
+        id: 'other-type',
+        label: formatMessage(accountBankFormMessages.otherAccountType),
         placeholder: formatMessage(
-          accountBankFormMessages.creditBankPlaceholder
-        )
+          accountBankFormMessages.otherAccountTypePlaceholder
+        ),
+        labelSpacing: '1'
+      },
+      breakpoints: { xs: 12, md: 3 },
+      renderIf: {
+        type: 'other'
+      }
+    },
+    {
+      type: 'text',
+      name: 'balance',
+      options: {
+        id: 'balance',
+        label: formatMessage(accountBankFormMessages.balance),
+        placeholder: formatMessage(accountBankFormMessages.balancePlaceholder),
+        labelSpacing: '1'
       },
       breakpoints: { xs: 12, md: 3 }
+    },
+    {
+      type: 'select',
+      name: 'currency',
+      options: {
+        clearable: false,
+        label: formatMessage(accountBankFormMessages.currency),
+        placeholder: formatMessage(accountBankFormMessages.currencyPlaceholder),
+        items: currencies,
+        textField: 'text',
+        valueField: 'value',
+        portal: true
+      },
+      breakpoints: { xs: 12, md: 3 }
+    },
+    {
+      type: 'text',
+      name: 'otherCurrency',
+      options: {
+        id: 'otherCurrency',
+        label: formatMessage(accountBankFormMessages.otherCurrency),
+        placeholder: formatMessage(
+          accountBankFormMessages.otherCurrencyPlaceholder
+        ),
+        labelSpacing: '1'
+      },
+      breakpoints: { xs: 12, md: 3 },
+      renderIf: {
+        currency: 'other'
+      }
     },
     {
       type: 'text',
       name: 'comments',
       options: {
-        id: 'social-media-comments',
+        id: 'comments',
         label: formatMessage(targetFormsGeneralMessages.comments),
         placeholder: formatMessage(
           targetFormsGeneralMessages.commentsPlaceholder
         ),
         multiline: true,
-        rows: 4
+        rows: 4,
+        labelSpacing: '1'
       },
       breakpoints: { xs: 12, md: 6 }
     }

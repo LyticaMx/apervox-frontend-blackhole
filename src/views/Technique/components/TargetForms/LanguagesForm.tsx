@@ -5,40 +5,67 @@ import { formMessages } from 'globalMessages'
 import { Field } from 'types/form'
 import AccordionForm from './AccordionForm'
 import { languagesFormMessages } from 'views/Technique/messages'
+import useLanguagesOptions from './hooks/useLanguagesOptions'
 
 interface FormValues {
-  name: string
+  language: string
+  otherLanguage: string
   level: string
 }
 
 const LanguagesForm = (): ReactElement => {
   const { formatMessage } = useIntl()
+  const { language, languageProficiency } = useLanguagesOptions()
 
   const fields: Array<Field<FormValues>> = [
     {
-      type: 'text',
-      name: 'name',
+      type: 'select',
+      name: 'language',
       options: {
-        id: 'technique-name',
         label: formatMessage(languagesFormMessages.language),
-        placeholder: formatMessage(languagesFormMessages.languagePlaceholder)
+        clearable: false,
+        placeholder: formatMessage(languagesFormMessages.languagePlaceholder),
+        items: language,
+        textField: 'text',
+        valueField: 'value',
+        portal: true
       },
       breakpoints: { xs: 12, md: 6 }
     },
     {
       type: 'text',
+      name: 'otherLanguage',
+      options: {
+        labelSpacing: '1',
+        id: 'other-language',
+        label: formatMessage(languagesFormMessages.otherLanguage),
+        placeholder: formatMessage(
+          languagesFormMessages.otherLanguagePlaceholder
+        )
+      },
+      breakpoints: { xs: 12, md: 6 },
+      renderIf: {
+        language: 'other'
+      }
+    },
+    {
+      type: 'select',
       name: 'level',
       options: {
-        id: 'techinque-description',
         label: formatMessage(languagesFormMessages.level),
-        placeholder: formatMessage(languagesFormMessages.levelPlaceholder)
+        clearable: false,
+        placeholder: formatMessage(languagesFormMessages.levelPlaceholder),
+        items: languageProficiency,
+        textField: 'text',
+        valueField: 'value',
+        portal: true
       },
       breakpoints: { xs: 12, md: 6 }
     }
   ]
 
   const validationSchema = yup.object({
-    name: yup.string().required(formatMessage(formMessages.required)),
+    language: yup.string().required(formatMessage(formMessages.required)),
     level: yup.string().required(formatMessage(formMessages.required))
   })
 
