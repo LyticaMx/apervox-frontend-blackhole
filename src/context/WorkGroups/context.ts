@@ -11,12 +11,6 @@ export const initialState: WorkgroupState = {
     total_users: 0,
     created_at: '',
     updated_at: '',
-    techniques: {
-      assigned: 0,
-      current: 0,
-      to_conclude: 0,
-      concluded: 0
-    },
     status: Status.ACTIVE
   },
   workGroups: [],

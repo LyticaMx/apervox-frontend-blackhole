@@ -1,7 +1,6 @@
 import { Priority } from 'types/priority'
 import { Status } from 'types/status'
 import { Evidence, Target, Technique, Turn } from 'types/technique'
-import { WorkGroup } from 'types/workgroup'
 
 export const techniquesData: Technique[] = [
   {
@@ -178,73 +177,5 @@ export const evidencesData: Evidence[] = [
     tag: 1,
     clasification: 2,
     type: 3
-  }
-]
-
-export const workGroups: WorkGroup[] = [
-  {
-    id: '001',
-    name: 'Grupo 1',
-    description: 'Monitoreo de datos',
-    registered_by: 'armandoalbor',
-    updated_by: 'efracuadras',
-    total_users: 3,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    techniques: {
-      assigned: 7,
-      current: 2,
-      to_conclude: 3,
-      concluded: 1
-    },
-    status: Status.ACTIVE
-  },
-  {
-    id: '002',
-    name: 'Grupo 2',
-    description: 'Gestión de datos',
-    registered_by: 'armandoalbor',
-    total_users: 2,
-    created_at: new Date().toISOString(),
-    updated_at: '',
-    techniques: {
-      assigned: 2,
-      current: 1,
-      to_conclude: 1,
-      concluded: 0
-    },
-    status: Status.ACTIVE
-  },
-  {
-    id: '003',
-    name: 'Auditoria',
-    description: 'Auditoria de datos',
-    registered_by: 'efracuadras',
-    total_users: 13,
-    created_at: new Date().toISOString(),
-    updated_at: '',
-    techniques: {
-      assigned: 10,
-      current: 7,
-      to_conclude: 1,
-      concluded: 2
-    },
-    status: Status.INACTIVE
-  },
-  {
-    id: '004',
-    name: 'Criminología',
-    description: 'Redes criminales',
-    registered_by: 'javieralbor',
-    total_users: 23,
-    created_at: new Date().toISOString(),
-    updated_at: '',
-    techniques: {
-      assigned: 12,
-      current: 6,
-      to_conclude: 1,
-      concluded: 5
-    },
-    status: Status.ACTIVE
   }
 ]

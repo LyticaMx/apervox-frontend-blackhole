@@ -3,15 +3,13 @@ import {
   WorkgroupState,
   WorkGroup,
   WorkGroupUser,
-  Turn,
-  WorkGroupTechnique,
   WorkGroupHistory,
   WorkgroupPaginationParams,
-  WorkgroupStaticFilter
+  WorkgroupStaticFilter,
+  WorkGroupTechnique
 } from 'types/workgroup'
 import { Status } from 'types/status'
-import { Priority } from 'types/priority'
-import { DateFilter, PaginationFilter } from 'types/filters'
+import { DateFilter } from 'types/filters'
 import { actions } from './constants'
 import { initialState } from './context'
 import useApi from 'hooks/useApi'
@@ -36,6 +34,7 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
     selected,
     usersPagination,
     staticFilter,
+    techniquesPagination,
     totalWorkGroups
   } = state
   const getWorkgroupsService = useApi({ endpoint: 'groups', method: 'get' })
@@ -165,7 +164,13 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
             created_at: item.created_at,
             registered_by: item.created_by,
             users: item.users,
-            total_users: item.users.length
+            total_users: item.users.length,
+            techniques: item.techniques,
+            techniquesByStatus: {
+              concluded: item.techniques_by_status?.concluded?.length,
+              concluding: item.techniques_by_status?.concluding?.length,
+              current: item.techniques_by_status?.active?.length
+            }
           })),
           total: totalResponse?.size ?? totalWorkGroups
         })
@@ -244,116 +249,45 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
   }
 
   const getWorkGroupTechniques = async (
-    id: string,
-    params?: Partial<PaginationFilter>
-  ): Promise<boolean> => {
+    params?: WorkgroupPaginationParams
+  ): Promise<void> => {
     try {
-      const mockedData = [
-        {
-          id: '001',
-          name: 'T1.23/2022-30',
-          created_at: new Date().toISOString(),
-          expires_at: new Date(
-            Date.now() + 2 * (3600 * 1000 * 24)
-          ).toISOString(),
-          registered_by: 'armandoalbor',
-          time_on_platform: '1 día',
-          total_objective: 3,
-          priority: Priority.HIGH,
-          turn_of_attention: Turn.MORNING,
-          status: Status.TO_COMPLETE
-        },
-        {
-          id: '002',
-          name: 'T1.23/2022-2',
-          created_at: new Date().toISOString(),
-          expires_at: new Date(
-            Date.now() + 6 * (3600 * 1000 * 24)
-          ).toISOString(),
-          registered_by: 'armandoalbor',
-          time_on_platform: '25 días',
-          total_objective: 24,
-          priority: Priority.HIGH,
-          turn_of_attention: Turn.EVENING,
-          status: Status.TO_COMPLETE
-        },
-        {
-          id: '003',
-          name: 'T1.24/2022-23',
-          created_at: new Date().toISOString(),
-          expires_at: new Date(
-            Date.now() + 4 * (3600 * 1000 * 24)
-          ).toISOString(),
-          registered_by: 'efracuadras',
-          time_on_platform: '10 días',
-          total_objective: 10,
-          priority: Priority.LOW,
-          turn_of_attention: Turn.NIGHTNING,
-          status: Status.CURRENT
-        },
-        {
-          id: '004',
-          name: 'T1.20/2022-4',
-          created_at: new Date().toISOString(),
-          expires_at: new Date(
-            Date.now() + 1 * (3600 * 1000 * 24)
-          ).toISOString(),
-          registered_by: 'javieralbor',
-          time_on_platform: '1 mes',
-          total_objective: 20,
-          priority: Priority.LOW,
-          turn_of_attention: Turn.EVENING,
-          status: Status.CURRENT
-        },
-        {
-          id: '005',
-          name: 'T1.18/2022-16',
-          created_at: new Date().toISOString(),
-          expires_at: new Date(
-            Date.now() + 16 * (3600 * 1000 * 24)
-          ).toISOString(),
-          registered_by: 'alfredogonzalez',
-          time_on_platform: '12 días',
-          total_objective: 44,
-          priority: Priority.MEDIUM,
-          turn_of_attention: Turn.MORNING,
-          status: Status.COMPLETED
-        }
-      ]
+      const urlParams = Params.Builder(params)
+        .pagination(techniquesPagination)
+        .build()
 
-      let data: WorkGroupTechnique[] = []
+      const response = await getWorkgroupsService({
+        queryString: `${selected.id}/techniques`,
+        urlParams
+      })
 
-      if (id === '001') {
-        data = [...mockedData]
-      }
-
-      if (id === '003') {
-        data.push(mockedData[1])
-        data.push(mockedData[3])
-        data.push(mockedData[4])
-      }
-
-      if (id === '004') {
-        data.push(mockedData[1])
-        data.push(mockedData[2])
-        data.push(mockedData[3])
-        data.push(mockedData[4])
-      }
+      const data: any[] = response.data
 
       dispatch(
         actions.setWorkGroupTechniques(
-          data ?? initialState.associatedTechniques
+          data.map<WorkGroupTechnique>((item) => ({
+            id: item.id,
+            created_at: item.created_at,
+            expires_at: item.end_date,
+            name: item.name,
+            priority: item.priority,
+            registered_by: item.created_by?.username,
+            status: item.status,
+            total_objective: item.targets.length,
+            turn_of_attention: item.shift
+          }))
         )
       )
 
-      return Boolean(data)
-    } catch (error) {
       dispatch(
-        actions.setWorkGroupTechniques(initialState.associatedTechniques)
+        actions.setWorkGroupTechniquesPagination({
+          page: response.page,
+          limit: urlParams.limit,
+          totalRecords: response.size,
+          sort: params?.sort ?? techniquesPagination.sort
+        })
       )
-
-      return false
-    }
+    } catch (error) {}
   }
 
   const selectWorkGroup = async (workGroup?: WorkGroup): Promise<boolean> => {
@@ -375,7 +309,7 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
           name: workgroup.name,
           description: workgroup.description,
           users: workgroup.userIds,
-          techniques: workgroup.techniques
+          techniques: workgroup.techniqueIds
         }
       })
 
@@ -408,6 +342,8 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
         queryString: `${selected.id}/users`,
         body: membersAction
       })
+
+      // TODO: Agregar conexión y desconexión de T.I. cuando sea agregada
 
       dispatch(actions.setSelectedWorkGroup(response.data))
 
@@ -497,6 +433,27 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
     }
   }
 
+  const deleteTechniquesOfWorkGroup = async (
+    ids: string[]
+  ): Promise<boolean> => {
+    try {
+      if (selected.id === '') return false
+
+      const response = await updateWorkGroupService({
+        queryString: `${selected.id}/techniques`,
+        body: {
+          disconnect: ids
+        }
+      })
+
+      actions.setSelectedWorkGroup(response.data)
+
+      return true
+    } catch {
+      return false
+    }
+  }
+
   return {
     getHistory,
     getWorkGroups,
@@ -509,7 +466,8 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
     deleteWorkGroup,
     deleteUsersOfWorkGroup,
     deleteWorkGroups,
-    toggleDisableWorkGroups
+    toggleDisableWorkGroups,
+    deleteTechniquesOfWorkGroup
   }
 }
 

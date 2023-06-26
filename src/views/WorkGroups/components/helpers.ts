@@ -20,7 +20,7 @@ export const getTechniqueStatusI18Key = (
       i18AbbreviatedKey = 'currentShortAbbreviation'
       break
 
-    case 'to_conclude':
+    case 'concluding':
       i18Key = 'toConclude'
       i18AbbreviatedKey = 'toConcludeShortAbbreviation'
       break

@@ -36,7 +36,8 @@ const CreateWorkGroupDrawer = ({ open, onClose }: Props): ReactElement => {
             const created = await actions?.createWorkGroup({
               name: values.name,
               description: values.description,
-              userIds: values.users.map((item) => item.value)
+              userIds: values.users.map((item) => item.value),
+              techniqueIds: values.techniques.map((item) => item.value)
             })
             if (created) {
               launchToast({

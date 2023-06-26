@@ -7,15 +7,20 @@ import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
 import { formMessages } from 'globalMessages'
 import { workGroupsFormMessages } from '../messages'
 
+interface Option {
+  value: string
+  label: string
+}
+
 interface FormValues {
   name: string
   description: string
-  users: any[]
-  techniques: string[]
+  users: Option[]
+  techniques: Option[]
 }
 
 interface Props {
-  initialValues?: FormValues | any
+  initialValues?: FormValues
   open: boolean
   onSubmit: (
     values: FormValues,
@@ -82,8 +87,23 @@ const WorkGroupForm = ({
     {
       name: 'techniques',
       section: 'techniques',
-      type: 'text',
-      options: {}
+      type: 'async-select',
+      options: {
+        asyncProps: {
+          api: {
+            endpoint: 'techniques',
+            method: 'get'
+          },
+          value: 'id',
+          label: 'name',
+          searchField: 'name'
+        },
+        isMulti: true,
+        placeholder: getLocalFormMessage('selectTechniquesPlaceholder'),
+        loadingMessage: () => `${getLocalFormMessage('loading')}...`,
+        noOptionsMessage: () => getLocalFormMessage('noOptions'),
+        debounceTimeout: 300
+      }
     }
   ]
 
