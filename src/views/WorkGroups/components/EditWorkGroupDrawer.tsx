@@ -52,20 +52,27 @@ const EditWorkGroupDrawer = ({ actualTab }: Props): ReactElement | null => {
       <WorkGroupForm
         open={show}
         initialValues={{
-          id: workGroup.id,
+          // id: workGroup.id,
           name: workGroup.name,
           description: workGroup.description,
-          users: workGroup.users?.map((item) => ({
-            value: item.id,
-            label: item.username
-          }))
+          users:
+            workGroup.users?.map((item) => ({
+              value: item.id,
+              label: item.username
+            })) ?? [],
+          techniques:
+            workGroup.techniques?.map((item) => ({
+              value: item.id,
+              label: item.name
+            })) ?? []
         }}
         onSubmit={async (values) => {
           const updated = await actions?.updateWorkGroup({
             id: workGroup.id,
             name: values.name,
             description: values.description,
-            userIds: values.users.map((item) => item.value)
+            userIds: values.users.map((item) => item.value),
+            techniqueIds: values.techniques.map((item) => item.value)
           })
           if (updated) {
             launchToast({

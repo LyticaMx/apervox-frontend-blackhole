@@ -115,7 +115,7 @@ const AssociatedUserList = (): ReactElement => {
       manualPagination={{
         currentPage: usersPagination.page,
         totalRecords: usersPagination.totalRecords,
-        onChange: (page) => actions?.getWorkGroups({ page: page + 1 })
+        onChange: (page) => actions?.getWorkGroupUsers({ page: page + 1 })
       }}
       manualLimit={{
         options: [15, 25, 50, 100],

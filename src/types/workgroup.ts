@@ -23,6 +23,11 @@ export interface InnerWorkgroupUser {
   username: string
 }
 
+export interface InnerTecnique {
+  id: string
+  name: string
+}
+
 export interface WorkGroup {
   id?: string
   name: string
@@ -32,17 +37,17 @@ export interface WorkGroup {
   total_users?: number
   created_at?: string
   updated_at?: string
-  techniques?: WorkGroupTechniques
-  techniquesIds?: string[]
+  techniquesByStatus?: WorkGroupTechniques
+  techniques?: InnerTecnique[]
   users?: InnerWorkgroupUser[]
   userIds?: string[]
+  techniqueIds?: string[]
   status?: boolean | Status
 }
 
 export interface WorkGroupTechniques {
-  assigned: number
   current: number
-  to_conclude: number
+  concluding: number
   concluded: number
 }
 
@@ -70,7 +75,6 @@ export interface WorkGroupTechnique {
   created_at: string
   expires_at: string
   registered_by: string
-  time_on_platform: string
   total_objective: number
   priority: Priority
   turn_of_attention: Turn
@@ -141,15 +145,12 @@ export interface WorkgroupActions {
   getWorkGroupUsers: (
     params?: WorkgroupPaginationParams & SearchParams
   ) => Promise<void>
-  getWorkGroupTechniques: (
-    id: string,
-    params?: Partial<PaginationFilter>
-  ) => Promise<boolean>
+  getWorkGroupTechniques: (params?: WorkgroupPaginationParams) => Promise<void>
   updateStatusWorkGroup: (id: string, status: boolean) => Promise<boolean>
   deleteWorkGroup: (id: string) => Promise<boolean>
   deleteWorkGroups: (id: string[]) => Promise<boolean>
   deleteUsersOfWorkGroup: (ids: string[]) => Promise<boolean>
-  deleteTechniqueOfWorkGroup?: (id: string) => Promise<boolean>
+  deleteTechniquesOfWorkGroup?: (id: string[]) => Promise<boolean>
   createWorkGroup: (params: WorkGroup) => Promise<boolean>
   updateWorkGroup: (params: WorkGroup) => Promise<boolean>
   selectWorkGroup: (params?: WorkGroup) => void

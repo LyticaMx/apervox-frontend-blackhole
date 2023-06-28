@@ -32,13 +32,16 @@ const CustomTabs = ({
   const { formatMessage } = useIntl()
 
   return (
-    <div className={clsx('flex gap-1 flex-wrap', classNames?.container)}>
+    <div className={clsx('flex gap-1', classNames?.container)}>
       {items.map((item) => (
         <Button
           key={item.id}
           size="sm"
           color="indigo"
-          className={clsx(active === item.id && 'bg-indigo-100')}
+          className={clsx(
+            active === item.id && 'bg-indigo-100',
+            'basis-40 flex-shrink-0'
+          )}
           onClick={() => onChange(item.id)}
         >
           {formatMessage(item.label)}

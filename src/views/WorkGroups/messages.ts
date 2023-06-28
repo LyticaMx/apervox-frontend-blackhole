@@ -159,6 +159,10 @@ export const workGroupsFormMessages = defineMessages({
   selectUsersPlaceholder: {
     id: 'views.workGroups.workGroupsForm.selectUsersPlaceholder',
     defaultMessage: 'Selecciona los usuarios'
+  },
+  selectTechniquesPlaceholder: {
+    id: 'views.workGroups.workGroupsForm.selectTechniquesPlaceholder',
+    defaultMessage: 'Selecciona las técnicas'
   }
 })
 

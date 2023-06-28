@@ -17,7 +17,7 @@ import Switch from 'components/Form/Switch'
 import Tooltip from 'components/Tooltip'
 import StatusTag from 'components/Status/StatusTag'
 import { Status } from 'types/status'
-import { WorkGroup } from 'types/workgroup'
+import { WorkGroup, WorkGroupTechniques } from 'types/workgroup'
 import * as helpers from './helpers'
 import useToast from 'hooks/useToast'
 
@@ -79,9 +79,10 @@ const WorkGroupList = ({
         enableSorting: false
       },
       {
+        accessorKey: 'techniquesByStatus',
         header: getMessage('techniques'),
-        cell: () => {
-          const techniques = []
+        cell: ({ getValue }) => {
+          const techniques = getValue<WorkGroupTechniques>()
 
           return (
             <div className="flex items-center justify-start">

@@ -43,7 +43,7 @@ const WorkGroups = (): ReactElement => {
   const {
     actions,
     selected,
-    associatedTechniques,
+    techniquesPagination,
     usersPagination,
     totalWorkGroups
   } = useWorkGroups()
@@ -54,10 +54,12 @@ const WorkGroups = (): ReactElement => {
   }, [])
 
   useEffect(() => {
-    if (tab === 'users' && selected.id) {
-      actions?.getWorkGroupUsers({ page: 1 })
-    } else {
-      actions?.getWorkGroupTechniques(selected.id ?? '')
+    if (selected.id) {
+      if (tab === 'users') {
+        actions?.getWorkGroupUsers({ page: 1 })
+      } else {
+        actions?.getWorkGroupTechniques({ page: 1 })
+      }
     }
   }, [tab])
 
@@ -195,11 +197,13 @@ const WorkGroups = (): ReactElement => {
                 component: (
                   <div className="py-2">
                     <p className="uppercase mb-2">
-                      {associatedTechniques.length}{' '}
-                      {getMessage('assignedTechniquesSubtitle')}
+                      {formatTotal(
+                        techniquesPagination.totalRecords,
+                        getMessage('assignedTechniquesSubtitle')
+                      )}
                     </p>
 
-                    <TechniqueList data={associatedTechniques} />
+                    <TechniqueList />
                   </div>
                 )
               }
