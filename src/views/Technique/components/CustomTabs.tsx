@@ -38,10 +38,7 @@ const CustomTabs = ({
           key={item.id}
           size="sm"
           color="indigo"
-          className={clsx(
-            active === item.id && 'bg-indigo-100',
-            'basis-40 flex-shrink-0'
-          )}
+          className={clsx(active === item.id && 'bg-indigo-100', 'basis-40')}
           onClick={() => onChange(item.id)}
         >
           {formatMessage(item.label)}

@@ -12,8 +12,8 @@ type Response = [
   (props: ContentProps) => ReactElement
 ]
 
-const useTabs = <T,>(defaultValue?: any): Response => {
-  const [active, setActive] = useState<T>(defaultValue ?? null)
+const useTabs = <T,>(defaultValue?: T): Response => {
+  const [active, setActive] = useState<T | null>(defaultValue ?? null)
 
   const Content = useCallback(
     ({ value, children, ...props }: ContentProps) =>

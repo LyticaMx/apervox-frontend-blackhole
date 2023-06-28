@@ -7,7 +7,7 @@ interface Props {
   style?: object
   selected?: boolean
   props?: ReactNode
-  tabAs: keyof JSX.IntrinsicElements & HtmlHTMLAttributes<HTMLOrSVGElement>
+  tabAs?: keyof JSX.IntrinsicElements & HtmlHTMLAttributes<HTMLOrSVGElement>
 }
 
 const Tab = forwardRef(
@@ -22,7 +22,11 @@ const Tab = forwardRef(
     return (
       <Tag
         {...props}
-        className={clsx(className, selected && 'tab__selected')}
+        className={clsx(
+          'btn text indigo shrink-0 sm',
+          className,
+          selected && 'bg-indigo-100'
+        )}
         ref={ref}
         style={style}
         {...(tabAs === 'button' ? buttonSpecialProps : {})}
