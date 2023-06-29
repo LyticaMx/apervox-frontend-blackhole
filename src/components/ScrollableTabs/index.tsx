@@ -234,6 +234,7 @@ const ScrollableTabs = (props: Props): ReactElement => {
 
   const updateNavBtnsState = (): void => {
     if (!_tabsContainerRef.current) return
+
     const scrollLeft = _tabsContainerRef.current.scrollLeft
     const scrollWidth = _tabsContainerRef.current.scrollWidth
     const clientWidth = _tabsContainerRef.current.clientWidth
@@ -250,10 +251,7 @@ const ScrollableTabs = (props: Props): ReactElement => {
   }
 
   const handleTabsScroll = useMemo(
-    () =>
-      debounce(() => {
-        updateNavBtnsState()
-      }),
+    () => debounce(updateNavBtnsState),
     [updateNavBtnsState]
   )
 
@@ -293,6 +291,10 @@ const ScrollableTabs = (props: Props): ReactElement => {
     () => ({ onLeftNavBtnClick, onRightNavBtnClick, goToStart, goToEnd }),
     [onLeftNavBtnClick, onRightNavBtnClick, goToStart, goToEnd]
   )
+
+  useEffect(() => {
+    handleTabsScroll()
+  }, [])
 
   useEffect(() => {
     return () => {
