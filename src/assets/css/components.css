@@ -63,3 +63,12 @@
 .card.shadow {
   @apply shadow-blackhole-md shadow-gray-200
 }
+
+.scroll-width-0{
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scroll-width-0::-webkit-scrollbar{
+  display: none;
+}

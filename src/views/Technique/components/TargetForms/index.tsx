@@ -1,6 +1,5 @@
 import { ReactElement } from 'react'
 import { targetFormsTabs, TARGET_FORMS_TABS } from '../../constants'
-import CustomTabs from 'views/Technique/components/CustomTabs'
 import LanguagesForm from './LanguagesForm'
 import SocialMediaForm from './SocialMediaForm'
 import AccountBankForm from './AccountBankForm'
@@ -17,21 +16,24 @@ import PersonalDataForm from './PersonalDataForm'
 import SocialCircleForm from './SocialCircleForm'
 import BiometricForm from './BiometricForm'
 import { useTabs } from 'hooks/useTabs'
+import ScrollableTabs from 'components/ScrollableTabs'
+import ScTab from 'components/ScrollableTabs/Tab'
+import { useIntl } from 'react-intl'
 
 const TargetForms = (): ReactElement => {
   const [active, setActive, Tab] = useTabs(TARGET_FORMS_TABS.PERSONAL_DATA)
+  const { formatMessage } = useIntl()
 
   return (
     <>
-      <CustomTabs
-        classNames={{ container: 'mb-4' }}
-        items={targetFormsTabs}
-        onChange={(tabClicked) => {
-          setActive(tabClicked as TARGET_FORMS_TABS)
-        }}
-        active={active}
-      />
-
+      <ScrollableTabs
+        activeTab={active}
+        onTabClick={(e, newTab) => setActive(newTab)}
+      >
+        {targetFormsTabs.map((tab) => (
+          <ScTab key={tab.id}>{formatMessage(tab.label)}</ScTab>
+        ))}
+      </ScrollableTabs>
       <Tab value={TARGET_FORMS_TABS.LANGUAGE}>
         <LanguagesForm />
       </Tab>
