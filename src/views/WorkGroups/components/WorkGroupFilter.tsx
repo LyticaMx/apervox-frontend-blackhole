@@ -29,31 +29,6 @@ const WorkGroupFilter = ({ toggleOpen }: Props): ReactElement => {
     }
   ]
 
-  // TODO: Eliminar despues de ser utilizado como ejemplo
-  /*
-  const staticFilters: StaticFilter[] = [
-    {
-      label: getMessage('status'),
-      name: 'status',
-      options: [
-        {
-          name: getMessage('active'),
-          value: 'active'
-        },
-        {
-          name: getMessage('inactive'),
-          value: 'inactive'
-        },
-        {
-          name: getMessage('both'),
-          value: 'both'
-        }
-      ]
-      // multiple: true
-    }
-  ]
-  */
-
   return (
     <ViewFilter
       fields={filterItems}
@@ -65,7 +40,8 @@ const WorkGroupFilter = ({ toggleOpen }: Props): ReactElement => {
           end_time: data.dateRange[1],
           clearDates: data.clearDates,
           filters: data.filterByField.fields,
-          query: data.filterByField.search
+          query: data.filterByField.search,
+          page: 1
         })
       }
       initialValues={{

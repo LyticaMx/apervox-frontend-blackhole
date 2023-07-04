@@ -65,7 +65,8 @@ const Header = ({ onAction }: Props): ReactElement => {
             filters: data.filterByField.fields,
             query: data.filterByField.search,
             status: status[staticF?.status ?? 'both'],
-            clearDates: data.clearDates
+            clearDates: data.clearDates,
+            page: 1
           })
         }}
       />
