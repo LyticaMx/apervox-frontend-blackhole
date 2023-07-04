@@ -39,7 +39,10 @@ const NavButton = forwardRef((props: Props, ref) => {
     <div className={clsx('inline-flex', navBtnContainerClassname)}>
       <Tag
         {...(navBtnAs === 'button' ? buttonSpecialProps : {})}
-        className={clsx('disabled:text-neutral-300', className)}
+        className={clsx(
+          'disabled:text-neutral-300 text-primary enabled:hover:bg-primary-100 p-2 rounded-full',
+          className
+        )}
         onClick={onClick}
         style={navBtnStyle}
         dir="ltr"

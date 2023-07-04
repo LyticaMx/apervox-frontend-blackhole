@@ -266,7 +266,7 @@ const ScrollableTabs = (props: Props): ReactElement => {
           disabled={!navBtnDisplay.start}
           onClick={onLeftNavBtnClick}
           ref={rightNavBtnRef}
-          className={clsx(navBtnClassName, leftNavBtnClassName)}
+          className={clsx('mr-2', navBtnClassName, leftNavBtnClassName)}
           {...navBtnProps}
         >
           {leftButtonIcon}
@@ -277,7 +277,7 @@ const ScrollableTabs = (props: Props): ReactElement => {
           disabled={!navBtnDisplay.end}
           onClick={onRightNavBtnClick}
           ref={leftNavBtnRef}
-          className={clsx(navBtnClassName, rightNavBtnClassName)}
+          className={clsx('ml-2', navBtnClassName, rightNavBtnClassName)}
           {...navBtnProps}
         >
           {rightButtonIcon}
