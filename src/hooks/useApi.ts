@@ -49,13 +49,32 @@ const useApi = ({
   const { launchToast } = useToast()
 
   const handleFetch = async (
-    { body, queryString, urlParams }: Fetch = {},
+    { body: data, queryString, urlParams }: Fetch = {},
     headers?: Partial<AxiosRequestHeaders>
   ): Promise<ResponseData> => {
     const url: string = `${endpoint}${queryString ? `/${queryString}` : ''}`
     const release = await lock()
     try {
       if (withLoader) loaderActions?.showLoader()
+
+      const formattedParams = urlParams ?? {}
+
+      for (const key in formattedParams) {
+        if (
+          !acceptNulls &&
+          (formattedParams[key] === null ||
+            typeof formattedParams[key] === 'undefined')
+        ) {
+          // Es seguro borrar esta línea, se desactiva el eslint
+          // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+          delete formattedParams[key]
+        } else if (
+          typeof formattedParams[key] === 'object' &&
+          formattedParams[key] instanceof Date
+        ) {
+          formattedParams[key] = formattedParams[key].toISOString()
+        }
+      }
 
       const response = await instance({
         method,
@@ -64,22 +83,8 @@ const useApi = ({
           serialize: (params) => QS.stringify(params, { arrayFormat: 'none' })
         },
         headers,
-        ...(urlParams
-          ? acceptNulls
-            ? { params: urlParams }
-            : {
-                params: Object.keys(urlParams).reduce((acum, key) => {
-                  if (
-                    urlParams[key] !== null &&
-                    typeof urlParams[key] !== 'undefined'
-                  ) {
-                    acum[key] = urlParams[key]
-                  }
-                  return acum
-                }, {})
-              }
-          : {}),
-        ...(body ? { data: body } : {})
+        params: formattedParams,
+        data
       })
 
       const notContent = response.status === 204

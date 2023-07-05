@@ -48,7 +48,8 @@ const TechniqueFilter = ({ toggleOpen }: Props): ReactElement => {
           end_time: data.dateRange[1],
           clearDates: data.clearDates,
           filters: data.filterByField.fields,
-          query: data.filterByField.search
+          query: data.filterByField.search,
+          page: 1
         })
       }
     />

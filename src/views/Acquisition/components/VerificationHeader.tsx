@@ -50,7 +50,8 @@ const VerificationHeader = (): ReactElement => {
             end_time: data.dateRange[1],
             filters: data.filterByField.fields,
             query: data.filterByField.search,
-            clearDates: data.clearDates
+            clearDates: data.clearDates,
+            page: 1
           })
         }}
         initialValues={{

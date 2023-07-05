@@ -82,7 +82,8 @@ const Header = (): ReactElement => {
               filters: data.filterByField.fields,
               query: data.filterByField.search,
               clearDates: data.clearDates,
-              line_status: lineStatus === 'all' ? undefined : lineStatus
+              line_status: lineStatus === 'all' ? undefined : lineStatus,
+              page: 1
             })
           }}
           initialValues={{
