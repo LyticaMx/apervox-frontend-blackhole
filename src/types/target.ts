@@ -26,25 +26,28 @@ import { Target } from 'types/technique'
 
 export type getDataPayload = PaginationParams &
   SearchParams &
-  DateFilter & { sort?: SortingState }
+  DateFilter & {
+    sort?: SortingState
+    technique_id?: string
+  }
 
-export type createPayload = Omit<Target, 'id'>
+export type createPayload = Omit<Target, 'id'> & { technique_id: string }
 export type updatePayload = Target
 
 export interface State {
   data: Target[]
+  total: number
   pagination: PaginationSortFilter
   dateFilter: DateFilter
   searchFilter: SearchFilter
 }
 
 export interface Actions {
-  getData: (params?: getDataPayload) => Promise<void>
+  getData: (params?: getDataPayload, getTotal?: boolean) => Promise<void>
   create: (payload: createPayload) => Promise<boolean>
   update: (payload: updatePayload) => Promise<boolean>
   delete: (id: string) => Promise<boolean>
-  deleteAll: (ids: string[]) => Promise<boolean>
-  toggleStatus: (id: string, status: boolean) => Promise<boolean>
+  deleteMany: (ids: string[]) => Promise<boolean>
 }
 
 export interface ContextType extends State {

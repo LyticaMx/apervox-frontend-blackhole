@@ -5,17 +5,21 @@ import { Types } from './constants'
 
 export const initialState: State = {
   summary: '',
-  targets: []
+  techniqueId: '',
+  searchFilter: {},
+  dateFilter: {}
 }
 
 export const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case Types.SET_TECHNIQUE:
-      return { ...state, technique: action.payload }
+      return {
+        ...state,
+        technique: action.payload,
+        techniqueId: action.payload.id
+      }
     case Types.SET_TARGET:
       return { ...state, target: action.payload }
-    case Types.GET_TARGETS:
-      return { ...state, targets: action.payload }
     case Types.SET_SUMMARY:
       return { ...state, summary: action.payload }
     default:
