@@ -45,10 +45,7 @@ export const useActions = (state: State, dispatch): Actions => {
       const techniqueId: string = params?.technique_id ?? ''
 
       const [response, totalResponse] = await Promise.all([
-        findAll(techniqueId, {
-          limit: 1,
-          page: params?.page ?? pagination.page
-        }),
+        findAll(techniqueId, urlParams),
         getTotal
           ? findAll(techniqueId, { page: 1, limit: 1 })
           : Promise.resolve(null)
