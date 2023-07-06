@@ -34,8 +34,8 @@ export const actionsMessages = defineMessages({
     id: 'global.actions.delete',
     defaultMessage: 'Eliminar'
   },
-  aplyChanges: {
-    id: 'global.actions.aplyChanges',
+  applyChanges: {
+    id: 'global.actions.applyChanges',
     defaultMessage: 'Aplicar cambios'
   },
   clean: {
