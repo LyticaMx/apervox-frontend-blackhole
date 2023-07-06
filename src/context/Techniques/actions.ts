@@ -12,6 +12,7 @@ import { DateFilter } from 'types/filters'
 import { useService } from 'hooks/useApi'
 import { Params } from 'utils/ParamsBuilder'
 import useToast from 'hooks/useToast'
+import { Status } from 'types/status'
 
 const orderByMapper = {
   created_at: 'start_date',
@@ -65,7 +66,8 @@ const useActions = (state: State, dispatch): Actions => {
             priority: item.priority,
             registered_by: item.created_by.username,
             total_target: item.targets.length,
-            status: item.status,
+            status:
+              item.status === 'concluding' ? Status.TO_COMPLETE : item.status,
             attention_turn: item.shift ?? ''
           })),
           total: total ?? 0
