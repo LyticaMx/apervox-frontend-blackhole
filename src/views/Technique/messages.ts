@@ -1557,3 +1557,36 @@ export const techniqueInfoTabsMessages = defineMessages({
     defaultMessage: 'Datos biométricos'
   }
 })
+
+export const techniqueUpdateMessages = defineMessages({
+  extendTechnique: {
+    id: 'views.techniques.update.extendTechnique',
+    defaultMessage: 'Extender técnica'
+  },
+  targetsFoundOnExtension: {
+    id: 'views.techniques.update.targetsFoundOnExtension',
+    defaultMessage:
+      'Se encontraron objetivos que están vinculados a la fecha de finalización de la técnica. Seleccione aquellos que desea que permanezcan con esta fecha para evitar que sean actualizados a la nueva fecha.'
+  },
+  selectedTargets: {
+    id: 'views.techniques.update.selectedTargets',
+    defaultMessage: '{selected} objetivos seleccionados'
+  },
+  updateNotDone: {
+    id: 'views.techniques.update.updateNotDone',
+    defaultMessage: 'No se realizó la actualización'
+  },
+  success: {
+    id: 'views.techniques.update.success',
+    defaultMessage: 'Datos actualizados correctamente'
+  },
+  anticipateTechnique: {
+    id: 'views.techniques.update.anticipateTechnique',
+    defaultMessage: 'Anticipar técnica'
+  },
+  targetsFoundOnAnticipation: {
+    id: 'views.techniques.update.targetsFoundOnAnticipation',
+    defaultMessage:
+      'Los objetivos sin fecha de finalización definida o con fecha posterior a la nueva fecha se limitarán a esta última. ¿Desea continuar?'
+  }
+})

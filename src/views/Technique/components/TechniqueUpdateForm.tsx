@@ -14,7 +14,7 @@ import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
 import Form from 'components/Form'
 import TextField from 'components/Form/Textfield'
 
-import { techniqueFormMessages } from '../messages'
+import { techniqueFormMessages, techniqueUpdateMessages } from '../messages'
 import { Turn } from 'types/technique'
 import { addDays, format, set } from 'date-fns'
 import { useTechnique } from 'context/Technique'
@@ -25,6 +25,7 @@ import { useTechniques } from 'context/Techniques'
 import ConfirmationDialog from './ConfirmationDialog'
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline'
 import StaticTargetDialog from './StaticTargetsDialog'
+import { useIntl } from 'react-intl'
 
 type AdvanceTimeType = 'days' | 'hours'
 type PriorityType = 'urgent' | 'high' | 'medium' | 'low'
@@ -50,6 +51,7 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
   const { technique, actions: techniqueActions } = useTechnique()
   const { actions: techniquesActions } = useTechniques()
   const getMessage = useFormatMessage(techniqueFormMessages)
+  const { formatMessage } = useIntl()
   const getGlobalMessage = useGlobalMessage()
   const { launchToast } = useToast()
   const [waitForExtension, setWaitForExtension] = useState<
@@ -315,7 +317,6 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
     let staticDateTargets: string[] | undefined
 
     if (expiresAt > oldExpiration) {
-      // TODO: Aqui agregar tabla de objetivos con nueva fecha
       const isAnyLinkedTarget =
         (await techniqueActions?.hasLinkedDateTargets()) ?? false
 
@@ -329,7 +330,7 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
         if (!targets) {
           launchToast({
             type: 'Warning',
-            title: 'No se realizó la actualización'
+            title: formatMessage(techniqueUpdateMessages.updateNotDone)
           })
           return
         }
@@ -345,7 +346,7 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
       if (!aprove) {
         launchToast({
           type: 'Warning',
-          title: 'No se realizó la actualización'
+          title: formatMessage(techniqueUpdateMessages.updateNotDone)
         })
         return
       }
@@ -366,7 +367,7 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
     )
     if (updated) {
       launchToast({
-        title: 'Datos actualizados',
+        title: formatMessage(techniqueUpdateMessages.success),
         type: 'Success'
       })
       await techniquesActions?.get()
@@ -406,8 +407,8 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
     <div>
       <ConfirmationDialog
         icon={<ExclamationCircleIcon className="text-red-500 w-5 h-5" />}
-        title="Anticipar técnica."
-        body="Los objetivos sin fecha de finalización definida o con fecha posterior a la nueva fecha se limitarán a esta última. ¿Desea continuar?"
+        title={formatMessage(techniqueUpdateMessages.anticipateTechnique)}
+        body={formatMessage(techniqueUpdateMessages.targetsFoundOnAnticipation)}
         onAction={waitForAnticipation}
         startDate={technique?.expires_at}
         endDate={formikRef.current?.values.endDate?.toISOString()}

@@ -167,5 +167,9 @@ export const actionsMessages = defineMessages({
   restore: {
     id: 'global.actions.restore',
     defaultMessage: 'Restablecer'
+  },
+  selectAll: {
+    id: 'global.actions.selectAll',
+    defaultMessage: 'Seleccionar todo'
   }
 })

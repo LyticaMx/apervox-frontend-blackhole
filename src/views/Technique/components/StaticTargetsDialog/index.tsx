@@ -9,7 +9,7 @@ import Label from 'components/Label'
 import NoData from 'components/NoData'
 import Typography from 'components/Typography'
 import { useTechnique } from 'context/Technique'
-import { actionsMessages } from 'globalMessages'
+import { actionsMessages, apiMessages } from 'globalMessages'
 import useApi from 'hooks/useApi'
 import { ReactElement, useEffect, useMemo, useRef, useState } from 'react'
 import { useIntl } from 'react-intl'
@@ -17,6 +17,7 @@ import { PaginationFilter } from 'types/filters'
 import TargetCard from './TargetCard'
 import Checkbox from 'components/Form/Checkbox'
 import { format } from 'date-fns'
+import { techniqueUpdateMessages } from 'views/Technique/messages'
 
 interface Props {
   onAction:
@@ -174,7 +175,7 @@ const StaticTargetDialog = (props: Props): ReactElement => {
         className="inline-flex items-center gap-1"
       >
         <ExclamationCircleIcon className="w-5 h-5 text-red-500" />
-        Extender técnica
+        {formatMessage(techniqueUpdateMessages.extendTechnique)}
       </Typography>
       <div className="flex items-center justify-center gap-2 my-1">
         <Typography
@@ -192,16 +193,18 @@ const StaticTargetDialog = (props: Props): ReactElement => {
         </Typography>
       </div>
       <Typography variant="body2">
-        Se encontraron objetivos que están vinculados a la fecha de finalización
-        de la técnica. Seleccione aquellos que desea que permanezcan con esta
-        fecha para evitar que sean actualizados a la nueva fecha.
+        {formatMessage(techniqueUpdateMessages.targetsFoundOnExtension)}
       </Typography>
       <div>
         <div className="flex items-center justify-between">
-          <span>{selectedCount} objetivos seleccionados</span>
+          <span>
+            {formatMessage(techniqueUpdateMessages.selectedTargets, {
+              selected: selectedCount
+            })}
+          </span>
           <div className="flex items-center gap-1">
             <Label id="select-all-shared-date-objectives" labelClassname="!m-0">
-              Seleccionar todo
+              {formatMessage(actionsMessages.selectAll)}
             </Label>
             <Checkbox
               id="select-all-shared-date-objectives"
@@ -241,7 +244,7 @@ const StaticTargetDialog = (props: Props): ReactElement => {
                   >
                     {virtualRow.index > loadedTargets.length - 1 ? (
                       hasNextPage ? (
-                        'Loading more'
+                        formatMessage(apiMessages.loadingMore)
                       ) : null
                     ) : (
                       <div

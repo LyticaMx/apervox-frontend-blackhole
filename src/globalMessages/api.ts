@@ -34,5 +34,9 @@ export const apiMessages = defineMessages({
   user_blocked: {
     id: 'global.api.user_blocked',
     defaultMessage: 'Usuario bloqueado'
+  },
+  loadingMore: {
+    id: 'global.api.loadingMore',
+    defaultMessage: 'Cargando más'
   }
 })

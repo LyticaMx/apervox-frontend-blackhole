@@ -2,7 +2,9 @@ import { UserIcon } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
 import Checkbox from 'components/Form/Checkbox'
 import Typography from 'components/Typography'
+import { platformMessages } from 'globalMessages'
 import { ReactElement } from 'react'
+import { useIntl } from 'react-intl'
 
 interface Props {
   id: string
@@ -15,6 +17,8 @@ interface Props {
 }
 
 const TargetCard = (props: Props): ReactElement => {
+  const { formatMessage } = useIntl()
+
   return (
     <div className="py-1">
       <div
@@ -29,11 +33,15 @@ const TargetCard = (props: Props): ReactElement => {
             <Typography style="semibold">{props.alias}</Typography>
             <div className="flex gap-2">
               <Typography variant="body2">
-                <span className="font-semibold mr-1">Número:</span>
+                <span className="font-semibold mr-1">{`${formatMessage(
+                  platformMessages.phoneNumber
+                )}:`}</span>
                 {props.phone}
               </Typography>
               <Typography variant="body2">
-                <span className="font-semibold mr-1">Línea:</span>
+                <span className="font-semibold mr-1">{`${formatMessage(
+                  platformMessages.phoneLine
+                )}:`}</span>
                 {props.line}
               </Typography>
             </div>
