@@ -17,6 +17,7 @@ import { VerificationLineProvider } from './VerificationLines'
 import { LabelsProvider } from './Labels'
 import { SettingsProvider } from './Settings'
 import { LocationProvider } from './Locations'
+import { TargetsProvider } from './Targets'
 
 interface Props {
   children: ReactNode
@@ -28,6 +29,7 @@ export const AppContextProvider = (props: Props): any => {
     PinsProvider,
     AlertsProvider,
     /* Contextos de BH2 */
+    TargetsProvider,
     SettingsProvider,
     UsersProvider,
     RolesProvider,

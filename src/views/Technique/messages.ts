@@ -13,14 +13,19 @@ export const createTargetDialogMessages = defineMessages({
 })
 
 export const deleteTargetDialogMessages = defineMessages({
-  deleteTarget: {
-    id: 'views.techniques.DeleteTargetDialog.deleteTarget',
-    defaultMessage: 'Quitar objetivo'
-  },
-  wantToRemove: {
-    id: 'views.techniques.DeleteTargetDialog.wantToRemove',
+  title: {
+    id: 'views.techniques.DeleteTargetDialog.title',
     defaultMessage:
-      '¿Quieres remover el objetivo {targetPhone} asignado a esta técnica?'
+      'Eliminar {selected, plural, one {objetivo} other {objetivos}}'
+  },
+  message: {
+    id: 'views.techniques.DeleteTargetDialog.message',
+    defaultMessage:
+      '¿Estás seguro de querer eliminar {selected, plural, one {el objetivo seleccionado} other {los # objetivos seleccionados}}?'
+  },
+  confirm: {
+    id: 'views.techniques.DeleteTargetDialog.confirm',
+    defaultMessage: '¿Estás seguro de querer eliminar el objetivo seleccionado?'
   }
 })
 

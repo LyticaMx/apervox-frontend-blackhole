@@ -20,6 +20,7 @@ import Tooltip from 'components/Tooltip'
 import BasicInfo from './TargetBasicInfo'
 import DeleteTargetDialog from './DeleteTargetDialog'
 import { targetCardMessages } from '../messages'
+import { useTargets } from 'context/Targets'
 
 interface Props {
   data: Target
@@ -34,6 +35,7 @@ const TargetCard = ({
   onClick,
   onCheck
 }: Props): ReactElement => {
+  const { actions } = useTargets()
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
   const { formatMessage } = useIntl()
   const getGlobalMessage = useGlobalMessage()
@@ -44,9 +46,13 @@ const TargetCard = ({
   }
   const handleCloseDeleteDialog = (): void => setOpenDeleteDialog(false)
 
-  const handleRemoveTarget = (): void => {
+  const handleRemoveTarget = async (): Promise<void> => {
     /* Filter or call API for update target list */
-    handleCloseDeleteDialog()
+    const res = await actions?.delete(data.id as string)
+
+    if (res) {
+      handleCloseDeleteDialog()
+    }
   }
 
   return (
@@ -147,7 +153,6 @@ const TargetCard = ({
       </div>
       <DeleteTargetDialog
         open={openDeleteDialog}
-        targetPhone={data.phone_number}
         onClose={handleCloseDeleteDialog}
         onAccept={handleRemoveTarget}
       />

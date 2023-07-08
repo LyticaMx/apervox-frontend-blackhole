@@ -2,7 +2,6 @@ import { Actions, InnerTechnique, State } from './types'
 
 import { actions } from './constants'
 import { Target, Technique } from 'types/technique'
-import { targetData } from 'views/Techniques/mocks'
 import { useService } from 'hooks/useApi'
 
 const useActions = (state: State, dispatch): Actions => {
@@ -15,18 +14,22 @@ const useActions = (state: State, dispatch): Actions => {
       const response = await techniqueService.get({
         queryString: technique.id ?? ''
       })
-      setTechnique({
-        id: response.data.id,
-        attention_turn: response.data.shift ?? '',
-        created_at: response.data.created_at,
-        expires_at: response.data.end_date,
-        name: response.data.name,
-        priority: response.data.priority,
-        registered_by: response.data.created_by.username,
-        total_target: 0,
-        status: response.data.status,
-        groups: response.data.groups ?? []
-      })
+
+      dispatch(
+        actions.setTechnique({
+          id: response.data.id,
+          attention_turn: response.data.shift ?? '',
+          created_at: response.data.created_at,
+          expires_at: response.data.end_date,
+          name: response.data.name,
+          priority: response.data.priority,
+          registered_by: response.data.created_by.username,
+          total_target: 0,
+          status: response.data.status,
+          groups: response.data.groups ?? []
+        })
+      )
+
       return true
     } catch {
       return false
@@ -81,11 +84,6 @@ const useActions = (state: State, dispatch): Actions => {
     }
   }
 
-  const create = async (technique: InnerTechnique): Promise<boolean> => {
-    console.log(technique)
-    return true
-  }
-
   const update = async (
     newTechnique: Omit<
       InnerTechnique,
@@ -126,24 +124,19 @@ const useActions = (state: State, dispatch): Actions => {
 
   const setTechnique = (payload: Technique): void => {
     dispatch(actions.setTechnique(payload))
-    getTargets()
   }
+
   const setTarget = (payload: Target): void => {
     dispatch(actions.setTarget(payload))
-  }
-  const getTargets = (): void => {
-    dispatch(actions.getTargets(targetData))
   }
 
   return {
     get,
     getDescription,
     updateDescription,
-    create,
     update,
     setTechnique,
     setTarget,
-    getTargets,
     hasLinkedDateTargets
   }
 }

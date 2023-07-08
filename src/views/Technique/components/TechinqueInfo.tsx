@@ -2,7 +2,6 @@ import { ReactElement, useRef } from 'react'
 import { useIntl } from 'react-intl'
 
 import { useTabs } from 'hooks/useTabs'
-import { useTechnique } from 'context/Technique'
 import { actionsMessages } from 'globalMessages'
 
 import Typography from 'components/Typography'
@@ -19,7 +18,6 @@ import TechniqueSummary from './TechniqueSummary'
 import { FormikContextType } from 'formik'
 
 const TechniqueInfo = (): ReactElement => {
-  const { targets, actions } = useTechnique()
   const [active, setActive, Tab] = useTabs(TECHNIQUE_INFO_TABS.TARGET)
   const formikRef = useRef<
     FormikContextType<TechniqueUpdateValues> | undefined
@@ -41,12 +39,7 @@ const TechniqueInfo = (): ReactElement => {
       />
 
       <Tab className="flex-1 h-0 " value={TECHNIQUE_INFO_TABS.TARGET}>
-        <TargetList
-          data={targets}
-          onSelectItem={(item) => {
-            actions?.setTarget(item)
-          }}
-        />
+        <TargetList />
       </Tab>
       <Tab value={TECHNIQUE_INFO_TABS.DESCRIPTION}>
         <TechniqueSummary />

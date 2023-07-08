@@ -1,3 +1,5 @@
+import { SearchParams } from 'types/api'
+import { DateFilter, SearchFilter } from 'types/filters'
 import { Target, Technique } from 'types/technique'
 
 export interface TechniqueGroup {
@@ -32,9 +34,11 @@ export interface InnerTechnique
 
 export interface State {
   technique?: InnerTechnique
+  techniqueId?: string
   summary: string
   target?: Target
-  targets: Target[]
+  dateFilter: DateFilter
+  searchFilter: SearchFilter
 }
 
 export interface Actions {
@@ -43,9 +47,7 @@ export interface Actions {
   updateDescription: (data: string) => Promise<boolean>
   setTechnique: (params: Technique) => void
   setTarget: (params: Target) => void
-  getTargets: () => void
   hasLinkedDateTargets: () => Promise<boolean>
-  create: (technique: InnerTechnique) => Promise<boolean>
   update: (
     technique: Omit<
       InnerTechnique,

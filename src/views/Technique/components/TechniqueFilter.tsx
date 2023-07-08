@@ -38,7 +38,7 @@ const TechniqueFilter = (): ReactElement => {
     <ViewFilter
       fields={filterItems}
       download={(document) => alert(document)}
-      onChange={(data) => console.log('workGroupsViewFilter', data)}
+      onChange={() => {}}
     />
   )
 }

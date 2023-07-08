@@ -8,15 +8,15 @@ import { LoaderProvider } from 'context/Loader/LoaderProvider'
 import DrawerProvider from 'context/Drawer/Provider'
 import { AuthProvider } from 'context/Auth'
 import { LanguageProvider } from 'context/Language'
-import { ContextLogger, appContext } from 'context/ContextLogger'
+// import { ContextLogger, appContext } from 'context/ContextLogger'
 
-import { isDev } from 'utils/env'
+// import { isDev } from 'utils/env'
 
 import 'react-toastify/dist/ReactToastify.css'
 import { SidebarProvider } from 'context/Sidebar'
 import { AppContextProvider } from 'context/AppContextProvider'
 
-const contextConfig = { objectDiffs: true, arrayDiffs: false }
+// const contextConfig = { objectDiffs: true, arrayDiffs: false }
 
 const RootComponent = (): ReactElement => (
   <>
@@ -30,12 +30,12 @@ const RootComponent = (): ReactElement => (
                   <>
                     <Navigator />
 
-                    {isDev() && (
+                    {/* {isDev() && (
                       <ContextLogger
                         contexts={appContext}
                         config={contextConfig}
                       />
-                    )}
+                    )} */}
                   </>
                 </AppContextProvider>
               </DrawerProvider>
