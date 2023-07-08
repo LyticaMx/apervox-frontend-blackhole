@@ -33,6 +33,27 @@ const useActions = (state: State, dispatch): Actions => {
     }
   }
 
+  const hasLinkedDateTargets = async (): Promise<boolean> => {
+    try {
+      if (!technique) return false
+
+      const response = await techniqueService.get({
+        queryString: `${technique.id ?? ''}/targets`,
+        urlParams: {
+          has_end_date: false,
+          page: 1,
+          limit: 1
+        }
+      })
+
+      if (response.size === 0) return false
+
+      return true
+    } catch {
+      return false
+    }
+  }
+
   const getDescription = async (): Promise<boolean> => {
     try {
       if (!technique) return false
@@ -69,7 +90,8 @@ const useActions = (state: State, dispatch): Actions => {
     newTechnique: Omit<
       InnerTechnique,
       'description' | 'attention_turn' | 'status' | 'total_target'
-    >
+    >,
+    staticDateTargets: string[] = []
   ): Promise<boolean> => {
     try {
       if (!technique) return false
@@ -78,6 +100,7 @@ const useActions = (state: State, dispatch): Actions => {
       body.end_date = newTechnique.expires_at
       body.priority = newTechnique.priority
       body.groups = newTechnique.groups
+      body.static_end_date_targets = staticDateTargets
       if (
         newTechnique.notificationTime ||
         !isNaN(newTechnique.notificationTime)
@@ -120,7 +143,8 @@ const useActions = (state: State, dispatch): Actions => {
     update,
     setTechnique,
     setTarget,
-    getTargets
+    getTargets,
+    hasLinkedDateTargets
   }
 }
 

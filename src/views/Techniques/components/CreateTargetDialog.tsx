@@ -21,8 +21,14 @@ const CreateTargetDialog = ({
   const { formatMessage } = useIntl()
 
   return (
-    <Dialog open={open} onClose={onClose} size="md" padding="none">
-      <div className="bg-white px-8 py-5">
+    <Dialog
+      open={open}
+      onClose={onClose}
+      size="md"
+      padding="none"
+      overflow="visible"
+    >
+      <div className="bg-white px-8 py-5 rounded-md">
         <Typography variant="title" style="bold" className="uppercase">
           {formatMessage(createTargetDialogMessages.addTarget)}
         </Typography>

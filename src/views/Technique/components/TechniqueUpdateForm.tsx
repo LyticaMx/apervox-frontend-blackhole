@@ -1,4 +1,10 @@
-import { MutableRefObject, ReactElement, useEffect, useMemo } from 'react'
+import {
+  MutableRefObject,
+  ReactElement,
+  useEffect,
+  useMemo,
+  useState
+} from 'react'
 import { FormikConfig, FormikContextType } from 'formik'
 import * as yup from 'yup'
 
@@ -10,12 +16,15 @@ import TextField from 'components/Form/Textfield'
 
 import { techniqueFormMessages } from '../messages'
 import { Turn } from 'types/technique'
-import { addDays, format } from 'date-fns'
+import { addDays, format, set } from 'date-fns'
 import { useTechnique } from 'context/Technique'
 import useSections from 'hooks/useSections'
 import useToast from 'hooks/useToast'
 import { Priority } from 'types/priority'
 import { useTechniques } from 'context/Techniques'
+import ConfirmationDialog from './ConfirmationDialog'
+import { ExclamationCircleIcon } from '@heroicons/react/24/outline'
+import StaticTargetDialog from './StaticTargetsDialog'
 
 type AdvanceTimeType = 'days' | 'hours'
 type PriorityType = 'urgent' | 'high' | 'medium' | 'low'
@@ -43,6 +52,12 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
   const getMessage = useFormatMessage(techniqueFormMessages)
   const getGlobalMessage = useGlobalMessage()
   const { launchToast } = useToast()
+  const [waitForExtension, setWaitForExtension] = useState<
+    ((value: PromiseLike<string[] | null> | (string[] | null)) => void) | null
+  >(null)
+  const [waitForAnticipation, setWaitForAnticipation] = useState<
+    ((value: PromiseLike<boolean> | boolean) => void) | null
+  >(null)
 
   useEffect(() => {
     techniqueActions?.get()
@@ -285,6 +300,79 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
     name: yup.string().required(getMessage('required'))
   })
 
+  const handleFormSubmit = async (values: FormValues): Promise<void> => {
+    if (!values.endDate) return
+
+    const expiresAt = set(values.endDate, {
+      hours: 23,
+      minutes: 59,
+      seconds: 59,
+      milliseconds: 999
+    })
+
+    const oldExpiration = new Date(technique?.expires_at ?? 0)
+
+    let staticDateTargets: string[] | undefined
+
+    if (expiresAt > oldExpiration) {
+      // TODO: Aqui agregar tabla de objetivos con nueva fecha
+      const isAnyLinkedTarget =
+        (await techniqueActions?.hasLinkedDateTargets()) ?? false
+
+      if (isAnyLinkedTarget) {
+        const targets = await new Promise<string[] | null>((resolve) => {
+          setWaitForExtension(() => resolve)
+        })
+
+        setWaitForExtension(null)
+
+        if (!targets) {
+          launchToast({
+            type: 'Warning',
+            title: 'No se realizó la actualización'
+          })
+          return
+        }
+        staticDateTargets = targets
+      }
+    } else if (expiresAt < oldExpiration) {
+      const aprove = await new Promise<boolean>((resolve) => {
+        setWaitForAnticipation(() => resolve)
+      })
+
+      setWaitForAnticipation(null)
+
+      if (!aprove) {
+        launchToast({
+          type: 'Warning',
+          title: 'No se realizó la actualización'
+        })
+        return
+      }
+    }
+
+    const updated = await techniqueActions?.update(
+      {
+        name: values.name,
+        expires_at: expiresAt.toISOString(),
+        priority: values.priority as Priority,
+        shift: values.shift as Turn,
+        reportEvidenceEvery: values.court,
+        notificationTime: parseInt(values.advanceTime),
+        notificationTimeUnit: values.advanceTimeType,
+        groups: values.groups.map((item) => item.value)
+      },
+      staticDateTargets
+    )
+    if (updated) {
+      launchToast({
+        title: 'Datos actualizados',
+        type: 'Success'
+      })
+      await techniquesActions?.get()
+    }
+  }
+
   const formikConfig = useMemo<FormikConfig<FormValues>>(
     () => ({
       initialValues: {
@@ -308,32 +396,27 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
         priority: technique?.priority ?? 'medium'
       },
       validationSchema,
-      onSubmit: async (values) => {
-        const updated = await techniqueActions?.update({
-          name: values.name,
-          expires_at: values.endDate?.toISOString(),
-          priority: values.priority as Priority,
-          shift: values.shift as Turn,
-          reportEvidenceEvery: values.court,
-          notificationTime: parseInt(values.advanceTime),
-          notificationTimeUnit: values.advanceTimeType,
-          groups: values.groups.map((item) => item.value)
-        })
-        if (updated) {
-          launchToast({
-            title: 'Datos actualizados',
-            type: 'Success'
-          })
-          await techniquesActions?.get()
-        }
-      },
+      onSubmit: handleFormSubmit,
       enableReinitialize: true
     }),
-    [technique]
+    [technique, handleFormSubmit]
   )
 
   return (
     <div>
+      <ConfirmationDialog
+        icon={<ExclamationCircleIcon className="text-red-500 w-5 h-5" />}
+        title="Anticipar técnica."
+        body="Los objetivos sin fecha de finalización definida o con fecha posterior a la nueva fecha se limitarán a esta última. ¿Desea continuar?"
+        onAction={waitForAnticipation}
+        startDate={technique?.expires_at}
+        endDate={formikRef.current?.values.endDate?.toISOString()}
+      />
+      <StaticTargetDialog
+        onAction={waitForExtension}
+        startDate={technique?.expires_at}
+        endDate={formikRef.current?.values.endDate?.toISOString()}
+      />
       <Form
         formikConfig={formikConfig}
         formikRef={formikRef}
