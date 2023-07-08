@@ -1,4 +1,3 @@
-import { SearchParams } from 'types/api'
 import { DateFilter, SearchFilter } from 'types/filters'
 import { Target, Technique } from 'types/technique'
 
