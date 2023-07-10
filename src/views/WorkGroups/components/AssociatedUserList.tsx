@@ -70,6 +70,7 @@ const AssociatedUserList = (): ReactElement => {
               >
                 <button
                   onClick={async (e) => {
+                    e?.stopPropagation()
                     const deleted = await actions?.deleteUsersOfWorkGroup([id])
                     if (deleted) {
                       await actions?.getWorkGroupUsers({ page: 1 })

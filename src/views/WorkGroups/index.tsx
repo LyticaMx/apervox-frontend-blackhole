@@ -84,7 +84,7 @@ const WorkGroups = (): ReactElement => {
     } else {
       drawerActions?.handleCloseDrawer()
     }
-  }, [selected])
+  }, [selected?.id])
 
   useEffect(() => {
     openCreateDrawer && actions?.selectWorkGroup()
