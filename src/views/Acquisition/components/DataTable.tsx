@@ -62,7 +62,7 @@ const DataTable = (): ReactElement => {
       accessorKey: 'created_at',
       header: getMessage('date'),
       cell: ({ getValue }) =>
-        format(new Date(getValue<string>()), 'dd/MM/yyyy - hh:mm')
+        format(new Date(getValue<string>()), 'dd/MM/yyyy - HH:mm')
     },
     {
       accessorKey: 'target.technique',
@@ -92,7 +92,7 @@ const DataTable = (): ReactElement => {
       cell: ({ row }) => {
         const value = get(row.original, 'target.end_date')
 
-        if (value) return format(new Date(value), 'dd/MM/yyyy - hh:mm')
+        if (value) return format(new Date(value), 'dd/MM/yyyy - HH:mm')
 
         return ''
       },

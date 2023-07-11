@@ -113,7 +113,10 @@ const TargetForm = ({ initialValues, onSubmit }: Props): ReactElement => {
                 },
                 value: 'id',
                 label: 'phone',
-                searchField: 'phone'
+                searchField: 'phone',
+                extraParams: {
+                  line_status: ['available']
+                }
               },
               debounceTimeout: 300,
               label: getMessage('derivationLine'),

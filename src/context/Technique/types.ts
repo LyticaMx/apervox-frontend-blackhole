@@ -47,11 +47,13 @@ export interface Actions {
   updateDescription: (data: string) => Promise<boolean>
   setTechnique: (params: Technique) => void
   setTarget: (params: Target) => void
+  hasLinkedDateTargets: () => Promise<boolean>
   update: (
     technique: Omit<
       InnerTechnique,
       'description' | 'attention_turn' | 'status' | 'total_target'
-    >
+    >,
+    staticDateTargets?: string[]
   ) => Promise<boolean>
 }
 

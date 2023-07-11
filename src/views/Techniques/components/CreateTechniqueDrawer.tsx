@@ -6,6 +6,7 @@ import { useIntl } from 'react-intl'
 import { createTechniqueDrawerMessages } from '../messages'
 import { useTechniques } from 'context/Techniques'
 import useToast from 'hooks/useToast'
+import { set } from 'date-fns'
 
 interface Props {
   open: boolean
@@ -17,11 +18,19 @@ const CreateTechniqueDrawer = ({ open, onClose }: Props): ReactElement => {
   const { launchToast } = useToast()
 
   const handleSubmit = async (values: FormValues): Promise<void> => {
+    if (!values.endDate) return
+
     const created = techniqueActions?.create({
       name: values.name,
       description: values.description,
       starts_at: values.startDate?.toISOString() ?? '',
-      expires_at: values.endDate?.toISOString() ?? '',
+      expires_at:
+        set(values.endDate, {
+          hours: 23,
+          minutes: 59,
+          seconds: 59,
+          milliseconds: 999
+        }).toISOString() ?? '',
       notificationTime: parseInt(values.advanceTime),
       notificationTimeUnit: values.advanceTimeType,
       groups: values.groups.map((group) => group.value),
