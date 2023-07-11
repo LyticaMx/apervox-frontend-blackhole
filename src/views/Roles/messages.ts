@@ -190,5 +190,9 @@ export const scopeNamesMessages = defineMessages({
   targets: {
     id: 'views.roles.scopes.targets',
     defaultMessage: 'Objetivos'
+  },
+  target_metadatas: {
+    id: 'views.roles.scopes.target_metadatas',
+    defaultMessage: 'Metadatos de los objetivos'
   }
 })

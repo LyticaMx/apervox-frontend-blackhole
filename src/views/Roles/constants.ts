@@ -204,5 +204,22 @@ export const scopes: Module[] = [
       create: { 'overflow_lines.read': true },
       update: { 'overflow_lines.read': true }
     }
+  },
+  {
+    id: 'target_metadatas',
+    permissions: {
+      read: false,
+      create: false,
+      update: false,
+      delete: false,
+      export: false
+    },
+    actions: {
+      read: { 'targets.read': true },
+      create: { 'targets.read': true },
+      update: { 'targets.read': true },
+      delete: { 'targets.read': true },
+      export: { 'targets.read': true }
+    }
   }
 ]
