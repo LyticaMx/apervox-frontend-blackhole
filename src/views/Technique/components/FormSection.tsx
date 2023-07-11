@@ -1,8 +1,8 @@
-import { ReactElement } from 'react'
+import { ReactElement, useEffect, useMemo } from 'react'
 import { useHistory } from 'react-router-dom'
 import { pathRoute } from 'router/routes'
 
-// import { useTechnique } from 'context/Technique'
+import { useTechnique } from 'context/Technique'
 import { useTabs } from 'hooks/useTabs'
 
 import CustomTabs from './CustomTabs'
@@ -16,14 +16,28 @@ const evidenceTypes = ['audio', 'video', 'image', 'doc']
 
 const FormSection = (): ReactElement => {
   const history = useHistory()
+  const { target } = useTechnique()
   const [active, setActive, Tab] = useTabs(TARGET_INFO_TABS.EVIDENCE)
-  // const { technique, target } = useTechnique()
+  const tabs = useMemo(
+    () =>
+      targetInfoTabs.filter((item) => {
+        if (!item.target) return true
+        else return Boolean(target)
+      }),
+    [target]
+  )
+
+  useEffect(() => {
+    if (!target && active !== TARGET_INFO_TABS.EVIDENCE) {
+      setActive(TARGET_INFO_TABS.EVIDENCE)
+    }
+  }, [active, target])
 
   return (
     <div id="technique-objetive-forms" className="h-full">
       <CustomTabs
         classNames={{ container: 'my-2' }}
-        items={targetInfoTabs}
+        items={tabs}
         onChange={(tabClicked) => {
           setActive(tabClicked as TARGET_INFO_TABS)
         }}

@@ -1,8 +1,9 @@
 import { Actions, InnerTechnique, State } from './types'
 
 import { actions } from './constants'
-import { Target, Technique } from 'types/technique'
+import { Technique } from 'types/technique'
 import { useService } from 'hooks/useApi'
+import { Target } from 'types/target'
 
 const useActions = (state: State, dispatch): Actions => {
   const { technique } = state
@@ -100,7 +101,10 @@ const useActions = (state: State, dispatch): Actions => {
   }
 
   const setTechnique = (payload: Technique): void => {
+    if (technique && technique.id === payload.id) return
+
     dispatch(actions.setTechnique(payload))
+    dispatch(actions.setTarget(undefined))
   }
 
   const setTarget = (payload: Target): void => {

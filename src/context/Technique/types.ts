@@ -1,6 +1,6 @@
-import { SearchParams } from 'types/api'
 import { DateFilter, SearchFilter } from 'types/filters'
-import { Target, Technique } from 'types/technique'
+import { Target } from 'types/target'
+import { Technique } from 'types/technique'
 
 export interface TechniqueGroup {
   id: string

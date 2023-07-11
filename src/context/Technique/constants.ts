@@ -1,5 +1,6 @@
 import { createAction } from 'types/contextReducer'
-import { Target, Technique } from 'types/technique'
+import { Target } from 'types/target'
+import { Technique } from 'types/technique'
 
 export enum Types {
   SET_TECHNIQUE = 'technique/setTechnique',

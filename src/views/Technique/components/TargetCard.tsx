@@ -9,8 +9,6 @@ import {
   TrashIcon
 } from '@heroicons/react/24/outline'
 
-import { Target } from 'types/technique'
-
 import { useGlobalMessage } from 'hooks/useIntl'
 import IconButton from 'components/Button/IconButton'
 import Checkbox from 'components/Form/Checkbox'
@@ -21,9 +19,12 @@ import BasicInfo from './TargetBasicInfo'
 import DeleteTargetDialog from './DeleteTargetDialog'
 import { targetCardMessages } from '../messages'
 import { useTargets } from 'context/Targets'
+import { Target } from 'types/target'
+import clsx from 'clsx'
 
 interface Props {
   data: Target
+  selected: boolean
   isChecked: boolean
   onClick: (item: Target) => void
   onCheck: (item: Target) => void
@@ -32,6 +33,7 @@ interface Props {
 const TargetCard = ({
   data,
   isChecked,
+  selected,
   onClick,
   onCheck
 }: Props): ReactElement => {
@@ -48,7 +50,7 @@ const TargetCard = ({
 
   const handleRemoveTarget = async (): Promise<void> => {
     /* Filter or call API for update target list */
-    const res = await actions?.delete(data.id as string)
+    const res = await actions?.delete(data.id)
 
     if (res) {
       handleCloseDeleteDialog()
@@ -58,10 +60,15 @@ const TargetCard = ({
   return (
     <div className="">
       <div
-        className="p-3 bg-neutral-50 rounded-lg w-full cursor-pointer"
+        className={clsx(
+          'p-3 bg-neutral-50 rounded-lg w-full cursor-pointer border border-transparent',
+          {
+            '!border-primary': selected
+          }
+        )}
         onClick={() => onClick(data)}
       >
-        <BasicInfo name={data.name} phoneNumber={data.phone_number} />
+        <BasicInfo name={data.alias} phoneNumber={data.phone} />
         <div className="flex flex-col items-start">
           <Typography variant="body2" style="semibold">
             {`${formatMessage(targetCardMessages.creation)}:`}
@@ -72,7 +79,7 @@ const TargetCard = ({
           <Typography variant="body2" style="semibold">
             {`${formatMessage(targetCardMessages.finalization)}:`}
             <span className="font-normal ml-1">
-              {format(new Date(data.expires_at ?? 0), 'dd/mm/yyyy - HH:mm:ss')}
+              {format(new Date(data.end_date ?? 0), 'dd/MM/yyyy')}
             </span>
           </Typography>
         </div>

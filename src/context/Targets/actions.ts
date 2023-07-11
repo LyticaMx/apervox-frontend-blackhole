@@ -51,16 +51,7 @@ export const useActions = (state: State, dispatch): Actions => {
           : Promise.resolve(null)
       ])
 
-      dispatch(
-        actions.setData(
-          response.data.map((item) => ({
-            id: item.id,
-            name: item.alias,
-            phone_number: item.phone,
-            type: 'etsi'
-          }))
-        )
-      )
+      dispatch(actions.setData(response.data))
 
       dispatch(actions.setTotal(totalResponse?.size ?? total))
 
@@ -97,10 +88,10 @@ export const useActions = (state: State, dispatch): Actions => {
       await techniqueService.post({
         queryString: `${techniqueId}/targets`,
         body: {
-          alias: payload.name,
-          phone: payload.phone_number,
-          overflow_line_id: payload.overflow_id,
-          carrier_id: payload.phone_company
+          alias: payload.alias,
+          phone: payload.phone,
+          overflow_line_id: payload.overflow_line_id,
+          carrier_id: payload.carrier_id
         }
       })
 
@@ -115,10 +106,12 @@ export const useActions = (state: State, dispatch): Actions => {
       await resource.put({
         queryString: payload.id,
         body: {
-          alias: payload.name,
-          phone: payload.phone_number,
-          overflow_line_id: payload.overflow_id,
-          carrier_id: payload.phone_company
+          alias: payload.alias,
+          phone: payload.phone,
+          overflow_line_id: payload.overflow_line_id,
+          carrier_id: payload.carrier_id,
+          has_end_date: payload.has_end_date,
+          end_date: payload.end_date
         }
       })
 

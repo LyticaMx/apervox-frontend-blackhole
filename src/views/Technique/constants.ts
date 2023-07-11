@@ -38,12 +38,13 @@ export const techiniqueInfoTabs = [
 ]
 
 export const targetInfoTabs = [
-  { id: TARGET_INFO_TABS.EVIDENCE, label: platformMessages.evidences },
+  { id: TARGET_INFO_TABS.EVIDENCE, label: platformMessages.evidences, target: false },
   {
     id: TARGET_INFO_TABS.GENERAL_DATA,
-    label: techniqueInfoTabsMessages.generalData
+    label: techniqueInfoTabsMessages.generalData,
+    target: true
   },
-  { id: TARGET_INFO_TABS.FORMS, label: generalMessages.forms }
+  { id: TARGET_INFO_TABS.FORMS, label: generalMessages.forms, target: true }
 ]
 
 export const targetFormsTabs = [
