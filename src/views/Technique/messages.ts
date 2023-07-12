@@ -1595,3 +1595,15 @@ export const techniqueUpdateMessages = defineMessages({
       'Los objetivos sin fecha de finalización definida o con fecha posterior a la nueva fecha se limitarán a esta última. ¿Desea continuar?'
   }
 })
+
+export const createMetadataDialogMessages = defineMessages({
+  title: {
+    id: 'views.techniques.createMetadataDialog.title',
+    defaultMessage: 'El objetivo no cuenta con formularios'
+  },
+  message: {
+    id: 'views.techniques.createMetadataDialog.message',
+    defaultMessage:
+      'Selecciona formularios ya existente o crear formularios vacios.'
+  }
+})

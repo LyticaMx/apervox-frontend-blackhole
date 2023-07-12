@@ -1,6 +1,6 @@
 import { DateFilter, SearchFilter } from 'types/filters'
 import { Target } from 'types/target'
-import { Technique } from 'types/technique'
+import { Technique, TechniqueTabs } from 'types/technique'
 
 export interface TechniqueGroup {
   id: string
@@ -36,9 +36,11 @@ export interface State {
   technique?: InnerTechnique
   techniqueId?: string
   summary: string
+  showTargetForms: boolean
   target?: Target
   dateFilter: DateFilter
   searchFilter: SearchFilter
+  activeTab: TechniqueTabs
 }
 
 export interface Actions {
@@ -47,6 +49,8 @@ export interface Actions {
   updateDescription: (data: string) => Promise<boolean>
   setTechnique: (params: Technique) => void
   setTarget: (params: Target) => void
+  showForms: (params: Target) => void
+  setActiveTab: (tab: TechniqueTabs) => void
   hasLinkedDateTargets: () => Promise<boolean>
   update: (
     technique: Omit<

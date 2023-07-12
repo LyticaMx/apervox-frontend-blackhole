@@ -76,6 +76,8 @@ export interface Actions {
   update: (payload: updatePayload) => Promise<boolean>
   delete: (id: string) => Promise<boolean>
   deleteMany: (ids: string[]) => Promise<boolean>
+  createMetadata: (id: string, alias: string) => Promise<boolean>
+  linkMetadata: (id: string, metadataId: string) => Promise<boolean>
 }
 
 export interface ContextType extends State {

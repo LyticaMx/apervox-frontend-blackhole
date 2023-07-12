@@ -10,10 +10,8 @@ import {
 } from '@heroicons/react/24/outline'
 
 import { useGlobalMessage } from 'hooks/useIntl'
-import IconButton from 'components/Button/IconButton'
 import Checkbox from 'components/Form/Checkbox'
 import Typography from 'components/Typography'
-import Tooltip from 'components/Tooltip'
 
 import BasicInfo from './TargetBasicInfo'
 import DeleteTargetDialog from './DeleteTargetDialog'
@@ -21,6 +19,9 @@ import { targetCardMessages } from '../messages'
 import { useTargets } from 'context/Targets'
 import { Target } from 'types/target'
 import clsx from 'clsx'
+import TargetCardAction from './TargetCardAction'
+import { useTechnique } from 'context/Technique'
+import MetadataDialog from './MetadataDialog'
 
 interface Props {
   data: Target
@@ -38,7 +39,9 @@ const TargetCard = ({
   onCheck
 }: Props): ReactElement => {
   const { actions } = useTargets()
+  const { actions: actionsTechnique } = useTechnique()
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
+  const [openMetadataDialog, setOpenMetadataDialog] = useState(false)
   const { formatMessage } = useIntl()
   const getGlobalMessage = useGlobalMessage()
 
@@ -56,6 +59,40 @@ const TargetCard = ({
       handleCloseDeleteDialog()
     }
   }
+
+  const handleShowForms = async (): Promise<void> => {
+    const res = await actionsTechnique?.showForms(data)
+
+    if (!res) {
+      setOpenMetadataDialog(true)
+    }
+  }
+
+  const actionsCard = [
+    {
+      content: formatMessage(targetCardMessages.activity),
+      icon: <DocumentChartBarIcon className="w-4" />,
+      action: (e) => e?.stopPropagation()
+    },
+    {
+      content: formatMessage(targetCardMessages.forms),
+      icon: <ClipboardDocumentIcon className="w-4" />,
+      action: (e) => {
+        e?.stopPropagation()
+        handleShowForms()
+      }
+    },
+    {
+      content: formatMessage(targetCardMessages.history),
+      icon: <DocumentMagnifyingGlassIcon className="w-4" />,
+      action: (e) => e?.stopPropagation()
+    },
+    {
+      content: getGlobalMessage('delete', 'actionsMessages'),
+      icon: <TrashIcon className="w-4" />,
+      action: handleOpenDeleteDialog
+    }
+  ]
 
   return (
     <div className="">
@@ -83,78 +120,22 @@ const TargetCard = ({
             </span>
           </Typography>
         </div>
-        <div className="flex justify-between items-center mt-2">
+        <div className="flex justify-between items-center mt-1">
           <Checkbox
             checked={isChecked}
             onClick={(e) => e?.stopPropagation()}
             onChange={() => onCheck(data)}
           />
-          <div className="flex">
-            <Tooltip
-              content={formatMessage(targetCardMessages.activity)}
-              floatProps={{ offset: 10, arrow: true }}
-              classNames={{
-                panel:
-                  'bg-secondary text-white py-1 px-2 rounded-md text-sm whitespace-nowrap',
-                arrow: 'absolute bg-white w-2 h-2 rounded-full bg-secondary'
-              }}
-              placement="top"
-            >
-              <IconButton
-                className="mr-1"
-                onClick={(e) => e?.stopPropagation()}
+          <div className="flex pag-2">
+            {actionsCard.map((item, index) => (
+              <TargetCardAction
+                key={index}
+                content={item.content}
+                onClick={item.action}
               >
-                <DocumentChartBarIcon className="w-4" />
-              </IconButton>
-            </Tooltip>
-            <Tooltip
-              content={formatMessage(targetCardMessages.forms)}
-              floatProps={{ offset: 10, arrow: true }}
-              classNames={{
-                panel:
-                  'bg-secondary text-white py-1 px-2 rounded-md text-sm whitespace-nowrap',
-                arrow: 'absolute bg-white w-2 h-2 rounded-full bg-secondary'
-              }}
-              placement="top"
-            >
-              <IconButton
-                className="mr-1"
-                onClick={(e) => e?.stopPropagation()}
-              >
-                <ClipboardDocumentIcon className="w-4" />
-              </IconButton>
-            </Tooltip>
-            <Tooltip
-              content={formatMessage(targetCardMessages.history)}
-              floatProps={{ offset: 10, arrow: true }}
-              classNames={{
-                panel:
-                  'bg-secondary text-white py-1 px-2 rounded-md text-sm whitespace-nowrap',
-                arrow: 'absolute bg-white w-2 h-2 rounded-full bg-secondary'
-              }}
-              placement="top"
-            >
-              <IconButton
-                className="mr-1"
-                onClick={(e) => e?.stopPropagation()}
-              >
-                <DocumentMagnifyingGlassIcon className="w-4" />
-              </IconButton>
-            </Tooltip>
-            <Tooltip
-              content={getGlobalMessage('delete', 'actionsMessages')}
-              floatProps={{ offset: 10, arrow: true }}
-              classNames={{
-                panel:
-                  'bg-secondary text-white py-1 px-2 rounded-md text-sm whitespace-nowrap',
-                arrow: 'absolute bg-white w-2 h-2 rounded-full bg-secondary'
-              }}
-              placement="top"
-            >
-              <IconButton className="mr-1" onClick={handleOpenDeleteDialog}>
-                <TrashIcon className="w-4" />
-              </IconButton>
-            </Tooltip>
+                {item.icon}
+              </TargetCardAction>
+            ))}
           </div>
         </div>
       </div>
@@ -162,6 +143,16 @@ const TargetCard = ({
         open={openDeleteDialog}
         onClose={handleCloseDeleteDialog}
         onAccept={handleRemoveTarget}
+      />
+
+      <MetadataDialog
+        targetId={data.id}
+        open={openMetadataDialog}
+        onClose={() => setOpenMetadataDialog(false)}
+        onSubmit={() => {
+          setOpenMetadataDialog(false)
+          handleShowForms()
+        }}
       />
     </div>
   )

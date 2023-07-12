@@ -6,30 +6,37 @@ import { useTechnique } from 'context/Technique'
 import { useTabs } from 'hooks/useTabs'
 
 import CustomTabs from './CustomTabs'
-import { targetInfoTabs, TARGET_INFO_TABS } from '../constants'
+import { targetInfoTabs } from '../constants'
 import EvidenceList from './EvidenceList'
 import TargetForms from './TargetForms'
 import GeneralDataForm from './TargetForms/GeneralDataForm'
 import { evidencesData } from 'views/Techniques/mocks'
+import { TechniqueTabs } from 'types/technique'
 
 const evidenceTypes = ['audio', 'video', 'image', 'doc']
 
 const FormSection = (): ReactElement => {
   const history = useHistory()
-  const { target } = useTechnique()
-  const [active, setActive, Tab] = useTabs(TARGET_INFO_TABS.EVIDENCE)
+  const { target, showTargetForms, activeTab, actions } = useTechnique()
+  const [active, setActive, Tab] = useTabs(activeTab)
+
+  useEffect(() => {
+    setActive(activeTab)
+  }, [activeTab])
+
   const tabs = useMemo(
     () =>
       targetInfoTabs.filter((item) => {
-        if (!item.target) return true
-        else return Boolean(target)
+        if (item.id === TechniqueTabs.GENERAL_DATA) return Boolean(target)
+        if (item.id === TechniqueTabs.FORMS) return showTargetForms
+        return true
       }),
-    [target]
+    [target, showTargetForms]
   )
 
   useEffect(() => {
-    if (!target && active !== TARGET_INFO_TABS.EVIDENCE) {
-      setActive(TARGET_INFO_TABS.EVIDENCE)
+    if (!target && active !== TechniqueTabs.EVIDENCE) {
+      setActive(TechniqueTabs.EVIDENCE)
     }
   }, [active, target])
 
@@ -38,13 +45,13 @@ const FormSection = (): ReactElement => {
       <CustomTabs
         classNames={{ container: 'my-2' }}
         items={tabs}
-        onChange={(tabClicked) => {
-          setActive(tabClicked as TARGET_INFO_TABS)
+        onChange={(tab) => {
+          actions?.setActiveTab(tab as unknown as TechniqueTabs)
         }}
         active={active}
       />
 
-      <Tab value={TARGET_INFO_TABS.EVIDENCE}>
+      <Tab value={TechniqueTabs.EVIDENCE}>
         <EvidenceList
           data={evidencesData}
           onSelectItem={(evidence) =>
@@ -55,11 +62,11 @@ const FormSection = (): ReactElement => {
         />
       </Tab>
 
-      <Tab value={TARGET_INFO_TABS.GENERAL_DATA}>
+      <Tab value={TechniqueTabs.GENERAL_DATA}>
         <GeneralDataForm />
       </Tab>
 
-      <Tab value={TARGET_INFO_TABS.FORMS}>
+      <Tab value={TechniqueTabs.FORMS}>
         <TargetForms />
       </Tab>
     </div>

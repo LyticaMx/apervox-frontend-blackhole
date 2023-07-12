@@ -1,13 +1,14 @@
 import { Actions, InnerTechnique, State } from './types'
 
 import { actions } from './constants'
-import { Technique } from 'types/technique'
+import { Technique, TechniqueTabs } from 'types/technique'
 import { useService } from 'hooks/useApi'
 import { Target } from 'types/target'
 
 const useActions = (state: State, dispatch): Actions => {
   const { technique } = state
   const techniqueService = useService('techniques')
+  const targetsService = useService('targets')
 
   const get = async (): Promise<boolean> => {
     try {
@@ -128,10 +129,33 @@ const useActions = (state: State, dispatch): Actions => {
 
     dispatch(actions.setTechnique(payload))
     dispatch(actions.setTarget(undefined))
+    dispatch(actions.showForms(false))
+    dispatch(actions.setActiveTab(TechniqueTabs.EVIDENCE))
   }
 
   const setTarget = (payload: Target): void => {
     dispatch(actions.setTarget(payload))
+  }
+
+  const showForms = async (payload: Target): Promise<boolean> => {
+    try {
+      await targetsService.get({
+        queryString: `${payload.id}/metadata`,
+        showToast: false
+      })
+
+      dispatch(actions.setTarget(payload))
+      dispatch(actions.showForms(true))
+      dispatch(actions.setActiveTab(TechniqueTabs.FORMS))
+
+      return true
+    } catch (error) {
+      return false
+    }
+  }
+
+  const setActiveTab = (tab: TechniqueTabs): void => {
+    dispatch(actions.setActiveTab(tab))
   }
 
   return {
@@ -141,7 +165,9 @@ const useActions = (state: State, dispatch): Actions => {
     update,
     setTechnique,
     setTarget,
-    hasLinkedDateTargets
+    hasLinkedDateTargets,
+    showForms,
+    setActiveTab
   }
 }
 

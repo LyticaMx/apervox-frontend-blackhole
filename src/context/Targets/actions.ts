@@ -141,11 +141,45 @@ export const useActions = (state: State, dispatch): Actions => {
     }
   }
 
+  const createMetadata = async (
+    id: string,
+    alias: string
+  ): Promise<boolean> => {
+    try {
+      await resource.post({
+        queryString: `${id}/metadata`,
+        body: { unique_alias: alias }
+      })
+
+      return true
+    } catch (error) {
+      return false
+    }
+  }
+
+  const linkMetadata = async (
+    id: string,
+    metadataId: string
+  ): Promise<boolean> => {
+    try {
+      await resource.put({
+        queryString: `${id}/metadata`,
+        body: { metadata_id: metadataId }
+      })
+
+      return true
+    } catch (error) {
+      return false
+    }
+  }
+
   return {
     getData,
     create,
     update,
     delete: deleteOne,
-    deleteMany
+    deleteMany,
+    createMetadata,
+    linkMetadata
   }
 }
