@@ -272,7 +272,8 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
             name: item.name,
             priority: item.priority,
             registered_by: item.created_by?.username,
-            status: item.status,
+            status:
+              item.status === 'concluding' ? Status.TO_COMPLETE : item.status,
             total_objective: item.targets.length,
             turn_of_attention: item.shift
           }))
@@ -333,17 +334,33 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
       const members = selected.users?.map((user) => user.id) ?? []
       const newMembers = workgroup.userIds ?? []
 
+      const techniques =
+        selected.techniques?.map((technique) => technique.id) ?? []
+      const newTechniques = workgroup.techniqueIds ?? []
+
       const membersAction = {
         connect: newMembers.filter((user) => !members.includes(user)),
         disconnect: members.filter((user) => !newMembers.includes(user))
       }
 
-      const response = await updateWorkGroupService({
+      const techniquesAction = {
+        connect: newTechniques.filter(
+          (technique) => !members.includes(technique)
+        ),
+        disconnect: techniques.filter(
+          (technique) => !newTechniques.includes(technique)
+        )
+      }
+
+      let response = await updateWorkGroupService({
         queryString: `${selected.id}/users`,
         body: membersAction
       })
 
-      // TODO: Agregar conexión y desconexión de T.I. cuando sea agregada
+      response = await updateWorkGroupService({
+        queryString: `${selected.id}/techniques`,
+        body: techniquesAction
+      })
 
       dispatch(actions.setSelectedWorkGroup(response.data))
 
@@ -364,7 +381,7 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
         }
       })
 
-      actions.setSelectedWorkGroup(response.data)
+      dispatch(actions.setSelectedWorkGroup(response.data))
 
       return true
     } catch {
@@ -446,7 +463,7 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
         }
       })
 
-      actions.setSelectedWorkGroup(response.data)
+      dispatch(actions.setSelectedWorkGroup(response.data))
 
       return true
     } catch {
