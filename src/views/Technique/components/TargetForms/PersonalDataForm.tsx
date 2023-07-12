@@ -15,6 +15,7 @@ import { useIntl } from 'react-intl'
 import useTargetMeta from 'hooks/useTargetMeta'
 import { useTechnique } from 'context/Technique'
 import useToast from 'hooks/useToast'
+import { format } from 'date-fns'
 
 interface FormValues extends AddressFormValues {
   alias: string
@@ -188,7 +189,7 @@ const PersonalDataForm = (): ReactElement => {
     const body: Record<string, any> = {
       unique_alias: values.alias,
       full_name: values.name,
-      phone_numner: values.targetNumber,
+      phone_number: values.targetNumber,
       gender: values.gender,
       age: values.age,
       country: values.birthCountry,
@@ -198,7 +199,9 @@ const PersonalDataForm = (): ReactElement => {
 
     if (values.curp) body.curp = values.curp
     if (values.rfc) body.rfc = values.rfc
-    if (values.birthdate) body.birthday = values.birthdate
+    if (values.birthdate) {
+      body.birthday = format(new Date(values.birthdate), 'yyyy-MM-dd')
+    }
 
     try {
       await actions.update(body)

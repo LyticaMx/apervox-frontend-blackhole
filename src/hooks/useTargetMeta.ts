@@ -96,10 +96,13 @@ const useTargetMeta = <T extends MetaType>(
     case 'biometrics':
       return {
         create: async (body: object) =>
-          await targetServices.post({
-            queryString: `${target}/biometrics`,
-            body
-          }),
+          await targetServices.post(
+            {
+              queryString: `${target}/biometrics`,
+              body
+            },
+            { 'Content-Type': 'multipart/form-data' }
+          ),
         get: async () =>
           await targetServices.get({
             queryString: `${target}/biometrics`
