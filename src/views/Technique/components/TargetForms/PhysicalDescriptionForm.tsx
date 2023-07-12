@@ -1,12 +1,19 @@
-import { ReactElement, useMemo } from 'react'
+import { ReactElement, useEffect, useMemo, useState } from 'react'
 import { FormikConfig } from 'formik'
 import * as yup from 'yup'
 import Form from 'components/Form'
 import { Field } from 'types/form'
 import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
 import Typography from 'components/Typography'
-import { physicalDescriptionFormMessages } from 'views/Technique/messages'
+import {
+  physicalDescriptionFormMessages,
+  targetFormMessages
+} from 'views/Technique/messages'
 import { usePhysicalDescriptionOptions } from './hooks/usePhysicalDescriptionOptions'
+import { useTechnique } from 'context/Technique'
+import useTargetMeta from 'hooks/useTargetMeta'
+import useToast from 'hooks/useToast'
+import { useIntl } from 'react-intl'
 
 interface FormValues {
   height: string
@@ -20,15 +27,26 @@ interface FormValues {
   otherHairColor: string
 }
 
-interface Props {
-  initialValues?: FormValues
-}
-
-const PhysicalDescriptionForm = ({ initialValues }: Props): ReactElement => {
+const PhysicalDescriptionForm = (): ReactElement => {
+  const [initialValues, setInitialValues] = useState<FormValues>({
+    bodyType: '',
+    hairColor: '',
+    hairLength: '',
+    hairType: '',
+    height: '',
+    otherBody: '',
+    otherHairColor: '',
+    skinColor: '',
+    weight: ''
+  })
   const getMessage = useFormatMessage(physicalDescriptionFormMessages)
+  const { formatMessage } = useIntl()
   const getGlobalMessage = useGlobalMessage()
   const { bodyTypes, skinTypes, hairColor, hairLength, hairTypes } =
     usePhysicalDescriptionOptions()
+  const { target } = useTechnique()
+  const actions = useTargetMeta(target?.id ?? '', 'physical-description')
+  const { launchToast } = useToast()
 
   const fields: Array<Field<FormValues>> = [
     {
@@ -161,7 +179,7 @@ const PhysicalDescriptionForm = ({ initialValues }: Props): ReactElement => {
     bodyType: yup.string().required(getMessage('required')),
     skinColor: yup.string().required(getMessage('required')),
     hairType: yup.string().required(getMessage('required')),
-    hairColor: yup.array().required(getMessage('required')),
+    hairColor: yup.string().required(getMessage('required')),
     otherBody: yup
       .string()
       .when('bodyType', (value, field) =>
@@ -171,26 +189,71 @@ const PhysicalDescriptionForm = ({ initialValues }: Props): ReactElement => {
       )
   })
 
+  const getData = async (): Promise<void> => {
+    try {
+      const response = await actions.get()
+      setInitialValues({
+        bodyType: response.data.body_type ?? '',
+        hairColor: response.data.hair_color ?? '',
+        hairLength: response.data.hair_length ?? '',
+        hairType: response.data.hair_type ?? '',
+        height: response.data.height ?? '',
+        otherBody: response.data.other_body ?? '',
+        otherHairColor: response.data.other_color ?? '',
+        skinColor: response.data.skin ?? '',
+        weight: response.data.weight ?? ''
+      })
+    } catch {}
+  }
+
+  const handleSubmit = async (values: FormValues): Promise<void> => {
+    try {
+      const body: Record<string, any> = {}
+      if (values.height) body.height = parseFloat(values.height)
+      if (values.weight) body.weight = parseFloat(values.weight)
+      body.body_type = values.bodyType
+      if (values.bodyType === 'other') {
+        body.other_body = values.otherBody
+      }
+      body.skin = values.skinColor
+      body.hair_type = values.hairType
+      body.hair_length = values.hairLength
+      body.hair_color = values.hairColor
+      if (values.hairColor === 'other') {
+        body.other_color = values.otherHairColor
+      }
+
+      await actions.update(body)
+      launchToast({
+        title: formatMessage(targetFormMessages.updatedSuccessfully),
+        type: 'Success'
+      })
+    } catch {}
+  }
+
   const formikConfig = useMemo<FormikConfig<FormValues>>(
     () => ({
       initialValues: {
-        height: initialValues?.height ?? '',
-        weight: initialValues?.weight ?? '',
-        bodyType: initialValues?.bodyType ?? '',
-        otherBody: initialValues?.otherBody ?? '',
-        skinColor: initialValues?.skinColor ?? '',
-        hairType: initialValues?.hairType ?? '',
-        hairLength: initialValues?.hairLength ?? '',
-        hairColor: initialValues?.hairColor ?? '',
-        otherHairColor: initialValues?.otherHairColor ?? ''
+        height: initialValues.height,
+        weight: initialValues.weight,
+        bodyType: initialValues.bodyType,
+        otherBody: initialValues.otherBody,
+        skinColor: initialValues.skinColor,
+        hairType: initialValues.hairType,
+        hairLength: initialValues.hairLength,
+        hairColor: initialValues.hairColor,
+        otherHairColor: initialValues.otherHairColor
       },
       validationSchema,
-      onSubmit: (values) => {
-        console.log(values)
-      }
+      onSubmit: handleSubmit,
+      enableReinitialize: true
     }),
     [initialValues]
   )
+
+  useEffect(() => {
+    getData()
+  }, [])
 
   return (
     <div className="w-full">

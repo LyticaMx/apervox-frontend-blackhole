@@ -26,6 +26,7 @@ const BiometricForm = (props: BiometricFormProps): ReactElement => {
   const actions = useTargetMeta(target?.id ?? '', 'biometrics')
 
   const handleSubmit = async (values: FormValues): Promise<void> => {
+    // TODO: Revisar Biometricos
     try {
       values.photos.forEach(async (photo) => {
         const formData = new FormData()
