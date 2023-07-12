@@ -85,8 +85,7 @@ export const useAddressForm = <T,>(section?: string): AddressForm<T> => {
     state: yup.string().required(formatMessage(formMessages.required)),
     city: yup.string().required(formatMessage(formMessages.required)),
     zipCode: yup.string().required(formatMessage(formMessages.required)),
-    line1: yup.string().required(formatMessage(formMessages.required)),
-    line2: yup.string().required(formatMessage(formMessages.required))
+    line1: yup.string().required(formatMessage(formMessages.required))
   })
 
   // const addressValidationSchema = yup.object({

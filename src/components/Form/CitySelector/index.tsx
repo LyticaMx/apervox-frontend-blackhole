@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useMemo } from 'react'
+import { ReactElement, useMemo } from 'react'
 import { Country, State, City } from 'country-state-city'
 import { Breakpoints } from 'types/form'
 import Grid from 'components/Grid'
@@ -43,14 +43,6 @@ const CitySelector = (props: Props): ReactElement => {
     [props.country, props.state]
   )
 
-  useEffect(() => {
-    if (props.state) props.onChange(props.stateName ?? 'state', '')
-  }, [props.country])
-
-  useEffect(() => {
-    if (props.city) props.onChange(props.cityName ?? 'city', '')
-  }, [props.state])
-
   return (
     <>
       <Grid item xs={12} {...props.countryBreakpoints}>
@@ -58,9 +50,11 @@ const CitySelector = (props: Props): ReactElement => {
           label={props.countryLabel}
           placeholder={props.countryPlaceholder}
           value={props.country}
-          onChange={(val) =>
+          onChange={(val) => {
             props.onChange(props.countryName ?? 'country', val)
-          }
+            props.onChange(props.stateName ?? 'state', '')
+            props.onChange(props.cityName ?? 'city', '')
+          }}
           onTouched={() => props.onTouched?.(props.countryName ?? 'country')}
           textField="name"
           valueField="isoCode"
@@ -75,7 +69,10 @@ const CitySelector = (props: Props): ReactElement => {
           label={props.stateLabel}
           placeholder={props.statePlaceholder}
           value={props.state}
-          onChange={(val) => props.onChange(props.stateName ?? 'state', val)}
+          onChange={(val) => {
+            props.onChange(props.stateName ?? 'state', val)
+            props.onChange(props.cityName ?? 'city', '')
+          }}
           onTouched={() => props.onTouched?.(props.stateName ?? 'state')}
           textField="name"
           valueField="isoCode"

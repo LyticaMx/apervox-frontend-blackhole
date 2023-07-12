@@ -116,6 +116,10 @@ export const targetCardMessages = defineMessages({
 })
 
 export const targetFormMessages = defineMessages({
+  updatedSuccessfully: {
+    id: 'views.techniques.TargetForm.updatedSuccessfully',
+    defaultMessage: 'Formulario actualizado correctamente'
+  },
   etsiTargets: {
     id: 'views.techniques.TargetForm.etsiTargets',
     defaultMessage: 'Objetivos ETSI'

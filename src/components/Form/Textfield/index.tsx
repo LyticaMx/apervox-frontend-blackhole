@@ -84,7 +84,7 @@ const TextField = ({
         className={clsx(
           'text-field',
 
-          { outlined, 'border-red-500 border-2': error },
+          { outlined, '!border-red-500 border-2': error },
           inputProps.className
         )}
       />
