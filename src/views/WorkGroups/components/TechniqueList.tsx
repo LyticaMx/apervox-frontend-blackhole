@@ -23,6 +23,9 @@ import { generalMessages } from 'globalMessages'
 import { useWorkGroups } from 'context/WorkGroups'
 import { WorkGroupTechnique } from 'types/workgroup'
 import { useLanguage } from 'context/Language'
+import useToast from 'hooks/useToast'
+import { useIntl } from 'react-intl'
+import { workGroupsUsersListMessages } from '../messages'
 
 const TechniqueList = (): ReactElement => {
   const {
@@ -31,7 +34,9 @@ const TechniqueList = (): ReactElement => {
     techniquesPagination
   } = useWorkGroups()
   const { locale } = useLanguage()
+  const { launchToast } = useToast()
   const getMessage = useFormatMessage(generalMessages)
+  const { formatMessage } = useIntl()
 
   const normalModeColumns: NonEmptyArray<ColumnDef<WorkGroupTechnique>> = [
     {
@@ -101,7 +106,9 @@ const TechniqueList = (): ReactElement => {
       accessorKey: 'id',
       enableSorting: false,
       header: getMessage('action'),
-      cell: ({ row }) => {
+      cell: ({ getValue, table }) => {
+        const id = getValue<string>()
+
         return (
           <div className="flex items-center justify-center">
             <Tooltip
@@ -115,10 +122,29 @@ const TechniqueList = (): ReactElement => {
               placement="top"
             >
               <IconButton
-                onClick={(e) => {
+                onClick={async (e) => {
                   e?.stopPropagation()
-                  console.log('Borrame')
+                  const deleted =
+                    (await techniquesActions?.deleteTechniquesOfWorkGroup?.([
+                      id
+                    ])) ?? false
+                  if (deleted) {
+                    await techniquesActions?.getWorkGroupTechniques({ page: 1 })
+                    await techniquesActions?.getWorkGroups()
+                    launchToast({
+                      title: formatMessage(
+                        workGroupsUsersListMessages.deletedTechniquesSuccess,
+                        {
+                          total: 1
+                        }
+                      ),
+                      type: 'Success'
+                    })
+                  }
                 }}
+                disabled={
+                  table.getIsSomeRowsSelected() || table.getIsAllRowsSelected()
+                }
                 className="text-muted hover:text-primary"
               >
                 <TrashIcon className="h-5 w-5 mx-1" />
@@ -161,9 +187,24 @@ const TechniqueList = (): ReactElement => {
           name: 'Eliminar',
           tooltip: getMessage('delete'),
           action: async (items) => {
-            console.log(
-              `onDeleteTechniquesFromWorkGroup(${items.map((user) => user.id)})`
-            )
+            const deleted =
+              await techniquesActions?.deleteTechniquesOfWorkGroup?.(
+                items.map((datum) => datum.id)
+              )
+            if (deleted) {
+              await techniquesActions?.getWorkGroupUsers({ page: 1 })
+              await techniquesActions?.getWorkGroupTechniques()
+              launchToast({
+                title: formatMessage(
+                  workGroupsUsersListMessages.deletedTechniquesSuccess,
+                  {
+                    total: items.length
+                  }
+                ),
+                type: 'Success'
+              })
+            }
+            return true
           },
           Icon: TrashIcon
         }
