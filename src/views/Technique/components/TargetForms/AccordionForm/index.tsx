@@ -119,8 +119,12 @@ const AccordionForm = <T extends Object>({
 
     formikRefs.current.forEach((value) => {
       value?.setTouched(
-        fields.reduce((prev, field) => {
-          prev[field.name] = true
+        fields.reduce<any>((prev, field) => {
+          if (field.name === 'city-selector') {
+            prev.country = true
+            prev.state = true
+            prev.city = true
+          } else prev[field.name] = true
           return prev
         }, {})
       )
