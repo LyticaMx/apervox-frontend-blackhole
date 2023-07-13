@@ -6,7 +6,15 @@ import {
   CalendarDaysIcon,
   XMarkIcon
 } from '@heroicons/react/20/solid'
-import { format, subMonths, addMonths, subYears, addYears } from 'date-fns'
+import {
+  format,
+  subMonths,
+  addMonths,
+  subYears,
+  addYears,
+  isValid,
+  parseISO
+} from 'date-fns'
 import { useOnClickOutside } from 'usehooks-ts'
 
 import { formClasses, labelFormClasses } from 'utils/classes'
@@ -125,7 +133,15 @@ const Datepicker = ({
   }, [selectedDate, formatDisplay])
 
   useEffect(() => {
-    setSelectedDate(value)
+    if (typeof value === 'string') {
+      const parsed = parseISO(value)
+      if (isValid(parsed)) setSelectedDate(parsed)
+      else setSelectedDate(undefined)
+    } else if (value instanceof Date) {
+      setSelectedDate(value)
+    } else {
+      setSelectedDate(undefined)
+    }
   }, [value])
 
   return (

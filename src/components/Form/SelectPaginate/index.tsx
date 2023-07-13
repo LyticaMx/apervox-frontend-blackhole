@@ -22,6 +22,7 @@ export interface Props {
   requiredMarker?: boolean
   error?: boolean
   helperText?: string
+  disabled?: boolean
 }
 
 const SelectPaginate = (props: Props): ReactElement => {
@@ -57,6 +58,7 @@ const SelectPaginate = (props: Props): ReactElement => {
           control: () =>
             clsx(props.error && "border !border-red-500 ring-1 ring-red-500'")
         }}
+        isDisabled={props.disabled}
       />
       {props.helperText && (
         <Typography

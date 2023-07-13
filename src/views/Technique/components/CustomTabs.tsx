@@ -8,16 +8,16 @@ interface ClassNames {
   container: string
 }
 
-interface Item {
-  id: string
+interface Item<T> {
+  id: T
   label: {
     id: string
     defaultMessage: string
   }
 }
 
-interface Props {
-  items: Item[]
+interface Props<T = any> {
+  items: Array<Item<T>>
   onChange: (item_id: string) => void
   active: string // Validate correct type
   classNames?: ClassNames

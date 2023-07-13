@@ -29,6 +29,7 @@ interface Fetch {
   body?: object
   queryString?: string
   urlParams?: UrlParams
+  showToast?: boolean
 }
 
 // type ApiMessage = keyof typeof apiMessages
@@ -49,7 +50,7 @@ const useApi = ({
   const { launchToast } = useToast()
 
   const handleFetch = async (
-    { body: data, queryString, urlParams }: Fetch = {},
+    { body: data, queryString, urlParams, showToast = true }: Fetch = {},
     headers?: Partial<AxiosRequestHeaders>
   ): Promise<ResponseData> => {
     const url: string = `${endpoint}${queryString ? `/${queryString}` : ''}`
@@ -108,7 +109,7 @@ const useApi = ({
           const errorsRegistered = Number(getItem('errorsAuthRegistered')) ?? 0
           authActions?.killSession()
           setItem('errorsAuthRegistered', errorsRegistered + 1)
-        } else {
+        } else if (showToast) {
           /* TODO: se reactivará cuando se tengan definidas las i18Key con backend
           const i18ErrorMessage: ApiMessage =
             response?.data && response.data.i18key

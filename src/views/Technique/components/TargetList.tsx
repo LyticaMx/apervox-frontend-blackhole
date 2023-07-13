@@ -8,7 +8,6 @@ import Scroller from 'components/Scroller'
 import IconButton from 'components/Button/IconButton'
 import Pagination from 'components/Table/Pagination'
 
-import { Target } from 'types/technique'
 import { actionsMessages } from 'globalMessages'
 
 import TargetCard from './TargetCard'
@@ -20,11 +19,12 @@ import { messages } from 'components/Table/messages'
 
 import DeleteTargetDialog from './DeleteTargetDialog'
 import CreateTargetDialog from 'views/Techniques/components/CreateTargetDialog'
+import { Target } from 'types/target'
 
 const TargetList = (): ReactElement => {
   let timer
 
-  const { techniqueId, actions } = useTechnique()
+  const { techniqueId, target: targetSelected, actions } = useTechnique()
   const { data, total, actions: targetsActions, pagination } = useTargets()
   const [searchValue, setSearchValue] = useState<string>('')
   const [targetsChecked, setTargetsChecked] = useState<string[]>([])
@@ -39,8 +39,8 @@ const TargetList = (): ReactElement => {
   const filteredSpeakers = useMemo(() => {
     const matches = data.filter(
       (target) =>
-        target.name.toUpperCase().includes(searchValue.toLocaleUpperCase()) ||
-        target.phone_number.toUpperCase().includes(searchValue.toUpperCase())
+        target.alias?.toUpperCase().includes(searchValue.toLocaleUpperCase()) ||
+        target.phone?.toUpperCase().includes(searchValue.toUpperCase())
     )
 
     return matches
@@ -62,7 +62,7 @@ const TargetList = (): ReactElement => {
   const totalSelected = targetsChecked.length
   const toggleSelection = (selectAll): void => {
     if (selectAll) {
-      setTargetsChecked(data.map((item) => item.id as string))
+      setTargetsChecked(data.map((item) => item.id))
       return
     }
 
@@ -73,12 +73,11 @@ const TargetList = (): ReactElement => {
     if (techniqueId) {
       const newTarget = {
         technique_id: techniqueId,
-        name: target.name,
-        phone_company: target.phoneCompany?.value,
-        phone_number: target.number,
-        liid: target.liid,
-        liid_v: target.liidVolte,
-        overflow_id: target.overflowLine?.value,
+        alias: target.name,
+        phone: target.number,
+        carrier_id: target.phoneCompany?.value,
+        has_end_date: false,
+        overflow_line_id: target.overflowLine?.value,
         type: target.type
       }
 
@@ -152,6 +151,7 @@ const TargetList = (): ReactElement => {
           <TargetCard
             key={target.id}
             data={target}
+            selected={target.id === targetSelected?.id}
             isChecked={targetsChecked.some((id) => target.id === id)}
             onClick={(item) => actions?.setTarget(item)}
             onCheck={handleCheckTarget}

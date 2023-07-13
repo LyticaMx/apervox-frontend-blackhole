@@ -10,7 +10,7 @@ import { useHistory } from 'react-router-dom'
 import { pathRoute } from 'router/routes'
 
 const Techniques = (): ReactElement => {
-  const { technique, actions: techniqueActions } = useTechnique()
+  const { techniqueId, actions: techniqueActions } = useTechnique()
   const history = useHistory()
 
   const getTechniqueInfo = async (): Promise<void> => {
@@ -21,7 +21,7 @@ const Techniques = (): ReactElement => {
 
   useEffect(() => {
     getTechniqueInfo()
-  }, [technique?.id ?? ''])
+  }, [techniqueId])
 
   return (
     <div className="absolute inset-0 p-4 flex flex-col">

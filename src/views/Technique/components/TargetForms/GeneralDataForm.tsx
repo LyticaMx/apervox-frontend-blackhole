@@ -5,22 +5,23 @@ import Form from 'components/Form'
 import { Field } from 'types/form'
 import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
 import { generalDataFormMessages } from 'views/Technique/messages'
+import { useTechnique } from 'context/Technique'
+import { get } from 'lodash'
+import { useTargets } from 'context/Targets'
 
 interface FormValues {
   name: string
-  targetNumber: string
-  derivationLine: string
-  phoneCompany: string
+  phone: string
+  overflowLine: any
+  carrier: any
   endDate: string
 }
 
-interface Props {
-  initialValues?: FormValues
-}
-
-const GeneralDataForm = ({ initialValues }: Props): ReactElement => {
+const GeneralDataForm = (): ReactElement => {
   const getMessage = useFormatMessage(generalDataFormMessages)
   const getGlobalMessage = useGlobalMessage()
+  const { target, techniqueId } = useTechnique()
+  const { actions } = useTargets()
 
   const fields: Array<Field<FormValues>> = [
     {
@@ -44,80 +45,51 @@ const GeneralDataForm = ({ initialValues }: Props): ReactElement => {
       breakpoints: { xs: 4 }
     },
     {
-      type: 'select',
-      name: 'derivationLine',
+      type: 'async-select',
+      name: 'overflowLine',
       options: {
+        asyncProps: {
+          api: {
+            endpoint: 'overflow-lines',
+            method: 'get'
+          },
+          value: 'id',
+          label: 'phone',
+          searchField: 'phone'
+        },
+        debounceTimeout: 300,
         label: getMessage('overflowLine'),
-        clearable: true,
-        placeholder: getMessage('phonePlaceholder'),
-        items: [
-          {
-            id: '1',
-            label: '5693678905'
-          },
-          {
-            id: '2',
-            label: '5693678906'
-          },
-          {
-            id: '3',
-            label: '5693678907'
-          },
-          {
-            id: '4',
-            label: '5693678908'
-          },
-          {
-            id: '5',
-            label: '5693678909'
-          }
-        ],
-        textField: 'label',
-        valueField: 'id',
-        className: 'bg-white-500 mt-3',
-        optionsContainerClassname: 'w-[95%]'
+        placeholder: getMessage('phonePlaceholder')
       },
       breakpoints: { xs: 4 }
     },
     {
-      type: 'select',
-      name: 'phoneCompany',
+      type: 'async-select',
+      name: 'carrier',
       options: {
+        asyncProps: {
+          api: {
+            endpoint: 'carriers',
+            method: 'get'
+          },
+          value: 'id',
+          label: 'name',
+          searchField: 'name'
+        },
         label: getMessage('carrier'),
-        clearable: true,
         placeholder: getMessage('carrierPlaceholder'),
-        items: [
-          {
-            id: '1',
-            label: 'Telcel'
-          },
-          {
-            id: '2',
-            label: 'Movistar'
-          },
-          {
-            id: '3',
-            label: 'AT&T'
-          },
-          {
-            id: '4',
-            label: 'Unefon'
-          }
-        ],
-        textField: 'label',
-        valueField: 'id',
-        className: 'bg-white-500 mt-3',
-        optionsContainerClassname: 'w-[95%]'
+        debounceTimeout: 300
       },
       breakpoints: { xs: 4 }
     },
     {
-      type: 'text',
+      type: 'date',
       name: 'endDate',
       options: {
         id: 'general-data-enddate',
         label: getMessage('endDate'),
-        placeholder: getMessage('endDatePlaceholder')
+        placeholder: getMessage('endDatePlaceholder'),
+        formatDisplay: 'dd-MM-yyyy'
       },
       breakpoints: { xs: 4 }
     }
@@ -125,32 +97,58 @@ const GeneralDataForm = ({ initialValues }: Props): ReactElement => {
 
   const validationSchema = yup.object({
     name: yup.string().required(getMessage('required')),
-    targetNumber: yup.string().required(getMessage('required')),
-    derivationLine: yup.string().required(getMessage('required')),
-    phoneCompany: yup.string().required(getMessage('required')),
-    endDate: yup.string().required(getMessage('required'))
+    phone: yup.string().required(getMessage('required')),
+    overflowLine: yup.mixed().required(getMessage('required')),
+    carrier: yup.mixed().required(getMessage('required'))
   })
+
+  const getAsyncValue = (item: any, value: string, label: string): any => {
+    if (!item) return null
+
+    return {
+      value: get(item, value),
+      label: get(item, label)
+    }
+  }
 
   const formikConfig = useMemo<FormikConfig<FormValues>>(
     () => ({
       initialValues: {
-        name: initialValues?.name ?? '',
-        targetNumber: initialValues?.name ?? '',
-        derivationLine: initialValues?.name ?? '',
-        phoneCompany: initialValues?.name ?? '',
-        endDate: initialValues?.name ?? ''
+        name: target?.alias ?? '',
+        phone: target?.phone ?? '',
+        overflowLine: getAsyncValue(target?.overflow_line, 'id', 'phone'),
+        carrier: getAsyncValue(target?.carrier, 'id', 'name'),
+        endDate: target?.end_date ?? ''
       },
       validationSchema,
-      onSubmit: (values) => {
-        console.log(values)
+      onSubmit: async (values) => {
+        if (target) {
+          const res = await actions?.update({
+            id: target.id,
+            alias: values.name,
+            phone: values.phone,
+            overflow_line_id: values.overflowLine.value ?? null,
+            carrier_id: values.carrier.value ?? null,
+            has_end_date: !!values.endDate,
+            end_date: values.endDate
+              ? (values.endDate as unknown as Date).toISOString()
+              : '',
+            type: 'conventional'
+          })
+
+          if (res) {
+            actions?.getData({ technique_id: techniqueId })
+          }
+        }
       }
     }),
-    [initialValues]
+    [target]
   )
 
   return (
     <div className="bg-white p-2 py-4 rounded-md w-full">
       <Form
+        initialValuesCanChange
         formikConfig={formikConfig}
         fields={fields}
         submitButtonPosition="right"
