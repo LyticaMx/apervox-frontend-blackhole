@@ -15,6 +15,7 @@ import { useTechnique } from 'context/Technique'
 import { ResponseData } from 'types/api'
 import DeleteFormConfirmation from './DeleteFormConfirmation'
 import useToast from 'hooks/useToast'
+import { TechniqueTabs } from 'types/technique'
 
 interface FormValues extends AddressFormValues {
   id?: string
@@ -36,7 +37,7 @@ const LaborForm = (): ReactElement => {
     ((value: boolean | PromiseLike<boolean>) => void) | null
   >(null)
   const { launchToast } = useToast()
-  const { target } = useTechnique()
+  const { target, actions: techniqueActions } = useTechnique()
   const { addressFields, addressValidationSchema } =
     useAddressForm<FormValues>('address')
   const actions = useTargetMeta(target?.id ?? '', 'jobs')
@@ -128,7 +129,9 @@ const LaborForm = (): ReactElement => {
           line2: item.address?.address_line_2 ?? ''
         }))
       )
-    } catch {}
+    } catch {
+      techniqueActions?.setActiveTab(TechniqueTabs.GENERAL_DATA)
+    }
   }
 
   const updateData = async (values: FormValues[]): Promise<void> => {
@@ -218,7 +221,7 @@ const LaborForm = (): ReactElement => {
 
   useEffect(() => {
     getData()
-  }, [])
+  }, [target?.id])
 
   return (
     <div>

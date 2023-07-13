@@ -16,6 +16,7 @@ import useTargetMeta from 'hooks/useTargetMeta'
 import { useTechnique } from 'context/Technique'
 import useToast from 'hooks/useToast'
 import { format } from 'date-fns'
+import { TechniqueTabs } from 'types/technique'
 
 interface FormValues extends AddressFormValues {
   alias: string
@@ -56,7 +57,7 @@ const PersonalDataForm = (): ReactElement => {
   const getGlobalMessage = useGlobalMessage()
   const { addressFields, addressValidationSchema } =
     useAddressForm<FormValues>('address')
-  const { target } = useTechnique()
+  const { target, actions: techniqueActions } = useTechnique()
   const actions = useTargetMeta(target?.id ?? '', 'personal-data')
   const { launchToast } = useToast()
 
@@ -265,12 +266,14 @@ const PersonalDataForm = (): ReactElement => {
         line1: addressResponse.data.address_line_1 ?? '',
         line2: addressResponse.data.address_line_2 ?? ''
       })
-    } catch {}
+    } catch {
+      techniqueActions?.setActiveTab(TechniqueTabs.GENERAL_DATA)
+    }
   }
 
   useEffect(() => {
     getValues()
-  }, [])
+  }, [target?.id])
 
   return (
     <div className="w-full">

@@ -8,6 +8,7 @@ import { useIntl } from 'react-intl'
 import { biometricFormMessages } from 'views/Technique/messages'
 import useTargetMeta from 'hooks/useTargetMeta'
 import { useTechnique } from 'context/Technique'
+import { TechniqueTabs } from 'types/technique'
 
 export interface FormValues {
   fingerprints: File[]
@@ -22,7 +23,7 @@ interface BiometricFormProps {
 const BiometricForm = (props: BiometricFormProps): ReactElement => {
   const { initialValues } = props
   const { formatMessage } = useIntl()
-  const { target } = useTechnique()
+  const { target, actions: techniqueActions } = useTechnique()
   const actions = useTargetMeta(target?.id ?? '', 'biometrics')
 
   const handleSubmit = async (values: FormValues): Promise<void> => {
@@ -107,8 +108,12 @@ const BiometricForm = (props: BiometricFormProps): ReactElement => {
   ]
 
   useEffect(() => {
-    actions.get()
-  }, [])
+    try {
+      actions.get()
+    } catch {
+      techniqueActions?.setActiveTab(TechniqueTabs.GENERAL_DATA)
+    }
+  }, [target?.id])
 
   return (
     <div className="w-full">

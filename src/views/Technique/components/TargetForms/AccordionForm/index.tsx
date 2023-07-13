@@ -132,8 +132,6 @@ const AccordionForm = <T extends Object>({
       value?.validateForm()
     })
 
-    console.log(Array.from<string>(formikRefs.current.keys()))
-
     valuesRef.current.forEach((form, index) => {
       errors[index] = !form.isValid
 

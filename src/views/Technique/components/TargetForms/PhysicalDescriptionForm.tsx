@@ -14,6 +14,7 @@ import { useTechnique } from 'context/Technique'
 import useTargetMeta from 'hooks/useTargetMeta'
 import useToast from 'hooks/useToast'
 import { useIntl } from 'react-intl'
+import { TechniqueTabs } from 'types/technique'
 
 interface FormValues {
   height: string
@@ -44,7 +45,7 @@ const PhysicalDescriptionForm = (): ReactElement => {
   const getGlobalMessage = useGlobalMessage()
   const { bodyTypes, skinTypes, hairColor, hairLength, hairTypes } =
     usePhysicalDescriptionOptions()
-  const { target } = useTechnique()
+  const { target, actions: techniqueActions } = useTechnique()
   const actions = useTargetMeta(target?.id ?? '', 'physical-description')
   const { launchToast } = useToast()
 
@@ -203,7 +204,9 @@ const PhysicalDescriptionForm = (): ReactElement => {
         skinColor: response.data.skin ?? '',
         weight: response.data.weight ?? ''
       })
-    } catch {}
+    } catch {
+      techniqueActions?.setActiveTab(TechniqueTabs.GENERAL_DATA)
+    }
   }
 
   const handleSubmit = async (values: FormValues): Promise<void> => {
@@ -253,7 +256,7 @@ const PhysicalDescriptionForm = (): ReactElement => {
 
   useEffect(() => {
     getData()
-  }, [])
+  }, [target?.id])
 
   return (
     <div className="w-full">
