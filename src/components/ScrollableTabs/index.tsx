@@ -19,6 +19,7 @@ import {
 import NavButton from './NavButton'
 import { animate } from './utils/animate'
 import { debounce } from './utils/debounce'
+import { useDidMountEffect } from 'hooks/useDidMountEffect'
 
 interface TabsRects {
   top: number
@@ -296,7 +297,7 @@ const ScrollableTabs = (props: Props): ReactElement => {
     handleTabsScroll()
   }, [])
 
-  useEffect(() => {
+  useDidMountEffect(() => {
     return () => {
       handleTabsScroll.clear()
     }
