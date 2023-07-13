@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
 
-import { ReactElement } from 'react'
+import { MutableRefObject, ReactElement } from 'react'
 import { FormikConfig, FormikContextType } from 'formik'
 import Form from 'components/Form'
 import { Field, Section } from 'types/form'
@@ -11,6 +11,9 @@ interface Props<T> {
   validationSchema?: any
   onSubmit?: (values: T) => void
   onChangeValues?: (values: FormikContextType<T>) => void
+  formikRef?:
+    | MutableRefObject<FormikContextType<T> | undefined>
+    | ((ref: FormikContextType<T> | undefined) => void)
   withSections?: {
     renderMainSection: boolean
     sections: Section[]
@@ -23,7 +26,8 @@ const GenericForm = <T extends Object>({
   validationSchema,
   onSubmit,
   onChangeValues,
-  withSections
+  withSections,
+  formikRef
 }: Props<T>): ReactElement => {
   const initialValuesMapped: T = {} as T
 
@@ -37,12 +41,14 @@ const GenericForm = <T extends Object>({
     validateOnChange: true,
     onSubmit: (values) => {
       if (onSubmit) onSubmit(values)
-    }
+    },
+    enableReinitialize: true
   }
 
   return (
     <Form
       formikConfig={formikConfig}
+      formikRef={formikRef}
       fields={fields}
       renderSubmitButton={false}
       initialValuesCanChange

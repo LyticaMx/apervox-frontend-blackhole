@@ -7,7 +7,7 @@ import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
 import Typography from 'components/Typography'
 import {
   physicalDescriptionFormMessages,
-  targetFormMessages
+  targetMetaFormMessages
 } from 'views/Technique/messages'
 import { usePhysicalDescriptionOptions } from './hooks/usePhysicalDescriptionOptions'
 import { useTechnique } from 'context/Technique'
@@ -225,7 +225,7 @@ const PhysicalDescriptionForm = (): ReactElement => {
 
       await actions.update(body)
       launchToast({
-        title: formatMessage(targetFormMessages.updatedSuccessfully),
+        title: formatMessage(targetMetaFormMessages.updatedSuccessfully),
         type: 'Success'
       })
     } catch {}

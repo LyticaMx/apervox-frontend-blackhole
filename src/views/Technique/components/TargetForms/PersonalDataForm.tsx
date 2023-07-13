@@ -9,7 +9,7 @@ import { useAddressForm, AddressFormValues } from './useAddressForm'
 import {
   targetFormsGeneralMessages,
   personalDataFormMessages,
-  targetFormMessages
+  targetMetaFormMessages
 } from 'views/Technique/messages'
 import { useIntl } from 'react-intl'
 import useTargetMeta from 'hooks/useTargetMeta'
@@ -214,7 +214,7 @@ const PersonalDataForm = (): ReactElement => {
         address_line_2: values.line2
       })
       launchToast({
-        title: formatMessage(targetFormMessages.updatedSuccessfully),
+        title: formatMessage(targetMetaFormMessages.updatedSuccessfully),
         type: 'Success'
       })
     } catch {}

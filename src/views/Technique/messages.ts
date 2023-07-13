@@ -116,10 +116,6 @@ export const targetCardMessages = defineMessages({
 })
 
 export const targetFormMessages = defineMessages({
-  updatedSuccessfully: {
-    id: 'views.techniques.TargetForm.updatedSuccessfully',
-    defaultMessage: 'Formulario actualizado correctamente'
-  },
   etsiTargets: {
     id: 'views.techniques.TargetForm.etsiTargets',
     defaultMessage: 'Objetivos ETSI'
@@ -164,6 +160,34 @@ export const targetFormMessages = defineMessages({
   phoneExample: {
     id: 'views.techniques.TargetForm.phoneExample',
     defaultMessage: 'Ej. 0000000000'
+  }
+})
+
+export const targetMetaFormMessages = defineMessages({
+  updatedSuccessfully: {
+    id: 'views.techniques.TargetMetaForm.updatedSuccessfully',
+    defaultMessage: 'Formulario actualizado correctamente'
+  },
+  aboutToDelete: {
+    id: 'views.techniques.TargetMetaForm.aboutToDelete',
+    defaultMessage: 'Estás a punto de eliminar un formulario'
+  },
+  deleteForm: {
+    id: 'views.techniques.TargetMetaForm.deleteForm',
+    defaultMessage: 'Eliminar formulario'
+  },
+  aboutToDeleteBody: {
+    id: 'views.techniques.TargetMetaForm.aboutToDelete',
+    defaultMessage:
+      'El formulario que estás intentando eliminar ya está registrado en la base de datos. ¿Estás seguro de que deseas continuar?'
+  },
+  deletedForm: {
+    id: 'views.techniques.TargetMetaForm.deletedForm',
+    defaultMessage: 'Formulario eliminado correctamente'
+  },
+  formNotDeleted: {
+    id: 'views.techniques.TargetMetaForm.formNotDeleted',
+    defaultMessage: 'El formulario no ha sido eliminado'
   }
 })
 

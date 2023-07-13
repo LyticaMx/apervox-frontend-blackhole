@@ -26,6 +26,9 @@ export const useAddressForm = <T,>(section?: string): AddressForm<T> => {
       type: 'city-selector',
       name: 'city-selector',
       options: {
+        countryName: 'country',
+        stateName: 'state',
+        cityName: 'city',
         countryLabel: formatMessage(useAddressMessages.country),
         countryPlaceholder: formatMessage(
           useAddressMessages.countryPlaceholder
@@ -87,15 +90,6 @@ export const useAddressForm = <T,>(section?: string): AddressForm<T> => {
     zipCode: yup.string().required(formatMessage(formMessages.required)),
     line1: yup.string().required(formatMessage(formMessages.required))
   })
-
-  // const addressValidationSchema = yup.object({
-  //   state: yup.string().required(formatMessage(formMessages.required)),
-  //   municipality: yup.string().required(formatMessage(formMessages.required)),
-  //   postalCode: yup.string().required(formatMessage(formMessages.required)),
-  //   colony: yup.string().required(formatMessage(formMessages.required)),
-  //   street: yup.string().required(formatMessage(formMessages.required)),
-  //   number: yup.string().required(formatMessage(formMessages.required))
-  // })
 
   return {
     addressFields,

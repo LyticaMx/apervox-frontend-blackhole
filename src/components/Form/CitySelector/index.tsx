@@ -33,7 +33,12 @@ export interface Props {
   disabled?: boolean
 }
 
-const CitySelector = (props: Props): ReactElement => {
+const CitySelector = ({
+  countryName = 'country',
+  stateName = 'state',
+  cityName = 'city',
+  ...props
+}: Props): ReactElement => {
   const states = useMemo(
     () => State.getStatesOfCountry(props.country),
     [props.country]
@@ -49,13 +54,13 @@ const CitySelector = (props: Props): ReactElement => {
         <SelectField
           label={props.countryLabel}
           placeholder={props.countryPlaceholder}
-          value={props.country}
+          value={props.country ?? ''}
           onChange={(val) => {
-            props.onChange(props.countryName ?? 'country', val)
-            props.onChange(props.stateName ?? 'state', '')
-            props.onChange(props.cityName ?? 'city', '')
+            props.onChange(countryName, val)
+            props.onChange(stateName, '')
+            props.onChange(cityName, '')
           }}
-          onTouched={() => props.onTouched?.(props.countryName ?? 'country')}
+          onTouched={() => props.onTouched?.(countryName)}
           textField="name"
           valueField="isoCode"
           items={Country.getAllCountries()}
@@ -68,12 +73,12 @@ const CitySelector = (props: Props): ReactElement => {
         <SelectField
           label={props.stateLabel}
           placeholder={props.statePlaceholder}
-          value={props.state}
+          value={props.state ?? ''}
           onChange={(val) => {
-            props.onChange(props.stateName ?? 'state', val)
-            props.onChange(props.cityName ?? 'city', '')
+            props.onChange(stateName, val)
+            props.onChange(cityName, '')
           }}
-          onTouched={() => props.onTouched?.(props.stateName ?? 'state')}
+          onTouched={() => props.onTouched?.(stateName)}
           textField="name"
           valueField="isoCode"
           items={states}
@@ -86,9 +91,9 @@ const CitySelector = (props: Props): ReactElement => {
         <SelectField
           label={props.cityLabel}
           placeholder={props.cityPlaceholder}
-          value={props.city}
-          onChange={(val) => props.onChange(props.cityName ?? 'city', val)}
-          onTouched={() => props.onTouched?.(props.cityName ?? 'city')}
+          value={props.city ?? ''}
+          onChange={(val) => props.onChange(cityName, val)}
+          onTouched={() => props.onTouched?.(cityName)}
           textField="name"
           valueField="name"
           items={cities}
@@ -99,12 +104,6 @@ const CitySelector = (props: Props): ReactElement => {
       </Grid>
     </>
   )
-}
-
-CitySelector.DefaultProps = {
-  countryName: 'country',
-  stateName: 'state',
-  cityName: 'city'
 }
 
 export default CitySelector
