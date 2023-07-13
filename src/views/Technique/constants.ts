@@ -1,16 +1,11 @@
 import { generalMessages, platformMessages } from 'globalMessages'
 import { techniqueInfoTabsMessages } from './messages'
+import { TechniqueTabs } from 'types/technique'
 
 export enum TECHNIQUE_INFO_TABS {
   TARGET = 'TARGET',
   DESCRIPTION = 'DESCRIPTION',
   CONFIG = 'CONFIG'
-}
-
-export enum TARGET_INFO_TABS {
-  EVIDENCE = 'EVIDENCE',
-  GENERAL_DATA = 'GENERAL_DATA',
-  FORMS = 'FORMS'
 }
 
 export enum TARGET_FORMS_TABS {
@@ -38,12 +33,12 @@ export const techiniqueInfoTabs = [
 ]
 
 export const targetInfoTabs = [
-  { id: TARGET_INFO_TABS.EVIDENCE, label: platformMessages.evidences },
+  { id: TechniqueTabs.EVIDENCE, label: platformMessages.evidences },
   {
-    id: TARGET_INFO_TABS.GENERAL_DATA,
+    id: TechniqueTabs.GENERAL_DATA,
     label: techniqueInfoTabsMessages.generalData
   },
-  { id: TARGET_INFO_TABS.FORMS, label: generalMessages.forms }
+  { id: TechniqueTabs.FORMS, label: generalMessages.forms }
 ]
 
 export const targetFormsTabs = [

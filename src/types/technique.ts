@@ -31,6 +31,12 @@ export enum PhoneCompany {
   MOVISTAR = 2
 }
 
+export enum TechniqueTabs {
+  EVIDENCE,
+  GENERAL_DATA,
+  FORMS
+}
+
 export interface TechniqueGroup {
   id: string
   name: string
