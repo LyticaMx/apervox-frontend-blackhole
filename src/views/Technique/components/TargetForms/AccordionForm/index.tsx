@@ -87,7 +87,7 @@ const AccordionForm = <T extends Object>({
   }
 
   const handleRemoveForm = (index: number): void => {
-    // TODO: Eliminar del map
+    formikRefs.current.delete(`${itemTitle} ${index + 1}`)
     const newLanguages = [...valuesRef.current]
     newLanguages.splice(index, 1)
     valuesRef.current = [...newLanguages]
