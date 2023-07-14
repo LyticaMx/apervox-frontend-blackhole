@@ -8,22 +8,31 @@ import Button from 'components/Button'
 import { Field, Section } from 'types/form'
 import BasicAccordion from './BasicAccordion'
 import GenericForm from './GenericForm'
+import useToast from 'hooks/useToast'
+import { useIntl } from 'react-intl'
+import { targetMetaFormMessages } from 'views/Technique/messages'
+import useForceUpdate from 'hooks/useForceUpdate'
+import { useDidMountEffect } from 'hooks/useDidMountEffect'
 
 interface Props<T> {
   title: string
   itemTitle: string
-  fields: Array<Field<T>>
+  fields: Array<Field<T & { id?: string }>>
   validationSchema?: any
   withSections?: {
     renderMainSection: boolean
     sections: Section[]
   }
+  onDelete?: (id: string) => Promise<boolean>
+  onSubmit?: (data: T[]) => void | Promise<void>
+  onReset?: (ids: string[]) => Promise<boolean> // Preguntar
+  initialData?: T[]
 }
 
 interface FormData<T> {
   isValid: boolean
   touched: { [k: string]: boolean } | null
-  data: Partial<T>
+  data: Partial<T & { id?: string }>
 }
 
 const AccordionForm = <T extends Object>({
@@ -31,34 +40,54 @@ const AccordionForm = <T extends Object>({
   itemTitle,
   fields,
   validationSchema,
-  withSections
+  withSections,
+  onDelete,
+  onSubmit,
+  initialData
 }: Props<T>): ReactElement => {
   const getGlobalMessage = useGlobalMessage()
+  const { formatMessage } = useIntl()
+  const { updatesForced, forceUpdate } = useForceUpdate()
+  const formikRefs = useRef<
+    Map<string, FormikContextType<T & { id?: string }> | undefined>
+  >(new Map())
+  const genEmpty = (): FormData<T> => ({
+    isValid: false,
+    touched: null,
+    data: fields.reduce<any>((prev, field) => {
+      if (field.name === 'city-selector') {
+        prev.country = ''
+        prev.state = ''
+        prev.city = ''
+      } else prev[field.name] = ''
+      return prev
+    }, {})
+  })
 
-  const initialFormData: FormData<T> = useMemo(() => {
-    const initialData = {}
-
-    fields.forEach((field) => {
-      initialData[field.name] = ''
-    })
-
-    return {
-      isValid: false,
-      touched: null,
-      data: initialData
+  const initialFormData: Array<FormData<T>> = useMemo(() => {
+    if (initialData && initialData.length > 0) {
+      return initialData.map((item) => ({
+        data: item,
+        isValid: true,
+        touched: null
+      }))
     }
-  }, [])
 
-  const valuesRef = useRef<any[]>([initialFormData])
+    return [genEmpty()]
+  }, [initialData])
+
+  const valuesRef = useRef<any[]>(initialFormData)
   const [errors, setErrors] = useState<any>({})
   const [totalForms, setTotalForms] = useState(1)
+  const { launchToast } = useToast()
 
   const handleAddForm = (): void => {
-    valuesRef.current = [...valuesRef.current, initialFormData]
+    valuesRef.current = [...valuesRef.current, genEmpty()]
     setTotalForms((prev) => prev + 1)
   }
 
   const handleRemoveForm = (index: number): void => {
+    formikRefs.current.delete(`${itemTitle} ${index + 1}`)
     const newLanguages = [...valuesRef.current]
     newLanguages.splice(index, 1)
     valuesRef.current = [...newLanguages]
@@ -88,6 +117,21 @@ const AccordionForm = <T extends Object>({
     let isValid = true
     const errors = {}
 
+    formikRefs.current.forEach((value) => {
+      value?.setTouched(
+        fields.reduce<any>((prev, field) => {
+          if (field.name === 'city-selector') {
+            prev.country = true
+            prev.state = true
+            prev.city = true
+          } else prev[field.name] = true
+          return prev
+        }, {})
+      )
+
+      value?.validateForm()
+    })
+
     valuesRef.current.forEach((form, index) => {
       errors[index] = !form.isValid
 
@@ -101,8 +145,21 @@ const AccordionForm = <T extends Object>({
     return isValid
   }
 
-  const handleResetAll = (): void => {
-    valuesRef.current = [initialFormData]
+  const handleResetAll = async (): Promise<void> => {
+    valuesRef.current = [genEmpty()]
+
+    const ids = Array.from(formikRefs.current.values()).filter(
+      (form) => form?.values?.id
+    )
+    if (ids.length > 0) {
+      console.log('reset')
+      return
+    }
+
+    formikRefs.current = new Map<
+      string,
+      FormikContextType<T & { id?: string }>
+    >()
     setTotalForms(1)
     setErrors({})
   }
@@ -120,7 +177,7 @@ const AccordionForm = <T extends Object>({
         >
           <div
             className="bg-white rounded-b-md p-4 mb-6"
-            id={`${index}-${formData.data.name}`}
+            id={`${index}-${formData?.data?.id ?? 0}`}
           >
             <GenericForm<T>
               fields={fields.map((field) => {
@@ -144,8 +201,10 @@ const AccordionForm = <T extends Object>({
               validationSchema={validationSchema}
               initialValues={formData ? formData.data : undefined}
               onChangeValues={(formik: FormikContextType<T>) => {
-                console.log(formik)
                 handleUpdateForm(index, formik)
+              }}
+              formikRef={(ref) => {
+                formikRefs.current.set(`${itemTitle} ${index + 1}`, ref)
               }}
               withSections={withSections}
             />
@@ -154,7 +213,36 @@ const AccordionForm = <T extends Object>({
               <div className="py-4 flex items-center justify-end w-full">
                 <TrashIcon
                   className="w-4 h-4 cursor-pointer text-gray-400 hover:text-red-700"
-                  onClick={() => handleRemoveForm(index)}
+                  onClick={async () => {
+                    if (!formData?.data?.id) {
+                      handleRemoveForm(index)
+                      launchToast({
+                        title: formatMessage(
+                          targetMetaFormMessages.deletedForm
+                        ),
+                        type: 'Success'
+                      })
+                      return
+                    }
+                    const canDelete =
+                      (await onDelete?.(formData.data.id)) ?? false
+                    if (canDelete) {
+                      handleRemoveForm(index)
+                      launchToast({
+                        title: formatMessage(
+                          targetMetaFormMessages.deletedForm
+                        ),
+                        type: 'Success'
+                      })
+                    } else {
+                      launchToast({
+                        title: formatMessage(
+                          targetMetaFormMessages.formNotDeleted
+                        ),
+                        type: 'Warning'
+                      })
+                    }
+                  }}
                 />
               </div>
             )}
@@ -162,7 +250,13 @@ const AccordionForm = <T extends Object>({
         </BasicAccordion>
       )
     })
-  }, [totalForms, errors])
+  }, [totalForms, errors, initialFormData, updatesForced])
+
+  useDidMountEffect(() => {
+    valuesRef.current = initialFormData
+    if (initialFormData.length === totalForms) forceUpdate()
+    setTotalForms(initialFormData.length)
+  }, [initialFormData])
 
   return (
     <div>
@@ -187,7 +281,9 @@ const AccordionForm = <T extends Object>({
           onClick={() => {
             const isValid = handleValidateAll()
 
-            console.log(isValid, valuesRef.current)
+            if (isValid) {
+              onSubmit?.(valuesRef.current.map((item) => item.data) as T[])
+            }
           }}
         >
           {getGlobalMessage('save', 'actionsMessages')}

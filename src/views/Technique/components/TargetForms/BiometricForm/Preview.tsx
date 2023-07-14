@@ -4,8 +4,10 @@ import { BsSoundwave } from 'react-icons/bs'
 
 interface PreviewProps {
   type: 'image' | 'audio'
-  file: File
+  file?: File
+  url?: string
   remove: () => void
+  id?: string
 }
 
 const Preview = (props: PreviewProps): ReactElement => {
@@ -14,6 +16,7 @@ const Preview = (props: PreviewProps): ReactElement => {
 
   useEffect(() => {
     if (type === 'audio') return
+    if (!file) return
 
     const url = URL.createObjectURL(file)
     setPreview(url)

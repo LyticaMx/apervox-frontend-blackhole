@@ -32,7 +32,9 @@ interface Props<T> {
   submitButtonLabel?: string
   submitButtonPosition?: 'left' | 'center' | 'right'
   submitButtonProps?: SubmitButtonProps
-  formikRef?: MutableRefObject<FormikContextType<T> | undefined>
+  formikRef?:
+    | MutableRefObject<FormikContextType<T> | undefined>
+    | ((ref: FormikContextType<T> | undefined) => void)
   className?: string
   initialValuesCanChange?: boolean
   onChangeValues?: (values: FormikContextType<T>) => void
@@ -76,7 +78,13 @@ const Form = <DataType extends FormikValues = FormikValues>(
   }, [withSections])
 
   useEffect(() => {
-    if (formikRef) formikRef.current = formik
+    if (formikRef) {
+      if (typeof formikRef === 'function') {
+        formikRef(formik)
+      } else {
+        formikRef.current = formik
+      }
+    }
   }, [formik])
 
   // Add this method to update form values when base instance re-render with another initialValues

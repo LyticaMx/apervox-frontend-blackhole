@@ -1,11 +1,14 @@
 import Form from 'components/Form'
 import Typography from 'components/Typography'
 import { FormikConfig } from 'formik'
-import { ReactElement, useMemo } from 'react'
+import { ReactElement, useEffect, useMemo } from 'react'
 import { Field, Section } from 'types/form'
 import Biometrics from './Biometrics'
 import { useIntl } from 'react-intl'
 import { biometricFormMessages } from 'views/Technique/messages'
+import useTargetMeta from 'hooks/useTargetMeta'
+import { useTechnique } from 'context/Technique'
+import { TechniqueTabs } from 'types/technique'
 
 export interface FormValues {
   fingerprints: File[]
@@ -20,6 +23,33 @@ interface BiometricFormProps {
 const BiometricForm = (props: BiometricFormProps): ReactElement => {
   const { initialValues } = props
   const { formatMessage } = useIntl()
+  const { target, actions: techniqueActions } = useTechnique()
+  const actions = useTargetMeta(target?.id ?? '', 'biometrics')
+
+  const handleSubmit = async (values: FormValues): Promise<void> => {
+    // TODO: Revisar Biometricos
+    try {
+      values.photos.forEach(async (photo) => {
+        const formData = new FormData()
+        formData.append('type', 'photo')
+        formData.append('file', photo)
+        await actions.create(formData)
+      })
+      values.fingerprints.forEach(async (fingerprint) => {
+        const formData = new FormData()
+        formData.append('type', 'fingerprint')
+        formData.append('file', fingerprint)
+        await actions.create(formData)
+      })
+      values.voiceprints.forEach(async (voiceprint) => {
+        const formData = new FormData()
+        formData.append('type', 'voice_sample')
+        formData.append('file', voiceprint)
+        await actions.create(formData)
+      })
+    } catch {}
+  }
+
   const formikConfig = useMemo<FormikConfig<FormValues>>(
     () => ({
       initialValues: {
@@ -27,9 +57,7 @@ const BiometricForm = (props: BiometricFormProps): ReactElement => {
         voiceprints: initialValues?.voiceprints ?? [],
         photos: initialValues?.photos ?? []
       },
-      onSubmit: (values) => {
-        console.log(values)
-      }
+      onSubmit: handleSubmit
     }),
     [initialValues]
   )
@@ -78,6 +106,14 @@ const BiometricForm = (props: BiometricFormProps): ReactElement => {
       section: 'voiceprints'
     }
   ]
+
+  useEffect(() => {
+    try {
+      actions.get()
+    } catch {
+      techniqueActions?.setActiveTab(TechniqueTabs.GENERAL_DATA)
+    }
+  }, [target?.id])
 
   return (
     <div className="w-full">

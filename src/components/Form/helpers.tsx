@@ -140,9 +140,9 @@ export const fieldMapper = <T,>({ field, formik }: Params<T>): ReactNode => {
       return (
         <CitySelector
           {...field.options}
-          country={formik.values[countryName]}
-          state={formik.values[stateName]}
-          city={formik.values[cityName]}
+          country={formik.values[countryName] ?? ''}
+          state={formik.values[stateName] ?? ''}
+          city={formik.values[cityName] ?? ''}
           onChange={formik.setFieldValue}
           onTouched={formik.setFieldTouched}
           countryError={

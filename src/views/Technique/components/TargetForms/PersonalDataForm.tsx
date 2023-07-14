@@ -1,4 +1,4 @@
-import { ReactElement, useMemo } from 'react'
+import { ReactElement, useEffect, useMemo, useState } from 'react'
 import { FormikConfig } from 'formik'
 import * as yup from 'yup'
 import Form from 'components/Form'
@@ -8,11 +8,18 @@ import Typography from 'components/Typography'
 import { useAddressForm, AddressFormValues } from './useAddressForm'
 import {
   targetFormsGeneralMessages,
-  personalDataFormMessages
+  personalDataFormMessages,
+  targetMetaFormMessages
 } from 'views/Technique/messages'
 import { useIntl } from 'react-intl'
+import useTargetMeta from 'hooks/useTargetMeta'
+import { useTechnique } from 'context/Technique'
+import useToast from 'hooks/useToast'
+import { format } from 'date-fns'
+import { TechniqueTabs } from 'types/technique'
 
 interface FormValues extends AddressFormValues {
+  alias: string
   name: string
   targetNumber: string
   gender: string
@@ -25,17 +32,36 @@ interface FormValues extends AddressFormValues {
   birthCity: string
 }
 
-interface Props {
-  initialValues?: FormValues
-}
-
-const PersonalDataForm = ({ initialValues }: Props): ReactElement => {
+const PersonalDataForm = (): ReactElement => {
+  const [initialValues, setInitialValues] = useState<FormValues>({
+    alias: '',
+    name: '',
+    targetNumber: '',
+    gender: '',
+    birthdate: '',
+    age: '',
+    curp: '',
+    rfc: '',
+    birthCountry: '',
+    birthState: '',
+    birthCity: '',
+    state: '',
+    city: '',
+    zipCode: '',
+    country: '',
+    line1: '',
+    line2: ''
+  })
   const getMessage = useFormatMessage(personalDataFormMessages)
   const { formatMessage } = useIntl()
   const getGlobalMessage = useGlobalMessage()
-  const { addressFields, addressValidationSchema } = useAddressForm('address')
+  const { addressFields, addressValidationSchema } =
+    useAddressForm<FormValues>('address')
+  const { target, actions: techniqueActions } = useTechnique()
+  const actions = useTargetMeta(target?.id ?? '', 'personal-data')
+  const { launchToast } = useToast()
 
-  const fields: Array<Field<FormValues | AddressFormValues>> = [
+  const fields: Array<Field<FormValues>> = [
     {
       type: 'text',
       name: 'alias',
@@ -71,15 +97,15 @@ const PersonalDataForm = ({ initialValues }: Props): ReactElement => {
       name: 'gender',
       options: {
         label: getMessage('gender'),
-        clearable: true,
+        clearable: false,
         placeholder: getMessage('genderPlaceholder'),
         items: [
           {
-            id: '1',
+            id: 'male',
             label: getMessage('male')
           },
           {
-            id: '2',
+            id: 'female',
             label: getMessage('female')
           }
         ],
@@ -91,9 +117,10 @@ const PersonalDataForm = ({ initialValues }: Props): ReactElement => {
       breakpoints: { xs: 3 }
     },
     {
-      type: 'text',
+      type: 'date',
       name: 'birthdate',
       options: {
+        formatDisplay: 'dd/MM/yyyy',
         id: 'personal-data-birthdate',
         label: getMessage('birthDate'),
         placeholder: getMessage('birthDatePlaceholder')
@@ -134,15 +161,15 @@ const PersonalDataForm = ({ initialValues }: Props): ReactElement => {
       type: 'city-selector',
       name: 'birth-address-selector',
       options: {
-        countryName: '',
+        countryName: 'birthCountry',
         countryLabel: getMessage('birthCountry'),
         countryPlaceholder: getMessage('birthCountryPlaceholder'),
         countryBreakpoints: { xs: 3 },
-        stateName: '',
+        stateName: 'birthState',
         stateLabel: getMessage('birthState'),
         statePlaceholder: getMessage('birthStatePlaceholder'),
         stateBreakpoints: { xs: 3 },
-        cityName: '',
+        cityName: 'birthCity',
         cityLabel: getMessage('birthCity'),
         cityPlaceholder: getMessage('birthCityPlaceholder'),
         cityBreakpoints: { xs: 3 },
@@ -155,39 +182,51 @@ const PersonalDataForm = ({ initialValues }: Props): ReactElement => {
 
   const validationSchema = yup
     .object({
-      height: yup.string().required(getMessage('required')),
-      weight: yup.string().required(getMessage('required')),
-      bodyType: yup.string().required(getMessage('required')),
-      skinColor: yup.string().required(getMessage('required')),
-      hairType: yup.string().required(getMessage('required')),
-      hairColor: yup.array().required(getMessage('required'))
+      name: yup.string().required(getMessage('required'))
     })
     .concat(addressValidationSchema)
 
-  const formikConfig = useMemo<FormikConfig<FormValues | AddressFormValues>>(
+  const handleSubmit = async (values: FormValues): Promise<void> => {
+    const body: Record<string, any> = {
+      unique_alias: values.alias,
+      full_name: values.name,
+      phone_number: values.targetNumber,
+      gender: values.gender,
+      age: values.age,
+      country: values.birthCountry,
+      state: values.birthState,
+      town: values.birthCity
+    }
+
+    if (values.curp) body.curp = values.curp
+    if (values.rfc) body.rfc = values.rfc
+    if (values.birthdate) {
+      body.birthday = format(new Date(values.birthdate), 'yyyy-MM-dd')
+    }
+
+    try {
+      await actions.update(body)
+      await actions.updateAddress({
+        country: values.country,
+        state: values.state,
+        city: values.city,
+        zip: values.zipCode,
+        address_line_1: values.line1,
+        address_line_2: values.line2
+      })
+      launchToast({
+        title: formatMessage(targetMetaFormMessages.updatedSuccessfully),
+        type: 'Success'
+      })
+    } catch {}
+  }
+
+  const formikConfig = useMemo<FormikConfig<FormValues>>(
     () => ({
-      initialValues: {
-        name: initialValues?.name ?? '',
-        targetNumber: initialValues?.targetNumber ?? '',
-        gender: initialValues?.gender ?? '',
-        birthdate: initialValues?.birthdate ?? '',
-        age: initialValues?.age ?? '',
-        curp: initialValues?.curp ?? '',
-        rfc: initialValues?.rfc ?? '',
-        birthCountry: initialValues?.birthCountry ?? '',
-        birthState: initialValues?.birthState ?? '',
-        birthCity: initialValues?.birthCity ?? '',
-        state: initialValues?.state ?? '',
-        city: initialValues?.city ?? '',
-        zipCode: initialValues?.zipCode ?? '',
-        country: initialValues?.country ?? '',
-        line1: initialValues?.line1 ?? '',
-        line2: initialValues?.line2 ?? ''
-      },
+      initialValues,
       validationSchema,
-      onSubmit: (values) => {
-        console.log(values)
-      }
+      onSubmit: handleSubmit,
+      enableReinitialize: true
     }),
     [initialValues]
   )
@@ -202,6 +241,39 @@ const PersonalDataForm = ({ initialValues }: Props): ReactElement => {
       spacing: 1
     }
   ]
+
+  const getValues = async (): Promise<void> => {
+    try {
+      const response = await actions.get()
+      const addressResponse = await actions.getAddress()
+
+      setInitialValues({
+        alias: response.data.unique_alias ?? '',
+        name: response.data.full_name ?? '',
+        targetNumber: response.data.phone_number ?? '',
+        gender: response.data.gender ?? '',
+        birthdate: response.data.birthdate ?? '',
+        age: response.data.age ?? '',
+        curp: response.data.curp ?? '',
+        rfc: response.data.rfc ?? '',
+        birthCountry: response.data.country ?? '',
+        birthState: response.data.state ?? '',
+        birthCity: response.data.town ?? '',
+        country: addressResponse.data.country ?? '',
+        state: addressResponse.data.state ?? '',
+        city: addressResponse.data.city ?? '',
+        zipCode: addressResponse.data.zip ?? '',
+        line1: addressResponse.data.address_line_1 ?? '',
+        line2: addressResponse.data.address_line_2 ?? ''
+      })
+    } catch {
+      techniqueActions?.setActiveTab(TechniqueTabs.GENERAL_DATA)
+    }
+  }
+
+  useEffect(() => {
+    getValues()
+  }, [target?.id])
 
   return (
     <div className="w-full">

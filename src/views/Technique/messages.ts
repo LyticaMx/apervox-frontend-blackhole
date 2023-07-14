@@ -163,6 +163,34 @@ export const targetFormMessages = defineMessages({
   }
 })
 
+export const targetMetaFormMessages = defineMessages({
+  updatedSuccessfully: {
+    id: 'views.techniques.TargetMetaForm.updatedSuccessfully',
+    defaultMessage: 'Formulario actualizado correctamente'
+  },
+  aboutToDelete: {
+    id: 'views.techniques.TargetMetaForm.aboutToDelete',
+    defaultMessage: 'Estás a punto de eliminar un formulario'
+  },
+  deleteForm: {
+    id: 'views.techniques.TargetMetaForm.deleteForm',
+    defaultMessage: 'Eliminar formulario'
+  },
+  aboutToDeleteBody: {
+    id: 'views.techniques.TargetMetaForm.aboutToDelete',
+    defaultMessage:
+      'El formulario que estás intentando eliminar ya está registrado en la base de datos. ¿Estás seguro de que deseas continuar?'
+  },
+  deletedForm: {
+    id: 'views.techniques.TargetMetaForm.deletedForm',
+    defaultMessage: 'Formulario eliminado correctamente'
+  },
+  formNotDeleted: {
+    id: 'views.techniques.TargetMetaForm.formNotDeleted',
+    defaultMessage: 'El formulario no ha sido eliminado'
+  }
+})
+
 export const targetFormsGeneralMessages = defineMessages({
   comments: {
     id: 'views.techniques.TargetForms.generalMessages.comments',
