@@ -24,7 +24,7 @@ import { Target } from 'types/target'
 const TargetList = (): ReactElement => {
   let timer
 
-  const { techniqueId, target: targetSelected, actions } = useTechnique()
+  const { techniqueId, target: targetSelected } = useTechnique()
   const { data, total, actions: targetsActions, pagination } = useTargets()
   const [searchValue, setSearchValue] = useState<string>('')
   const [targetsChecked, setTargetsChecked] = useState<string[]>([])
@@ -153,7 +153,6 @@ const TargetList = (): ReactElement => {
             data={target}
             selected={target.id === targetSelected?.id}
             isChecked={targetsChecked.some((id) => target.id === id)}
-            onClick={(item) => actions?.setTarget(item)}
             onCheck={handleCheckTarget}
           />
         ))}
