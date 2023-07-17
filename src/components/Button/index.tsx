@@ -18,7 +18,7 @@ interface Props {
     | 'purple'
     | 'primary'
     | 'secondary'
-  variant?: 'text' | 'outlined' | 'contained'
+  variant?: 'text' | 'outlined' | 'contained' | 'tonal'
   margin?: 'none' | 'normal' | 'dense'
   fullwidth?: boolean
   disabled?: boolean

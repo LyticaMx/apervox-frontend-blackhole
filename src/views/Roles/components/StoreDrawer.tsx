@@ -222,6 +222,12 @@ const StoreDrawer = ({ open, role, onClose }: Props): ReactElement => {
             debounceTimeout={300}
             value={formik.values.users}
             isMulti={true}
+            loadingMessage={() =>
+              `${getGlobalMessage('loading', 'generalMessages')}...`
+            }
+            noOptionsMessage={() =>
+              getGlobalMessage('noOptions', 'generalMessages')
+            }
             onChange={(val) => {
               formik.setFieldValue('users', val)
             }}

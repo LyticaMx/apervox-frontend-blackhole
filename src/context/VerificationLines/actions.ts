@@ -5,7 +5,8 @@ import {
   State,
   GetPayload,
   CreatePayload,
-  UpdatePayload
+  UpdatePayload,
+  VerificationLine
 } from 'types/verificationLine'
 import { actions } from './constants'
 import { Params } from 'utils/ParamsBuilder'
@@ -89,35 +90,16 @@ export const useActions = (state: State, dispatch): Actions => {
       return false
     }
   }
-  const deleteOne = async (id: string): Promise<boolean> => {
-    try {
-      await resource.delete({
-        queryString: id
-      })
-      return true
-    } catch {
-      return false
-    }
-  }
-  const deleteMany = async (ids: string[]): Promise<boolean> => {
-    try {
-      await resource.delete({
-        body: { ids }
-      })
-      return true
-    } catch {
-      return false
-    }
-  }
-
-  const toggleStatus = async (
-    id: string,
-    status: boolean
+  const updateMany = async (
+    ids: string[],
+    payload: Partial<VerificationLine>
   ): Promise<boolean> => {
     try {
       await resource.put({
-        queryString: id,
-        body: { status }
+        body: {
+          ids,
+          payload
+        }
       })
 
       return true
@@ -130,8 +112,6 @@ export const useActions = (state: State, dispatch): Actions => {
     get,
     create,
     update,
-    deleteOne,
-    deleteMany,
-    toggleStatus
+    updateMany
   }
 }

@@ -1,5 +1,6 @@
 import {
   FunctionComponent,
+  MutableRefObject,
   ReactElement,
   SVGProps,
   useCallback,
@@ -72,6 +73,7 @@ interface Props<T> {
     paddingSize?: 'xs' | 'sm' | 'md'
     className?: string
   }
+  tableRef?: MutableRefObject<any | undefined>
 }
 
 const Table = <DataType,>({
@@ -88,13 +90,22 @@ const Table = <DataType,>({
   enableSorting = true,
   manualLimit,
   actionsForSelectedItems,
-  rowConfig
+  rowConfig,
+  tableRef
 }: Props<DataType>): ReactElement => {
   const [sortingState, setSortingState] = useState<SortingState>([])
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const tableContainerRef = useRef<HTMLDivElement>(null)
   const manualSortingRef = useRef(manualSorting?.onSortingChange)
+
+  useEffect(() => {
+    if (tableRef) {
+      tableRef.current = {
+        setRowSelection
+      }
+    }
+  }, [tableRef])
 
   useEffect(() => {
     manualSortingRef.current = manualSorting?.onSortingChange

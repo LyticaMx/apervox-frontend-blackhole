@@ -55,6 +55,21 @@
 .btn.contained.purple { @apply bg-purple-500 text-white hover:enabled:bg-purple-500 }
 .btn.contained.primary { @apply bg-primary-500 text-white hover:enabled:bg-primary-500 }
 
+/* Tonal */
+.btn.tonal.primary { @apply bg-primary bg-opacity-10 text-primary hover:enabled:bg-opacity-70 hover:enabled:!text-white}
+.btn.tonal.secondary { @apply bg-secondary bg-opacity-10 text-secondary hover:enabled:bg-opacity-70 hover:enabled:!text-white}
+.btn.tonal.base { @apply bg-slate-500 bg-opacity-10 text-slate-500 hover:enabled:bg-opacity-70 hover:enabled:!text-white}
+.btn.tonal.red { @apply bg-red-500 bg-opacity-10 text-red-500 hover:enabled:bg-opacity-70 hover:enabled:!text-white}
+.btn.tonal.yellow { @apply bg-yellow-500 bg-opacity-10 text-yellow-500 hover:enabled:bg-opacity-70 hover:enabled:!text-white}
+.btn.tonal.orange { @apply bg-orange-500 bg-opacity-10 text-orange-500 hover:enabled:bg-opacity-70 hover:enabled:!text-white}
+.btn.tonal.green { @apply bg-green-500 bg-opacity-10 text-green-500 hover:enabled:bg-opacity-70 hover:enabled:!text-white}
+.btn.tonal.cyan { @apply bg-cyan-500 bg-opacity-10 text-cyan-500 hover:enabled:bg-opacity-70 hover:enabled:!text-white}
+.btn.tonal.sky { @apply bg-sky-500 bg-opacity-10 text-sky-500 hover:enabled:bg-opacity-70 hover:enabled:!text-white}
+.btn.tonal.blue { @apply bg-blue-500 bg-opacity-10 text-blue-500 hover:enabled:bg-opacity-70 hover:enabled:!text-white}
+.btn.tonal.indigo { @apply bg-indigo-500 bg-opacity-10 text-indigo-500 hover:enabled:bg-opacity-70 hover:enabled:!text-white}
+.btn.tonal.purple { @apply bg-purple-500 bg-opacity-10 text-purple-500 hover:enabled:bg-opacity-70 hover:enabled:!text-white}
+.btn.tonal.primary { @apply bg-primary-500 bg-opacity-10 text-primary-500 hover:enabled:bg-opacity-70 hover:enabled:!text-white}
+
 .card {
   @apply w-full border border-background-secondary bg-white rounded-md overflow-hidden
   
