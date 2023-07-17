@@ -1,18 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ReactElement, useMemo, useState, useRef } from 'react'
-import { FormikContextType } from 'formik'
+import { FormikConfig, FormikContextType } from 'formik'
 import { PlusCircleIcon, TrashIcon } from '@heroicons/react/24/outline'
 import { useGlobalMessage } from 'hooks/useIntl'
 import Typography from 'components/Typography'
 import Button from 'components/Button'
 import { Field, Section } from 'types/form'
 import BasicAccordion from './BasicAccordion'
-import GenericForm from './GenericForm'
 import useToast from 'hooks/useToast'
 import { useIntl } from 'react-intl'
 import { targetMetaFormMessages } from 'views/Technique/messages'
 import useForceUpdate from 'hooks/useForceUpdate'
 import { useDidMountEffect } from 'hooks/useDidMountEffect'
+import Form from 'components/Form'
 
 interface Props<T> {
   title: string
@@ -168,6 +168,14 @@ const AccordionForm = <T extends Object>({
     return Array.from({ length: totalForms }, (_, index) => {
       const formData = valuesRef.current[index]
 
+      const formikConfig: FormikConfig<T> = {
+        initialValues: formData.data ?? {},
+        validationSchema,
+        validateOnChange: true,
+        enableReinitialize: true,
+        onSubmit: () => {} // verificar como utilizar esta
+      }
+
       return (
         <BasicAccordion
           key={index}
@@ -179,7 +187,7 @@ const AccordionForm = <T extends Object>({
             className="bg-white rounded-b-md p-4 mb-6"
             id={`${index}-${formData?.data?.id ?? 0}`}
           >
-            <GenericForm<T>
+            <Form
               fields={fields.map((field) => {
                 if (
                   field.type === 'text' ||
@@ -198,8 +206,7 @@ const AccordionForm = <T extends Object>({
                 }
                 return field
               })}
-              validationSchema={validationSchema}
-              initialValues={formData ? formData.data : undefined}
+              formikConfig={formikConfig}
               onChangeValues={(formik: FormikContextType<T>) => {
                 handleUpdateForm(index, formik)
               }}
@@ -207,6 +214,7 @@ const AccordionForm = <T extends Object>({
                 formikRefs.current.set(`${itemTitle} ${index + 1}`, ref)
               }}
               withSections={withSections}
+              renderSubmitButton={false}
             />
 
             {index > 0 && (
