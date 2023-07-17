@@ -5,7 +5,7 @@ import { VerificationLine } from 'types/verificationLine'
 export enum Types {
   SET_VERIFICATION_LINES = 'verificationLines/setVerificationLines',
   SET_VERIFICATION_LINES_PAGINATION = 'verificationLines/setVerificationLinesPagination',
-  SET_VERIFICATION_LINES_FILTERS = 'verificationLines/setVerificationLinesPagination'
+  SET_VERIFICATION_LINES_FILTERS = 'verificationLines/setVerificationLinesFilters'
 }
 
 export const actions = {

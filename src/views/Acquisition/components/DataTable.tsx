@@ -1,11 +1,14 @@
-import { DocumentMagnifyingGlassIcon } from '@heroicons/react/24/outline'
+import {
+  DocumentMagnifyingGlassIcon,
+  NoSymbolIcon
+} from '@heroicons/react/24/outline'
 import IconButton from 'components/Button/IconButton'
 import Switch from 'components/Form/Switch'
 import Table from 'components/Table'
 import { format } from 'date-fns'
 import { useFormatMessage } from 'hooks/useIntl'
 import useTableColumns from 'hooks/useTableColumns'
-import { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useRef, useState } from 'react'
 import { tableMessages } from '../messages'
 import { OverflowLine } from 'types/overflowLine'
 import { useOverflowLine } from 'context/OverflowLines'
@@ -15,17 +18,20 @@ import DisableOverflowLineDialog from './DisableOverflowLineDialog'
 import { get } from 'lodash'
 import clsx from 'clsx'
 import Tooltip from 'components/Tooltip'
+import { useIntl } from 'react-intl'
+import { actionsMessages } from 'globalMessages'
 
 const DataTable = (): ReactElement => {
+  const { formatMessage } = useIntl()
   const getMessage = useFormatMessage(tableMessages)
   const { data, pagination, actions: overflowLineActions } = useOverflowLine()
-  const [rowSelected, setRowSelected] = useState<OverflowLine | null>(null)
-  const [disableOverflowLine, setDisableOverflowLine] = useState<{
-    id: string
-    status: boolean
-  }>({ id: '', status: false })
 
   const [open, toggle] = useToggle()
+  const [openDisable, setOpenDisable] = useState(false)
+
+  const tableRef = useRef<any>(undefined)
+  const [selected, setSelected] = useState<OverflowLine | null>(null)
+  const [selectedIds, setSelectedIds] = useState<string[]>([])
 
   const colorsStatus = {
     assigned: 'bg-red-500',
@@ -119,12 +125,7 @@ const DataTable = (): ReactElement => {
               size="sm"
               stopPropagation
               value={getValue<boolean>() ?? false}
-              onChange={() =>
-                setDisableOverflowLine({
-                  id: row.original.id ?? '',
-                  status: getValue<boolean>() ?? false
-                })
-              }
+              onChange={() => setSelected(row.original)}
             />
           </Tooltip>
           <IconButton
@@ -146,15 +147,26 @@ const DataTable = (): ReactElement => {
     <>
       <EditOverflowLineDrawer
         open={open}
-        overflowLine={rowSelected}
+        overflowLine={selected}
         onClose={toggle}
       />
       <DisableOverflowLineDialog
-        id={disableOverflowLine.id}
-        currentStatus={disableOverflowLine.status}
-        onClose={() => setDisableOverflowLine({ id: '', status: false })}
+        open={openDisable}
+        data={selected}
+        ids={selectedIds}
+        onSuccess={() => {
+          tableRef.current?.setRowSelection({})
+          setSelected(null)
+          setSelectedIds([])
+          setOpenDisable(false)
+        }}
+        onClose={() => {
+          setSelected(null)
+          setOpenDisable(false)
+        }}
       />
       <Table
+        tableRef={tableRef}
         columns={columns}
         data={data}
         manualSorting={{
@@ -163,9 +175,21 @@ const DataTable = (): ReactElement => {
         }}
         withCheckbox
         onRowClicked={(row) => {
-          setRowSelected(row)
+          setSelected(row)
           toggle()
         }}
+        actionsForSelectedItems={[
+          {
+            name: 'disable',
+            tooltip: formatMessage(actionsMessages.disable),
+            action: (items: any) => {
+              setSelected(null)
+              setSelectedIds(items.map((item) => item.id))
+              setOpenDisable(true)
+            },
+            Icon: NoSymbolIcon
+          }
+        ]}
       />
     </>
   )

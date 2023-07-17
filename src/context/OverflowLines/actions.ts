@@ -5,6 +5,7 @@ import {
   Actions,
   CreatePayload,
   GetPayload,
+  OverflowLine,
   State,
   UpdatePayload
 } from 'types/overflowLine'
@@ -21,7 +22,10 @@ export const useActions = (state: State, dispatch): Actions => {
     try {
       const urlParams = Params.Builder(params)
         .paginateAndSeach({ ...pagination, ...searchFilter })
-        .sort(pagination.sort, { created_by: 'created_by.username', medium_name: 'medium.name' })
+        .sort(pagination.sort, {
+          created_by: 'created_by.username',
+          medium_name: 'medium.name'
+        })
         .dates(dateFilter)
         .putStaticFilter('line_status', params?.line_status)
         .build()
@@ -119,35 +123,16 @@ export const useActions = (state: State, dispatch): Actions => {
     }
   }
 
-  const deleteOne = async (id: string): Promise<boolean> => {
-    try {
-      await resource.delete({
-        queryString: id
-      })
-      return true
-    } catch {
-      return false
-    }
-  }
-  const deleteMany = async (ids: string[]): Promise<boolean> => {
-    try {
-      await resource.delete({
-        body: { ids }
-      })
-      return true
-    } catch {
-      return false
-    }
-  }
-
-  const toggleDisable = async (
-    id: string,
-    status: boolean
+  const updateMany = async (
+    ids: string[],
+    payload: Partial<OverflowLine>
   ): Promise<boolean> => {
     try {
       await resource.put({
-        queryString: id,
-        body: { status }
+        body: {
+          ids,
+          payload
+        }
       })
 
       return true
@@ -160,8 +145,6 @@ export const useActions = (state: State, dispatch): Actions => {
     get,
     create,
     update,
-    deleteOne,
-    deleteMany,
-    toggleDisable
+    updateMany
   }
 }

@@ -34,6 +34,10 @@ const Verification = (): ReactElement => {
 
   const [openEdit, setOpenEdit] = useState(false)
   const { data, pagination, actions } = useVerificationLine()
+  console.log(
+    '🚀 ~ file: Verification.tsx:37 ~ Verification ~ pagination:',
+    pagination
+  )
 
   const columns = useTableColumns<VerificationLine>(() => [
     {
@@ -42,6 +46,7 @@ const Verification = (): ReactElement => {
     },
     {
       header: formatMessage(tableMessages.createdBy),
+      enableSorting: false,
       accessorKey: 'created_by'
     },
     {
@@ -52,6 +57,7 @@ const Verification = (): ReactElement => {
     },
     {
       header: formatMessage(generalMessages.actions),
+      enableSorting: false,
       accessorKey: 'id',
       cell: ({ getValue, cell, row }) => {
         const isActive = cell.row.original.status
