@@ -36,7 +36,6 @@ interface Props<T> {
     | MutableRefObject<FormikContextType<T> | undefined>
     | ((ref: FormikContextType<T> | undefined) => void)
   className?: string
-  initialValuesCanChange?: boolean
   onChangeValues?: (values: FormikContextType<T>) => void
   buttons?: ReactNode
 }
@@ -55,7 +54,6 @@ const Form = <DataType extends FormikValues = FormikValues>(
     submitButtonProps = {},
     formikRef,
     className,
-    initialValuesCanChange,
     onChangeValues
   } = props
 
@@ -86,17 +84,6 @@ const Form = <DataType extends FormikValues = FormikValues>(
       }
     }
   }, [formik])
-
-  // Add this method to update form values when base instance re-render with another initialValues
-  useEffect(() => {
-    if (initialValuesCanChange && formik) {
-      const keys = Object.keys(formikConfig.initialValues)
-
-      keys.forEach((keyName) => {
-        formik.setFieldValue(keyName, formikConfig.initialValues[keyName])
-      })
-    }
-  }, [formikConfig.initialValues])
 
   // Add this method to broadcast form changes when values or status of the formik instance are updated
   useEffect(() => {
