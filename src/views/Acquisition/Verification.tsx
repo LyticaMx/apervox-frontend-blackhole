@@ -46,7 +46,7 @@ const Verification = (): ReactElement => {
     },
     {
       header: formatMessage(tableMessages.createdBy),
-      enableSorting: false,
+      id: 'created_by.username',
       accessorKey: 'created_by'
     },
     {

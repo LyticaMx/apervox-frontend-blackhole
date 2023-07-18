@@ -9,7 +9,7 @@ import { format } from 'date-fns'
 import { useFormatMessage } from 'hooks/useIntl'
 import useTableColumns from 'hooks/useTableColumns'
 import { ReactElement, useEffect, useRef, useState } from 'react'
-import { tableMessages } from '../messages'
+import { statusMessages, tableMessages } from '../messages'
 import { OverflowLine } from 'types/overflowLine'
 import { useOverflowLine } from 'context/OverflowLines'
 import { useToggle } from 'hooks/useToggle'
@@ -41,16 +41,16 @@ const DataTable = (): ReactElement => {
   }
   const columns = useTableColumns<OverflowLine>(() => [
     {
-      accessorKey: 'target.phone',
+      accessorKey: 'target',
+      id: 'target_phone',
       header: getMessage('target'),
-      cell: ({ row }) => get(row.original, 'target.phone'),
-      enableSorting: false
+      cell: ({ row }) => get(row.original, 'target.phone')
     },
     {
-      accessorKey: 'target.carrier',
+      accessorKey: 'target',
+      id: 'target_carrier',
       header: getMessage('company'),
-      cell: ({ row }) => get(row.original, 'target.carrier.name'),
-      enableSorting: false
+      cell: ({ row }) => get(row.original, 'target.carrier.name')
     },
     {
       accessorKey: 'medium.name',
@@ -71,10 +71,10 @@ const DataTable = (): ReactElement => {
         format(new Date(getValue<string>()), 'dd/MM/yyyy - HH:mm')
     },
     {
-      accessorKey: 'target.technique',
+      accessorKey: 'target',
+      id: 'target_technique',
       header: getMessage('technique'),
-      cell: ({ row }) => get(row.original, 'target.technique.name'),
-      enableSorting: false
+      cell: ({ row }) => get(row.original, 'target.technique.name', '')
     },
     {
       accessorKey: 'line_status',
@@ -90,7 +90,28 @@ const DataTable = (): ReactElement => {
             {getMessage(getValue<string>())}
           </p>
         </div>
-      )
+      ),
+      meta: {
+        columnFilters: {
+          multiple: true,
+          options: [
+            { name: formatMessage(statusMessages.assigned), value: 'assigned' },
+            {
+              name: formatMessage(statusMessages.available),
+              value: 'available'
+            },
+            {
+              name: formatMessage(statusMessages.quarantine),
+              value: 'quarantine'
+            },
+            {
+              name: formatMessage(statusMessages.maintenance),
+              value: 'maintenance'
+            }
+          ],
+          onChange: (value) => overflowLineActions?.get({ line_status: value })
+        }
+      }
     },
     {
       accessorKey: 'target.end_date',
@@ -101,8 +122,7 @@ const DataTable = (): ReactElement => {
         if (value) return format(new Date(value), 'dd/MM/yyyy - HH:mm')
 
         return ''
-      },
-      enableSorting: false
+      }
     },
     {
       header: getMessage('actions'),

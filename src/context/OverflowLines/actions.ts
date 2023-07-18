@@ -1,3 +1,4 @@
+/* eslint-disable no-unreachable */
 import { useService } from 'hooks/useApi'
 import { omit } from 'lodash'
 import { actions } from './constants'
@@ -24,6 +25,10 @@ export const useActions = (state: State, dispatch): Actions => {
         .paginateAndSeach({ ...pagination, ...searchFilter })
         .sort(pagination.sort, {
           created_by: 'created_by.username',
+          target_phone: 'target.phone',
+          target_carrier: 'target.carrier.name',
+          target_technique: 'target.technique.name',
+          target_end_date: 'target.end_date',
           medium_name: 'medium.name'
         })
         .dates(dateFilter)
