@@ -120,6 +120,7 @@ const GeneralDataForm = (): ReactElement => {
         carrier: getAsyncValue(target?.carrier, 'id', 'name'),
         endDate: target?.end_date ?? ''
       },
+      enableReinitialize: true,
       validationSchema,
       onSubmit: async (values) => {
         if (target) {
@@ -148,7 +149,6 @@ const GeneralDataForm = (): ReactElement => {
   return (
     <div className="bg-white p-2 py-4 rounded-md w-full">
       <Form
-        initialValuesCanChange
         formikConfig={formikConfig}
         fields={fields}
         submitButtonPosition="right"
