@@ -148,7 +148,6 @@ const GeneralDataForm = (): ReactElement => {
   return (
     <div className="bg-white p-2 py-4 rounded-md w-full">
       <Form
-        initialValuesCanChange
         formikConfig={formikConfig}
         fields={fields}
         submitButtonPosition="right"
