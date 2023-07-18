@@ -6,7 +6,7 @@ import { useService } from 'hooks/useApi'
 import { Target } from 'types/target'
 
 const useActions = (state: State, dispatch): Actions => {
-  const { technique } = state
+  const { technique, activeTab } = state
   const techniqueService = useService('techniques')
   const targetsService = useService('targets')
 
@@ -133,7 +133,15 @@ const useActions = (state: State, dispatch): Actions => {
     dispatch(actions.setActiveTab(TechniqueTabs.EVIDENCE))
   }
 
-  const setTarget = (payload: Target): void => {
+  const setTarget = async (payload: Target): Promise<void> => {
+    if (activeTab === TechniqueTabs.FORMS) {
+      const res = await showForms(payload)
+
+      if (!res) {
+        dispatch(actions.setActiveTab(TechniqueTabs.GENERAL_DATA))
+      }
+    }
+
     dispatch(actions.setTarget(payload))
   }
 
@@ -150,6 +158,7 @@ const useActions = (state: State, dispatch): Actions => {
 
       return true
     } catch (error) {
+      dispatch(actions.showForms(false))
       return false
     }
   }

@@ -1,6 +1,11 @@
 import Form from 'components/Form'
 import { FormikConfig, FormikContextType, FormikHelpers } from 'formik'
-import { actionsMessages, formMessages, platformMessages } from 'globalMessages'
+import {
+  actionsMessages,
+  formMessages,
+  generalMessages,
+  platformMessages
+} from 'globalMessages'
 import { MutableRefObject, ReactElement, useMemo } from 'react'
 import { useIntl } from 'react-intl'
 import { Field } from 'types/form'
@@ -33,6 +38,8 @@ const OverflowLineForm = ({
       type: 'async-select',
       options: {
         label: formatMessage(platformMessages.acquisitionMedium),
+        loadingMessage: () => `${formatMessage(generalMessages.loading)}...`,
+        noOptionsMessage: () => formatMessage(generalMessages.noOptions),
         asyncProps: {
           api: { endpoint: 'acquisition-mediums', method: 'get' },
           value: 'id',

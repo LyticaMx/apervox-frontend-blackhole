@@ -1,7 +1,7 @@
-import { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useRef, useState } from 'react'
 import { format } from 'date-fns'
 import { useIntl } from 'react-intl'
-import { RectangleGroupIcon } from '@heroicons/react/24/outline'
+import { NoSymbolIcon, RectangleGroupIcon } from '@heroicons/react/24/outline'
 
 import Table from 'components/Table'
 import Tooltip from 'components/Tooltip'
@@ -20,27 +20,24 @@ import { useVerificationLine } from 'context/VerificationLines/useVerificationLi
 import { VerificationLine } from 'types/verificationLine'
 
 import EditVerificationLineDrawer from './components/EditVerificationLineDrawer'
-import DeleteVerificationLineDialog from './components/DeleteVerificationLineDialog'
 import Tabs from './components/Tabs'
 import DisableVerificationLineDialog from './components/DisableVerificationLineDialog'
 import VerificationHeader from './components/VerificationHeader'
 
-interface SynchroEditIds {
-  ids: string[]
-  resolve: ((value: boolean | PromiseLike<boolean>) => void) | null
-}
-
 const Verification = (): ReactElement => {
   const { formatMessage } = useIntl()
 
+  const tableRef = useRef<any>(undefined)
   const [openDisable, setOpenDisable] = useState(false)
   const [selected, setSelected] = useState<VerificationLine | null>(null)
-  const [deleteLines, setDeleteLines] = useState<SynchroEditIds>({
-    ids: [],
-    resolve: null
-  })
+  const [selectedIds, setSelectedIds] = useState<string[]>([])
+
   const [openEdit, setOpenEdit] = useState(false)
   const { data, pagination, actions } = useVerificationLine()
+  console.log(
+    '🚀 ~ file: Verification.tsx:37 ~ Verification ~ pagination:',
+    pagination
+  )
 
   const columns = useTableColumns<VerificationLine>(() => [
     {
@@ -49,6 +46,7 @@ const Verification = (): ReactElement => {
     },
     {
       header: formatMessage(tableMessages.createdBy),
+      id: 'created_by.username',
       accessorKey: 'created_by'
     },
     {
@@ -59,6 +57,7 @@ const Verification = (): ReactElement => {
     },
     {
       header: formatMessage(generalMessages.actions),
+      enableSorting: false,
       accessorKey: 'id',
       cell: ({ getValue, cell, row }) => {
         const isActive = cell.row.original.status
@@ -81,6 +80,7 @@ const Verification = (): ReactElement => {
                 size="sm"
                 value={isActive}
                 onChange={() => {
+                  setSelectedIds([])
                   setSelected(row.original)
                   setOpenDisable(true)
                 }}
@@ -120,20 +120,16 @@ const Verification = (): ReactElement => {
         onClose={() => setOpenEdit(false)}
         open={openEdit}
       />
-      <DeleteVerificationLineDialog
-        ids={deleteLines.ids}
-        resolve={deleteLines.resolve ?? (() => {})}
-        onConfirm={() => setDeleteLines({ ids: [], resolve: null })}
-        onClose={() => {
-          if (deleteLines.resolve) {
-            deleteLines.resolve(false)
-          }
-          setDeleteLines({ ids: [], resolve: null })
-        }}
-      />
       <DisableVerificationLineDialog
         open={openDisable}
         data={selected}
+        ids={selectedIds}
+        onSuccess={() => {
+          tableRef.current?.setRowSelection({})
+          setSelected(null)
+          setSelectedIds([])
+          setOpenDisable(false)
+        }}
         onClose={() => {
           setSelected(null)
           setOpenDisable(false)
@@ -141,9 +137,11 @@ const Verification = (): ReactElement => {
       />
       <div className="mt-2">
         <Table
+          tableRef={tableRef}
           columns={columns}
           data={data}
           maxHeight={500}
+          withCheckbox
           onRowClicked={(row) => {
             setSelected(row)
             setOpenEdit(true)
@@ -163,6 +161,18 @@ const Verification = (): ReactElement => {
             totalRecords: pagination.totalRecords,
             onChange: (page) => actions?.get({ page: page + 1 })
           }}
+          actionsForSelectedItems={[
+            {
+              name: 'disable',
+              tooltip: formatMessage(actionsMessages.disable),
+              action: (items: any) => {
+                setSelected(null)
+                setSelectedIds(items.map((item) => item.id))
+                setOpenDisable(true)
+              },
+              Icon: NoSymbolIcon
+            }
+          ]}
         />
       </div>
     </div>

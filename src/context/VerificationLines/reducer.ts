@@ -2,10 +2,7 @@ import { State } from 'types/verificationLine'
 import { Types } from './constants'
 import { Action } from 'types/contextReducer'
 
-export const reducer = (
-  state: State,
-  action: Action<Types>
-): State => {
+export const reducer = (state: State, action: Action<Types>): State => {
   switch (action.type) {
     case Types.SET_VERIFICATION_LINES:
       return {

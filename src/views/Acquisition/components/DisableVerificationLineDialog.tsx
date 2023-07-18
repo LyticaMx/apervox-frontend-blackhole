@@ -1,5 +1,5 @@
 import useToast from 'hooks/useToast'
-import { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useMemo, useState } from 'react'
 import { useIntl } from 'react-intl'
 import Dialog from 'components/Dialog'
 import { InformationCircleIcon } from '@heroicons/react/24/outline'
@@ -14,7 +14,9 @@ import { disableDialogMessages } from '../messages'
 interface Props {
   open: boolean
   data: VerificationLine | null
+  ids: string[]
   onClose?: () => void
+  onSuccess?: () => void
 }
 
 const DisableVerificationLineDialog = (props: Props): ReactElement => {
@@ -26,21 +28,27 @@ const DisableVerificationLineDialog = (props: Props): ReactElement => {
   )
   const toast = useToast()
 
+  const selected = useMemo(
+    () => (props.ids.length ? props.ids.length : 1),
+    [props.ids]
+  )
+
   const handleDisable = async (): Promise<void> => {
     try {
-      const updated = await actions?.toggleStatus(
-        props.data?.id ?? '',
-        currentStatus
-      )
+      const ids = props.data ? [props.data.id ?? ''] : props.ids
+
+      const updated = await actions?.updateMany(ids, { status: currentStatus })
 
       if (updated) {
         await actions?.get({ page: 1 })
+
         toast.success(
           formatMessage(disableDialogMessages.success, {
+            selected,
             status: currentStatus
           })
         )
-        onClose()
+        props.onSuccess?.()
       }
     } catch {}
   }
@@ -50,14 +58,14 @@ const DisableVerificationLineDialog = (props: Props): ReactElement => {
   }, [props.data])
 
   return (
-    <Dialog open={props.open} onClose={onClose} size="sm" padding="none">
+    <Dialog open={props.open} onClose={onClose} size="md" padding="none">
       <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
         <div className="text-center sm:mt-0">
           <InformationCircleIcon className="h-6 w-6 text-primary m-auto mb-2" />
 
-          <h3 className="text-lg font-medium leading-6 text-gray-900">
+          <h3 className="text-lg font-medium leading-6 text-gray-900 mb-3">
             {formatMessage(disableDialogMessages.verificationTitle, {
-              status: currentStatus
+              selected
             })}
           </h3>
 
@@ -69,6 +77,7 @@ const DisableVerificationLineDialog = (props: Props): ReactElement => {
 
           <p className="text-sm text-gray-500 mt-1">
             {formatMessage(disableDialogMessages.message, {
+              selected,
               status: currentStatus
             })}
           </p>
@@ -76,11 +85,11 @@ const DisableVerificationLineDialog = (props: Props): ReactElement => {
       </div>
 
       <div className=" px-4 pb-8 sm:flex gap-2 justify-center">
+        <Button variant="tonal" color="secondary" onClick={onClose}>
+          {formatMessage(actionsMessages.cancel)}
+        </Button>
         <Button variant="contained" color="primary" onClick={handleDisable}>
           {formatMessage(actionsMessages.accept)}
-        </Button>
-        <Button variant="contained" color="secondary" onClick={onClose}>
-          {formatMessage(actionsMessages.cancel)}
         </Button>
       </div>
     </Dialog>

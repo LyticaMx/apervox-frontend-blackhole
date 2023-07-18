@@ -177,21 +177,21 @@ export const deleteMessages = defineMessages({
 export const disableDialogMessages = defineMessages({
   overflowTitle: {
     id: 'views.acquisition.DisableDialog.overflowTitle',
-    defaultMessage: 'Habilitar / deshabilitar línea de derivación'
+    defaultMessage: 'Habilitar / deshabilitar {selected, plural, one{línea} other {líneas}} de derivación'
   },
   verificationTitle: {
     id: 'views.acquisition.DisableDialog.verificationTitle',
-    defaultMessage: 'Habilitar / deshabilitar línea de verificación'
+    defaultMessage: 'Habilitar / deshabilitar {selected, plural, one{línea} other {líneas}} de verificación'
   },
   message: {
     id: 'views.acquisition.DisableDialog.message',
     defaultMessage:
-      '¿Quieres {status, select, false{habilitar} other{deshabilitar}} la línea seleccionada?'
+      '¿Quieres {status, select, false{deshabilitar} other{habilitar}} {selected, plural, one{la línea seleccionada} other {las líneas seleccionadas}}?'
   },
   success: {
     id: 'views.acquisition.DisableDialog.success',
     defaultMessage:
-      'Línea {status, select, false{deshabilitada} other{habilitada}} correctamente'
+      '{selected, plural, one{Línea} other {Líneas}} {status, select, false{deshabilitada} other{habilitada}} correctamente'
   }
 })
 

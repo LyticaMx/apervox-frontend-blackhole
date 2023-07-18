@@ -1,12 +1,15 @@
-import { DocumentMagnifyingGlassIcon } from '@heroicons/react/24/outline'
+import {
+  DocumentMagnifyingGlassIcon,
+  NoSymbolIcon
+} from '@heroicons/react/24/outline'
 import IconButton from 'components/Button/IconButton'
 import Switch from 'components/Form/Switch'
 import Table from 'components/Table'
 import { format } from 'date-fns'
 import { useFormatMessage } from 'hooks/useIntl'
 import useTableColumns from 'hooks/useTableColumns'
-import { ReactElement, useEffect, useState } from 'react'
-import { tableMessages } from '../messages'
+import { ReactElement, useEffect, useRef, useState } from 'react'
+import { statusMessages, tableMessages } from '../messages'
 import { OverflowLine } from 'types/overflowLine'
 import { useOverflowLine } from 'context/OverflowLines'
 import { useToggle } from 'hooks/useToggle'
@@ -15,17 +18,20 @@ import DisableOverflowLineDialog from './DisableOverflowLineDialog'
 import { get } from 'lodash'
 import clsx from 'clsx'
 import Tooltip from 'components/Tooltip'
+import { useIntl } from 'react-intl'
+import { actionsMessages } from 'globalMessages'
 
 const DataTable = (): ReactElement => {
+  const { formatMessage } = useIntl()
   const getMessage = useFormatMessage(tableMessages)
   const { data, pagination, actions: overflowLineActions } = useOverflowLine()
-  const [rowSelected, setRowSelected] = useState<OverflowLine | null>(null)
-  const [disableOverflowLine, setDisableOverflowLine] = useState<{
-    id: string
-    status: boolean
-  }>({ id: '', status: false })
 
   const [open, toggle] = useToggle()
+  const [openDisable, setOpenDisable] = useState(false)
+
+  const tableRef = useRef<any>(undefined)
+  const [selected, setSelected] = useState<OverflowLine | null>(null)
+  const [selectedIds, setSelectedIds] = useState<string[]>([])
 
   const colorsStatus = {
     assigned: 'bg-red-500',
@@ -35,16 +41,16 @@ const DataTable = (): ReactElement => {
   }
   const columns = useTableColumns<OverflowLine>(() => [
     {
-      accessorKey: 'target.phone',
+      accessorKey: 'target',
+      id: 'target_phone',
       header: getMessage('target'),
-      cell: ({ row }) => get(row.original, 'target.phone'),
-      enableSorting: false
+      cell: ({ row }) => get(row.original, 'target.phone')
     },
     {
-      accessorKey: 'target.carrier',
+      accessorKey: 'target',
+      id: 'target_carrier',
       header: getMessage('company'),
-      cell: ({ row }) => get(row.original, 'target.carrier.name'),
-      enableSorting: false
+      cell: ({ row }) => get(row.original, 'target.carrier.name')
     },
     {
       accessorKey: 'medium.name',
@@ -65,10 +71,10 @@ const DataTable = (): ReactElement => {
         format(new Date(getValue<string>()), 'dd/MM/yyyy - HH:mm')
     },
     {
-      accessorKey: 'target.technique',
+      accessorKey: 'target',
+      id: 'target_technique',
       header: getMessage('technique'),
-      cell: ({ row }) => get(row.original, 'target.technique.name'),
-      enableSorting: false
+      cell: ({ row }) => get(row.original, 'target.technique.name', '')
     },
     {
       accessorKey: 'line_status',
@@ -84,7 +90,28 @@ const DataTable = (): ReactElement => {
             {getMessage(getValue<string>())}
           </p>
         </div>
-      )
+      ),
+      meta: {
+        columnFilters: {
+          multiple: true,
+          options: [
+            { name: formatMessage(statusMessages.assigned), value: 'assigned' },
+            {
+              name: formatMessage(statusMessages.available),
+              value: 'available'
+            },
+            {
+              name: formatMessage(statusMessages.quarantine),
+              value: 'quarantine'
+            },
+            {
+              name: formatMessage(statusMessages.maintenance),
+              value: 'maintenance'
+            }
+          ],
+          onChange: (value) => overflowLineActions?.get({ line_status: value })
+        }
+      }
     },
     {
       accessorKey: 'target.end_date',
@@ -95,8 +122,7 @@ const DataTable = (): ReactElement => {
         if (value) return format(new Date(value), 'dd/MM/yyyy - HH:mm')
 
         return ''
-      },
-      enableSorting: false
+      }
     },
     {
       header: getMessage('actions'),
@@ -119,12 +145,7 @@ const DataTable = (): ReactElement => {
               size="sm"
               stopPropagation
               value={getValue<boolean>() ?? false}
-              onChange={() =>
-                setDisableOverflowLine({
-                  id: row.original.id ?? '',
-                  status: getValue<boolean>() ?? false
-                })
-              }
+              onChange={() => setSelected(row.original)}
             />
           </Tooltip>
           <IconButton
@@ -146,15 +167,26 @@ const DataTable = (): ReactElement => {
     <>
       <EditOverflowLineDrawer
         open={open}
-        overflowLine={rowSelected}
+        overflowLine={selected}
         onClose={toggle}
       />
       <DisableOverflowLineDialog
-        id={disableOverflowLine.id}
-        currentStatus={disableOverflowLine.status}
-        onClose={() => setDisableOverflowLine({ id: '', status: false })}
+        open={openDisable}
+        data={selected}
+        ids={selectedIds}
+        onSuccess={() => {
+          tableRef.current?.setRowSelection({})
+          setSelected(null)
+          setSelectedIds([])
+          setOpenDisable(false)
+        }}
+        onClose={() => {
+          setSelected(null)
+          setOpenDisable(false)
+        }}
       />
       <Table
+        tableRef={tableRef}
         columns={columns}
         data={data}
         manualSorting={{
@@ -163,9 +195,21 @@ const DataTable = (): ReactElement => {
         }}
         withCheckbox
         onRowClicked={(row) => {
-          setRowSelected(row)
+          setSelected(row)
           toggle()
         }}
+        actionsForSelectedItems={[
+          {
+            name: 'disable',
+            tooltip: formatMessage(actionsMessages.disable),
+            action: (items: any) => {
+              setSelected(null)
+              setSelectedIds(items.map((item) => item.id))
+              setOpenDisable(true)
+            },
+            Icon: NoSymbolIcon
+          }
+        ]}
       />
     </>
   )

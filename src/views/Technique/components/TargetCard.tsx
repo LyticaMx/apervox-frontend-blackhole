@@ -27,7 +27,6 @@ interface Props {
   data: Target
   selected: boolean
   isChecked: boolean
-  onClick: (item: Target) => void
   onCheck: (item: Target) => void
 }
 
@@ -35,7 +34,6 @@ const TargetCard = ({
   data,
   isChecked,
   selected,
-  onClick,
   onCheck
 }: Props): ReactElement => {
   const { actions } = useTargets()
@@ -103,7 +101,7 @@ const TargetCard = ({
             '!border-primary': selected
           }
         )}
-        onClick={() => onClick(data)}
+        onClick={() => actionsTechnique?.setTarget(data)}
       >
         <BasicInfo name={data.alias} phoneNumber={data.phone} />
         <div className="flex flex-col items-start">

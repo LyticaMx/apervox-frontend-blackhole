@@ -29,9 +29,10 @@ export interface Actions {
   get: (params?: GetPayload, getTotal?: boolean) => Promise<void>
   create: (payload: CreatePayload) => Promise<boolean>
   update: (payload: UpdatePayload) => Promise<boolean>
-  deleteOne: (id: string) => Promise<boolean>
-  deleteMany: (ids: string[]) => Promise<boolean>
-  toggleStatus: (id: string, status: boolean) => Promise<boolean>
+  updateMany: (
+    ids: string[],
+    payload: Partial<VerificationLine>
+  ) => Promise<boolean>
 }
 
 export interface ContextType extends State {
