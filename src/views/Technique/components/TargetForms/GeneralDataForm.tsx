@@ -121,6 +121,7 @@ const GeneralDataForm = (): ReactElement => {
         carrier: getAsyncValue(target?.carrier, 'id', 'name'),
         endDate: target?.end_date ?? ''
       },
+      enableReinitialize: true,
       validationSchema,
       onSubmit: async (values) => {
         if (target) {
