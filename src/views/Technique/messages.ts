@@ -1333,6 +1333,27 @@ export const biometricFormMessages = defineMessages({
   voiceprints: {
     id: 'views.techniques.BiometricForm.voiceprints',
     defaultMessage: 'Huellas de voz'
+  },
+  savedSuccessfully: {
+    id: 'views.techniques.BiometricForm.savedSuccessfully',
+    defaultMessage: 'Datos biométricos guardados correctamente'
+  },
+  waitForDelete: {
+    id: 'views.techniques.BiometricForm.waitForDelete',
+    defaultMessage: 'Eliminar biometrico'
+  },
+  waitForDeleteDescription: {
+    id: 'views.techniques.BiometricForm.waitForDeleteDescription',
+    defaultMessage:
+      'Estás intentando eliminar un registro biométrico que ya se encuentra almacenado en nuestros servidores. ¿Estás seguro de que deseas continuar con esta acción?'
+  },
+  biometricNotDeleted: {
+    id: 'views.techniques.BiometricForm.biometricNotDeleted',
+    defaultMessage: 'No se eliminó el biométrico'
+  },
+  biometricDeleted: {
+    id: 'views.techniques.BiometricForm.biometricDeleted',
+    defaultMessage: 'Biométrico eliminado correctamente'
   }
 })
 

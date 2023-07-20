@@ -64,11 +64,11 @@ const useTargetMeta = <T extends MetaType>(
       return {
         get: async () =>
           await targetServices.get({
-            queryString: `${target}/personal-datas`
+            queryString: `${target}/personal-data`
           }),
         update: async (body: object) =>
           await targetServices.put({
-            queryString: `${target}/personal-datas`,
+            queryString: `${target}/personal-data`,
             body
           }),
         getAddress: async () =>
@@ -85,11 +85,11 @@ const useTargetMeta = <T extends MetaType>(
       return {
         get: async () =>
           await targetServices.get({
-            queryString: `${target}/physical-datas`
+            queryString: `${target}/physical-data`
           }),
         update: async (body: object) =>
           await targetServices.put({
-            queryString: `${target}/physical-datas`,
+            queryString: `${target}/physical-data`,
             body
           })
       } as TargetMetaApi<T>

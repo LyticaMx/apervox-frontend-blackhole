@@ -1,4 +1,5 @@
 import { XMarkIcon } from '@heroicons/react/24/outline'
+import { useAuth } from 'context/Auth'
 import { ReactElement, useEffect, useState } from 'react'
 import { BsSoundwave } from 'react-icons/bs'
 
@@ -11,8 +12,9 @@ interface PreviewProps {
 }
 
 const Preview = (props: PreviewProps): ReactElement => {
-  const { file, type, remove } = props
+  const { file, type, remove, url } = props
   const [preview, setPreview] = useState<string | null>(null)
+  const { auth } = useAuth()
 
   useEffect(() => {
     if (type === 'audio') return
@@ -38,7 +40,13 @@ const Preview = (props: PreviewProps): ReactElement => {
   return (
     <div
       className="w-20 h-20 bg-center bg-no-repeat bg-cover relative"
-      style={{ backgroundImage: preview ? `url(${preview})` : '' }}
+      style={{
+        backgroundImage: url
+          ? `${url}?token=${auth.token}`
+          : preview
+          ? `url(${preview})`
+          : ''
+      }}
     >
       <XMarkIcon
         className="w-4 h-4 absolute top-0 right-0 cursor-pointer text-white mix-blend-difference"
