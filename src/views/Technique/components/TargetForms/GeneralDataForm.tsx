@@ -113,6 +113,7 @@ const GeneralDataForm = (): ReactElement => {
 
   const formikConfig = useMemo<FormikConfig<FormValues>>(
     () => ({
+      enableReinitialize: true,
       initialValues: {
         name: target?.alias ?? '',
         phone: target?.phone ?? '',

@@ -1,16 +1,23 @@
 import * as yup from 'yup'
 import { useIntl } from 'react-intl'
-import { ReactElement } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { formMessages } from 'globalMessages'
 import { Field, Section } from 'types/form'
 import AccordionForm from './AccordionForm'
 import { useAddressForm, AddressFormValues } from './useAddressForm'
 import {
   targetFormsGeneralMessages,
-  organizationFormMessages
+  organizationFormMessages,
+  targetMetaFormMessages
 } from 'views/Technique/messages'
+import { useTechnique } from 'context/Technique'
+import useTargetMeta from 'hooks/useTargetMeta'
+import useToast from 'hooks/useToast'
+import { TechniqueTabs } from 'types/technique'
+import DeleteFormConfirmation from './DeleteFormConfirmation'
 
 interface FormValues extends AddressFormValues {
+  id?: string
   name: string
   phone: string
   email: string
@@ -18,9 +25,19 @@ interface FormValues extends AddressFormValues {
 
 const OrganizationsForm = (): ReactElement => {
   const { formatMessage } = useIntl()
-  const { addressFields, addressValidationSchema } = useAddressForm('address')
+  const { addressFields, addressValidationSchema } =
+    useAddressForm<FormValues>('address')
 
-  const fields: Array<Field<FormValues | AddressFormValues>> = [
+  const [initialData, setInitialData] = useState<FormValues[] | undefined>()
+  const [deleteFormConfirm, setDeleteFormConfirm] = useState<
+    ((value: boolean | PromiseLike<boolean>) => void) | null
+  >(null)
+  const toast = useToast()
+
+  const { target, actions: techniqueActions } = useTechnique()
+  const actions = useTargetMeta(target?.id ?? '', 'organizations')
+
+  const fields: Array<Field<FormValues>> = [
     {
       type: 'text',
       name: 'name',
@@ -38,6 +55,7 @@ const OrganizationsForm = (): ReactElement => {
       type: 'text',
       name: 'email',
       options: {
+        labelSpacing: '1',
         id: 'organization-email',
         label: formatMessage(formMessages.email),
         placeholder: formatMessage(targetFormsGeneralMessages.emailPlaceholder)
@@ -82,9 +100,92 @@ const OrganizationsForm = (): ReactElement => {
     }
   ]
 
+  const getData = async (): Promise<void> => {
+    try {
+      const response = await actions.get()
+      setInitialData(
+        response.data.map((item) => ({
+          id: item.id,
+          name: item.name ?? '',
+          phone: item.phone ?? '',
+          email: item.email ?? '',
+          country: item.address?.country ?? '',
+          state: item.address?.state ?? '',
+          city: item.address?.city ?? '',
+          zipCode: item.address?.zip ?? '',
+          line1: item.address?.address_line_1 ?? '',
+          line2: item.address?.address_line_2 ?? ''
+        }))
+      )
+    } catch {
+      techniqueActions?.setActiveTab(TechniqueTabs.GENERAL_DATA)
+    }
+  }
+
+  const updateData = async (values: FormValues[]): Promise<void> => {
+    try {
+      const response = await actions.update(
+        values.map((form) => ({
+          id: form.id,
+          name: form.name,
+          phone: form.phone,
+          email: form.email,
+          address: {
+            country: form.country,
+            state: form.state,
+            city: form.city,
+            zip: form.zipCode,
+            address_line_1: form.line1,
+            address_line_2: form.line2
+          }
+        }))
+      )
+
+      setInitialData(
+        response.data.map((item) => ({
+          id: item.id,
+          name: item.name ?? '',
+          email: item.email ?? '',
+          phone: item.phone ?? '',
+          country: item.address?.country ?? '',
+          state: item.address?.state ?? '',
+          city: item.address?.city ?? '',
+          zipCode: item.address?.zip ?? '',
+          line1: item.address?.address_line_1 ?? '',
+          line2: item.address?.address_line_2 ?? ''
+        }))
+      )
+
+      toast.success(formatMessage(targetMetaFormMessages.updatedSuccessfully))
+    } catch {}
+  }
+
+  const deleteData = async (id: string): Promise<boolean> => {
+    try {
+      const deleteOnDB = await new Promise<boolean>((resolve) =>
+        setDeleteFormConfirm(() => resolve)
+      )
+
+      setDeleteFormConfirm(null)
+
+      if (!deleteOnDB) return false
+
+      await actions.delete(id)
+
+      return true
+    } catch {
+      return false
+    }
+  }
+
+  useEffect(() => {
+    getData()
+  }, [target?.id])
+
   return (
     <div>
-      <AccordionForm<FormValues | AddressFormValues>
+      <DeleteFormConfirmation onAction={deleteFormConfirm} />
+      <AccordionForm<FormValues>
         fields={fields}
         validationSchema={validationSchema}
         title={formatMessage(organizationFormMessages.title).toUpperCase()}
@@ -93,6 +194,9 @@ const OrganizationsForm = (): ReactElement => {
           renderMainSection: true,
           sections
         }}
+        initialData={initialData}
+        onSubmit={updateData}
+        onDelete={deleteData}
       />
     </div>
   )

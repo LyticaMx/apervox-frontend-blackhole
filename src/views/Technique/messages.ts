@@ -1265,7 +1265,14 @@ export const vehiclesFormMessages = defineMessages({
     id: 'views.techniques.VehiclesForm.colorPlaceholder',
     defaultMessage: 'Ej. Azul'
   },
-
+  otherColor: {
+    id: 'views.techniques.VehiclesForm.otherColor',
+    defaultMessage: 'Otro color'
+  },
+  otherColorPlaceholder: {
+    id: 'views.techniques.VehiclesForm.otherColorPlaceholder',
+    defaultMessage: 'Ej. Azul'
+  },
   motorcycle: {
     id: 'views.techniques.VehiclesForm.motorcycle',
     defaultMessage: 'Motocicleta'
@@ -1314,6 +1321,50 @@ export const vehiclesFormMessages = defineMessages({
   trailer: {
     id: 'views.techniques.VehiclesForm.trailer',
     defaultMessage: 'Tráiler'
+  },
+  silver: {
+    id: 'views.techniques.VehiclesForm.silver',
+    defaultMessage: 'Plateado'
+  },
+  black: {
+    id: 'views.techniques.VehiclesForm.black',
+    defaultMessage: 'Negro'
+  },
+  white: {
+    id: 'views.techniques.VehiclesForm.white',
+    defaultMessage: 'Blanco'
+  },
+  gray: {
+    id: 'views.techniques.VehiclesForm.gray',
+    defaultMessage: 'Gris'
+  },
+  red: {
+    id: 'views.techniques.VehiclesForm.red',
+    defaultMessage: 'Rojo'
+  },
+  blue: {
+    id: 'views.techniques.VehiclesForm.blue',
+    defaultMessage: 'Azul'
+  },
+  green: {
+    id: 'views.techniques.VehiclesForm.green',
+    defaultMessage: 'Verde'
+  },
+  brown: {
+    id: 'views.techniques.VehiclesForm.brown',
+    defaultMessage: 'Café'
+  },
+  yellow: {
+    id: 'views.techniques.VehiclesForm.yellow',
+    defaultMessage: 'Amarillo'
+  },
+  orange: {
+    id: 'views.techniques.VehiclesForm.orange',
+    defaultMessage: 'Naranja'
+  },
+  purple: {
+    id: 'views.techniques.VehiclesForm.purple',
+    defaultMessage: 'Morado'
   }
 })
 
