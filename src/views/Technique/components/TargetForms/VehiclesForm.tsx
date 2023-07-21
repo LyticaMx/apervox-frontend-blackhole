@@ -1,26 +1,43 @@
 import * as yup from 'yup'
 import { useIntl } from 'react-intl'
-import { ReactElement } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { formMessages, generalMessages } from 'globalMessages'
 import { Field } from 'types/form'
 import AccordionForm from './AccordionForm'
 import {
   targetFormsGeneralMessages,
+  targetMetaFormMessages,
   vehiclesFormMessages
 } from 'views/Technique/messages'
+import { TechniqueTabs } from 'types/technique'
+import DeleteFormConfirmation from './DeleteFormConfirmation'
+import { useTechnique } from 'context/Technique'
+import useToast from 'hooks/useToast'
+import useTargetMeta from 'hooks/useTargetMeta'
 
 interface FormValues {
+  id?: string
   brand: string
+  other_brand?: string
   model: string
   year: string
   type: string
-  plates: string
+  other_type: string
   color: string
+  other_color?: string
+  plates: string
   comments?: string
 }
 
 const VehiclesForm = (): ReactElement => {
   const { formatMessage } = useIntl()
+  const { launchToast } = useToast()
+  const { target, actions: techniqueActions } = useTechnique()
+  const actions = useTargetMeta(target?.id ?? '', 'vehicles')
+  const [initialData, setInitialData] = useState<FormValues[] | undefined>()
+  const [deleteFormConfirm, setDeleteFormConfirm] = useState<
+    ((value: boolean | PromiseLike<boolean>) => void) | null
+  >(null)
 
   const carBrand = [
     { value: 'audi', text: 'Audi' },
@@ -71,6 +88,21 @@ const VehiclesForm = (): ReactElement => {
     { value: 'bus', text: formatMessage(vehiclesFormMessages.bus) },
     { value: 'truck', text: formatMessage(vehiclesFormMessages.truck) },
     { value: 'trailer', text: formatMessage(vehiclesFormMessages.trailer) },
+    { value: 'other', text: formatMessage(generalMessages.other) }
+  ]
+
+  const vehicleColor = [
+    { value: 'silver', text: formatMessage(vehiclesFormMessages.silver) },
+    { value: 'black', text: formatMessage(vehiclesFormMessages.black) },
+    { value: 'white', text: formatMessage(vehiclesFormMessages.white) },
+    { value: 'gray', text: formatMessage(vehiclesFormMessages.gray) },
+    { value: 'red', text: formatMessage(vehiclesFormMessages.red) },
+    { value: 'blue', text: formatMessage(vehiclesFormMessages.blue) },
+    { value: 'green', text: formatMessage(vehiclesFormMessages.green) },
+    { value: 'brown', text: formatMessage(vehiclesFormMessages.brown) },
+    { value: 'yellow', text: formatMessage(vehiclesFormMessages.yellow) },
+    { value: 'orange', text: formatMessage(vehiclesFormMessages.orange) },
+    { value: 'purple', text: formatMessage(vehiclesFormMessages.purple) },
     { value: 'other', text: formatMessage(generalMessages.other) }
   ]
 
@@ -130,8 +162,8 @@ const VehiclesForm = (): ReactElement => {
       name: 'type',
       options: {
         label: formatMessage(vehiclesFormMessages.vehicleType),
-        clearable: false,
         placeholder: formatMessage(vehiclesFormMessages.vehicleTypePlaceholder),
+        clearable: false,
         items: vehicleType,
         textField: 'text',
         valueField: 'value',
@@ -144,7 +176,7 @@ const VehiclesForm = (): ReactElement => {
       name: 'other_type',
       options: {
         labelSpacing: '1',
-        id: 'other-language',
+        id: 'other-type',
         label: formatMessage(vehiclesFormMessages.otherType),
         placeholder: formatMessage(vehiclesFormMessages.otherTypePlaceholder)
       },
@@ -154,21 +186,39 @@ const VehiclesForm = (): ReactElement => {
       }
     },
     {
-      type: 'text',
+      type: 'select',
       name: 'color',
       options: {
-        labelSpacing: '1',
-        id: 'vehicle-color',
         label: formatMessage(vehiclesFormMessages.color),
-        placeholder: formatMessage(vehiclesFormMessages.colorPlaceholder)
+        placeholder: formatMessage(vehiclesFormMessages.colorPlaceholder),
+        clearable: false,
+        items: vehicleColor,
+        textField: 'text',
+        valueField: 'value',
+        portal: true
       },
       breakpoints: { xs: 12, md: 4, sm: 6 }
+    },
+    {
+      type: 'text',
+      name: 'other_color',
+      options: {
+        labelSpacing: '1',
+        id: 'other-color',
+        label: formatMessage(vehiclesFormMessages.otherColor),
+        placeholder: formatMessage(vehiclesFormMessages.otherColorPlaceholder)
+      },
+      breakpoints: { xs: 12, md: 4, sm: 6 },
+      renderIf: {
+        color: 'other'
+      }
     },
     {
       type: 'text',
       name: 'plates',
       options: {
         id: 'vehicle-plates',
+        labelSpacing: '1',
         label: formatMessage(vehiclesFormMessages.plates),
         placeholder: formatMessage(vehiclesFormMessages.platesPlaceholder)
       },
@@ -214,13 +264,94 @@ const VehiclesForm = (): ReactElement => {
     color: yup.string().required(formatMessage(formMessages.required))
   })
 
+  const setItems = (items: any[]): void => {
+    setInitialData(
+      items.map((item) => ({
+        id: item.id,
+        brand: item.brand,
+        other_brand: item.other_brand,
+        model: item.model,
+        year: item.year,
+        type: item.type,
+        other_type: item.other_type,
+        color: item.color,
+        other_color: item.other_color,
+        plates: item.plates,
+        comments: item.comments
+      }))
+    )
+  }
+
+  const getData = async (): Promise<void> => {
+    try {
+      const response = await actions.get()
+
+      setItems(response.data)
+    } catch {
+      techniqueActions?.setActiveTab(TechniqueTabs.GENERAL_DATA)
+    }
+  }
+
+  const updateData = async (values: FormValues[]): Promise<void> => {
+    try {
+      const response = await actions.update(
+        values.map((form) => ({
+          id: form.id,
+          brand: form.brand,
+          other_brand: form.brand === 'other' ? form.other_brand : undefined,
+          model: form.model,
+          year: form.year,
+          type: form.type,
+          other_type: form.type === 'other' ? form.other_type : undefined,
+          color: form.color,
+          other_color: form.color === 'other' ? form.other_color : undefined,
+          plates: form.plates,
+          comments: form.comments ? form.comments : undefined
+        }))
+      )
+
+      setItems(response.data)
+
+      launchToast({
+        title: formatMessage(targetMetaFormMessages.updatedSuccessfully),
+        type: 'Success'
+      })
+    } catch {}
+  }
+
+  const deleteData = async (id: string): Promise<boolean> => {
+    try {
+      const deleteOnDB = await new Promise<boolean>((resolve) =>
+        setDeleteFormConfirm(() => resolve)
+      )
+
+      setDeleteFormConfirm(null)
+
+      if (!deleteOnDB) return false
+
+      await actions.delete(id)
+
+      return true
+    } catch {
+      return false
+    }
+  }
+
+  useEffect(() => {
+    getData()
+  }, [target?.id])
+
   return (
     <div>
+      <DeleteFormConfirmation onAction={deleteFormConfirm} />
       <AccordionForm<FormValues>
         fields={fields}
         validationSchema={validationSchema}
         title={formatMessage(vehiclesFormMessages.title).toUpperCase()}
         itemTitle={formatMessage(vehiclesFormMessages.itemTitle)}
+        initialData={initialData}
+        onSubmit={updateData}
+        onDelete={deleteData}
       />
     </div>
   )

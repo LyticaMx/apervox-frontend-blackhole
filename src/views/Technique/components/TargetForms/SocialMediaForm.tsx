@@ -1,19 +1,36 @@
 import * as yup from 'yup'
 import { useIntl } from 'react-intl'
-import { ReactElement } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { formMessages, generalMessages } from 'globalMessages'
 import { Field } from 'types/form'
 import AccordionForm from './AccordionForm'
-import { socialMediaFormMessages } from 'views/Technique/messages'
+import {
+  socialMediaFormMessages,
+  targetMetaFormMessages
+} from 'views/Technique/messages'
+import useToast from 'hooks/useToast'
+import { useTechnique } from 'context/Technique'
+import useTargetMeta from 'hooks/useTargetMeta'
+import DeleteFormConfirmation from './DeleteFormConfirmation'
+import { TechniqueTabs } from 'types/technique'
 
 interface FormValues {
+  id?: string
   name: string
+  other?: string
   url: string
   username: string
 }
 
 const SocialMediaForm = (): ReactElement => {
   const { formatMessage } = useIntl()
+  const { launchToast } = useToast()
+  const { target, actions: techniqueActions } = useTechnique()
+  const actions = useTargetMeta(target?.id ?? '', 'social-networks')
+  const [initialData, setInitialData] = useState<FormValues[] | undefined>()
+  const [deleteFormConfirm, setDeleteFormConfirm] = useState<
+    ((value: boolean | PromiseLike<boolean>) => void) | null
+  >(null)
 
   const socialmedia = [
     { value: 'facebook', text: 'Facebook' },
@@ -64,6 +81,7 @@ const SocialMediaForm = (): ReactElement => {
       options: {
         id: 'social-media-url',
         label: 'URL',
+        labelSpacing: '1',
         placeholder: formatMessage(socialMediaFormMessages.urlPlaceholder)
       },
       breakpoints: { xs: 12, md: 4, sm: 6 }
@@ -73,6 +91,7 @@ const SocialMediaForm = (): ReactElement => {
       name: 'username',
       options: {
         id: 'social-media-username',
+        labelSpacing: '1',
         label: formatMessage(socialMediaFormMessages.username),
         placeholder: formatMessage(socialMediaFormMessages.usernamePlaceholder)
       },
@@ -93,13 +112,85 @@ const SocialMediaForm = (): ReactElement => {
     username: yup.string().required(formatMessage(formMessages.required))
   })
 
+  const getData = async (): Promise<void> => {
+    try {
+      const response = await actions.get()
+      setInitialData(
+        response.data.map((item) => ({
+          id: item.id,
+          name: item.name ?? '',
+          url: item.url ?? '',
+          username: item.username ?? '',
+          other: item.other
+        }))
+      )
+    } catch {
+      techniqueActions?.setActiveTab(TechniqueTabs.GENERAL_DATA)
+    }
+  }
+
+  const updateData = async (values: FormValues[]): Promise<void> => {
+    try {
+      const response = await actions.update(
+        values.map((form) => ({
+          id: form.id,
+          name: form.name,
+          url: form.url,
+          username: form.username,
+          other: form.name === 'other' ? form.other : undefined
+        }))
+      )
+
+      setInitialData(
+        response.data.map((item) => ({
+          id: item.id,
+          name: item.name ?? '',
+          url: item.url ?? '',
+          username: item.username ?? '',
+          other: item.other
+        }))
+      )
+
+      launchToast({
+        title: formatMessage(targetMetaFormMessages.updatedSuccessfully),
+        type: 'Success'
+      })
+    } catch {}
+  }
+
+  const deleteData = async (id: string): Promise<boolean> => {
+    try {
+      const deleteOnDB = await new Promise<boolean>((resolve) =>
+        setDeleteFormConfirm(() => resolve)
+      )
+
+      setDeleteFormConfirm(null)
+
+      if (!deleteOnDB) return false
+
+      await actions.delete(id)
+
+      return true
+    } catch {
+      return false
+    }
+  }
+
+  useEffect(() => {
+    getData()
+  }, [target?.id])
+
   return (
     <div>
+      <DeleteFormConfirmation onAction={deleteFormConfirm} />
       <AccordionForm<FormValues>
         fields={fields}
         validationSchema={validationSchema}
         title={formatMessage(socialMediaFormMessages.title).toUpperCase()}
         itemTitle={formatMessage(socialMediaFormMessages.itemTitle)}
+        initialData={initialData}
+        onSubmit={updateData}
+        onDelete={deleteData}
       />
     </div>
   )
