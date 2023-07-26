@@ -6,7 +6,7 @@ import GoBackButton from 'components/GoBackButton'
 import Title from 'components/Title'
 
 import TechniqueFilter from './TechniqueFilter'
-import { ChevronRightIcon } from '@heroicons/react/24/outline'
+import { ChevronRightIcon, XMarkIcon } from '@heroicons/react/24/outline'
 
 const Header = (): ReactElement => {
   const { technique, target } = useTechnique()
@@ -22,6 +22,9 @@ const Header = (): ReactElement => {
             <>
               <ChevronRightIcon className="w-4 h-4" />
               <Title className="uppercase">{target?.alias}</Title>
+              <div className="bg-primary-400 hover:bg-primary-500 cursor-pointer p-0.5 text-white rounded-full">
+                <XMarkIcon className="w-3 h-3" />
+              </div>
             </>
           )}
         </div>

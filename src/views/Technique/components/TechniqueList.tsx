@@ -3,6 +3,8 @@ import clsx from 'clsx'
 
 import Typography from 'components/Typography'
 import Scroller from 'components/Scroller'
+import Pagination from 'components/Table/Pagination'
+
 import { useTechnique } from 'context/Technique'
 import { useTechniques } from 'context/Techniques'
 import { useGlobalMessage } from 'hooks/useIntl'
@@ -23,7 +25,7 @@ export const colorByPriority = {
 
 const TechniqueList = (): ReactElement => {
   const { technique, actions } = useTechnique()
-  const { data, actions: actionsTechniques } = useTechniques()
+  const { data, pagination, actions: actionsTechniques } = useTechniques()
   const getMessage = useGlobalMessage()
   useEffect(() => {
     actionsTechniques?.get()
@@ -58,6 +60,21 @@ const TechniqueList = (): ReactElement => {
         ))}
         <div></div>
       </Scroller>
+      <Pagination
+        className={{
+          container: 'flex-wrap !p-0',
+          text: '!m-0'
+        }}
+        currentPage={pagination.page}
+        onPageChange={(page) => actionsTechniques?.get({ page: page + 1 })}
+        pageSize={pagination.limit}
+        totalCount={pagination.totalRecords}
+        manualLimit={{
+          options: pagination.limitOptions ?? [15],
+          onChangeLimit: (page, limit) =>
+            actionsTechniques?.get({ page: page + 1, limit })
+        }}
+      />
     </div>
   )
 }

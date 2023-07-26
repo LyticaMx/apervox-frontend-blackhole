@@ -15,6 +15,12 @@ import { useIntl } from 'react-intl'
 import { paginationMessages } from '../messages'
 import { NonEmptyArray } from 'types/utils'
 
+interface ClassNames {
+  container?: string
+  pagination?: string
+  text?: string
+  select?: string
+}
 export interface PaginationLimit {
   options: NonEmptyArray<number>
   onChangeLimit: (currentPage: number, limit: number) => void
@@ -25,7 +31,7 @@ interface Props {
   siblingCount?: number
   currentPage: number
   pageSize: number
-  className?: string
+  className?: ClassNames
   manualLimit?: PaginationLimit
 }
 
@@ -87,12 +93,12 @@ const Pagination = ({
   )
 
   return (
-    <div className="flex my-3 pl-5 items-center">
+    <div className={clsx('flex my-3 pl-5 items-center', className?.container)}>
       {paginationRange.length > 0 && (
         <div
           className={clsx(
             'flex rounded-md shadow-sm w-max text-sm font-medium text-gray-500',
-            className && className
+            className?.pagination
           )}
         >
           <button
@@ -158,10 +164,10 @@ const Pagination = ({
         </div>
       )}
 
-      <Typography variant="caption" className="ml-5">
+      <Typography variant="caption" className={clsx('ml-5', className?.text)}>
         {formatMessage(paginationMessages.rowsPerPage)}
       </Typography>
-      <div className="w-14 ml-4">
+      <div className={clsx('w-14 ml-4', className?.select)}>
         <SelectField
           items={limitOptions}
           value={pageSize}

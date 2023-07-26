@@ -133,8 +133,11 @@ const useActions = (state: State, dispatch): Actions => {
     dispatch(actions.setActiveTab(TechniqueTabs.EVIDENCE))
   }
 
-  const setTarget = async (payload: Target): Promise<void> => {
-    if (activeTab === TechniqueTabs.FORMS) {
+  const setTarget = async (payload: Target | undefined): Promise<void> => {
+    if (!payload) {
+      dispatch(actions.setActiveTab(TechniqueTabs.EVIDENCE))
+      dispatch(actions.showForms(false))
+    } else if (activeTab === TechniqueTabs.FORMS) {
       const res = await showForms(payload)
 
       if (!res) {
