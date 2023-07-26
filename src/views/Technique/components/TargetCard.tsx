@@ -1,4 +1,4 @@
-import { ReactElement, useState } from 'react'
+import { ReactElement, useMemo, useState } from 'react'
 import { format } from 'date-fns'
 import { useIntl } from 'react-intl'
 
@@ -25,23 +25,19 @@ import MetadataDialog from './MetadataDialog'
 
 interface Props {
   data: Target
-  selected: boolean
   isChecked: boolean
   onCheck: (item: Target) => void
 }
 
-const TargetCard = ({
-  data,
-  isChecked,
-  selected,
-  onCheck
-}: Props): ReactElement => {
+const TargetCard = ({ data, isChecked, onCheck }: Props): ReactElement => {
   const { actions } = useTargets()
-  const { actions: actionsTechnique } = useTechnique()
+  const { actions: actionsTechnique, target } = useTechnique()
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
   const [openMetadataDialog, setOpenMetadataDialog] = useState(false)
   const { formatMessage } = useIntl()
   const getGlobalMessage = useGlobalMessage()
+
+  const selected = useMemo(() => target?.id === data.id, [target, data])
 
   const handleOpenDeleteDialog = (e): void => {
     e?.stopPropagation()
@@ -92,6 +88,11 @@ const TargetCard = ({
     }
   ]
 
+  const handleClick = (): void => {
+    if (target?.id === data.id) actionsTechnique?.setTarget(undefined)
+    else actionsTechnique?.setTarget(data)
+  }
+
   return (
     <div className="">
       <div
@@ -101,7 +102,7 @@ const TargetCard = ({
             '!border-primary': selected
           }
         )}
-        onClick={() => actionsTechnique?.setTarget(data)}
+        onClick={handleClick}
       >
         <BasicInfo name={data.alias} phoneNumber={data.phone} />
         <div className="flex flex-col items-start">

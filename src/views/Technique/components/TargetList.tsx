@@ -24,7 +24,7 @@ import { Target } from 'types/target'
 const TargetList = (): ReactElement => {
   let timer
 
-  const { techniqueId, target: targetSelected } = useTechnique()
+  const { techniqueId } = useTechnique()
   const { data, total, actions: targetsActions, pagination } = useTargets()
   const [searchValue, setSearchValue] = useState<string>('')
   const [targetsChecked, setTargetsChecked] = useState<string[]>([])
@@ -151,13 +151,15 @@ const TargetList = (): ReactElement => {
           <TargetCard
             key={target.id}
             data={target}
-            selected={target.id === targetSelected?.id}
             isChecked={targetsChecked.some((id) => target.id === id)}
             onCheck={handleCheckTarget}
           />
         ))}
       </Scroller>
       <Pagination
+        className={{
+          container: 'flex-wrap !p-0'
+        }}
         currentPage={pagination.page}
         onPageChange={(page) => targetsActions?.getData({ page: page + 1 })}
         pageSize={pagination.limit}

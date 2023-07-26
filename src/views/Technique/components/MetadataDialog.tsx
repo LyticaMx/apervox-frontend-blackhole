@@ -116,7 +116,7 @@ const MetadataDialog = (props: Props): ReactElement => {
             value={metadata}
             onChange={setMetadata}
             asyncProps={{
-              api: { endpoint: 'target-metadatas', method: 'get' },
+              api: { endpoint: 'target-metadata', method: 'get' },
               value: 'id',
               label: 'unique_alias',
               searchField: 'unique_alias',

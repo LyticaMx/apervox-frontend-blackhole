@@ -48,7 +48,7 @@ export interface Actions {
   getDescription: () => Promise<boolean>
   updateDescription: (data: string) => Promise<boolean>
   setTechnique: (params: Technique) => void
-  setTarget: (params: Target) => void
+  setTarget: (params: Target | undefined) => void
   showForms: (params: Target) => void
   setActiveTab: (tab: TechniqueTabs) => void
   hasLinkedDateTargets: () => Promise<boolean>
