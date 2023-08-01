@@ -11,9 +11,9 @@ interface Props extends CustomFieldFunctionProps<FormValues> {
 
 const Biometrics = (props: Props): ReactElement | null => {
   const { name, values, setFieldValue, onSyncDelete } = props
-  const { technique } = useTechnique()
+  const { target } = useTechnique()
 
-  if (!technique?.id) return null
+  if (!target?.id) return null
 
   return (
     <div>
@@ -24,7 +24,7 @@ const Biometrics = (props: Props): ReactElement | null => {
             type={name === 'voiceprints' ? 'audio' : 'image'}
             id={id}
             url={`${process.env.REACT_APP_MAIN_BACKEND_URL}targets/${
-              technique.id ?? ''
+              target.id ?? ''
             }/biometrics/${id}`}
             remove={async () => await onSyncDelete(id, name)}
           />
