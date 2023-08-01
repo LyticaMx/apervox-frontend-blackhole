@@ -42,7 +42,7 @@ const Preview = (props: PreviewProps): ReactElement => {
       className="w-20 h-20 bg-center bg-no-repeat bg-cover relative"
       style={{
         backgroundImage: url
-          ? `${url}?token=${auth.token}`
+          ? `url(${url}?token=${auth.token})`
           : preview
           ? `url(${preview})`
           : ''
