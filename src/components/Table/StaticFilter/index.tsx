@@ -80,10 +80,6 @@ const StaticFilter = (props: Props): ReactElement => {
         formikRef.current?.values.filters ?? (props.multipleSelection ? [] : '')
     },
     onSubmit: async (values) => {
-      formikRef.current?.resetForm({
-        values
-      })
-
       if (typeof values.filters === 'string') {
         await onChange([values.filters])
       } else await onChange(values.filters)
@@ -138,7 +134,7 @@ const StaticFilter = (props: Props): ReactElement => {
                   formikRef.current?.resetForm({
                     values: {
                       // TODO: Cambiar cuando los filtros de back sean OR y no AND
-                      filters: ''
+                      filters: props.multipleSelection ? [] : ''
                     }
                   })
                 }}
