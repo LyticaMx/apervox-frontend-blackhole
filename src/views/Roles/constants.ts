@@ -221,5 +221,13 @@ export const scopes: Module[] = [
       delete: { 'targets.read': true },
       export: { 'targets.read': true }
     }
+  },
+  {
+    id: 'call_evidences',
+    permissions: {
+      read: false,
+      update: false,
+      export: false
+    }
   }
 ]
