@@ -60,7 +60,7 @@ export const useActions = (state: State, dispatch): Actions => {
       const formData = new FormData()
       formData.append('name', payload.name)
       formData.append('doc_type', payload.doc_type)
-      formData.append('image', payload.file ?? '', payload.file?.name)
+      formData.append('image', payload.file ?? ('' as any), payload.file?.name)
       formData.append('organization_name', payload.organization_name)
 
       await resource.post(
