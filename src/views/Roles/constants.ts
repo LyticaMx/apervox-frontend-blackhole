@@ -206,7 +206,7 @@ export const scopes: Module[] = [
     }
   },
   {
-    id: 'target_metadatas',
+    id: 'target_metadata',
     permissions: {
       read: false,
       create: false,

@@ -175,8 +175,6 @@ const FilterByField = ({
     disabledEmpty &&
     !Object.values(formik.values).filter((item) => item !== null).length
 
-  console.log(formik.values)
-
   return (
     <Popover className="relative inline-block">
       <Float

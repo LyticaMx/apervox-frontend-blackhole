@@ -39,7 +39,7 @@ export const useActions = (state: State, dispatch): Actions => {
 
       const [response] = await Promise.all([
         await resource.get({ urlParams }),
-        getTotalRows ? getTotal() : null
+        getTotalRows ? getTotal() : Promise.resolve(null)
       ])
 
       dispatch(actions.setData(response.data))
@@ -85,7 +85,16 @@ export const useActions = (state: State, dispatch): Actions => {
   const create = async (payload: PayloadCreate): Promise<boolean> => {
     try {
       await resource.post({
-        body: payload
+        body: {
+          ...payload,
+          scopes: get(payload, ['scopes'], [] as Scope[]).map((scope) => {
+            if (scope.name === 'call_evidences') {
+              // Las evidencias no pueden ser eliminadas ni creadas
+              return { ...scope, delete: false, create: false }
+            }
+            return scope
+          })
+        }
       })
 
       return true
@@ -107,7 +116,13 @@ export const useActions = (state: State, dispatch): Actions => {
       })
       await resource.put({
         queryString: `${payload.id}/scopes`,
-        body: get(payload, ['scopes'], [])
+        body: get(payload, ['scopes'], [] as Scope[]).map((scope) => {
+          if (scope.name === 'call_evidences') {
+            // Las evidencias no pueden ser eliminadas ni creadas
+            return { ...scope, delete: false, create: false }
+          }
+          return scope
+        })
       })
       return true
     } catch {
