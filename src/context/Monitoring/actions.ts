@@ -1,5 +1,6 @@
 import useApi from 'hooks/useApi'
 import {
+  LiveCall,
   LiveCallActions,
   LiveCallPaginationParams,
   LiveCallState,
@@ -10,7 +11,13 @@ import { DateFilter } from 'types/filters'
 import { Params } from 'utils/ParamsBuilder'
 import { actions } from './constants'
 
-const orderByMapper = {}
+const orderByMapper = {
+  target: 'target_phone',
+  date: 'call_start_date',
+  time: 'call_start_date',
+  technique: 'technique.name',
+  priority: 'technique.priority'
+}
 
 export const useActions = (state: LiveCallState, dispatch): LiveCallActions => {
   const { pagination, dateFilter, searchFilter, staticFilter } = state
@@ -45,7 +52,22 @@ export const useActions = (state: LiveCallState, dispatch): LiveCallActions => {
           : Promise.resolve(null)
       ])
 
-      dispatch(actions.setData(response.data))
+      dispatch(
+        actions.setData(
+          (response.data as any[]).map<LiveCall>((datum) => {
+            return {
+              id: datum.id,
+              target: datum.target_phone,
+              carrier: datum.carrier,
+              date: datum.call_start_date,
+              priority: datum.technique?.priority ?? '',
+              status: datum.type.includes('live') ? 'live' : 'ended',
+              technique: datum.technique?.name,
+              type: datum.type.split('_')[0]
+            }
+          })
+        )
+      )
       if (total != null) {
         dispatch(actions.setTotal(total))
       }

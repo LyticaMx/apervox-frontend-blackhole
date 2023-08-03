@@ -5,23 +5,22 @@ import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
 import useTableColumns from 'hooks/useTableColumns'
 import { ReactElement, useEffect } from 'react'
 import { tableMessages } from '../messages'
-import { Call } from '../types'
 import { useMonitoring } from 'context/Monitoring'
+import { LiveCall } from 'context/Monitoring/types'
+import clsx from 'clsx'
+import Tooltip from 'components/Tooltip'
+import IconButton from 'components/Button/IconButton'
 
 const CallsTable = (): ReactElement => {
   const getMessage = useFormatMessage(tableMessages)
   const getGlobalMessage = useGlobalMessage()
-  const { actions, pagination } = useMonitoring()
+  const { actions, pagination, data } = useMonitoring()
 
   useEffect(() => {
     actions?.getData({}, true)
   }, [])
 
-  const columns = useTableColumns<Call>(() => [
-    {
-      accessorKey: 'id',
-      header: 'ID'
-    },
+  const columns = useTableColumns<LiveCall>(() => [
     {
       accessorKey: 'target',
       header: getMessage('target')
@@ -32,11 +31,13 @@ const CallsTable = (): ReactElement => {
       cell: ({ getValue }) => format(new Date(getValue<string>()), 'dd/MM/yyyy')
     },
     {
+      accessorKey: 'date',
+      id: 'time',
       header: getMessage('time'),
       cell: ({ row }) => format(new Date(row.original.date), 'hh:mm')
     },
     {
-      accessorKey: 'operator',
+      accessorKey: 'carrier',
       header: getMessage('operator')
     },
     {
@@ -49,9 +50,35 @@ const CallsTable = (): ReactElement => {
       cell: ({ getValue }) => (
         <p className="px-1 py-0.5 rounded-3xl text-sm">
           <span className="w-3 h-3 rounded-full bg-primary inline-block mr-2" />
-          {getValue<string>()}
+          {getMessage(`${getValue<string>()}Priority`)}
         </p>
-      )
+      ),
+      meta: {
+        columnFilters: {
+          options: [
+            {
+              name: getMessage('lowPriority'),
+              value: 'low'
+            },
+            {
+              name: getMessage('mediumPriority'),
+              value: 'medium'
+            },
+            {
+              name: getMessage('highPriority'),
+              value: 'high'
+            },
+            {
+              name: getMessage('urgentPriority'),
+              value: 'urgent'
+            }
+          ],
+          onChange: (priority) => {
+            actions?.getData({ priority })
+          },
+          multiple: true
+        }
+      }
     },
     {
       accessorKey: 'type',
@@ -59,24 +86,70 @@ const CallsTable = (): ReactElement => {
       cell: ({ getValue }) => (
         <p className="px-1 py-0.5 rounded-3xl text-sm flex items-center gap-2">
           <PhoneIcon className="w-4 h-4 text-muted" />
-          {getValue<string>()}
+          {getMessage(getValue<string>())}
         </p>
-      )
+      ),
+      meta: {
+        columnFilters: {
+          options: [
+            {
+              name: getMessage('evidence'),
+              value: 'evidence_live'
+            },
+            {
+              name: getMessage('verification'),
+              value: 'verification_live'
+            },
+            {
+              name: getMessage('trash'),
+              value: 'trash_live'
+            }
+          ],
+          onChange: (callType) => {
+            actions?.getData({ callType })
+          },
+          multiple: true
+        }
+      }
     },
     {
       accessorKey: 'status',
       header: getGlobalMessage('status', 'generalMessages'),
-      cell: ({ getValue }) => (
-        <p className="px-1 py-0.5 rounded-3xl bg-red-500 text-white text-center text-sm">
-          {getValue<string>()}
-        </p>
-      )
+      enableSorting: false,
+      cell: ({ getValue }) => {
+        const status = getValue<string>()
+
+        return (
+          <p
+            className={clsx(
+              'px-1 py-0.5 rounded-3xl text-white text-center text-sm',
+              status === 'live' ? 'bg-red-500' : 'text-muted'
+            )}
+          >
+            {getMessage(status)}
+          </p>
+        )
+      }
     },
     {
       header: getGlobalMessage('actions', 'generalMessages'),
+      enableSorting: false,
       cell: () => (
         <div>
-          <PhoneXMarkIcon className="w-4 h-4 text-muted" />
+          <Tooltip
+            content={getMessage('hangUp')}
+            floatProps={{ offset: 10, arrow: true }}
+            classNames={{
+              panel:
+                'bg-secondary text-white py-1 px-2 rounded-md text-sm whitespace-nowrap',
+              arrow: 'absolute bg-white w-2 h-2 rounded-full bg-secondary'
+            }}
+            placement="top"
+          >
+            <IconButton className="ml-1">
+              <PhoneXMarkIcon className="w-4 h-4 text-muted" />
+            </IconButton>
+          </Tooltip>
         </div>
       )
     }
@@ -85,51 +158,23 @@ const CallsTable = (): ReactElement => {
   return (
     <Table
       columns={columns}
-      data={[
-        {
-          id: '001',
-          date: '2023-02-14T18:58:02.626Z',
-          target: '5623456908',
-          operator: 'Telcel',
-          technique: 'T.I.45/2022-2',
-          priority: 'Urgente',
-          type: 'Verificación',
-          status: 'En vivo'
-        },
-        {
-          id: '002',
-          date: '2023-02-14T18:58:02.626Z',
-          target: '5623456908',
-          operator: 'Telcel',
-          technique: 'T.I.45/2022-2',
-          priority: 'Urgente',
-          type: 'Verificación',
-          status: 'En vivo'
-        },
-        {
-          id: '003',
-          date: '2023-02-14T18:58:02.626Z',
-          target: '5623456908',
-          operator: 'Telcel',
-          technique: 'T.I.45/2022-2',
-          priority: 'Urgente',
-          type: 'Verificación',
-          status: 'Colgada'
-        },
-        {
-          id: '004',
-          date: '2023-02-14T18:58:02.626Z',
-          target: '5623456908',
-          operator: 'Telcel',
-          technique: 'T.I.45/2022-2',
-          priority: 'Urgente',
-          type: 'Verificación',
-          status: 'En vivo'
-        }
-      ]}
+      data={data}
+      className="overflow-x-auto shadow rounded-lg"
       manualSorting={{
-        onSortingChange: (sort) => actions?.getData({ sort, page: 1 }),
+        onSortingChange: (sort) => actions?.getData({ sort }),
         sorting: pagination.sort
+      }}
+      maxHeight={500}
+      manualLimit={{
+        options: [15, 25, 50, 100],
+        onChangeLimit: (page, limit) =>
+          actions?.getData({ page: page + 1, limit })
+      }}
+      pageSize={pagination.limit}
+      manualPagination={{
+        currentPage: pagination.page,
+        totalRecords: pagination.totalRecords,
+        onChange: (page) => actions?.getData({ page: page + 1 })
       }}
     />
   )

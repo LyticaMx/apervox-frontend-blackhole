@@ -4,6 +4,13 @@ import { DateFilter, PaginationFilter, SearchFilter } from 'types/filters'
 
 export interface LiveCall {
   id: string
+  target: string
+  carrier: string
+  technique: string
+  priority: string
+  type: string
+  status: string
+  date: string
 }
 
 export interface LiveCallPaginationParams extends PaginationParams {

@@ -9,6 +9,7 @@ import ViewFilter from 'components/ViewFilter'
 
 import { messages } from '../messages'
 import { useMonitoring } from 'context/Monitoring'
+import { formatTotal } from 'utils/formatTotal'
 
 const Header = (): ReactElement => {
   const getMessage = useFormatMessage(messages)
@@ -16,12 +17,14 @@ const Header = (): ReactElement => {
   const {
     dateFilter,
     searchFilter,
+    total,
     actions: liveCallsActions
   } = useMonitoring()
 
   const items = [
-    { label: 'Numero de usuarios', name: 'numero_usuarios' },
-    { label: 'Usuario', name: 'usuario' }
+    { label: getMessage('target'), name: 'target_phone' },
+    { label: getMessage('carrier'), name: 'carrier' },
+    { label: getMessage('technique'), name: 'technique' }
   ]
 
   return (
@@ -34,7 +37,7 @@ const Header = (): ReactElement => {
             style="semibold"
             className="uppercase text-secondary text-base mr-4"
           >
-            11 {getMessage('ongoingCalls')}
+            {formatTotal(total, getMessage('ongoingCalls'))}
           </Typography>
 
           <ViewCounter count={5}>
