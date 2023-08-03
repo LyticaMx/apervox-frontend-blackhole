@@ -58,7 +58,7 @@ const useApi = ({
     try {
       if (withLoader) loaderActions?.showLoader()
 
-      const formattedParams = urlParams ?? {}
+      const formattedParams = structuredClone(urlParams) ?? {}
 
       for (const key in formattedParams) {
         if (
