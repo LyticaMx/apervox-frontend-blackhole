@@ -8,10 +8,16 @@ import ViewCounter from 'components/ViewCounter'
 import ViewFilter from 'components/ViewFilter'
 
 import { messages } from '../messages'
+import { useMonitoring } from 'context/Monitoring'
 
 const Header = (): ReactElement => {
   const getMessage = useFormatMessage(messages)
   const getGlobalMessage = useGlobalMessage()
+  const {
+    dateFilter,
+    searchFilter,
+    actions: liveCallsActions
+  } = useMonitoring()
 
   const items = [
     { label: 'Numero de usuarios', name: 'numero_usuarios' },
@@ -45,7 +51,28 @@ const Header = (): ReactElement => {
           </ViewCounter>
         </div>
       </div>
-      <ViewFilter fields={items} download={(document) => alert(document)} />
+      <ViewFilter
+        fields={items}
+        download={(document) => alert(document)}
+        initialValues={{
+          dateRange: {
+            start_time: dateFilter.start_time,
+            end_time: dateFilter.end_time
+          },
+          search: searchFilter.query,
+          fields: searchFilter.filters
+        }}
+        onChange={(data) =>
+          liveCallsActions?.getData({
+            start_time: data.dateRange[0],
+            end_time: data.dateRange[1],
+            clearDates: data.clearDates,
+            filters: data.filterByField.fields,
+            query: data.filterByField.search,
+            page: 1
+          })
+        }
+      />
     </div>
   )
 }

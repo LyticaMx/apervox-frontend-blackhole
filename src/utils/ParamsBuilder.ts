@@ -14,17 +14,18 @@ export class Params {
   end_time: Date | undefined;
   [x: string]: any
 
-  constructor() {
-    this.by = 'created_at'
+  constructor(defaultBy = 'created_at') {
+    this.by = defaultBy
     this.order = 'desc'
     this.page = 1
     this.limit = 15
   }
 
   static Builder<T extends Record<string, any> | undefined>(
-    newParams: T
+    newParams: T,
+    defaultOrderBy?: string
   ): ParamsBuilder<T> {
-    return new ParamsBuilder(newParams)
+    return new ParamsBuilder(newParams, defaultOrderBy)
   }
 }
 
@@ -32,8 +33,8 @@ class ParamsBuilder<T extends Record<string, any> | undefined> {
   private params: Params
   private readonly newParams: T | undefined
 
-  constructor(newParams: T) {
-    this.params = new Params()
+  constructor(newParams: T, defaultOrderBy?: string) {
+    this.params = new Params(defaultOrderBy)
     this.newParams = newParams
   }
 

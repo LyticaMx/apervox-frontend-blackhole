@@ -18,6 +18,7 @@ import { LabelsProvider } from './Labels'
 import { SettingsProvider } from './Settings'
 import { LocationProvider } from './Locations'
 import { TargetsProvider } from './Targets'
+import { MonitoringProvider } from './Monitoring'
 
 interface Props {
   children: ReactNode
@@ -44,7 +45,8 @@ export const AppContextProvider = (props: Props): any => {
     VerificationLineProvider,
     TechniqueProvider,
     TechniquesProvider,
-    LocationProvider
+    LocationProvider,
+    MonitoringProvider
   ]
 
   const CombinedProviders = providers.reduce(

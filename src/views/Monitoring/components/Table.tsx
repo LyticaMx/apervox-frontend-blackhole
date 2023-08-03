@@ -1,20 +1,21 @@
 import { PhoneIcon, PhoneXMarkIcon } from '@heroicons/react/24/outline'
-import { SortingState } from '@tanstack/react-table'
 import Table from 'components/Table'
 import { format } from 'date-fns'
 import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
 import useTableColumns from 'hooks/useTableColumns'
-import { ReactElement, useState } from 'react'
+import { ReactElement, useEffect } from 'react'
 import { tableMessages } from '../messages'
 import { Call } from '../types'
+import { useMonitoring } from 'context/Monitoring'
 
 const CallsTable = (): ReactElement => {
   const getMessage = useFormatMessage(tableMessages)
   const getGlobalMessage = useGlobalMessage()
-  const [sortingState, setSortingState] = useState<SortingState>([])
-  const [rowSelected, setRowSelected] = useState<Call | null>(null)
+  const { actions, pagination } = useMonitoring()
 
-  console.log('🚀 ~ file: Table.tsx:20 ~ CallsTable ~ rowSelected', rowSelected)
+  useEffect(() => {
+    actions?.getData({}, true)
+  }, [])
 
   const columns = useTableColumns<Call>(() => [
     {
@@ -127,10 +128,9 @@ const CallsTable = (): ReactElement => {
         }
       ]}
       manualSorting={{
-        onSortingChange: setSortingState,
-        sorting: sortingState
+        onSortingChange: (sort) => actions?.getData({ sort, page: 1 }),
+        sorting: pagination.sort
       }}
-      onRowClicked={setRowSelected}
     />
   )
 }
