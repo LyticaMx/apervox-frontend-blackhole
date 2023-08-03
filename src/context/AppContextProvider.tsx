@@ -1,8 +1,5 @@
 import { ReactNode } from 'react'
 
-import { PinsProvider } from 'context/Pins'
-import { AlertsProvider } from 'context/Alerts'
-import { DatesFilterProvider } from 'context/DatesFilter'
 import { WorkGroupsProvider } from 'context/WorkGroups'
 import { TechniqueProvider } from './Technique'
 import { TechniquesProvider } from './Techniques'
@@ -26,10 +23,6 @@ interface Props {
 
 export const AppContextProvider = (props: Props): any => {
   const providers = [
-    DatesFilterProvider,
-    PinsProvider,
-    AlertsProvider,
-    /* Contextos de BH2 */
     TargetsProvider,
     SettingsProvider,
     UsersProvider,
