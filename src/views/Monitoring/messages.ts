@@ -61,6 +61,6 @@ export const tabsMessages = defineMessages({
   },
   history: {
     id: 'views.monitoring.tabs.history',
-    defaultMessage: 'Historial de llamdas'
+    defaultMessage: 'Historial de llamadas'
   }
 })

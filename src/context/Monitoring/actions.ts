@@ -54,18 +54,16 @@ export const useActions = (state: LiveCallState, dispatch): LiveCallActions => {
 
       dispatch(
         actions.setData(
-          (response.data as any[]).map<LiveCall>((datum) => {
-            return {
-              id: datum.id,
-              target: datum.target_phone,
-              carrier: datum.carrier,
-              date: datum.call_start_date,
-              priority: datum.technique?.priority ?? '',
-              status: datum.type.includes('live') ? 'live' : 'ended',
-              technique: datum.technique?.name,
-              type: datum.type.split('_')[0]
-            }
-          })
+          (response.data as any[]).map<LiveCall>((datum) => ({
+            id: datum.id,
+            target: datum.target_phone,
+            carrier: datum.carrier,
+            date: datum.call_start_date,
+            priority: datum.technique?.priority ?? '',
+            status: datum.type.includes('live') ? 'live' : 'ended',
+            technique: datum.technique?.name,
+            type: datum.type.split('_')[0]
+          }))
         )
       )
       if (total != null) {

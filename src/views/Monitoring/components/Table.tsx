@@ -132,6 +132,7 @@ const CallsTable = (): ReactElement => {
       }
     },
     {
+      id: 'actions',
       header: getGlobalMessage('actions', 'generalMessages'),
       enableSorting: false,
       cell: () => (

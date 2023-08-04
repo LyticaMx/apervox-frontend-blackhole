@@ -37,7 +37,7 @@ export interface CallCounters {
 
 export interface LiveCallState {
   data: LiveCall[]
-  total: 0
+  total: number
   counters: CallCounters
   pagination: LiveCallPagination
   dateFilter: DateFilter

@@ -24,6 +24,14 @@ export const messages = defineMessages({
   withTranscription: {
     id: 'views.callsHistory.withTranscription',
     defaultMessage: 'Con transcripción'
+  },
+  workBy: {
+    id: 'views.callsHistory.search.workBy',
+    defaultMessage: 'Trabajado por'
+  },
+  operator: {
+    id: 'views.callsHistory.search.operator',
+    defaultMessage: 'Operadora'
   }
 })
 
@@ -47,5 +55,45 @@ export const tableMessages = defineMessages({
   workBy: {
     id: 'views.callsHistory.table.workBy',
     defaultMessage: 'Trabajado por'
+  },
+  verification: {
+    id: 'views.callHistory.table.callType.verification',
+    defaultMessage: 'Verificación'
+  },
+  trash: {
+    id: 'views.callHistory.table.callType.trash',
+    defaultMessage: 'Basura'
+  },
+  evidence: {
+    id: 'views.callHistory.table.callType.evidence',
+    defaultMessage: 'Técnica'
+  },
+  unclassified: {
+    id: 'views.callsHistory.table.relevance.unclassified',
+    defaultMessage: 'Sin clasificar'
+  },
+  not_relevant: {
+    id: 'views.callsHistory.table.relevance.not_relevant',
+    defaultMessage: 'No relevante'
+  },
+  discarded: {
+    id: 'views.callsHistory.table.relevance.discarded',
+    defaultMessage: 'Descartado'
+  },
+  relevant: {
+    id: 'views.callsHistory.table.relevance.relevant',
+    defaultMessage: 'Relevante'
+  },
+  withTranscription: {
+    id: 'views.callsHistory.table.withTranscription',
+    defaultMessage: 'Con transcripción'
+  },
+  withoutTranscription: {
+    id: 'views.callsHistory.table.withTranscription',
+    defaultMessage: 'Sin transcripción'
+  },
+  both: {
+    id: 'views.callsHistory.table.both',
+    defaultMessage: 'Ambos'
   }
 })
