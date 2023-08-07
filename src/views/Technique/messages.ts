@@ -89,6 +89,22 @@ export const evidenceListMessages = defineMessages({
   type: {
     id: 'views.techniques.EvidenceList.type',
     defaultMessage: 'Tipo'
+  },
+  workingBy: {
+    id: 'views.techniques.EvidenceList.workingBy',
+    defaultMessage: 'Trabajando por'
+  },
+  trackedBy: {
+    id: 'views.techniques.EvidenceList.trackedBy',
+    defaultMessage: 'En seguimiento por'
+  },
+  withFollow: {
+    id: 'views.techniques.EvidenceList.withFollow',
+    defaultMessage: 'Con seguimiento'
+  },
+  withoutFollow: {
+    id: 'views.techniques.EvidenceList.withoutFollow',
+    defaultMessage: 'Sin seguimiento'
   }
 })
 

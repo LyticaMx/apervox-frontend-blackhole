@@ -77,11 +77,6 @@ export interface Evidence {
   expires_at: string
   duration: string
   carrier: string
-  imei: string
-  imsi: string
-  code_cell_start: string
-  direction_cell_start: string
-  region_cell_start: string
   audit_by: string
   follow_up: string
   obtained_from: string
