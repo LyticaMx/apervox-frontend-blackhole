@@ -124,5 +124,9 @@ export const formMessages = defineMessages({
   passwordsNotMatches: {
     id: 'global.form.passwordsNotMatches',
     defaultMessage: 'Las contraseñas no coinciden'
+  },
+  chooseAtLeastOneField: {
+    id: 'global.form.chooseAtLeastOneField',
+    defaultMessage: 'Debes escoger al menos un campo'
   }
 })

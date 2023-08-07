@@ -8,7 +8,7 @@ import { Popover } from '@headlessui/react'
 import { Float } from '@headlessui-float/react'
 import { AdjustmentsVerticalIcon } from '@heroicons/react/24/outline'
 
-import { actionsMessages, generalMessages } from 'globalMessages'
+import { actionsMessages, formMessages, generalMessages } from 'globalMessages'
 
 import TextField from 'components/Form/Textfield'
 import Radio from 'components/Form/Radio'
@@ -108,7 +108,7 @@ const FilterByField = ({
             if (Array.isArray(value) && value.length === 0) return false
             return true
           },
-          message: 'Debes escoger al menos un campo'
+          message: intl.formatMessage(formMessages.chooseAtLeastOneField)
         })
     })
   })
