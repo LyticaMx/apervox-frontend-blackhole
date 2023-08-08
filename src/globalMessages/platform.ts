@@ -139,5 +139,9 @@ export const platformMessages = defineMessages({
   incorrectPassword: {
     id: 'global.platform.incorrectPassword',
     defaultMessage: 'Contraseña incorrecta'
+  },
+  carrier: {
+    id: 'global.platform.carrier',
+    defaultMessage: 'Operadora'
   }
 })

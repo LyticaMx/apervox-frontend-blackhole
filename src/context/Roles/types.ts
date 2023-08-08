@@ -24,6 +24,7 @@ export interface State {
   pagination: RolesPagination
   dateFilter: DateFilter
   searchFilter: SearchFilter
+  staticFilter: StaticFilters
 }
 
 export interface PayloadCreate {

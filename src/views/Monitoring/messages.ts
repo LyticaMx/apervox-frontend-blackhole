@@ -27,6 +27,30 @@ export const tableMessages = defineMessages({
   callType: {
     id: 'views.monitoring.table.callType',
     defaultMessage: 'Tipo llamada'
+  },
+  verification: {
+    id: 'views.monitoring.table.callType.verification',
+    defaultMessage: 'Verificación'
+  },
+  trash: {
+    id: 'views.monitoring.table.callType.trash',
+    defaultMessage: 'Basura'
+  },
+  evidence: {
+    id: 'views.monitoring.table.callType.evidence',
+    defaultMessage: 'Técnica'
+  },
+  live: {
+    id: 'views.monitoring.table.callStatus.live',
+    defaultMessage: 'En vivo'
+  },
+  ended: {
+    id: 'views.monitoring.table.callStatus.ended',
+    defaultMessage: 'Finalizada'
+  },
+  hangUp: {
+    id: 'views.monitoring.table.hangUp',
+    defaultMessage: 'Colgar llamada'
   }
 })
 
@@ -37,6 +61,6 @@ export const tabsMessages = defineMessages({
   },
   history: {
     id: 'views.monitoring.tabs.history',
-    defaultMessage: 'Historial de llamdas'
+    defaultMessage: 'Historial de llamadas'
   }
 })

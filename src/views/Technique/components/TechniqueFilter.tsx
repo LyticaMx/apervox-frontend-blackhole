@@ -1,36 +1,46 @@
 import { ReactElement } from 'react'
 import { useFormatMessage } from 'hooks/useIntl'
-import { generalMessages } from 'globalMessages'
 
 import ViewFilter from 'components/ViewFilter'
+import { evidenceListMessages } from '../messages'
+import { useEvidences } from 'context/Evidences'
 
 const TechniqueFilter = (): ReactElement => {
-  const getGeneralMessage = useFormatMessage(generalMessages)
+  const getGeneralMessage = useFormatMessage(evidenceListMessages)
+  const { actions, dateFilter, searchFilter } = useEvidences()
 
   const filterItems = [
     {
-      name: 'id',
-      label: 'ID'
+      name: 'evidence_number',
+      label: getGeneralMessage('eventNumber')
     },
     {
-      name: 'name',
-      label: getGeneralMessage('name')
+      name: 'target_phone',
+      label: getGeneralMessage('targetNumber')
     },
     {
-      name: 'description',
-      label: getGeneralMessage('description')
+      name: 'source_number',
+      label: getGeneralMessage('sourceNumber')
     },
     {
-      name: 'registeredBy',
-      label: getGeneralMessage('registeredBy')
+      name: 'carrier',
+      label: getGeneralMessage('carrier')
     },
     {
-      name: 'techniques',
-      label: getGeneralMessage('techniques')
+      name: 'audited_by',
+      label: getGeneralMessage('auditedBy')
     },
     {
-      name: 'status',
-      label: getGeneralMessage('status')
+      name: 'tracked_by',
+      label: getGeneralMessage('trackedBy')
+    },
+    {
+      name: 'working_by',
+      label: getGeneralMessage('workingBy')
+    },
+    {
+      name: 'label',
+      label: getGeneralMessage('tag')
     }
   ]
 
@@ -38,7 +48,24 @@ const TechniqueFilter = (): ReactElement => {
     <ViewFilter
       fields={filterItems}
       download={(document) => alert(document)}
-      onChange={() => {}}
+      initialValues={{
+        dateRange: {
+          start_time: dateFilter.start_time,
+          end_time: dateFilter.end_time
+        },
+        search: searchFilter.query,
+        fields: searchFilter.filters
+      }}
+      onChange={(data) =>
+        actions?.getData({
+          start_time: data.dateRange[0],
+          end_time: data.dateRange[1],
+          clearDates: data.clearDates,
+          filters: data.filterByField.fields,
+          query: data.filterByField.search,
+          page: 1
+        })
+      }
     />
   )
 }

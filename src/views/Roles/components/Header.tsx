@@ -8,19 +8,22 @@ import ViewFilter from 'components/ViewFilter'
 import { StaticFilter } from 'components/FilterByField'
 
 import { rolesMessages } from '../messages'
+import { useIntl } from 'react-intl'
+import { formMessages, generalMessages } from 'globalMessages'
 
 interface Props {
   onAction: () => void
 }
 const status = { active: true, inactive: false, both: undefined }
 const Header = ({ onAction }: Props): ReactElement => {
-  const { total, actions } = useRoles()
+  const { total, actions, searchFilter, dateFilter, staticFilter } = useRoles()
+  const { formatMessage } = useIntl()
 
   const getMessage = useFormatMessage(rolesMessages)
 
   const items = [
-    { label: 'Nombre', name: 'name' },
-    { label: 'Usuario', name: 'created_by' }
+    { label: formatMessage(formMessages.name), name: 'name' },
+    { label: formatMessage(generalMessages.createdBy), name: 'created_by' }
   ]
   const staticFilters: StaticFilter[] = [
     {
@@ -56,6 +59,22 @@ const Header = ({ onAction }: Props): ReactElement => {
         action={{ label: getMessage('button'), onClick: onAction }}
         download={(document) => alert(document)}
         staticFilters={staticFilters}
+        initialValues={{
+          search: searchFilter.query ?? '',
+          fields: searchFilter.filters ?? [],
+          dateRange: {
+            start_time: dateFilter.start_time,
+            end_time: dateFilter.end_time
+          },
+          staticFilters: {
+            status:
+              staticFilter.status !== undefined
+                ? staticFilter.status
+                  ? 'active'
+                  : 'inactive'
+                : 'both'
+          }
+        }}
         onChange={(data) => {
           const staticF = data.filterByField.staticFilters
 

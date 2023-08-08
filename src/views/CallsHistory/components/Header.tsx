@@ -7,13 +7,24 @@ import ViewFilter from 'components/ViewFilter'
 import { useFormatMessage } from 'hooks/useIntl'
 
 import { messages } from '../messages'
+import { useCallHistory } from 'context/CallHistory'
 
 const Header = (): ReactElement => {
   const getMessage = useFormatMessage(messages)
+  const {
+    dateFilter,
+    searchFilter,
+    actions: callHistoryActions
+  } = useCallHistory()
 
   const items = [
-    { label: 'Numero de usuarios', name: 'numero_usuarios' },
-    { label: 'Usuario', name: 'usuario' }
+    { label: getMessage('source'), name: 'source' },
+    { label: getMessage('phoneLine'), name: 'overflow_line_phone' },
+    { label: getMessage('target'), name: 'target_phone' },
+    { label: getMessage('operator'), name: 'carrier' },
+    { label: getMessage('technique'), name: 'technique' },
+    { label: getMessage('workBy'), name: 'working_by' },
+    { label: getMessage('label'), name: 'label' }
   ]
 
   return (
@@ -28,7 +39,28 @@ const Header = (): ReactElement => {
           <ViewCounter count={5}>{getMessage('withTranscription')}</ViewCounter>
         </div>
       </div>
-      <ViewFilter fields={items} download={(document) => alert(document)} />
+      <ViewFilter
+        fields={items}
+        download={(document) => alert(document)}
+        initialValues={{
+          dateRange: {
+            start_time: dateFilter.start_time,
+            end_time: dateFilter.end_time
+          },
+          search: searchFilter.query,
+          fields: searchFilter.filters
+        }}
+        onChange={(data) =>
+          callHistoryActions?.getData({
+            start_time: data.dateRange[0],
+            end_time: data.dateRange[1],
+            clearDates: data.clearDates,
+            filters: data.filterByField.fields,
+            query: data.filterByField.search,
+            page: 1
+          })
+        }
+      />
     </div>
   )
 }

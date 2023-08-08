@@ -1,18 +1,20 @@
 import { ReactElement, ReactNode, useEffect, useMemo } from 'react'
 import { useIntl } from 'react-intl'
 import { useFormik } from 'formik'
-
 import clsx from 'clsx'
+import * as yup from 'yup'
+
 import { Popover } from '@headlessui/react'
 import { Float } from '@headlessui-float/react'
 import { AdjustmentsVerticalIcon } from '@heroicons/react/24/outline'
 
-import { actionsMessages, generalMessages } from 'globalMessages'
+import { actionsMessages, formMessages, generalMessages } from 'globalMessages'
 
 import TextField from 'components/Form/Textfield'
 import Radio from 'components/Form/Radio'
 import StaticFilterComponent from './StaticFilter'
 import { useAutoCloseDialog } from 'hooks/useAutoCloseDialog'
+import Typography from 'components/Typography'
 
 export type InputType =
   | 'datepicker'
@@ -95,6 +97,22 @@ const FilterByField = ({
     )
   }, [staticFilters])
 
+  const validationSchema = yup.object({
+    search: yup.string(),
+    fields: yup.mixed().when('search', {
+      is: (val = '') => val.trim() !== '',
+      then: (schema) =>
+        schema.test({
+          name: 'is-field-selected',
+          test: (value) => {
+            if (Array.isArray(value) && value.length === 0) return false
+            return true
+          },
+          message: intl.formatMessage(formMessages.chooseAtLeastOneField)
+        })
+    })
+  })
+
   const formik = useFormik({
     initialValues: {
       search: '',
@@ -102,6 +120,7 @@ const FilterByField = ({
       staticFilters: initialStaticValues,
       ...initialValues
     },
+    validationSchema,
     onSubmit: (values) => {
       if (onSubmit) {
         // TODO: Revertir este cambio cuando los filtros sean OR y no AND
@@ -232,7 +251,14 @@ const FilterByField = ({
                 />
 
                 <p className="mt-3 mb-2">Campos</p>
-                <div className="flex flex-col gap-1 pl-1">
+                <div
+                  className={clsx(
+                    'flex flex-col gap-1 pl-1 py-1',
+                    formik.errors.fields &&
+                      formik.touched.fields &&
+                      'border rounded-sm border-red-500'
+                  )}
+                >
                   {items.map((item, index) => (
                     // TODO: Revertir este cambio cuando los filtros sean OR y no AND
                     <Radio
@@ -241,10 +267,16 @@ const FilterByField = ({
                       name="fields"
                       id={`fields-${item.name}`}
                       onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
                       value={item.name}
                       checked={formik.values.fields.includes(item.name)}
                     />
                   ))}
+                  {formik.errors.fields && formik.touched.fields && (
+                    <Typography variant="caption" className={'text-red-500'}>
+                      {formik.errors.fields}
+                    </Typography>
+                  )}
                 </div>
                 <div className="mt-3">
                   {staticFilters.map((filter) => (

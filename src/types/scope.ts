@@ -14,7 +14,8 @@ export type Resource =
   | 'overflow_lines'
   | 'verification_lines'
   | 'targets'
-  | 'target_metadatas'
+  | 'target_metadata'
+  | 'call_evidences'
 
 export interface Scope {
   name: Resource

@@ -206,7 +206,7 @@ export const scopes: Module[] = [
     }
   },
   {
-    id: 'target_metadatas',
+    id: 'target_metadata',
     permissions: {
       read: false,
       create: false,
@@ -220,6 +220,14 @@ export const scopes: Module[] = [
       update: { 'targets.read': true },
       delete: { 'targets.read': true },
       export: { 'targets.read': true }
+    }
+  },
+  {
+    id: 'call_evidences',
+    permissions: {
+      read: false,
+      update: false,
+      export: false
     }
   }
 ]

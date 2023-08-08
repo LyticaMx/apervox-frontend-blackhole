@@ -1,8 +1,5 @@
 import { ReactNode } from 'react'
 
-import { PinsProvider } from 'context/Pins'
-import { AlertsProvider } from 'context/Alerts'
-import { DatesFilterProvider } from 'context/DatesFilter'
 import { WorkGroupsProvider } from 'context/WorkGroups'
 import { TechniqueProvider } from './Technique'
 import { TechniquesProvider } from './Techniques'
@@ -18,6 +15,9 @@ import { LabelsProvider } from './Labels'
 import { SettingsProvider } from './Settings'
 import { LocationProvider } from './Locations'
 import { TargetsProvider } from './Targets'
+import { MonitoringProvider } from './Monitoring'
+import { CallHistoryProvider } from './CallHistory'
+import { EvidencesProvider } from './Evidences'
 
 interface Props {
   children: ReactNode
@@ -25,10 +25,6 @@ interface Props {
 
 export const AppContextProvider = (props: Props): any => {
   const providers = [
-    DatesFilterProvider,
-    PinsProvider,
-    AlertsProvider,
-    /* Contextos de BH2 */
     TargetsProvider,
     SettingsProvider,
     UsersProvider,
@@ -44,7 +40,10 @@ export const AppContextProvider = (props: Props): any => {
     VerificationLineProvider,
     TechniqueProvider,
     TechniquesProvider,
-    LocationProvider
+    LocationProvider,
+    MonitoringProvider,
+    CallHistoryProvider,
+    EvidencesProvider
   ]
 
   const CombinedProviders = providers.reduce(

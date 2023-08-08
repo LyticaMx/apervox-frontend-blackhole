@@ -12,7 +12,8 @@ export const initialState: State = {
     totalRecords: 0
   },
   searchFilter: {},
-  dateFilter: {}
+  dateFilter: {},
+  staticFilter: {}
 }
 
 export const RoleContext: Context<State> = createContext(initialState)

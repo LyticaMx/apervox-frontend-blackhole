@@ -10,10 +10,7 @@ import { targetInfoTabs } from '../constants'
 import EvidenceList from './EvidenceList'
 import TargetForms from './TargetForms'
 import GeneralDataForm from './TargetForms/GeneralDataForm'
-import { evidencesData } from 'views/Techniques/mocks'
 import { TechniqueTabs } from 'types/technique'
-
-const evidenceTypes = ['audio', 'video', 'image', 'doc']
 
 const FormSection = (): ReactElement => {
   const history = useHistory()
@@ -53,10 +50,9 @@ const FormSection = (): ReactElement => {
 
       <Tab value={TechniqueTabs.EVIDENCE}>
         <EvidenceList
-          data={evidencesData}
           onSelectItem={(evidence) =>
             history.push(pathRoute.evidence, {
-              type: evidenceTypes[evidence.type]
+              type: 'audio'
             })
           }
         />
