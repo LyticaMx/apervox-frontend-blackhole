@@ -18,6 +18,7 @@ import { TargetsProvider } from './Targets'
 import { MonitoringProvider } from './Monitoring'
 import { CallHistoryProvider } from './CallHistory'
 import { EvidencesProvider } from './Evidences'
+import { WorkingEvidenceProvider } from './WorkingEvidence'
 
 interface Props {
   children: ReactNode
@@ -43,7 +44,8 @@ export const AppContextProvider = (props: Props): any => {
     LocationProvider,
     MonitoringProvider,
     CallHistoryProvider,
-    EvidencesProvider
+    EvidencesProvider,
+    WorkingEvidenceProvider
   ]
 
   const CombinedProviders = providers.reduce(

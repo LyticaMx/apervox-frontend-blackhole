@@ -2,14 +2,13 @@ import Button from 'components/Button'
 import Grid from 'components/Grid'
 import ImageEditor from 'components/ImageEditor'
 import { FormikContextType } from 'formik'
-import { ReactElement, useMemo, useRef } from 'react'
+import { ReactElement, useEffect, useMemo, useRef, useState } from 'react'
 import EventInformation, {
-  EvidenceData,
   FormValues as EventClassificationValues
 } from './components/EventInformation'
 import { useIntl } from 'react-intl'
 import { messages } from './messages'
-import { useLocation } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { BsSkipEnd, BsSkipStart } from 'react-icons/bs'
 import VideoPlayer from 'components/VideoPlayer'
 import Typography from 'components/Typography'
@@ -26,65 +25,80 @@ import { Editor } from '@ghostramses/ckeditor5-blackhole-custom-build/build/cked
 import { PDFViewer } from 'components/PDFViewer'
 import PlanckTeory from 'assets/demo/Teoria_Planck.pdf'
 import WaveSurfer from 'components/WaveSurferContext'
-/* Demo */
-import DemoAudio from 'assets/audio/0989123090_20220128_173052_2_000126.wav'
+import { useWorkingEvidence } from 'context/WorkingEvidence'
+import { pathRoute } from 'router/routes'
+import useToast from 'hooks/useToast'
+import { RegionInterface } from 'components/WaveSurferContext/types'
 
 interface EvidenceLocation {
   type: 'audio' | 'video' | 'image' | 'doc'
+  from?: 'technique' | 'monitor'
 }
 
 const Evidence = (): ReactElement => {
+  const [regions, setRegions] = useState<RegionInterface[]>([])
   const { formatMessage } = useIntl()
   const location = useLocation<EvidenceLocation>()
   const { localeI18n } = useLanguage()
   const formikRef = useRef<FormikContextType<EventClassificationValues>>()
   const synopsisRef = useRef<Editor>(null)
+  const history = useHistory()
+  const workingEvidence = useWorkingEvidence()
+  const { launchToast } = useToast()
 
-  const eventInformation = useMemo<EvidenceData>(() => {
-    switch (location.state?.type) {
-      case 'audio':
-        return {
-          id: 'A001',
-          tiName: 'T.I.242/2022-2',
-          startDate: '2023-03-07T15:17:26.308Z',
-          duration: 180,
-          targetPhone: '5563456789'
-        }
-      case 'video':
-        return {
-          id: 'V003',
-          filename: 'V003...55ydhfj.mp4',
-          sourceDevice: 'Laptop forense',
-          tiName: 'T.I.242/2022-2',
-          startDate: '2023-03-07T15:17:26.308Z',
-          endDate: '2023-03-07T16:17:26.308Z',
-          duration: 3600
-        }
-      case 'image':
-        return {
-          id: 'I002',
-          filename: 'captura...002.jpg',
-          sourceDevice: 'Laptop forense',
-          tiName: 'T.I.242/2022-2',
-          startDate: '2023-03-07T15:17:26.308Z'
-        }
-      case 'doc': {
-        return {
-          id: 'DOO4',
-          filename: 'documento...12.pdf',
-          sourceDevice: 'Laptop forense',
-          startDate: '2023-03-07T15:17:26.308Z',
-          tiName: 'T.I.242/2022-2'
-        }
+  const saveSynopsis = async (): Promise<void> => {
+    try {
+      const saved =
+        (await workingEvidence.actions?.updateSynopsis(
+          synopsisRef.current?.getData() ?? ''
+        )) ?? false
+      if (saved) {
+        launchToast({
+          title: 'Sinopsis guardada correctamente',
+          type: 'Success'
+        })
+        return
       }
-      default:
-        return {
-          id: 'EV000',
-          tiName: 'BH_TI',
-          startDate: '2023-03-07T15:17:26.308Z'
-        }
+      launchToast({
+        title: 'No se pudo guardar la sinopsis',
+        type: 'Danger'
+      })
+    } catch {
+      launchToast({
+        title: 'No se pudo guardar la sinopsis',
+        type: 'Danger'
+      })
     }
-  }, [])
+  }
+
+  const getRegions = async (): Promise<void> => {
+    try {
+      const regions = (await workingEvidence.actions?.getRegions()) ?? []
+      setRegions(
+        regions.map((region) => ({
+          id: region.id ?? '',
+          start: region.startTime,
+          end: region.endTime,
+          name: region.tag
+        }))
+      )
+    } catch {}
+  }
+
+  useEffect(() => {
+    if (!workingEvidence.id) {
+      if (location.state.from === 'technique') {
+        history.push(pathRoute.technique)
+      } else history.push(pathRoute.monitoring.history)
+      return
+    }
+    workingEvidence.actions?.getData()
+  }, [workingEvidence.id])
+
+  useEffect(() => {
+    if (location.state.type !== 'audio') return
+    getRegions()
+  }, [location.state.type])
 
   const toolTabs = useMemo<NonEmptyArray<ToolTab>>(() => {
     const tabs: NonEmptyArray<ToolTab> = [
@@ -92,7 +106,7 @@ const Evidence = (): ReactElement => {
         id: 'synopsis',
         name: formatMessage(platformMessages.synopsis),
         component: (
-          <SynopsisEditor editorRef={synopsisRef} initialData="Data inicial" />
+          <SynopsisEditor editorRef={synopsisRef} saveSynopsis={saveSynopsis} />
         )
       },
       {
@@ -140,7 +154,7 @@ const Evidence = (): ReactElement => {
     }
 
     return tabs
-  }, [localeI18n, location.state.type])
+  }, [localeI18n, location.state.type, workingEvidence.id])
 
   return (
     <div>
@@ -150,9 +164,12 @@ const Evidence = (): ReactElement => {
             variant="subtitle"
             className="text-secondary uppercase font-[900]"
           >
-            {`${eventInformation.id} ${formatMessage(messages.eventType, {
-              type: location.state.type
-            })}`}
+            {`${workingEvidence.evidenceNumber} ${formatMessage(
+              messages.eventType,
+              {
+                type: location.state.type
+              }
+            )}`}
           </Typography>
         </div>
         <div className="flex gap-3 items-center">
@@ -185,10 +202,14 @@ const Evidence = (): ReactElement => {
             {location.state.type === 'audio' && (
               <WaveSurfer
                 plugins={['Regions', 'Timeline', 'Minimap']}
-                audio={{ url: DemoAudio }}
+                audio={{
+                  url: workingEvidence.actions?.getAudioUrl() ?? '',
+                  peek: workingEvidence.actions?.getAudioWave()
+                }}
                 onDownload={async () => {
                   console.log('hola')
                 }}
+                regions={regions}
                 splitChannels
                 showEqualizer
                 showMinimap
@@ -215,7 +236,7 @@ const Evidence = (): ReactElement => {
           <EventInformation
             formikRef={formikRef}
             onSubmit={(values) => console.log(values)}
-            evidenceData={eventInformation}
+            evidenceData={workingEvidence}
           />
         </Grid>
       </Grid>
