@@ -11,11 +11,13 @@ import EvidenceList from './EvidenceList'
 import TargetForms from './TargetForms'
 import GeneralDataForm from './TargetForms/GeneralDataForm'
 import { TechniqueTabs } from 'types/technique'
+import { useWorkingEvidence } from 'context/WorkingEvidence'
 
 const FormSection = (): ReactElement => {
   const history = useHistory()
   const { target, showTargetForms, activeTab, actions } = useTechnique()
   const [active, setActive, Tab] = useTabs(activeTab)
+  const { actions: workingActions } = useWorkingEvidence()
 
   useEffect(() => {
     setActive(activeTab)
@@ -50,11 +52,14 @@ const FormSection = (): ReactElement => {
 
       <Tab value={TechniqueTabs.EVIDENCE}>
         <EvidenceList
-          onSelectItem={(evidence) =>
+          onSelectItem={async (evidence) => {
+            workingActions?.setEvidence(evidence.id)
+
             history.push(pathRoute.evidence, {
-              type: 'audio'
+              type: 'audio',
+              from: 'technique'
             })
-          }
+          }}
         />
       </Tab>
 

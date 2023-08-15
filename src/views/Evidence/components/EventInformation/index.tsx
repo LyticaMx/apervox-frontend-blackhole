@@ -13,22 +13,13 @@ import StarRating from './StarRating'
 import * as yup from 'yup'
 import { format } from 'date-fns'
 import { secondsToString } from 'utils/timeToString'
+import { WorkingEvidence } from 'context/WorkingEvidence/types'
 
 export interface FormValues {
   label: string
-  classification: '0' | '1' | '2' | '3'
+  'label-manual': boolean
+  classification: 0 | 1 | 2 | 3
   follow: boolean
-}
-
-export interface EvidenceData {
-  id: string
-  tiName: string
-  targetPhone?: string
-  filename?: string
-  sourceDevice?: string
-  startDate: string
-  endDate?: string
-  duration?: number
 }
 
 interface Props {
@@ -37,7 +28,14 @@ interface Props {
     | ((values: FormValues) => void)
     | ((values: FormValues) => Promise<void>)
     | ((values: FormValues) => Promise<boolean>)
-  evidenceData: EvidenceData
+  evidenceData: WorkingEvidence
+}
+
+const classifications = {
+  unclassified: 0,
+  discarded: 1,
+  not_relevant: 2,
+  relevant: 3
 }
 
 const EventInformation = (props: Props): ReactElement => {
@@ -54,14 +52,16 @@ const EventInformation = (props: Props): ReactElement => {
 
   const formikConfig: FormikConfig<FormValues> = {
     initialValues: {
-      label: '',
-      classification: '0',
-      follow: false
+      label: evidenceData.label?.id ?? evidenceData.label?.value ?? '',
+      'label-manual': !evidenceData.label?.id, // Campo necesario para diferenciar si la etiqueta es manual
+      classification: classifications[evidenceData.classification] ?? 0,
+      follow: evidenceData.follow ?? false
     },
     onSubmit: async (values) => {
       await onSubmit(values)
     },
-    validationSchema
+    validationSchema,
+    enableReinitialize: true
   }
 
   const fields = useMemo<Array<Field<FormValues>>>(
@@ -71,15 +71,16 @@ const EventInformation = (props: Props): ReactElement => {
         name: 'label',
         options: {
           textField: 'value',
-          valueField: 'value',
+          valueField: 'id',
           decoratorField: 'decorator',
           addOption: true,
           items: [
             {
               color: 'red',
-              value: 'BCC'
+              value: 'BCC',
+              id: '3'
             },
-            { color: 'blue', value: 'BSC' }
+            { color: 'blue', value: 'BSC', id: '4' }
           ].map((item) => ({
             ...item,
             decorator: (
@@ -172,7 +173,7 @@ const EventInformation = (props: Props): ReactElement => {
       <Typography style="italic">
         {formatMessage(eventInformationMessages.evidenceId)}
       </Typography>
-      <Typography className="ml-4">{evidenceData.id}</Typography>
+      <Typography className="ml-4">{evidenceData.evidenceNumber}</Typography>
       {evidenceData.filename && (
         <>
           <Typography style="italic">
@@ -205,7 +206,9 @@ const EventInformation = (props: Props): ReactElement => {
           </Typography>
           <div className="flex gap-2 items-center">
             <CheckIcon className="w-4 h-4 text-primary" />
-            <span>{format(new Date(evidenceData.startDate), 'HH:mm')}</span>
+            <span>
+              {format(new Date(evidenceData.startDate ?? 0), 'HH:mm')}
+            </span>
           </div>
         </Grid>
         {evidenceData.endDate && (
@@ -215,7 +218,9 @@ const EventInformation = (props: Props): ReactElement => {
             </Typography>
             <div className="flex gap-2 items-center">
               <CheckIcon className="w-4 h-4 text-primary" />
-              <span>{format(new Date(evidenceData.endDate), 'HH:mm')}</span>
+              <span>
+                {format(new Date(evidenceData.endDate ?? 0), 'HH:mm')}
+              </span>
             </div>
           </Grid>
         )}
@@ -226,7 +231,7 @@ const EventInformation = (props: Props): ReactElement => {
       <div className="flex items-center gap-2">
         <CalendarDaysIcon className="text-gray-400 w-4 h-4" />
         <Typography>
-          {format(new Date(evidenceData.startDate), 'dd/MM/yyyy')}
+          {format(new Date(evidenceData.startDate ?? 0), 'dd/MM/yyyy')}
         </Typography>
       </div>
       {evidenceData.duration && (

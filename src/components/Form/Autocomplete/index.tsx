@@ -21,6 +21,7 @@ export interface Props {
   onQueryChange?: (value: any) => void
   noFoundText: ReactElement | string
   decoratorField?: string
+  onAddOption?: (isAdd: boolean) => void
 }
 const defaultProps: Props = {
   items: [],
@@ -43,7 +44,8 @@ const Autocomplete = ({
   onQueryChange,
   noFoundText,
   className,
-  addOption
+  addOption,
+  onAddOption
 }: Props): ReactElement => {
   const [query, setQuery] = useState('')
 
@@ -55,7 +57,8 @@ const Autocomplete = ({
     if (addOption && typeof selected === 'undefined') {
       selected = {
         [valueField]: value,
-        [textField]: value
+        [textField]: value,
+        manual: true
       }
     }
 
@@ -80,7 +83,12 @@ const Autocomplete = ({
   return (
     <Combobox
       value={itemSelected}
-      onChange={(item) => onChange(item[valueField])}
+      onChange={(item) => {
+        onChange(item[valueField])
+        if (addOption) {
+          onAddOption?.(item.manual ?? false)
+        }
+      }}
     >
       <Float
         as="div"
@@ -133,7 +141,11 @@ const Autocomplete = ({
           {filtered.length === 0 && query !== '' ? (
             addOption ? (
               <Combobox.Option
-                value={{ [valueField]: query, [textField]: query }}
+                value={{
+                  [valueField]: query,
+                  [textField]: query,
+                  manual: true
+                }}
                 className="relative cursor-default select-none py-2 pr-10 pl-4 hover:bg-blue-100 hover:text-blue-900 text-gray-900"
               >
                 {query}

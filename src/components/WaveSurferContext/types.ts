@@ -6,11 +6,20 @@ import {
 } from 'wavesurfer.js/src/plugin/regions'
 import { EventHandler } from 'wavesurfer.js/types/util'
 
+export interface RegionInterface {
+  id: string
+  start: number
+  partialStart?: number // revisar si estos son necesarios
+  end: number
+  partialEnd?: number // revisar si estos son necesarios
+  name: string // Revisar como se llama esta cosa
+}
+
 export interface WsProps {
   plugins: Plugins
   audio?: Audio
   peek?: string
-  regions?: any
+  regions?: RegionInterface[]
   wsRef?: any
   config: Omit<WaveSurferParams, 'container' | 'plugins' | 'splitChannels'>
   splitChannels: boolean

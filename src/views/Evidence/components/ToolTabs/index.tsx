@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { ReactElement, useMemo, useState } from 'react'
+import { ReactElement, useEffect, useMemo, useState } from 'react'
 import { NonEmptyArray } from 'types/utils'
 
 export interface ToolTab {
@@ -11,16 +11,23 @@ export interface ToolTab {
 interface Props {
   tabs: NonEmptyArray<ToolTab>
   defaultTab?: string
+  onChangeTab?: (id: string) => void
 }
 
 const ToolTabs = (props: Props): ReactElement => {
-  const { tabs, defaultTab } = props
+  const { tabs, defaultTab, onChangeTab } = props
   const [current, setCurrent] = useState(defaultTab ?? tabs[0].id)
 
   const currentTab = useMemo<ToolTab>(
     () => tabs.find((tab) => tab.id === current) ?? tabs[0],
     [current, tabs]
   )
+
+  useEffect(() => {
+    if (onChangeTab) {
+      onChangeTab(current)
+    }
+  }, [current])
 
   return (
     <div>

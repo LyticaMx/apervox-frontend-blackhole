@@ -181,6 +181,7 @@ export const fieldMapper = <T,>({ field, formik }: Params<T>): ReactNode => {
             )}
             value={formik.values[name]}
             onChange={(val) => formik.setFieldValue(name, val)}
+            onAddOption={(val) => formik.setFieldValue(`${name}-manual`, val)}
           />
           {!!formik.errors[name] && !!formik.touched[name] ? (
             <span className="text-red-500 mt-2">{formik.errors[name]}</span>
