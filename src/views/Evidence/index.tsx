@@ -29,11 +29,19 @@ import { useWorkingEvidence } from 'context/WorkingEvidence'
 import { pathRoute } from 'router/routes'
 import useToast from 'hooks/useToast'
 import { RegionInterface } from 'components/WaveSurferContext/types'
+import { UpdateData } from 'context/WorkingEvidence/types'
 
 interface EvidenceLocation {
   type: 'audio' | 'video' | 'image' | 'doc'
   from?: 'technique' | 'monitor'
 }
+
+const CLASSIFICATION_VALUES = [
+  'unclassified',
+  'discarded',
+  'not_relevant',
+  'relevant'
+]
 
 const Evidence = (): ReactElement => {
   const [regions, setRegions] = useState<RegionInterface[]>([])
@@ -69,6 +77,60 @@ const Evidence = (): ReactElement => {
         type: 'Danger'
       })
     }
+  }
+
+  const updateEvidenceClassification = async (
+    data: EventClassificationValues
+  ): Promise<void> => {
+    try {
+      const updateBody: UpdateData = {
+        classification: CLASSIFICATION_VALUES[data.classification] as any,
+        isTracked: data.follow
+      }
+
+      if (data['label-manual']) updateBody.customLabel = data.label
+      else updateBody.label = data.label
+
+      const saved =
+        (await workingEvidence.actions?.classifyEvidence(updateBody)) ?? false
+
+      if (saved) {
+        launchToast({
+          title: 'Evidencia clasificada correctamente',
+          type: 'Success'
+        })
+      } else {
+        launchToast({
+          title: 'No se pudo clasificar la evidencia',
+          type: 'Danger'
+        })
+      }
+    } catch {}
+
+    try {
+      const updatedRegions =
+        (await workingEvidence.actions?.updateRegions(
+          regions.map((region) => ({
+            id: region.id,
+            tag: region.name,
+            startTime: region.start,
+            endTime: region.end
+          }))
+        )) ?? false
+      if (updatedRegions) {
+        launchToast({
+          title: 'Sinopsis guardada correctamente',
+          type: 'Success'
+        })
+      } else {
+        launchToast({
+          title: 'No se pudieron actualizar las regiones',
+          type: 'Danger'
+        })
+      }
+    } catch {}
+
+    // TODO: Implementar logica de generación de transcripciones
   }
 
   const getRegions = async (): Promise<void> => {
@@ -235,7 +297,7 @@ const Evidence = (): ReactElement => {
         <Grid item xs={12} lg={3}>
           <EventInformation
             formikRef={formikRef}
-            onSubmit={(values) => console.log(values)}
+            onSubmit={updateEvidenceClassification}
             evidenceData={workingEvidence}
           />
         </Grid>
