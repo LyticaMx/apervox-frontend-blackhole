@@ -2,7 +2,14 @@ import Button from 'components/Button'
 import Grid from 'components/Grid'
 import ImageEditor from 'components/ImageEditor'
 import { FormikContextType } from 'formik'
-import { ReactElement, useEffect, useMemo, useRef, useState } from 'react'
+import {
+  ReactElement,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react'
 import EventInformation, {
   FormValues as EventClassificationValues
 } from './components/EventInformation'
@@ -30,11 +37,18 @@ import { pathRoute } from 'router/routes'
 import useToast from 'hooks/useToast'
 import { RegionInterface } from 'components/WaveSurferContext/types'
 import { UpdateData } from 'context/WorkingEvidence/types'
+import { TranscriptionRegion } from './components/TranscriptionRegion'
+import asRegion from 'components/WaveSurferContext/hoc/asRegion'
+import { DeleteRegionDialog } from './components/DeleteRegionDialog'
+
+// import TestAudio from 'assets/audio/0989123090_20220128_173052_2_000126.wav'
 
 interface EvidenceLocation {
   type: 'audio' | 'video' | 'image' | 'doc'
   from?: 'technique' | 'monitor'
 }
+
+type ResolveDeleteRegion = (value: boolean | PromiseLike<boolean>) => void
 
 const CLASSIFICATION_VALUES = [
   'unclassified',
@@ -44,7 +58,14 @@ const CLASSIFICATION_VALUES = [
 ]
 
 const Evidence = (): ReactElement => {
-  const [regions, setRegions] = useState<RegionInterface[]>([])
+  const [commonRegions, setCommonRegions] = useState<RegionInterface[]>([])
+  const [transcriptionRegions, setTranscriptionRegions] = useState<
+    RegionInterface[]
+  >([])
+  const [peek, setPeek] = useState<number[]>([]) // Es más facil descargar un state de 2 megas xD
+  const [resolveRegion, setResolveRegion] =
+    useState<ResolveDeleteRegion | null>(null)
+  const [currentTab, setCurrentTab] = useState('synopsis')
   const { formatMessage } = useIntl()
   const location = useLocation<EvidenceLocation>()
   const { localeI18n } = useLanguage()
@@ -53,6 +74,7 @@ const Evidence = (): ReactElement => {
   const history = useHistory()
   const workingEvidence = useWorkingEvidence()
   const { launchToast } = useToast()
+  const wavesurferRef = useRef<any>() // obtener el tipo del objeto
 
   const saveSynopsis = async (): Promise<void> => {
     try {
@@ -110,16 +132,16 @@ const Evidence = (): ReactElement => {
     try {
       const updatedRegions =
         (await workingEvidence.actions?.updateRegions(
-          regions.map((region) => ({
+          commonRegions.map((region) => ({
             id: region.id,
-            tag: region.name,
+            tag: region.data?.name ?? '',
             startTime: region.start,
             endTime: region.end
           }))
         )) ?? false
       if (updatedRegions) {
         launchToast({
-          title: 'Sinopsis guardada correctamente',
+          title: 'Regiones guardadas correctamente',
           type: 'Success'
         })
       } else {
@@ -133,19 +155,95 @@ const Evidence = (): ReactElement => {
     // TODO: Implementar logica de generación de transcripciones
   }
 
+  const getPeaks = async (): Promise<void> => {
+    try {
+      const peaks = (await workingEvidence.actions?.getAudioWave()) ?? []
+      setPeek(peaks)
+    } catch {}
+  }
+
   const getRegions = async (): Promise<void> => {
     try {
       const regions = (await workingEvidence.actions?.getRegions()) ?? []
-      setRegions(
-        regions.map((region) => ({
+      setCommonRegions(
+        regions.map<RegionInterface>((region) => ({
           id: region.id ?? '',
           start: region.startTime,
           end: region.endTime,
-          name: region.tag
+          data: { name: region.tag }
         }))
+      )
+    } catch {
+      setCommonRegions([])
+    }
+
+    try {
+      const regions =
+        (await workingEvidence.actions?.getTranscriptionSegments()) ?? []
+      setTranscriptionRegions(
+        // TODO: hacer un map antes de enviar al wavesurfer
+        regions.map<RegionInterface>((region) => {
+          return {
+            id: region.id ?? '',
+            start: region.startTime,
+            end: region.endTime,
+            data: { text: region.text }
+          }
+        })
+      )
+    } catch {
+      setTranscriptionRegions([])
+    }
+  }
+
+  const updateTranscription = async (): Promise<void> => {
+    try {
+      const regionsToUpdate = transcriptionRegions.map((region) => {
+        if (!region.id.startsWith('wavesurfer')) {
+          return {
+            id: region.id,
+            startTime: region.start,
+            endTime: region.end,
+            text: region.data?.text ?? ''
+          }
+        }
+
+        return {
+          startTime: region.start,
+          endTime: region.end,
+          text: region.data?.text ?? ''
+        }
+      })
+
+      const updated =
+        (await workingEvidence.actions?.updateTranscriptionSegments(
+          regionsToUpdate
+        )) ?? []
+
+      setTranscriptionRegions(
+        updated.map<RegionInterface>((region) => {
+          return {
+            id: region.id ?? '',
+            start: region.startTime,
+            end: region.endTime,
+            data: { text: region.text }
+          }
+        })
       )
     } catch {}
   }
+
+  const regions = useMemo(
+    () =>
+      currentTab === 'transcription'
+        ? transcriptionRegions.map((region) =>
+            Object.assign({}, region, {
+              data: { id: region.id ?? '' }
+            })
+          )
+        : commonRegions,
+    [currentTab]
+  )
 
   useEffect(() => {
     if (!workingEvidence.id) {
@@ -155,12 +253,147 @@ const Evidence = (): ReactElement => {
       return
     }
     workingEvidence.actions?.getData()
+    getPeaks()
   }, [workingEvidence.id])
 
   useEffect(() => {
     if (location.state.type !== 'audio') return
     getRegions()
   }, [location.state.type])
+
+  const handleChangeTab = (newTab: string): void => {
+    setCurrentTab((actualTab) => {
+      if (actualTab !== newTab) {
+        const regions = wavesurferRef.current.regions.map((region) => {
+          const savedRegion: RegionInterface = {
+            id: region.id,
+            start: region.start,
+            end: region.end
+          }
+
+          if (region.data?.name) {
+            savedRegion.data = { name: region?.data?.name }
+          } else if (region.data?.id) {
+            savedRegion.data = {
+              // buscar como reducir el find
+              text: transcriptionRegions.find((item) => item.id === region.id)
+                ?.data?.text
+            }
+          }
+
+          return savedRegion
+        })
+        if (actualTab === 'transcription') {
+          setTranscriptionRegions(regions)
+        } else {
+          setCommonRegions(regions)
+        }
+      }
+      return newTab
+    })
+  }
+
+  // TODO: Agregar dependencias de acciones de transcripción
+  const handleTranscript = useCallback(
+    async (
+      regionId: string,
+      start: number,
+      end: number
+    ): Promise<string | null> => {
+      if (regionId.startsWith('wavesurfer')) {
+        const updated =
+          (await workingEvidence.actions?.updateTranscriptionSegments([
+            {
+              text: '',
+              startTime: start,
+              endTime: end
+            }
+          ])) ?? []
+        if (updated.length > 0) {
+          const actualRegions = transcriptionRegions.map((item) => item.id)
+          const last = updated.find(
+            (region) => !actualRegions.includes(region.id ?? '')
+          )
+          if (!last) return null
+          setTranscriptionRegions(
+            transcriptionRegions
+              .concat([
+                {
+                  id: last.id ?? '',
+                  start: last.startTime,
+                  end: last.endTime,
+                  data: { text: '' }
+                }
+              ])
+              .sort((a, b) => a.start - b.start)
+          )
+          return last.id ?? regionId
+        }
+      } else {
+        // Se manda a generar transcripción automática de actualización
+        setTranscriptionRegions(
+          transcriptionRegions
+            .map((region) =>
+              region.id === regionId ? { ...region, start, end } : region
+            )
+            .sort((a, b) => a.start - b.start)
+        )
+        console.log('Actualizar region desde back') // TODO: Transcripciones automáticas
+      }
+
+      return regionId
+    },
+    [transcriptionRegions]
+  )
+
+  const deleteTranscript = useCallback(
+    async (regionId: string) => {
+      try {
+        let deleted = true
+        if (!regionId.startsWith('wavesurfer')) {
+          const canBeDeleted = await new Promise<boolean>((resolve) => {
+            setResolveRegion(() => resolve)
+          })
+          if (canBeDeleted) {
+            deleted =
+              (await workingEvidence.actions?.deleteTranscriptionSegment(
+                regionId
+              )) ?? false
+          } else deleted = false
+        }
+        if (deleted) {
+          setTranscriptionRegions(
+            transcriptionRegions.filter((region) => region.id !== regionId)
+          )
+        }
+
+        return deleted
+      } catch {
+        return false
+      }
+    },
+    [transcriptionRegions]
+  )
+
+  const handleChangeSegment = (id: string, value: string): void => {
+    setTranscriptionRegions((regions) =>
+      regions.map((region) =>
+        region.id === id ? { ...region, data: { text: value } } : region
+      )
+    )
+  }
+
+  const CustomRegion = useMemo(
+    () =>
+      asRegion((props) => (
+        <TranscriptionRegion
+          {...props}
+          transcript={handleTranscript}
+          deleteTranscript={deleteTranscript}
+        />
+      )),
+    [handleTranscript, deleteTranscript]
+  )
 
   const toolTabs = useMemo<NonEmptyArray<ToolTab>>(() => {
     const tabs: NonEmptyArray<ToolTab> = [
@@ -185,8 +418,14 @@ const Evidence = (): ReactElement => {
 
     if (location.state.type === 'audio' || location.state.type === 'video') {
       tabs.splice(1, 0, {
-        id: 'transcripcion',
-        component: <TranscriptionTab />,
+        id: 'transcription',
+        component: (
+          <TranscriptionTab
+            onSave={updateTranscription}
+            transcriptionSegments={transcriptionRegions}
+            onChangeSegment={handleChangeSegment}
+          />
+        ),
         name: 'Transcripción'
       })
     }
@@ -216,7 +455,12 @@ const Evidence = (): ReactElement => {
     }
 
     return tabs
-  }, [localeI18n, location.state.type, workingEvidence.id])
+  }, [
+    localeI18n,
+    location.state.type,
+    workingEvidence.id,
+    transcriptionRegions
+  ])
 
   return (
     <div>
@@ -234,8 +478,22 @@ const Evidence = (): ReactElement => {
             )}`}
           </Typography>
         </div>
+        <DeleteRegionDialog
+          open={Boolean(resolveRegion)}
+          onAccept={() => {
+            resolveRegion?.(true)
+            setResolveRegion(null)
+          }}
+          onClose={() => {
+            resolveRegion?.(false)
+            setResolveRegion(null)
+          }}
+        />
         <div className="flex gap-3 items-center">
-          <button className="p-1 w-8 h-8 bg-white shadow-md border rounded-md text-secondary-gray hover:enabled:text-secondary">
+          <button
+            className="p-1 w-8 h-8 bg-white shadow-md border rounded-md text-secondary-gray hover:enabled:text-secondary"
+            onClick={() => history.replace(pathRoute.technique)}
+          >
             <BsSkipStart className="h-6 w-6" />
           </button>
           <button className="p-1 w-8 h-8 bg-white shadow-md border rounded-md text-secondary-gray hover:enabled:text-secondary">
@@ -266,18 +524,24 @@ const Evidence = (): ReactElement => {
                 plugins={['Regions', 'Timeline', 'Minimap']}
                 audio={{
                   url: workingEvidence.actions?.getAudioUrl() ?? '',
-                  peek: workingEvidence.actions?.getAudioWave()
+                  peek
                 }}
                 onDownload={async () => {
                   console.log('hola')
                 }}
                 regions={regions}
+                CustomRegion={
+                  currentTab === 'transcription' ? CustomRegion : undefined
+                }
                 splitChannels
                 showEqualizer
                 showMinimap
                 showWave
                 showTimeline
                 showZoom
+                wsRef={(ws) => {
+                  wavesurferRef.current = ws
+                }}
               />
             )}
           </div>
@@ -290,7 +554,11 @@ const Evidence = (): ReactElement => {
               {formatMessage(messages.evidenceWorkingTools)}
             </Typography>
             <div className="mt-2">
-              <ToolTabs tabs={toolTabs} />
+              <ToolTabs
+                tabs={toolTabs}
+                current={currentTab}
+                onChangeTab={handleChangeTab}
+              />
             </div>
           </div>
         </Grid>

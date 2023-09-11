@@ -48,10 +48,10 @@ export interface WorkingEvidenceActions {
   updateFollow: () => Promise<boolean>
   updateSynopsis: (synopsis: string) => Promise<boolean>
   getAudioUrl: () => string
-  getAudioWave: () => Promise<number[] | undefined>
+  getAudioWave: () => Promise<number[]>
   updateTranscriptionSegments: (
     segments: TranscriptionSegment[]
-  ) => Promise<boolean>
+  ) => Promise<TranscriptionSegment[]>
   deleteTranscriptionSegment: (id: string) => Promise<boolean>
   getTranscriptionSegments: () => Promise<TranscriptionSegment[]>
   getRegions: () => Promise<Region[]>

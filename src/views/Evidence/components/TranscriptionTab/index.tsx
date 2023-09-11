@@ -2,87 +2,48 @@ import { ArrowDownTrayIcon } from '@heroicons/react/24/outline'
 import Button from 'components/Button'
 import Table from 'components/Table'
 import Typography from 'components/Typography'
-import { generalMessages, platformMessages } from 'globalMessages'
+import { platformMessages } from 'globalMessages'
 import useTableColumns from 'hooks/useTableColumns'
-import { ChangeEvent, ReactElement, useState } from 'react'
+import { ChangeEvent, ReactElement } from 'react'
 import { useIntl } from 'react-intl'
 import { secondsToString } from 'utils/timeToString'
 import { transcriptionTabMessages } from 'views/Evidence/messages'
 import DialogEditor from './DialogEditor'
+import { RegionInterface } from 'components/WaveSurferContext/types'
 
-export interface TranscriptionSegment {
-  interval: number
-  speaker: string
-  dialog: string
+interface Props {
+  transcriptionSegments: RegionInterface[]
+  onChangeSegment: (id: string, value: string) => void
+  onSave: () => Promise<void>
 }
 
-const TranscriptionTab = (): ReactElement => {
+const TranscriptionTab = (props: Props): ReactElement => {
+  const { onChangeSegment, onSave, transcriptionSegments } = props
   const { formatMessage } = useIntl()
-  const [segments, setSegments] = useState<TranscriptionSegment[]>([
-    {
-      interval: 0,
-      speaker: 'Hablante 1',
-      dialog:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras odio enim, vestibulum sed auctor eget, pellentesque fermentum justo. Integer at leo rhoncus, pharetra est mollis, dapibus elit. Praesent venenatis sit amet lacus non iaculis. Etiam sed luctus lorem. Quisque non sem lorem. Morbi ultricies dictum.'
-    },
-    {
-      interval: 90,
-      speaker: 'Hablante 2',
-      dialog:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras odio enim, vestibulum sed auctor eget, pellentesque fermentum justo. Integer at leo rhoncus, pharetra est mollis, dapibus elit.'
-    },
-    {
-      interval: 120,
-      speaker: 'Hablante 1',
-      dialog:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras odio enim, vestibulum sed auctor eget, pellentesque fermentum justo. Integer at leo rhoncus, pharetra est mollis, dapibus elit. Praesent venenatis sit amet lacus non iaculis. Etiam sed luctus lorem. Quisque non sem lorem. Morbi ultricies dictum.'
-    },
-    {
-      interval: 190,
-      speaker: 'Hablante 2',
-      dialog:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras odio enim, vestibulum sed auctor eget, pellentesque fermentum justo. Integer at leo rhoncus, pharetra est mollis, dapibus elit.'
-    },
-    {
-      interval: 220,
-      speaker: 'Hablante 1',
-      dialog:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras odio enim, vestibulum sed auctor eget, pellentesque fermentum justo. Integer at leo rhoncus, pharetra est mollis, dapibus elit. Praesent venenatis sit amet lacus non iaculis. Etiam sed luctus lorem. Quisque non sem lorem. Morbi ultricies dictum.'
-    }
-  ])
-
   const handleSegmentChange = (
     event: ChangeEvent<HTMLTextAreaElement>
   ): void => {
     const { name, value } = event.target
-    const [interval, speaker] = name.split('-')
-    setSegments(
-      segments.map((segment) => {
-        if (segment.interval !== +interval || segment.speaker !== speaker) {
-          return segment
-        }
-        return {
-          ...segment,
-          dialog: value
-        }
-      })
-    )
+    onChangeSegment(name, value)
   }
 
-  const columns = useTableColumns<TranscriptionSegment>(() => [
+  const columns = useTableColumns<RegionInterface>(() => [
     {
-      accessorKey: 'interval',
+      id: 'interval',
       header: () => (
         <span className="uppercase text-primary">
           {formatMessage(platformMessages.interval)}
         </span>
       ),
-      cell: ({ getValue }) => (
+      cell: ({ row }) => (
         <span className="font-medium">
-          {secondsToString(getValue<number>())}
+          {`${secondsToString(row.original.start)} - ${secondsToString(
+            row.original.end
+          )}`}
         </span>
       )
     },
+    /*
     {
       accessorKey: 'speaker',
       header: () => (
@@ -92,6 +53,7 @@ const TranscriptionTab = (): ReactElement => {
       ),
       cell: ({ getValue }) => `${getValue<string>()}:`
     },
+    */
     {
       accessorKey: 'dialog',
       header: () => (
@@ -125,7 +87,7 @@ const TranscriptionTab = (): ReactElement => {
           <button className="text-secondary-gray hover:enabled:text-secondary border shadow-md p-2 rounded-md">
             <ArrowDownTrayIcon className="w-5 h-5" />
           </button>
-          <Button color="primary" variant="contained">
+          <Button color="primary" variant="contained" onClick={onSave}>
             {formatMessage(transcriptionTabMessages.saveTranscription)}
           </Button>
         </div>
@@ -133,7 +95,7 @@ const TranscriptionTab = (): ReactElement => {
       <div className="mt-3">
         <Table
           columns={columns}
-          data={segments}
+          data={transcriptionSegments}
           rowConfig={{ paddingSize: 'sm' }}
         />
       </div>

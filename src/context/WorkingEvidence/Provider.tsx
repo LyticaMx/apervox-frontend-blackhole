@@ -9,6 +9,7 @@ import {
 } from './types'
 import { WorkingEvidenceContext, initialState } from './context'
 import { useService } from 'hooks/useApi'
+import { useAuth } from 'context/Auth'
 
 interface Props {
   children: ReactNode
@@ -17,6 +18,7 @@ interface Props {
 const WorkingEvidenceProvider = (props: Props): ReactElement => {
   const { children } = props
   const [workingEvidence, setWorkingEvidence] = useState(initialState)
+  const { auth } = useAuth()
   const evidenceService = useService('call-evidences')
 
   const setEvidence = (id?: string): void => {
@@ -92,18 +94,20 @@ const WorkingEvidenceProvider = (props: Props): ReactElement => {
   }
 
   const getAudioUrl = (): string =>
-    `${process.env.REACT_APP_MAIN_BACKEND_URL}/call-evidences/${
+    `${process.env.REACT_APP_MAIN_BACKEND_URL}call-evidences/${
       workingEvidence.id ?? 0
-    }/stream`
+    }/stream?token=${auth.token}`
 
-  const getAudioWave = async (): Promise<number[] | undefined> => {
+  const getAudioWave = async (): Promise<number[]> => {
     try {
-      if (!workingEvidence.id) return
+      if (!workingEvidence.id) return []
       const response = await evidenceService.get({
         queryString: `${workingEvidence.id}/waveform`
       })
-      return response.data
-    } catch {}
+      return response?.data ?? []
+    } catch {
+      return []
+    }
   }
 
   const updateFollow = async (): Promise<boolean> => {
@@ -152,7 +156,7 @@ const WorkingEvidenceProvider = (props: Props): ReactElement => {
         queryString: `${workingEvidence.id}/transcriptions`
       })
 
-      return (response.data as any[]).map((item) => ({
+      return ((response.data?.segments as any[]) ?? []).map((item) => ({
         id: item.id,
         text: item.content,
         startTime: item.start_time,
@@ -165,11 +169,11 @@ const WorkingEvidenceProvider = (props: Props): ReactElement => {
 
   const updateTranscriptionSegments = async (
     segments: TranscriptionSegment[]
-  ): Promise<boolean> => {
+  ): Promise<TranscriptionSegment[]> => {
     try {
-      if (!workingEvidence.id) return false
+      if (!workingEvidence.id) return []
 
-      await evidenceService.get({
+      const response = await evidenceService.put({
         queryString: `${workingEvidence.id}/transcriptions`,
         body: segments.map((item) => ({
           id: item.id,
@@ -179,9 +183,14 @@ const WorkingEvidenceProvider = (props: Props): ReactElement => {
         }))
       })
 
-      return true
+      return (response.data.segments ?? []).map((segment) => ({
+        id: segment.id,
+        text: segment.content,
+        startTime: segment.start_time,
+        endTime: segment.end_time
+      }))
     } catch {
-      return false
+      return []
     }
   }
 
