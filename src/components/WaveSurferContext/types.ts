@@ -12,7 +12,9 @@ export interface RegionInterface {
   partialStart?: number // revisar si estos son necesarios
   end: number
   partialEnd?: number // revisar si estos son necesarios
-  name: string // Revisar como se llama esta cosa
+  data?: {
+    [x: string]: any // Revisar como se llama esta cosa
+  }
 }
 
 export interface WsProps {

@@ -132,5 +132,13 @@ export const transcriptionTabMessages = defineMessages({
   saveTranscription: {
     id: 'views.Evidence.TranscriptionTab.saveTranscription',
     defaultMessage: 'Guardar transcripción'
+  },
+  deleteTranscriptionRegion: {
+    id: 'views.Evidence.TranscriptionTab.deleteRegion',
+    defaultMessage: 'Eliminar segmento'
+  },
+  deleteTranscriptionRegionQuestion: {
+    id: 'views.Evidence.TranscriptionTab.deleteRegionQuestion',
+    defaultMessage: '¿Se eliminará el segmento y su transcripción, está seguro?'
   }
 })

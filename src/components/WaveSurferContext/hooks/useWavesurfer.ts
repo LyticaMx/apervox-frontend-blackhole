@@ -29,6 +29,7 @@ const useWavesurfer = ({
     const ws = createWavesurfer({
       container,
       height: 150,
+      backend: 'MediaElementWebAudio', //* Necesito esto para el streaming
       splitChannelsOptions: {
         overlay: false,
         filterChannels: [],
@@ -48,7 +49,12 @@ const useWavesurfer = ({
     })
 
     if (audio) {
-      ws.load(audio.url, audio.peek, audio.preload)
+      //* Debemos mandar un media element para mantener el streaming
+      const webAudio = new Audio(audio.url)
+
+      webAudio.crossOrigin = 'anonymous'
+
+      ws.load(webAudio, audio.peek, audio.preload)
     }
 
     onMount?.(ws)
@@ -58,7 +64,7 @@ const useWavesurfer = ({
     return () => {
       ws.destroy()
     }
-  }, [container])
+  }, [container, audio?.url, audio?.peek])
 
   useEffect(() => {
     if (wavesurfer) {

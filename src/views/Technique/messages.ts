@@ -193,7 +193,7 @@ export const targetMetaFormMessages = defineMessages({
     defaultMessage: 'Eliminar formulario'
   },
   aboutToDeleteBody: {
-    id: 'views.techniques.TargetMetaForm.aboutToDelete',
+    id: 'views.techniques.TargetMetaForm.aboutToDeleteBody',
     defaultMessage:
       'El formulario que estás intentando eliminar ya está registrado en la base de datos. ¿Estás seguro de que deseas continuar?'
   },

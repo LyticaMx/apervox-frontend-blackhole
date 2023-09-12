@@ -89,7 +89,7 @@ export const tableMessages = defineMessages({
     defaultMessage: 'Con transcripción'
   },
   withoutTranscription: {
-    id: 'views.callsHistory.table.withTranscription',
+    id: 'views.callsHistory.table.withoutTranscription',
     defaultMessage: 'Sin transcripción'
   },
   both: {

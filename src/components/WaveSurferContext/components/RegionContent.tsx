@@ -31,6 +31,7 @@ const RegionContent = (props: Props): ReactElement => {
   const [show, setShow] = useState(false)
   const [name, setName] = useState<string>('')
   const [editing, setEditing] = useState<boolean>(false)
+  const [showTooltip, setShowTooltip] = useState(false)
   const { controls } = useWavesurferContext()
   const { formatMessage } = useIntl()
 
@@ -123,6 +124,8 @@ const RegionContent = (props: Props): ReactElement => {
         width < 36 ? 'p-0' : 'p-2'
       )}
       ref={$wraper}
+      onMouseEnter={() => setShowTooltip(true)}
+      onMouseLeave={() => setShowTooltip(false)}
       onClick={() => setShow(false)}
     >
       <div ref={$menu}>
@@ -224,6 +227,11 @@ const RegionContent = (props: Props): ReactElement => {
           </div>
         </Float>
       </div>
+      {showTooltip && (
+        <span className={clsx('break-words')}>
+          {(props.region.data?.name as string) ?? ''}
+        </span>
+      )}
     </div>
   )
 }
