@@ -16,6 +16,13 @@ import { Evidence } from 'context/Evidences/types'
 import { generalMessages, platformMessages } from 'globalMessages'
 import { useTechnique } from 'context/Technique'
 import { secondsToString } from 'utils/timeToString'
+import { useEvidenceSocket } from 'context/EvidenceSocket'
+import {
+  ReleaseEvidence,
+  TrackingEvidenceEvent,
+  WorkingEvidence
+} from 'types/evidence'
+import useToast from 'hooks/useToast'
 
 interface Props {
   onSelectItem?: (rowSelected: Evidence) => void
@@ -33,6 +40,34 @@ const EvidenceList = ({ onSelectItem }: Props): ReactElement => {
   const getGlobalMessage = useGlobalMessage()
   const { target } = useTechnique()
   const { data, pagination, actions: evidencesActions } = useEvidences()
+  const socket = useEvidenceSocket()
+  const toast = useToast()
+
+  useEffect(() => {
+    const working = (data: WorkingEvidence): void => {
+      evidencesActions?.updateEvidence(data.id)
+    }
+    const release = (data: ReleaseEvidence): void => {
+      evidencesActions?.updateEvidence(data.id)
+    }
+    const tracking = (data: TrackingEvidenceEvent): void => {
+      evidencesActions?.updateFollow(data.id, data.is_tracked)
+    }
+
+    if (socket) {
+      socket.on('working_evidence', working)
+      socket.on('release_evidence', release)
+      socket.on('tracking_change', tracking)
+    }
+
+    return () => {
+      if (socket) {
+        socket.off('working_evidence', working)
+        socket.off('release_evidence', release)
+        socket.off('tracking_change', tracking)
+      }
+    }
+  }, [socket, evidencesActions])
 
   useEffect(() => {
     evidencesActions?.getData({ page: 1 }, !target?.id)
@@ -102,8 +137,10 @@ const EvidenceList = ({ onSelectItem }: Props): ReactElement => {
       enableSorting: false
     },
     {
-      accessorKey: 'auditedBy',
-      header: formatMessage(evidenceListMessages.auditedBy).toUpperCase()
+      id: 'auditedBy',
+      header: formatMessage(evidenceListMessages.auditedBy).toUpperCase(),
+      cell: ({ row }) =>
+        row.original.workingBy ? row.original.workingBy : row.original.auditedBy
     },
     {
       accessorKey: 'isTracked',
@@ -134,7 +171,16 @@ const EvidenceList = ({ onSelectItem }: Props): ReactElement => {
               value={getValue<boolean>()}
               size="sm"
               stopPropagation
-              onChange={() => {}}
+              onChange={async () => {
+                const updated = await evidencesActions?.toggleFollow(id)
+                if (updated) {
+                  toast.success('Seguimiento actualizado correctamente')
+                } else {
+                  toast.danger(
+                    'No se pudo actualizar el seguimiento de la evidencia'
+                  )
+                }
+              }}
             />
             <Label id={`switch-${id}`} labelClassname="mb-0">
               {trackedBy}
@@ -172,14 +218,17 @@ const EvidenceList = ({ onSelectItem }: Props): ReactElement => {
     {
       accessorKey: 'relevance',
       header: formatMessage(evidenceListMessages.clasification).toUpperCase(),
-      cell: ({ getValue }) => {
+      cell: ({ getValue, row }) => {
         const relevance = getValue<string>()
 
-        if (!relevance) return null
+        if (!relevance) return ''
+
         const formatted = classifications[relevance] ?? {
           stars: 0,
           label: platformMessages.unseen
         }
+
+        if (row.original.workingBy) formatted.label = platformMessages.workingOn
 
         return (
           <div className="flex items-center">

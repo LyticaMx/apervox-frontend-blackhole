@@ -40,8 +40,8 @@ import { UpdateData } from 'context/WorkingEvidence/types'
 import { TranscriptionRegion } from './components/TranscriptionRegion'
 import asRegion from 'components/WaveSurferContext/hoc/asRegion'
 import { DeleteRegionDialog } from './components/DeleteRegionDialog'
-
-// import TestAudio from 'assets/audio/0989123090_20220128_173052_2_000126.wav'
+import { useTechnique } from 'context/Technique'
+import { useLockEvidence } from './hooks/useLockEvidence'
 
 interface EvidenceLocation {
   type: 'audio' | 'video' | 'image' | 'doc'
@@ -73,8 +73,14 @@ const Evidence = (): ReactElement => {
   const synopsisRef = useRef<Editor>(null)
   const history = useHistory()
   const workingEvidence = useWorkingEvidence()
+  const { techniqueId } = useTechnique()
   const { launchToast } = useToast()
   const wavesurferRef = useRef<any>() // obtener el tipo del objeto
+  const canWork = useLockEvidence(
+    workingEvidence.id ?? '',
+    location.state.from ?? 'monitor',
+    techniqueId
+  )
 
   const saveSynopsis = async (): Promise<void> => {
     try {
@@ -246,6 +252,7 @@ const Evidence = (): ReactElement => {
   )
 
   useEffect(() => {
+    if (!canWork) return
     if (!workingEvidence.id) {
       if (location.state.from === 'technique') {
         history.push(pathRoute.technique)
@@ -254,12 +261,13 @@ const Evidence = (): ReactElement => {
     }
     workingEvidence.actions?.getData()
     getPeaks()
-  }, [workingEvidence.id])
+  }, [workingEvidence.id, canWork])
 
   useEffect(() => {
+    if (!canWork) return
     if (location.state.type !== 'audio') return
     getRegions()
-  }, [location.state.type])
+  }, [location.state.type, canWork])
 
   const handleChangeTab = (newTab: string): void => {
     setCurrentTab((actualTab) => {

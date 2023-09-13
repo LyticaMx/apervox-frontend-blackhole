@@ -11,6 +11,7 @@ import { SearchParams } from 'types/api'
 import { DateFilter } from 'types/filters'
 import { Params } from 'utils/ParamsBuilder'
 import { actions } from './constants'
+import mutexify from 'mutexify/promise'
 
 const orderByMapper = {
   evidenceNumber: 'evidence_number',
@@ -23,8 +24,10 @@ const orderByMapper = {
   workingBy: 'working_by.username'
 }
 
+const lock = mutexify()
+
 export const useActions = (state: EvidenceState, dispatch): EvidenceActions => {
-  const { pagination, dateFilter, searchFilter, staticFilter } = state
+  const { pagination, dateFilter, searchFilter, staticFilter, data } = state
 
   // Buscar una manera de vincular esto
   const { technique, target } = useTechnique()
@@ -38,6 +41,10 @@ export const useActions = (state: EvidenceState, dispatch): EvidenceActions => {
     endpoint: 'targets',
     method: 'get'
   })
+
+  const getEvidence = useApi({ endpoint: 'call-evidences', method: 'get' })
+
+  const _updateFollow = useApi({ endpoint: 'call-evidences', method: 'put' })
 
   const getData = async (
     params?: EvidencePaginationParams &
@@ -139,5 +146,66 @@ export const useActions = (state: EvidenceState, dispatch): EvidenceActions => {
     } catch {}
   }
 
-  return { getData }
+  const updateEvidence = async (id: string): Promise<void> => {
+    const release = await lock()
+    try {
+      const canBeUpdated = data.some((ev) => ev.id === id)
+
+      if (!canBeUpdated) return
+
+      try {
+        const response = await getEvidence({ queryString: id })
+        dispatch(
+          actions.setData(
+            data.map((ev) =>
+              ev.id === id
+                ? {
+                    id: response.data.id,
+                    evidenceNumber: response.data.evidence_number,
+                    targetPhone: response.data.target_phone,
+                    sourceNumber: response.data.source_number,
+                    callStartDate: response.data.call_start_date,
+                    callEndDate: response.data.call_end_date,
+                    duration: response.data.duration,
+                    carrier: response.data.carrier,
+                    technique: response.data.technique?.name ?? '',
+                    auditedBy: response.data.audited_by?.username ?? '',
+                    isTracked: response.data.is_tracked,
+                    trackedBy: response.data.tracked_by?.username ?? '',
+                    workingBy: response.data.working_by?.username ?? '',
+                    relevance: response.data.relevance,
+                    hasTranscription: response.data.hasTranscription
+                  }
+                : ev
+            )
+          )
+        )
+      } catch {}
+    } catch {
+    } finally {
+      release()
+    }
+  }
+
+  const updateFollow = (id: string, status: boolean = false): void => {
+    dispatch(
+      actions.setData(
+        data.map((item) =>
+          item.id === id ? { ...item, isTracked: status } : item
+        )
+      )
+    )
+  }
+
+  const toggleFollow = async (id: string): Promise<boolean> => {
+    try {
+      await _updateFollow({ queryString: `${id}/tracking` })
+
+      return true
+    } catch {
+      return false
+    }
+  }
+
+  return { getData, updateEvidence, updateFollow, toggleFollow }
 }

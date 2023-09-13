@@ -9,7 +9,6 @@ import { getItem } from 'utils/persistentStorage'
 
 const Navigator = (): ReactElement => {
   const { auth, actions: authActions } = useAuth()
-
   const { socket, isSocketConnected } = useSocket({
     namespace: 'sessions',
     query: {
@@ -20,14 +19,17 @@ const Navigator = (): ReactElement => {
   useEffect(() => {
     if (!isSocketConnected) return
     if (!auth.profile.id) return
-    socket?.on('close_session', (data) => {
+
+    const closeSession = (data): void => {
       const ids: string[] = data.ids
       const logout = ids.some((id) => auth.profile.id === id)
       if (logout) authActions?.killSession(true)
-    })
+    }
+
+    socket?.on('close_session', closeSession)
 
     return () => {
-      socket?.off('close_session')
+      socket?.off('close_session', closeSession)
     }
   }, [isSocketConnected, auth.profile.id])
 

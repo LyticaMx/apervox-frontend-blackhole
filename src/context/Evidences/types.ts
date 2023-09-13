@@ -67,6 +67,9 @@ export interface EvidenceActions {
       StaticFilter,
     getTotal?: boolean
   ) => Promise<void>
+  updateEvidence: (id: string) => Promise<void>
+  updateFollow: (id: string, status: boolean) => void
+  toggleFollow: (id: string) => Promise<boolean>
 }
 
 export interface ContextType extends EvidenceState {
