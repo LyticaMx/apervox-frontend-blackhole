@@ -30,6 +30,7 @@ export const messages = defineMessages({
     id: 'views.Audit.workgroups',
     defaultMessage: 'Grupos de trabajo'
   },
+
   acquisitionMedium: {
     id: 'views.Audit.acquisitionMedium',
     defaultMessage: 'Medios de adquisición'
@@ -37,6 +38,29 @@ export const messages = defineMessages({
   created: {
     id: 'views.Audit.UserDrawer.created',
     defaultMessage: 'Creado: {date}'
+  }
+})
+
+export const auditableModules = defineMessages({
+  me: { id: 'views.Audit.AuditableModules.me', defaultMessage: 'Mi cuenta' },
+  techniques: {
+    id: 'views.Audit.AuditableModules.techniques',
+    defaultMessage: 'Técnicas'
+  },
+  users: {
+    id: 'views.Audit.AuditableModules.users',
+    defaultMessage: 'Usuarios'
+  }
+})
+
+export const auditableActions = defineMessages({
+  get_in: {
+    id: 'views.Audit.AuditableActions.get_in',
+    defaultMessage: 'Visitó el módulo'
+  },
+  view: {
+    id: 'views.Audit.AuditableActions.view',
+    defaultMessage: 'Revisó los detalles'
   }
 })
 

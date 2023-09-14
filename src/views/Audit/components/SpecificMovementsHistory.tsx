@@ -8,7 +8,8 @@ import { generalMessages } from 'globalMessages'
 import useTableColumns from 'hooks/useTableColumns'
 import { ReactElement, useMemo, useState } from 'react'
 import { useIntl } from 'react-intl'
-import { AuditInterface, Target, User } from '..'
+import { Target, User } from '..'
+import { Audit as AuditInterface } from 'context/Audit/ModuleAudits/types'
 import { messages } from '../messages'
 
 interface Props {
@@ -32,11 +33,6 @@ const SpecificMovementsHistory = (props: Props): ReactElement | null => {
 
   const columns = useTableColumns<AuditInterface>(
     () => [
-      {
-        accessorKey: 'id',
-        header: 'ID',
-        enableSorting: false
-      },
       {
         accessorKey: 'user',
         header: formatMessage(generalMessages.user),
@@ -89,6 +85,7 @@ const SpecificMovementsHistory = (props: Props): ReactElement | null => {
           }
         }
       },
+      /*
       {
         // TODO: Normalizar este
         accessorKey: 'module',
@@ -126,14 +123,15 @@ const SpecificMovementsHistory = (props: Props): ReactElement | null => {
             }
           : {})
       },
+      */
       {
-        accessorKey: 'date',
+        accessorKey: 'createdAt',
         header: formatMessage(generalMessages.date),
         cell: ({ getValue }) =>
           format(new Date(getValue<string>()), 'dd/MM/yyyy')
       },
       {
-        accessorKey: 'date',
+        accessorKey: 'createdAt',
         header: formatMessage(generalMessages.hour),
         cell: ({ getValue }) => format(new Date(getValue<string>()), 'hh:mm')
       }
@@ -199,56 +197,7 @@ const SpecificMovementsHistory = (props: Props): ReactElement | null => {
       </div>
       <Table
         columns={columns}
-        data={[
-          {
-            id: '001',
-            date: '2023-02-14T18:58:02.626Z',
-            description: 'Cambio de nombre de rol Auditoria',
-            module: 'Usuarios',
-            user: 'PUno',
-            target: {
-              id: '001',
-              name: '',
-              type: 'group'
-            }
-          },
-          {
-            id: '002',
-            date: '2023-02-14T18:58:02.626Z',
-            description: 'Cambio de nombre de rol Auditoria',
-            module: 'Usuarios',
-            user: 'PUno',
-            target: {
-              id: '001',
-              name: '',
-              type: 'group'
-            }
-          },
-          {
-            id: '003',
-            date: '2023-02-14T18:58:02.626Z',
-            description: 'Cambio de nombre de rol Auditoria',
-            module: 'Usuarios',
-            user: 'PUno',
-            target: {
-              id: '001',
-              name: '',
-              type: 'group'
-            }
-          },
-          {
-            id: '004',
-            date: '2023-02-14T18:58:02.626Z',
-            description: 'Cambio de nombre de rol Auditoria',
-            module: 'Usuarios',
-            user: 'PUno',
-            target: {
-              id: '001',
-              name: '',
-              type: 'group'
-            }
-          }
-        ]}
+        data={[]}
         manualSorting={{
           onSortingChange: setSortingState,
           sorting: sortingState
