@@ -11,6 +11,7 @@ import GeneralMediaList from './GeneralMediaList'
 import CompanyDrawer from './CompanyDrawer'
 import { useCarriers } from 'context/Carriers'
 import { formatTotal } from 'utils/formatTotal'
+import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
 
 interface FormValues {
   id?: string
@@ -21,12 +22,13 @@ const CarrierTab = (): ReactElement => {
   const { data, total, dateFilter, searchFilter, actions } = useCarriers()
   const { actions: drawerActions } = useDrawer()
   const { formatMessage } = useIntl()
-
+  const { actions: auditActions } = useModuleAudits()
   const [openDeleteCarrier, setOpenDeleteCarrier] = useState(false)
   const [deleteIds, setDeleteIds] = useState<string[]>([])
 
   useEffect(() => {
     actions?.getData({}, true)
+    auditActions?.genAudit(ModuleAuditsTypes.AuditableModules.CARRIERS)
   }, [])
 
   const handleDelete = async (): Promise<void> => {

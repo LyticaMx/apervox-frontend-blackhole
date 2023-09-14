@@ -50,6 +50,34 @@ export const auditableModules = defineMessages({
   users: {
     id: 'views.Audit.AuditableModules.users',
     defaultMessage: 'Usuarios'
+  },
+  overflow_lines: {
+    id: 'views.Audit.AuditableModules.overflow_lines',
+    defaultMessage: 'Medios de adquisición'
+  },
+  verification_lines: {
+    id: 'views.Audit.AuditableModules.verification_lines',
+    defaultMessage: 'Líneas de verificación'
+  },
+  targets: {
+    id: 'views.Audit.AuditableModules.targets',
+    defaultMessage: 'Objetivos'
+  },
+  settings: {
+    id: 'views.Audit.AuditableModules.settings',
+    defaultMessage: 'Configuración'
+  },
+  acquisition_mediums: {
+    id: 'views.Audit.AuditableModules.acquisition_mediums',
+    defaultMessage: 'Medios'
+  },
+  devices: {
+    id: 'views.Audit.AuditableModules.devices',
+    defaultMessage: 'Equipos'
+  },
+  carriers: {
+    id: 'views.Audit.AuditableModules.carriers',
+    defaultMessage: 'Compañías telefónicas'
   }
 })
 

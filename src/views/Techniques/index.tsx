@@ -14,15 +14,18 @@ import { techniquesMessages } from './messages'
 import CreateTechniqueDrawer from './components/CreateTechniqueDrawer'
 import { useTechniques } from 'context/Techniques'
 import { formatTotal } from 'utils/formatTotal'
+import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
 
 const Techniques = (): ReactElement => {
   const getMessage = useFormatMessage(techniquesMessages)
   const { actions, total } = useTechniques()
+  const { actions: auditActions } = useModuleAudits()
 
   const [openCreateDrawer, toggleOpenCreateDrawer] = useToggle(false)
 
   useEffect(() => {
     actions?.get({}, true)
+    auditActions?.genAudit(ModuleAuditsTypes.AuditableModules.TECHNIQUES)
   }, [])
 
   return (

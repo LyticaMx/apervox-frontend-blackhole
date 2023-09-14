@@ -11,6 +11,7 @@ import DeleteDialog from './components/DeleteDialog'
 
 import Pagination from 'components/Table/Pagination'
 import Header from './components/Header'
+import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
 
 const Roles = (): ReactElement => {
   const { data, pagination, actions } = useRoles()
@@ -19,9 +20,11 @@ const Roles = (): ReactElement => {
   const [open, toggleOpen] = useToggle(false)
   const [deleteDialog, toggleDelete] = useToggle(false)
   const [disabledDialog, toggleDisabled] = useToggle(false)
+  const { actions: auditActions } = useModuleAudits()
 
   useEffect(() => {
     actions?.getData({}, true)
+    auditActions?.genAudit(ModuleAuditsTypes.AuditableModules.ROLES)
   }, [])
 
   return (

@@ -12,6 +12,7 @@ import GeneralMediaList from './GeneralMediaList'
 import EditMediaDrawer from './EditMediaDrawer'
 import { useAcquisitionMediums } from 'context/AcquisitionMediums'
 import { formatTotal } from 'utils/formatTotal'
+import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
 
 interface FormValues {
   id?: string
@@ -19,14 +20,19 @@ interface FormValues {
 }
 
 const MediaTab = (): ReactElement => {
-  const { data, total, dateFilter, searchFilter, actions } = useAcquisitionMediums()
+  const { data, total, dateFilter, searchFilter, actions } =
+    useAcquisitionMediums()
   const { actions: drawerActions } = useDrawer()
   const { formatMessage } = useIntl()
   const [openDeleteMedia, setOpenDeleteMedia] = useState(false)
   const [deleteIds, setDeleteIds] = useState<string[]>([])
+  const { actions: auditActions } = useModuleAudits()
 
   useEffect(() => {
     actions?.getData({}, true)
+    auditActions?.genAudit(
+      ModuleAuditsTypes.AuditableModules.ACQUISITION_MEDIUMS
+    )
   }, [])
 
   const handleDelete = async (): Promise<void> => {
