@@ -5,7 +5,8 @@ import {
   AuditPaginationParams,
   StaticFilter,
   Audit,
-  AuditableModules
+  AuditableModules,
+  AuditableActions
 } from './types'
 import { DateFilter } from 'types/filters'
 import { Params } from 'utils/ParamsBuilder'
@@ -114,13 +115,16 @@ export const useActions = (
     } catch {}
   }
 
-  const genAudit = async (moduleName: AuditableModules): Promise<void> => {
+  const genAudit = async (
+    moduleName: AuditableModules,
+    action: AuditableActions = AuditableActions.GET_IN
+  ): Promise<void> => {
     try {
       const response = await createAudit(
         {
           queryString: moduleName,
           body: {
-            action: 'get_in'
+            action
           }
         },
         {

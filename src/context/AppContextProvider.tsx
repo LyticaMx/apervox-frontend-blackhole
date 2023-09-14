@@ -27,6 +27,7 @@ interface Props {
 
 export const AppContextProvider = (props: Props): any => {
   const providers = [
+    ModuleAuditsProvider,
     TargetsProvider,
     SettingsProvider,
     UsersProvider,
@@ -46,8 +47,7 @@ export const AppContextProvider = (props: Props): any => {
     MonitoringProvider,
     CallHistoryProvider,
     EvidencesProvider,
-    WorkingEvidenceProvider,
-    ModuleAuditsProvider
+    WorkingEvidenceProvider
   ]
 
   const CombinedProviders = providers.reduce(

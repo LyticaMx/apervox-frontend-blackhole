@@ -21,6 +21,11 @@ export enum AuditableModules {
   AUTH = 'auth'
 }
 
+export enum AuditableActions {
+  GET_IN = 'get_in',
+  SEARCH = 'search'
+}
+
 export interface Audit {
   id: string
   userId: string
@@ -62,7 +67,10 @@ export interface AuditActions {
     params?: AuditPaginationParams & SearchParams & DateFilter & StaticFilter,
     getTotal?: boolean
   ) => Promise<void>
-  genAudit: (moduleName: AuditableModules) => Promise<void>
+  genAudit: (
+    moduleName: AuditableModules,
+    action?: AuditableActions
+  ) => Promise<void>
 }
 
 export interface ContextType extends AuditContextState {
