@@ -181,13 +181,16 @@ export const useActions = (state: EvidenceState, dispatch): EvidenceActions => {
           )
         )
       } catch {}
-    } catch {
     } finally {
       release()
     }
   }
 
   const updateFollow = (id: string, status: boolean = false): void => {
+    const canBeUpdated = data.some((ev) => ev.id === id)
+
+    if (!canBeUpdated) return
+
     dispatch(
       actions.setData(
         data.map((item) =>
