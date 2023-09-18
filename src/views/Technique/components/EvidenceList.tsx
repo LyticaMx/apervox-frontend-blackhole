@@ -38,7 +38,7 @@ const classifications = {
 const EvidenceList = ({ onSelectItem }: Props): ReactElement => {
   const { formatMessage } = useIntl()
   const getGlobalMessage = useGlobalMessage()
-  const { target } = useTechnique()
+  const { target, techniqueId } = useTechnique()
   const { data, pagination, actions: evidencesActions } = useEvidences()
   const socket = useEvidenceSocket()
   const toast = useToast()
@@ -71,7 +71,7 @@ const EvidenceList = ({ onSelectItem }: Props): ReactElement => {
 
   useEffect(() => {
     evidencesActions?.getData({ page: 1 }, !target?.id)
-  }, [target?.id])
+  }, [target?.id, techniqueId])
 
   const columns = useTableColumns<Evidence>(() => [
     {
