@@ -57,20 +57,20 @@ export const useLockEvidence = (
     socket.on('working_evidence', workingListener)
     socket.on('next_evidence', nextEvidenceListener)
 
-    const workingArgs: WorkingArgs = { id }
-    if (from === 'monitor') socket.emit('working_evidence', workingArgs)
-    else {
-      workingArgs.technique_id = techniqueId
-      socket.emit('working_evidence', workingArgs)
-    }
+    if (!nextRef.current) {
+      const workingArgs: WorkingArgs = { id }
+      if (from === 'monitor') socket.emit('working_evidence', workingArgs)
+      else {
+        workingArgs.technique_id = techniqueId
+        socket.emit('working_evidence', workingArgs)
+      }
+    } else nextRef.current = false
 
     return () => {
       socket.off('busy_evidence', busyListener)
       socket.off('working_evidence', workingListener)
       socket.off('next_evidence', nextEvidenceListener)
-      if (!nextRef.current) {
-        socket.emit('release_evidence', {})
-      } else nextRef.current = false
+      if (!nextRef.current) socket.emit('release_evidence', {})
     }
   }, [socket, id, techniqueId])
 
