@@ -10,6 +10,11 @@ export interface WorkingEvidence {
     username: string
   }
 }
+
+export interface NextEvidence {
+  id: string | null
+}
+
 export interface ReleaseEvidence {
   id: string
 }

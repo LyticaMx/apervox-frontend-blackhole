@@ -223,12 +223,14 @@ const EvidenceList = ({ onSelectItem }: Props): ReactElement => {
 
         if (!relevance) return ''
 
-        const formatted = classifications[relevance] ?? {
+        const formatted = Object.assign({}, classifications[relevance]) ?? {
           stars: 0,
           label: platformMessages.unseen
         }
 
-        if (row.original.workingBy) formatted.label = platformMessages.workingOn
+        if (row.original.workingBy !== '') {
+          formatted.label = platformMessages.workingOn
+        }
 
         return (
           <div className="flex items-center">

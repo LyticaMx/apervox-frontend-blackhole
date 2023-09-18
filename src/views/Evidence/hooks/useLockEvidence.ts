@@ -1,22 +1,37 @@
 import { useEvidenceSocket } from 'context/EvidenceSocket'
-import { useEffect, useState } from 'react'
+import { useLoader } from 'context/Loader'
+import { useWorkingEvidence } from 'context/WorkingEvidence'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { pathRoute } from 'router/routes'
-import { WorkingArgs, WorkingEvidence } from 'types/evidence'
+import { NextEvidence, WorkingArgs, WorkingEvidence } from 'types/evidence'
+
+interface LockMechanism {
+  canWork: boolean
+  getNextEvidence: () => void
+}
 
 export const useLockEvidence = (
   id: string,
   from: 'technique' | 'monitor',
   techniqueId?: string
-): boolean => {
+): LockMechanism => {
   const [canWork, setCanWork] = useState(false)
+  const { actions: loaderActions } = useLoader()
+  const { actions: workingEvidenceActions } = useWorkingEvidence()
+  const nextRef = useRef<boolean>(false)
   const socket = useEvidenceSocket()
   const history = useHistory()
 
-  // TODO: manejo de next evidence
+  const getNextEvidence = useCallback(() => {
+    if (!socket) return
+    loaderActions?.showLoader()
+    nextRef.current = true
+    socket.emit('next_evidence', {})
+  }, [socket])
 
   useEffect(() => {
-    if (!socket) return
+    if (!socket) return () => {}
 
     const busyListener = (): void => {
       if (from === 'monitor') {
@@ -24,11 +39,23 @@ export const useLockEvidence = (
       } else history.replace(pathRoute.technique)
     }
     const workingListener = (evidence: WorkingEvidence): void => {
-      if (evidence.id === id) setCanWork(true)
+      if (evidence.id === id) {
+        setCanWork(true)
+      }
+    }
+    const nextEvidenceListener = (evidence: NextEvidence): void => {
+      loaderActions?.hideLoader()
+      if (evidence.id === null) {
+        return
+      }
+
+      setCanWork(false)
+      workingEvidenceActions?.setEvidence(evidence.id)
     }
 
     socket.on('busy_evidence', busyListener)
     socket.on('working_evidence', workingListener)
+    socket.on('next_evidence', nextEvidenceListener)
 
     const workingArgs: WorkingArgs = { id }
     if (from === 'monitor') socket.emit('working_evidence', workingArgs)
@@ -40,9 +67,12 @@ export const useLockEvidence = (
     return () => {
       socket.off('busy_evidence', busyListener)
       socket.off('working_evidence', workingListener)
-      socket.emit('release_evidence')
+      socket.off('next_evidence', nextEvidenceListener)
+      if (!nextRef.current) {
+        socket.emit('release_evidence', {})
+      } else nextRef.current = false
     }
   }, [socket, id, techniqueId])
 
-  return canWork
+  return { canWork, getNextEvidence }
 }

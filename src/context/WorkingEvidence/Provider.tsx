@@ -9,7 +9,7 @@ import {
 } from './types'
 import { WorkingEvidenceContext, initialState } from './context'
 import { useService } from 'hooks/useApi'
-import { useAuth } from 'context/Auth'
+import { get } from 'lodash'
 
 interface Props {
   children: ReactNode
@@ -18,7 +18,6 @@ interface Props {
 const WorkingEvidenceProvider = (props: Props): ReactElement => {
   const { children } = props
   const [workingEvidence, setWorkingEvidence] = useState(initialState)
-  const { auth } = useAuth()
   const evidenceService = useService('call-evidences')
 
   const setEvidence = (id?: string): void => {
@@ -93,10 +92,25 @@ const WorkingEvidenceProvider = (props: Props): ReactElement => {
     }
   }
 
-  const getAudioUrl = (): string =>
-    `${process.env.REACT_APP_MAIN_BACKEND_URL}call-evidences/${
-      workingEvidence.id ?? 0
-    }/stream?token=${auth.token}`
+  const getAudioUrl = async (): Promise<string> => {
+    try {
+      if (!workingEvidence.id) return ''
+
+      const response = await evidenceService.post({
+        queryString: `${workingEvidence.id}/auth-stream`
+      })
+
+      const authToken = get(response, 'data.token', '')
+
+      if (!authToken) return ''
+
+      return `${process.env.REACT_APP_MAIN_BACKEND_URL}call-evidences/${
+        workingEvidence.id ?? 0
+      }/stream?token=${authToken}`
+    } catch {
+      return ''
+    }
+  }
 
   const getAudioWave = async (): Promise<number[]> => {
     try {
