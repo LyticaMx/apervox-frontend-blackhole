@@ -352,10 +352,16 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
       }
     }
 
+    let expiration
+
+    if (expiresAt.toISOString() !== oldExpiration.toISOString()) {
+      expiration = expiresAt.toISOString()
+    }
+
     const updated = await techniqueActions?.update(
       {
         name: values.name,
-        expires_at: expiresAt.toISOString(),
+        expires_at: expiration,
         priority: values.priority as Priority,
         shift: values.shift as Turn,
         reportEvidenceEvery: values.court,

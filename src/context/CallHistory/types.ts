@@ -63,7 +63,8 @@ export interface CallActions {
     params: CallPaginationParams & SearchParams & DateFilter & StaticFilter,
     getTotal?: boolean
   ) => Promise<void>
-  classify: (id: string | string[]) => Promise<boolean>
+  updateEvidence: (id: string) => Promise<void>
+  classify: (ids: string[], relevance: string) => Promise<boolean>
 }
 
 export interface ContextType extends CallState {

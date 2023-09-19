@@ -20,6 +20,13 @@ export const messages = defineMessages({
   }
 })
 
+export const waitToWorkMessages = defineMessages({
+  gettingEvidence: {
+    id: 'views.Evidence.WaitToWork.gettingEvidence',
+    defaultMessage: 'Verificando disponibilidad'
+  }
+})
+
 export const eventInformationMessages = defineMessages({
   eventInformation: {
     id: 'views.Evidence.EventInformation.eventInformation',

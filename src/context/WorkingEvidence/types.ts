@@ -47,7 +47,7 @@ export interface WorkingEvidenceActions {
   classifyEvidence: (data: UpdateData) => Promise<boolean>
   updateFollow: () => Promise<boolean>
   updateSynopsis: (synopsis: string) => Promise<boolean>
-  getAudioUrl: () => string
+  getAudioUrl: () => Promise<string>
   getAudioWave: () => Promise<number[]>
   updateTranscriptionSegments: (
     segments: TranscriptionSegment[]

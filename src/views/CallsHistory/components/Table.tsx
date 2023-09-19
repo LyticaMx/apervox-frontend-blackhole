@@ -59,7 +59,8 @@ const CallsTable = (): ReactElement => {
     {
       accessorKey: 'relevance',
       header: getMessage('clasification'),
-      cell: ({ getValue }) => getMessage(getValue<string>()),
+      cell: ({ getValue, row }) =>
+        getMessage(row.original.workedBy ? 'working' : getValue<string>()),
       meta: {
         columnFilters: {
           options: [
