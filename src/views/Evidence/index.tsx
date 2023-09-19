@@ -40,8 +40,9 @@ import { UpdateData } from 'context/WorkingEvidence/types'
 import { TranscriptionRegion } from './components/TranscriptionRegion'
 import asRegion from 'components/WaveSurferContext/hoc/asRegion'
 import { DeleteRegionDialog } from './components/DeleteRegionDialog'
-
-// import TestAudio from 'assets/audio/0989123090_20220128_173052_2_000126.wav'
+import { useTechnique } from 'context/Technique'
+import { useLockEvidence } from './hooks/useLockEvidence'
+import WaitToWork from './components/WaitToWork/WaitToWork'
 
 interface EvidenceLocation {
   type: 'audio' | 'video' | 'image' | 'doc'
@@ -66,6 +67,7 @@ const Evidence = (): ReactElement => {
   const [resolveRegion, setResolveRegion] =
     useState<ResolveDeleteRegion | null>(null)
   const [currentTab, setCurrentTab] = useState('synopsis')
+  const [url, setUrl] = useState('')
   const { formatMessage } = useIntl()
   const location = useLocation<EvidenceLocation>()
   const { localeI18n } = useLanguage()
@@ -73,8 +75,14 @@ const Evidence = (): ReactElement => {
   const synopsisRef = useRef<Editor>(null)
   const history = useHistory()
   const workingEvidence = useWorkingEvidence()
+  const { techniqueId } = useTechnique()
   const { launchToast } = useToast()
   const wavesurferRef = useRef<any>() // obtener el tipo del objeto
+  const { canWork, getNextEvidence } = useLockEvidence(
+    workingEvidence.id ?? '',
+    location.state.from ?? 'monitor',
+    techniqueId
+  )
 
   const saveSynopsis = async (): Promise<void> => {
     try {
@@ -153,6 +161,21 @@ const Evidence = (): ReactElement => {
     } catch {}
 
     // TODO: Implementar logica de generación de transcripciones
+  }
+
+  const getAudioUrl = async (): Promise<void> => {
+    try {
+      const url = (await workingEvidence.actions?.getAudioUrl()) ?? ''
+
+      if (!url) {
+        if ((location.state.from ?? 'monitor') === 'monitor') {
+          history.replace(pathRoute.monitoring.history)
+        } else history.replace(pathRoute.technique)
+        return
+      }
+
+      setUrl(url)
+    } catch {}
   }
 
   const getPeaks = async (): Promise<void> => {
@@ -246,6 +269,7 @@ const Evidence = (): ReactElement => {
   )
 
   useEffect(() => {
+    if (!canWork) return
     if (!workingEvidence.id) {
       if (location.state.from === 'technique') {
         history.push(pathRoute.technique)
@@ -253,13 +277,15 @@ const Evidence = (): ReactElement => {
       return
     }
     workingEvidence.actions?.getData()
+    getAudioUrl()
     getPeaks()
-  }, [workingEvidence.id])
+  }, [workingEvidence.id, canWork])
 
   useEffect(() => {
+    if (!canWork) return
     if (location.state.type !== 'audio') return
     getRegions()
-  }, [location.state.type])
+  }, [location.state.type, canWork])
 
   const handleChangeTab = (newTab: string): void => {
     setCurrentTab((actualTab) => {
@@ -462,6 +488,8 @@ const Evidence = (): ReactElement => {
     transcriptionRegions
   ])
 
+  if (!canWork) return <WaitToWork />
+
   return (
     <div>
       <div className="mb-2 flex justify-between items-center mr-6">
@@ -496,7 +524,10 @@ const Evidence = (): ReactElement => {
           >
             <BsSkipStart className="h-6 w-6" />
           </button>
-          <button className="p-1 w-8 h-8 bg-white shadow-md border rounded-md text-secondary-gray hover:enabled:text-secondary">
+          <button
+            className="p-1 w-8 h-8 bg-white shadow-md border rounded-md text-secondary-gray hover:enabled:text-secondary"
+            onClick={getNextEvidence}
+          >
             <BsSkipEnd className="h-6 w-6" />
           </button>
           <Button
@@ -523,7 +554,7 @@ const Evidence = (): ReactElement => {
               <WaveSurfer
                 plugins={['Regions', 'Timeline', 'Minimap']}
                 audio={{
-                  url: workingEvidence.actions?.getAudioUrl() ?? '',
+                  url,
                   peek
                 }}
                 onDownload={async () => {

@@ -31,16 +31,18 @@ const useSocket = (
         setIsSocketConnected(true)
       })
 
-      socket.current.on('settings', (data) => {
-        console.log('hola', data)
-        settingsActionsRef.current?.update(
-          {
-            inactivityTime: data.inactivity_time,
-            doubleValidation: data.double_validation
-          },
-          true
-        )
-      })
+      if (opts?.namespace === 'sessions') {
+        //* Este evento sólo es valido en el socket de sesión
+        socket.current.on('settings', (data) => {
+          settingsActionsRef.current?.update(
+            {
+              inactivityTime: data.inactivity_time,
+              doubleValidation: data.double_validation
+            },
+            true
+          )
+        })
+      }
 
       socket.current.on('disconnect', (reason) => {
         console.log(`Client disconnected: ${reason}`)

@@ -68,6 +68,10 @@ export const tableMessages = defineMessages({
     id: 'views.callHistory.table.callType.evidence',
     defaultMessage: 'Técnica'
   },
+  working: {
+    id: 'views.callHistory.table.relevance.working',
+    defaultMessage: 'Trabajando'
+  },
   unclassified: {
     id: 'views.callsHistory.table.relevance.unclassified',
     defaultMessage: 'Sin clasificar'

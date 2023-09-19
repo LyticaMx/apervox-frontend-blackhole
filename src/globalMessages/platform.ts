@@ -95,6 +95,10 @@ export const platformMessages = defineMessages({
     id: 'global.platform.eventDate',
     defaultMessage: 'Fecha del evento'
   },
+  workingOn: {
+    id: 'global.platform.workingOn',
+    defaultMessage: 'Trabajando'
+  },
   unseen: {
     id: 'global.platform.unseen',
     defaultMessage: 'No visto'

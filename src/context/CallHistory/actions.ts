@@ -10,6 +10,7 @@ import { SearchParams } from 'types/api'
 import { DateFilter } from 'types/filters'
 import { Params } from 'utils/ParamsBuilder'
 import { actions } from './constants'
+import mutexify from 'mutexify/promise'
 
 const orderByMapper = {
   source: 'source_number',
@@ -23,18 +24,22 @@ const orderByMapper = {
   transcription: 'has_transcription'
 }
 
+const lock = mutexify()
+
 export const useActions = (state: CallState, dispatch): CallActions => {
-  const { pagination, dateFilter, searchFilter, staticFilter } = state
+  const { pagination, dateFilter, searchFilter, staticFilter, data } = state
   const getHistory = useApi({
     endpoint: 'call-evidences/monitor/history',
     method: 'get'
   })
-  /*
+  const getEvidence = useApi({
+    endpoint: 'call-evidences',
+    method: 'get'
+  })
   const classifyCall = useApi({
     endpoint: 'call-evidences',
     method: 'put'
   })
-  */
 
   const getData = async (
     params?: CallPaginationParams & SearchParams & DateFilter & StaticFilter,
@@ -127,10 +132,52 @@ export const useActions = (state: CallState, dispatch): CallActions => {
     } catch {}
   }
 
-  const classify = async (id: string | string[]): Promise<boolean> => false
+  const classify = async (
+    ids: string[],
+    relevance: string
+  ): Promise<boolean> => {
+    try {
+      await classifyCall({
+        body: {
+          ids,
+          payload: { relevance }
+        }
+      })
+
+      return true
+    } catch {
+      return false
+    }
+  }
+
+  const updateEvidence = async (id: string): Promise<void> => {
+    const release = await lock()
+    try {
+      const canBeUpdated = data.some((ev) => ev.id === id)
+
+      if (!canBeUpdated) return
+
+      try {
+        const response = await getEvidence({ queryString: id })
+
+        dispatch(
+          actions.setData(
+            data.map((ev) =>
+              ev.id === id
+                ? { ...ev, workedBy: response.data.working_by?.username ?? '' }
+                : ev
+            )
+          )
+        )
+      } catch {}
+    } finally {
+      release()
+    }
+  }
 
   return {
     getData,
-    classify
+    classify,
+    updateEvidence
   }
 }
