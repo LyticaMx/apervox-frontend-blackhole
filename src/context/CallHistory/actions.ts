@@ -137,14 +137,12 @@ export const useActions = (state: CallState, dispatch): CallActions => {
     relevance: string
   ): Promise<boolean> => {
     try {
-      const response = await classifyCall({
+      await classifyCall({
         body: {
           ids,
           payload: { relevance }
         }
       })
-
-      console.log(response)
 
       return true
     } catch {
