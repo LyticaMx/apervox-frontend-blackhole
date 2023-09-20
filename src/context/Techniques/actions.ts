@@ -13,6 +13,7 @@ import { useService } from 'hooks/useApi'
 import { Params } from 'utils/ParamsBuilder'
 import useToast from 'hooks/useToast'
 import { Status } from 'types/status'
+import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
 
 const orderByMapper = {
   created_at: 'start_date',
@@ -26,6 +27,7 @@ const useActions = (state: State, dispatch): Actions => {
   const { pagination, searchFilter, dateFilter, staticFilter } = state
   const techniquesService = useService('techniques')
   const { launchToast } = useToast()
+  const { actions: auditActions } = useModuleAudits()
 
   const get = async (
     params?: TechniquesPaginationParams &
@@ -55,6 +57,16 @@ const useActions = (state: State, dispatch): Actions => {
               .catch(() => 0)
           : Promise.resolve(null)
       ])
+
+      if (params?.query && params?.filters) {
+        try {
+          auditActions?.genAudit(
+            ModuleAuditsTypes.AuditableModules.TECHNIQUES,
+            ModuleAuditsTypes.AuditableActions.SEARCH,
+            'searched'
+          )
+        } catch {}
+      }
 
       dispatch(
         actions.setTechniques({

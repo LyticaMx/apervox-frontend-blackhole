@@ -10,6 +10,7 @@ import {
   State
 } from './types'
 import { Params } from 'utils/ParamsBuilder'
+import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
 
 const orderByMapper = {
   name: 'name'
@@ -18,6 +19,7 @@ const orderByMapper = {
 export const useActions = (state: State, dispatch): Actions => {
   const { pagination, dateFilter, searchFilter } = state
   const resource = useService('labels')
+  const { actions: auditActions } = useModuleAudits()
 
   const getData = async (params?: PayloadGet): Promise<void> => {
     try {
@@ -29,6 +31,16 @@ export const useActions = (state: State, dispatch): Actions => {
         .build()
 
       const response: ResponseData = await resource.get({ urlParams })
+
+      if (params?.query && params?.filters) {
+        try {
+          auditActions?.genAudit(
+            ModuleAuditsTypes.AuditableModules.LABELS,
+            ModuleAuditsTypes.AuditableActions.SEARCH,
+            'searched'
+          )
+        } catch {}
+      }
 
       dispatch(actions.setData(response.data))
 

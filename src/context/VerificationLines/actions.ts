@@ -10,10 +10,12 @@ import {
 } from 'types/verificationLine'
 import { actions } from './constants'
 import { Params } from 'utils/ParamsBuilder'
+import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
 
 export const useActions = (state: State, dispatch): Actions => {
   const { pagination, dateFilter, searchFilter, total } = state
   const resource = useService('verification-lines')
+  const { actions: auditActions } = useModuleAudits()
 
   const get = async (
     params?: GetPayload,
@@ -33,6 +35,16 @@ export const useActions = (state: State, dispatch): Actions => {
           ? resource.get({ urlParams: { page: 1, limit: 1 } })
           : Promise.resolve(null)
       ])
+
+      if (params?.query && params?.filters) {
+        try {
+          auditActions?.genAudit(
+            ModuleAuditsTypes.AuditableModules.VERIFICATION_LINES,
+            ModuleAuditsTypes.AuditableActions.SEARCH,
+            'searched'
+          )
+        } catch {}
+      }
 
       dispatch(
         actions.setVerificationLines({
