@@ -6,7 +6,8 @@ import {
   StaticFilter,
   Audit,
   AuditableModules,
-  AuditableActions
+  AuditableActions,
+  AuditedUser
 } from './types'
 import { DateFilter } from 'types/filters'
 import { Params } from 'utils/ParamsBuilder'
@@ -29,8 +30,8 @@ export const useActions = (
     endpoint: 'audits',
     method: 'get'
   })
-
   const createAudit = useApi({ endpoint: 'audits', method: 'post' })
+  const getUser = useApi({ endpoint: 'users', method: 'get' })
 
   const getData = async (
     params?: AuditPaginationParams & SearchParams & DateFilter & StaticFilter,
@@ -117,26 +118,50 @@ export const useActions = (
 
   const genAudit = async (
     moduleName: AuditableModules,
-    action: AuditableActions = AuditableActions.GET_IN
+    action: AuditableActions = AuditableActions.GET_IN,
+    name?: string
   ): Promise<void> => {
     try {
-      const response = await createAudit(
+      await createAudit(
         {
           queryString: moduleName,
           body: {
-            action
+            action,
+            name
           }
         },
         {
           'x-api-key': process.env.REACT_APP_X_API_KEY
         }
       )
-      console.log(response)
     } catch {}
+  }
+
+  const getAuditedUser = async (id: string): Promise<AuditedUser | null> => {
+    try {
+      const response = await getUser({ queryString: id })
+
+      return {
+        id: response.data?.id ?? '',
+        name: response.data?.profile?.names ?? '',
+        surnames: response.data?.profile?.last_name ?? '',
+        email: response.data?.email ?? '',
+        createdBy: response.data?.created_by ?? '',
+        createdOn: new Date(response.data?.created_at ?? 0),
+        extension: response.data?.company?.phone_extension ?? '',
+        position: response.data?.company?.position ?? '',
+        groups: response.data?.groups?.map((item) => item.name).join(', '),
+        username: response.data?.username ?? '',
+        userRol: response.data?.role?.name ?? ''
+      }
+    } catch {
+      return null
+    }
   }
 
   return {
     genAudit,
-    getData
+    getData,
+    getAuditedUser
   }
 }

@@ -89,6 +89,10 @@ export const auditableActions = defineMessages({
   view: {
     id: 'views.Audit.AuditableActions.view',
     defaultMessage: 'Revisó los detalles'
+  },
+  search: {
+    id: 'views.Audit.AuditableActions.search',
+    defaultMessage: 'Buscó en el módulo'
   }
 })
 

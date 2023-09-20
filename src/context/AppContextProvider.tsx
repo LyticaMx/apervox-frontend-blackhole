@@ -19,7 +19,7 @@ import { MonitoringProvider } from './Monitoring'
 import { CallHistoryProvider } from './CallHistory'
 import { EvidencesProvider } from './Evidences'
 import { WorkingEvidenceProvider } from './WorkingEvidence'
-import { ModuleAuditsProvider } from './Audit'
+import { ModuleAuditsProvider, SpecificUserAuditsProvider } from './Audit'
 import { EvidenceSocketProvider } from './EvidenceSocket'
 
 interface Props {
@@ -49,7 +49,8 @@ export const AppContextProvider = (props: Props): any => {
     CallHistoryProvider,
     EvidencesProvider,
     WorkingEvidenceProvider,
-    EvidenceSocketProvider
+    EvidenceSocketProvider,
+    SpecificUserAuditsProvider
   ]
 
   const CombinedProviders = providers.reduce(

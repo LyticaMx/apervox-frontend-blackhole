@@ -9,11 +9,11 @@ import { formMessages, generalMessages } from 'globalMessages'
 import { ReactElement } from 'react'
 import { useIntl } from 'react-intl'
 import { messages, userDrawerMessages } from '../messages'
-import { Target, User } from '..'
+import { User } from '..'
 
 interface Props {
   user: User | null
-  selectUser?: (target: Target) => void
+  selectUser?: (target: string) => void
 }
 
 const UserDrawer = (props: Props): ReactElement => {
@@ -21,7 +21,7 @@ const UserDrawer = (props: Props): ReactElement => {
   const { formatMessage } = useIntl()
 
   return (
-    <div className="w-96">
+    <div>
       <div className="flex items-center">
         <UserIcon className="w-12 h-12 p-2 border border-secondary-gray rounded" />
         <div className="ml-2">
@@ -98,13 +98,7 @@ const UserDrawer = (props: Props): ReactElement => {
           {selectUser && (
             <button
               className="mt-8 flex items-center group/item"
-              onClick={() =>
-                selectUser({
-                  id: user.id,
-                  name: user.name,
-                  type: 'user'
-                })
-              }
+              onClick={() => selectUser(user.id)}
             >
               <DocumentMagnifyingGlassIcon className="w-5 h-5 text-secondary-gray group-hover/item:text-primary" />
               <p className="ml-2">

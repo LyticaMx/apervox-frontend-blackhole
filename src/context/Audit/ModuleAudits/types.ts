@@ -40,6 +40,20 @@ export interface Audit {
   createdAt: string
 }
 
+export interface AuditedUser {
+  name: string
+  surnames: string
+  email: string
+  createdBy: string
+  createdOn: Date
+  extension: string
+  groups: string
+  id: string
+  position: string
+  username: string
+  userRol: string
+}
+
 export interface AuditPaginationParams extends PaginationParams {
   sort?: SortingState
 }
@@ -69,8 +83,10 @@ export interface AuditActions {
   ) => Promise<void>
   genAudit: (
     moduleName: AuditableModules,
-    action?: AuditableActions
+    action?: AuditableActions,
+    name?: string
   ) => Promise<void>
+  getAuditedUser: (id: string) => Promise<AuditedUser | null>
 }
 
 export interface ContextType extends AuditContextState {

@@ -84,7 +84,8 @@ export const useActions = (
         try {
           auditActions?.genAudit(
             ModuleAuditsTypes.AuditableModules.USERS,
-            ModuleAuditsTypes.AuditableActions.SEARCH
+            ModuleAuditsTypes.AuditableActions.SEARCH,
+            'searched'
           )
         } catch {}
       }

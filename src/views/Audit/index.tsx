@@ -15,7 +15,6 @@ import AuditDrawer from './components/AuditDrawer'
 // import LineDrawer from './components/LineDrawer'
 import SpecificMovementsHistory from './components/SpecificMovementsHistory'
 // import TiDrawer from './components/TiDrawer'
-import UserDrawer from './components/UserDrawer'
 import {
   auditDrawerMessages,
   auditableActions,
@@ -25,8 +24,9 @@ import {
   messages
   // tiDrawerMessages
 } from './messages'
-import { useModuleAudits } from 'context/Audit'
+import { useModuleAudits, useSpecificUserAudits } from 'context/Audit'
 import { Audit as AuditInterface } from 'context/Audit/ModuleAudits/types'
+import useUserDrawer from './hooks/useUserDrawer'
 
 type TargetTypes = 'user' | 'group' | 'rol' | 'line' | 'ti' | null
 
@@ -35,16 +35,6 @@ export interface Target {
   id: string
   name: string
 }
-/*
-export interface AuditInterface {
-  id: string
-  user: string
-  description: string
-  module: string
-  date: string
-  target: Target
-}
-*/
 
 export interface User {
   id: string
@@ -64,10 +54,12 @@ const Audit = (): ReactElement => {
   const { formatMessage } = useIntl()
   const { actions } = useDrawer()
   const [selectedTarget, setSelectedTarget] = useState<Target | null>(null)
+  const { openDrawer, selectedUser, clearUser } = useUserDrawer()
   const { data, actions: auditActions, pagination } = useModuleAudits()
+  const { actions: specificUserActions } = useSpecificUserAudits()
 
   const handleOpenAction = useCallback(
-    (row: AuditInterface) => {
+    (row: Record<string, any>) => {
       actions?.handleOpenDrawer({
         type: 'aside',
         title: (
@@ -176,37 +168,12 @@ const Audit = (): ReactElement => {
       }
       */
       header: formatMessage(generalMessages.user),
-      cell: ({ getValue }) => (
+      cell: ({ getValue, row }) => (
         <button
           className="text-primary hover:underline"
           onClick={async (e) => {
             e.stopPropagation()
-
-            // TODO: integrar API de usuario
-
-            actions?.handleOpenDrawer({
-              body: (
-                <UserDrawer
-                  user={{
-                    name: 'Pruebas',
-                    surnames: 'Uno',
-                    email: 'test@test.com',
-                    createdBy: 'SuperAdmin',
-                    createdOn: new Date('2023-02-14T18:58:02.626Z'),
-                    extension: '150',
-                    groups: 'Auditoria, Grupo 4',
-                    id: '002',
-                    position: 'General',
-                    username: 'PUno',
-                    userRol: 'Administrador'
-                  }}
-                  selectUser={setSelectedTarget}
-                />
-              ),
-              config: {
-                withoutBackdrop: true
-              }
-            })
+            openDrawer(row.original.userId)
           }}
         >
           {getValue<string>()}
@@ -224,23 +191,6 @@ const Audit = (): ReactElement => {
         }
 
         return action
-
-        /*
-          <div>
-            <span>{getValue<string>()}</span>
-            row.original.target && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  handleMoreData(row.original.target.type)
-                }}
-                className="ml-2 text-primary hover:underline"
-              >
-                {row.original.target.name}
-              </button>
-            )
-          </div>
-        */
       }
     },
     {
@@ -296,6 +246,27 @@ const Audit = (): ReactElement => {
       cell: ({ getValue }) => format(new Date(getValue<string>()), 'hh:mm')
     }
   ])
+
+  useEffect(() => {
+    if (selectedTarget?.type === 'user' && selectedTarget.id === selectedUser) {
+      setSelectedTarget(null)
+      specificUserActions?.setUserId()
+
+      return
+    }
+
+    if (selectedUser) {
+      specificUserActions?.setUserId(selectedUser)
+      setSelectedTarget({
+        id: selectedUser,
+        name: '',
+        type: 'user'
+      })
+    } else {
+      specificUserActions?.setUserId()
+      setSelectedTarget(null)
+    }
+  }, [selectedUser])
 
   useEffect(() => {
     auditActions?.getData()
@@ -389,17 +360,20 @@ const Audit = (): ReactElement => {
       </div>
       <SpecificMovementsHistory
         specificFilter={selectedTarget}
-        handleClose={() => setSelectedTarget(null)}
-        totalMovements={3}
+        handleClose={() => {
+          switch (selectedTarget?.type) {
+            case 'user':
+              clearUser()
+              break
+            default:
+              break
+          }
+          setSelectedTarget(null)
+        }}
         handleSelectMovement={handleOpenAction}
-        handleSelectUser={(user) =>
-          actions?.handleOpenDrawer({
-            body: <UserDrawer user={user} selectUser={setSelectedTarget} />,
-            config: {
-              withoutBackdrop: true
-            }
-          })
-        }
+        handleSelectUser={(user) => {
+          openDrawer(user.id)
+        }}
       />
     </div>
   )
