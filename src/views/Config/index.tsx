@@ -25,6 +25,7 @@ import useToast from 'hooks/useToast'
 import { useLanguage } from 'context/Language'
 import { LocaleType } from 'types/language'
 import { getItem } from 'utils/persistentStorage'
+import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
 
 interface FormValues {
   language: LocaleType
@@ -38,11 +39,13 @@ interface FormValues {
 const GeneralConfig = (): ReactElement => {
   const { formatMessage } = useIntl()
   const { settings, actions: settingsActions } = useSettings()
+  const { actions: auditActions } = useModuleAudits()
   const toast = useToast()
   const { actions: languageActions } = useLanguage()
 
   useEffect(() => {
     settingsActions?.get()
+    auditActions?.genAudit(ModuleAuditsTypes.AuditableModules.SETTINGS)
   }, [])
 
   const validationSchema = yup.object({

@@ -1,42 +1,38 @@
 import { XCircleIcon } from '@heroicons/react/24/outline'
-import { SortingState } from '@tanstack/react-table'
 import Table from 'components/Table'
 import Typography from 'components/Typography'
 import ViewFilter from 'components/ViewFilter'
 import { format } from 'date-fns'
 import { generalMessages } from 'globalMessages'
 import useTableColumns from 'hooks/useTableColumns'
-import { ReactElement, useMemo, useState } from 'react'
+import { ReactElement, useEffect, useMemo } from 'react'
 import { useIntl } from 'react-intl'
-import { AuditInterface, Target, User } from '..'
+import { Target, User } from '..'
 import { messages } from '../messages'
+import { useSpecificUserAudits } from 'context/Audit'
+import { formatTotal } from 'utils/formatTotal'
 
 interface Props {
   specificFilter: Target | null
-  totalMovements: number
   handleClose: () => void
-  handleSelectMovement: (row: AuditInterface) => void
+  handleSelectMovement: (row: Record<string, any>) => void
   handleSelectUser: (user: User) => void
 }
+
+type GenericAudit = Record<string, any>
 
 const SpecificMovementsHistory = (props: Props): ReactElement | null => {
   const {
     specificFilter,
     handleClose,
-    totalMovements,
     handleSelectMovement,
     handleSelectUser
   } = props
   const { formatMessage } = useIntl()
-  const [sortingState, setSortingState] = useState<SortingState>([])
+  const userAudits = useSpecificUserAudits()
 
-  const columns = useTableColumns<AuditInterface>(
+  const columns = useTableColumns<GenericAudit>(
     () => [
-      {
-        accessorKey: 'id',
-        header: 'ID',
-        enableSorting: false
-      },
       {
         accessorKey: 'user',
         header: formatMessage(generalMessages.user),
@@ -90,50 +86,13 @@ const SpecificMovementsHistory = (props: Props): ReactElement | null => {
         }
       },
       {
-        // TODO: Normalizar este
-        accessorKey: 'module',
-        header: formatMessage(messages.auditedModule),
-        ...(specificFilter?.type === 'user'
-          ? {
-              meta: {
-                staticFilters: {
-                  options: [
-                    {
-                      name: formatMessage(generalMessages.statistics),
-                      value: 'statistics'
-                    },
-                    {
-                      name: formatMessage(messages.rolesAndPermissions),
-                      value: 'roles'
-                    },
-                    {
-                      name: formatMessage(messages.usersControl),
-                      value: 'users'
-                    },
-                    {
-                      name: formatMessage(messages.workgroups),
-                      value: 'groups'
-                    },
-                    {
-                      name: formatMessage(messages.acquisitionMedium),
-                      value: 'media'
-                    }
-                  ],
-                  onChange: () => {},
-                  optionsName: formatMessage(messages.auditedModule)
-                }
-              }
-            }
-          : {})
-      },
-      {
-        accessorKey: 'date',
+        accessorKey: 'createdAt',
         header: formatMessage(generalMessages.date),
         cell: ({ getValue }) =>
           format(new Date(getValue<string>()), 'dd/MM/yyyy')
       },
       {
-        accessorKey: 'date',
+        accessorKey: 'createdAt',
         header: formatMessage(generalMessages.hour),
         cell: ({ getValue }) => format(new Date(getValue<string>()), 'hh:mm')
       }
@@ -156,7 +115,29 @@ const SpecificMovementsHistory = (props: Props): ReactElement | null => {
     }
   }, [specificFilter?.type])
 
-  if (!specificFilter) return null
+  const audits = useMemo(() => {
+    if (!specificFilter) return null
+    switch (specificFilter.type) {
+      case 'user':
+        return {
+          getData: userAudits.actions?.getData ?? (() => {}),
+          data: userAudits.data,
+          pagination: userAudits.pagination,
+          dateFilter: userAudits.dateFilter,
+          searchFilter: userAudits.searchFilter,
+          total: userAudits.total
+        }
+      default:
+        return null
+    }
+  }, [specificFilter?.type])
+
+  useEffect(() => {
+    if (!specificFilter || !audits) return
+    audits.getData({ page: 1 }, true)
+  }, [audits])
+
+  if (!specificFilter || !audits) return null
 
   return (
     <div className="mt-2 bg-white shadow-sm shadow-gray-300 rounded px-2 pt-2 relative">
@@ -176,7 +157,7 @@ const SpecificMovementsHistory = (props: Props): ReactElement | null => {
             {title}
           </Typography>
           <Typography className="uppercase">
-            {`${totalMovements} Movimientos auditados registrados`}
+            {formatTotal(audits.total, 'Movimientos auditados registrados')}
           </Typography>
         </div>
         <ViewFilter
@@ -199,62 +180,24 @@ const SpecificMovementsHistory = (props: Props): ReactElement | null => {
       </div>
       <Table
         columns={columns}
-        data={[
-          {
-            id: '001',
-            date: '2023-02-14T18:58:02.626Z',
-            description: 'Cambio de nombre de rol Auditoria',
-            module: 'Usuarios',
-            user: 'PUno',
-            target: {
-              id: '001',
-              name: '',
-              type: 'group'
-            }
-          },
-          {
-            id: '002',
-            date: '2023-02-14T18:58:02.626Z',
-            description: 'Cambio de nombre de rol Auditoria',
-            module: 'Usuarios',
-            user: 'PUno',
-            target: {
-              id: '001',
-              name: '',
-              type: 'group'
-            }
-          },
-          {
-            id: '003',
-            date: '2023-02-14T18:58:02.626Z',
-            description: 'Cambio de nombre de rol Auditoria',
-            module: 'Usuarios',
-            user: 'PUno',
-            target: {
-              id: '001',
-              name: '',
-              type: 'group'
-            }
-          },
-          {
-            id: '004',
-            date: '2023-02-14T18:58:02.626Z',
-            description: 'Cambio de nombre de rol Auditoria',
-            module: 'Usuarios',
-            user: 'PUno',
-            target: {
-              id: '001',
-              name: '',
-              type: 'group'
-            }
-          }
-        ]}
+        data={audits.data}
         manualSorting={{
-          onSortingChange: setSortingState,
-          sorting: sortingState
+          onSortingChange: (sort) => audits.getData({ sort }),
+          sorting: audits.pagination.sort
+        }}
+        manualLimit={{
+          options: [15, 25, 50, 100],
+          onChangeLimit: (page, limit) =>
+            audits.getData({ page: page + 1, limit })
         }}
         onRowClicked={handleSelectMovement}
         maxHeight={225}
+        pageSize={audits.pagination.limit}
+        manualPagination={{
+          currentPage: audits.pagination.page,
+          totalRecords: audits.pagination.totalRecords,
+          onChange: (page) => audits.getData({ page: page + 1 })
+        }}
       />
     </div>
   )

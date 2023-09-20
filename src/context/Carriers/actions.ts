@@ -6,6 +6,7 @@ import { DateFilter } from 'types/filters'
 import { actions } from './constants'
 import { Actions, CarriersPaginationParams, State } from './types'
 import { Params } from 'utils/ParamsBuilder'
+import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
 
 const orderByMapper = {
   name: 'name',
@@ -17,6 +18,7 @@ const orderByMapper = {
 export const useActions = (state: State, dispatch): Actions => {
   const { pagination, dateFilter, searchFilter } = state
   const resource = useService('carriers')
+  const { actions: auditActions } = useModuleAudits()
 
   const getData = async (
     params?: CarriersPaginationParams & SearchParams & DateFilter,
@@ -39,6 +41,16 @@ export const useActions = (state: State, dispatch): Actions => {
         })
 
         dispatch(actions.setTotal(total.size))
+      }
+
+      if (params?.query && params?.filters) {
+        try {
+          auditActions?.genAudit(
+            ModuleAuditsTypes.AuditableModules.CARRIERS,
+            ModuleAuditsTypes.AuditableActions.SEARCH,
+            'searched'
+          )
+        } catch {}
       }
 
       dispatch(

@@ -30,6 +30,7 @@ export const messages = defineMessages({
     id: 'views.Audit.workgroups',
     defaultMessage: 'Grupos de trabajo'
   },
+
   acquisitionMedium: {
     id: 'views.Audit.acquisitionMedium',
     defaultMessage: 'Medios de adquisición'
@@ -37,6 +38,77 @@ export const messages = defineMessages({
   created: {
     id: 'views.Audit.UserDrawer.created',
     defaultMessage: 'Creado: {date}'
+  }
+})
+
+export const auditableModules = defineMessages({
+  me: { id: 'views.Audit.AuditableModules.me', defaultMessage: 'Mi cuenta' },
+  techniques: {
+    id: 'views.Audit.AuditableModules.techniques',
+    defaultMessage: 'Técnicas'
+  },
+  users: {
+    id: 'views.Audit.AuditableModules.users',
+    defaultMessage: 'Usuarios'
+  },
+  overflow_lines: {
+    id: 'views.Audit.AuditableModules.overflow_lines',
+    defaultMessage: 'Medios de adquisición'
+  },
+  verification_lines: {
+    id: 'views.Audit.AuditableModules.verification_lines',
+    defaultMessage: 'Líneas de verificación'
+  },
+  targets: {
+    id: 'views.Audit.AuditableModules.targets',
+    defaultMessage: 'Objetivos'
+  },
+  settings: {
+    id: 'views.Audit.AuditableModules.settings',
+    defaultMessage: 'Configuración'
+  },
+  acquisition_mediums: {
+    id: 'views.Audit.AuditableModules.acquisition_mediums',
+    defaultMessage: 'Medios'
+  },
+  devices: {
+    id: 'views.Audit.AuditableModules.devices',
+    defaultMessage: 'Equipos'
+  },
+  carriers: {
+    id: 'views.Audit.AuditableModules.carriers',
+    defaultMessage: 'Compañías telefónicas'
+  },
+  labels: {
+    id: 'views.Audit.AuditableModules.labels',
+    defaultMessage: 'Etiquetas'
+  },
+  letterheads: {
+    id: 'views.Audit.AuditableModules.letterheads',
+    defaultMessage: 'Membretes'
+  },
+  roles: {
+    id: 'views.Audit.AuditableModules.roles',
+    defaultMessage: 'Roles'
+  },
+  workgroups: {
+    id: 'views.Audit.AuditableModules.workgroups',
+    defaultMessage: 'Grupos'
+  }
+})
+
+export const auditableActions = defineMessages({
+  get_in: {
+    id: 'views.Audit.AuditableActions.get_in',
+    defaultMessage: 'Visitó el módulo'
+  },
+  view: {
+    id: 'views.Audit.AuditableActions.view',
+    defaultMessage: 'Revisó los detalles'
+  },
+  search: {
+    id: 'views.Audit.AuditableActions.search',
+    defaultMessage: 'Buscó en el módulo'
   }
 })
 

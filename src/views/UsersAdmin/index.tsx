@@ -1,4 +1,4 @@
-import { ReactElement, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { useFormatMessage } from 'hooks/useIntl'
 import { useToggle } from 'usehooks-ts'
 import Title from 'components/Title'
@@ -15,6 +15,7 @@ import { usersMessages } from './messages'
 import NewPasswordDialog from './components/NewPasswordDialog'
 import { useUsers } from 'context/Users'
 import { formatTotal } from 'utils/formatTotal'
+import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
 
 interface SynchroDeleteIds {
   ids: string[]
@@ -40,6 +41,11 @@ const UsersAdmin = (): ReactElement => {
   const [openUnlockDialog, toggleUnlockDialog] = useToggle(false)
   const [selectedUser, setSelectedUser] = useState<any>(null)
   const { totalUsers } = useUsers()
+  const { actions: auditActions } = useModuleAudits()
+
+  useEffect(() => {
+    auditActions?.genAudit(ModuleAuditsTypes.AuditableModules.USERS)
+  }, [])
 
   return (
     <>

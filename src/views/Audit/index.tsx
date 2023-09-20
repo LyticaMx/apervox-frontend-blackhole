@@ -1,4 +1,3 @@
-import { SortingState } from '@tanstack/react-table'
 import Table from 'components/Table'
 import Typography from 'components/Typography'
 import ViewFilter from 'components/ViewFilter'
@@ -6,24 +5,28 @@ import { useDrawer } from 'context/Drawer'
 import { format } from 'date-fns'
 import { generalMessages } from 'globalMessages'
 import useTableColumns from 'hooks/useTableColumns'
-import { ReactElement, useCallback, useState } from 'react'
+import { ReactElement, useCallback, useEffect, useState } from 'react'
 import { useIntl } from 'react-intl'
 import { Link } from 'react-router-dom'
 import { pathRoute } from 'router/routes'
-import { SimpleDrawerConfig } from 'types/drawer'
+// import { SimpleDrawerConfig } from 'types/drawer'
 import AuditDrawer from './components/AuditDrawer'
-import GroupDrawer from './components/GroupDrawer'
-import LineDrawer from './components/LineDrawer'
+// import GroupDrawer from './components/GroupDrawer'
+// import LineDrawer from './components/LineDrawer'
 import SpecificMovementsHistory from './components/SpecificMovementsHistory'
-import TiDrawer from './components/TiDrawer'
-import UserDrawer from './components/UserDrawer'
+// import TiDrawer from './components/TiDrawer'
 import {
   auditDrawerMessages,
-  groupDrawerMessages,
-  lineDrawerMessages,
-  messages,
-  tiDrawerMessages
+  auditableActions,
+  auditableModules,
+  // groupDrawerMessages,
+  // lineDrawerMessages,
+  messages
+  // tiDrawerMessages
 } from './messages'
+import { useModuleAudits, useSpecificUserAudits } from 'context/Audit'
+import { Audit as AuditInterface } from 'context/Audit/ModuleAudits/types'
+import useUserDrawer from './hooks/useUserDrawer'
 
 type TargetTypes = 'user' | 'group' | 'rol' | 'line' | 'ti' | null
 
@@ -31,14 +34,6 @@ export interface Target {
   type: TargetTypes
   id: string
   name: string
-}
-export interface AuditInterface {
-  id: string
-  user: string
-  description: string
-  module: string
-  date: string
-  target: Target
 }
 
 export interface User {
@@ -58,11 +53,13 @@ export interface User {
 const Audit = (): ReactElement => {
   const { formatMessage } = useIntl()
   const { actions } = useDrawer()
-  const [sortingState, setSortingState] = useState<SortingState>([])
   const [selectedTarget, setSelectedTarget] = useState<Target | null>(null)
+  const { openDrawer, selectedUser, clearUser } = useUserDrawer()
+  const { data, actions: auditActions, pagination } = useModuleAudits()
+  const { actions: specificUserActions } = useSpecificUserAudits()
 
   const handleOpenAction = useCallback(
-    (row: AuditInterface) => {
+    (row: Record<string, any>) => {
       actions?.handleOpenDrawer({
         type: 'aside',
         title: (
@@ -74,9 +71,9 @@ const Audit = (): ReactElement => {
           <AuditDrawer
             action="Cambio de nombre"
             moduleName="Roles y permisos"
-            date={row.date}
+            date={row.createdAt}
             change="Editó el rol de usuario (Auditoria) cambiando su nombre por (Auditor)"
-            user={row.user}
+            user={row.username}
           />
         ),
         config: {
@@ -87,6 +84,7 @@ const Audit = (): ReactElement => {
     [actions?.handleOpenDrawer]
   )
 
+  /*
   const handleMoreData = useCallback((type: TargetTypes) => {
     const drawerConfig: SimpleDrawerConfig = {
       type: 'aside',
@@ -155,15 +153,11 @@ const Audit = (): ReactElement => {
       actions?.handleOpenDrawer(drawerConfig)
     }
   }, [])
+  */
 
   const columns = useTableColumns<AuditInterface>(() => [
     {
-      accessorKey: 'id',
-      header: 'ID',
-      id: 'id'
-    },
-    {
-      accessorKey: 'user',
+      accessorKey: 'username',
       id: 'user',
       /* TODO: Se comenta de manera temporal
       meta: {
@@ -174,34 +168,12 @@ const Audit = (): ReactElement => {
       }
       */
       header: formatMessage(generalMessages.user),
-      cell: ({ getValue }) => (
+      cell: ({ getValue, row }) => (
         <button
           className="text-primary hover:underline"
-          onClick={(e) => {
+          onClick={async (e) => {
             e.stopPropagation()
-            actions?.handleOpenDrawer({
-              body: (
-                <UserDrawer
-                  user={{
-                    name: 'Pruebas',
-                    surnames: 'Uno',
-                    email: 'test@test.com',
-                    createdBy: 'SuperAdmin',
-                    createdOn: new Date('2023-02-14T18:58:02.626Z'),
-                    extension: '150',
-                    groups: 'Auditoria, Grupo 4',
-                    id: '002',
-                    position: 'General',
-                    username: 'PUno',
-                    userRol: 'Administrador'
-                  }}
-                  selectUser={setSelectedTarget}
-                />
-              ),
-              config: {
-                withoutBackdrop: true
-              }
-            })
+            openDrawer(row.original.userId)
           }}
         >
           {getValue<string>()}
@@ -209,28 +181,20 @@ const Audit = (): ReactElement => {
       )
     },
     {
-      accessorKey: 'description',
-      id: 'description',
+      accessorKey: 'action',
       header: formatMessage(generalMessages.description),
-      cell: ({ row, getValue }) => (
-        <div>
-          <span>{getValue<string>()}</span>
-          {row.original.target && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation()
-                handleMoreData(row.original.target.type)
-              }}
-              className="ml-2 text-primary hover:underline"
-            >
-              {row.original.target.name}
-            </button>
-          )}
-        </div>
-      )
+      cell: ({ row, getValue }) => {
+        const action = getValue<string>()
+
+        if (auditableActions[action]) {
+          return formatMessage(auditableActions[action])
+        }
+
+        return action
+      }
     },
     {
-      accessorKey: 'module',
+      accessorKey: 'specificModule',
       id: 'module',
       header: formatMessage(messages.auditedModule),
       meta: {
@@ -260,21 +224,53 @@ const Audit = (): ReactElement => {
           onChange: () => {},
           optionsName: formatMessage(messages.auditedModule)
         }
+      },
+      cell: ({ getValue }) => {
+        const name = getValue<string>()
+
+        if (auditableModules[name]) return formatMessage(auditableModules[name])
+
+        return name
       }
     },
     {
-      accessorKey: 'date',
+      accessorKey: 'createdAt',
       id: 'date',
       header: formatMessage(generalMessages.date),
       cell: ({ getValue }) => format(new Date(getValue<string>()), 'dd/MM/yyyy')
     },
     {
-      accessorKey: 'date',
+      accessorKey: 'createdAt',
       id: 'hour',
       header: formatMessage(generalMessages.hour),
       cell: ({ getValue }) => format(new Date(getValue<string>()), 'hh:mm')
     }
   ])
+
+  useEffect(() => {
+    if (selectedTarget?.type === 'user' && selectedTarget.id === selectedUser) {
+      setSelectedTarget(null)
+      specificUserActions?.setUserId()
+
+      return
+    }
+
+    if (selectedUser) {
+      specificUserActions?.setUserId(selectedUser)
+      setSelectedTarget({
+        id: selectedUser,
+        name: '',
+        type: 'user'
+      })
+    } else {
+      specificUserActions?.setUserId()
+      setSelectedTarget(null)
+    }
+  }, [selectedUser])
+
+  useEffect(() => {
+    auditActions?.getData()
+  }, [])
 
   return (
     <div>
@@ -341,78 +337,43 @@ const Audit = (): ReactElement => {
       <div className="mt-2">
         <Table
           columns={columns}
-          data={[
-            {
-              id: '001',
-              date: '2023-02-14T18:58:02.626Z',
-              description: 'Cambio de nombre de rol',
-              module: 'Usuarios',
-              user: 'PUno',
-              target: {
-                id: '001',
-                name: 'Auditoria',
-                type: 'rol'
-              }
-            },
-            {
-              id: '002',
-              date: '2023-02-14T18:58:02.626Z',
-              description: 'Cambio de nombre de grupo',
-              module: 'Grupos de trabajo',
-              user: 'PUno',
-              target: {
-                id: '002',
-                name: 'Crimen organizado',
-                type: 'group'
-              }
-            },
-            {
-              id: '003',
-              date: '2023-02-14T18:58:02.626Z',
-              description: 'Registro de línea',
-              module: 'Medios de Adquisición',
-              user: 'PUno',
-              target: {
-                id: '003',
-                name: '5509876278',
-                type: 'line'
-              }
-            },
-            {
-              id: '004',
-              date: '2023-02-14T18:58:02.626Z',
-              description: 'Visualización de líneas asociadas a',
-              module: 'Técnicas',
-              user: 'PUno',
-              target: {
-                id: '004',
-                name: 'T.I.90/2023-2',
-                type: 'ti'
-              }
-            }
-          ]}
+          data={data}
           manualSorting={{
-            onSortingChange: setSortingState,
-            sorting: sortingState
+            onSortingChange: (sort) => auditActions?.getData({ sort }),
+            sorting: pagination.sort
+          }}
+          manualLimit={{
+            options: [15, 25, 50, 100],
+            onChangeLimit: (page, limit) =>
+              auditActions?.getData({ page: page + 1, limit })
           }}
           onRowClicked={handleOpenAction}
           maxHeight={!selectedTarget ? 500 : 225}
           withCheckbox
+          pageSize={pagination.limit}
+          manualPagination={{
+            currentPage: pagination.page,
+            totalRecords: pagination.totalRecords,
+            onChange: (page) => auditActions?.getData({ page: page + 1 })
+          }}
         />
       </div>
       <SpecificMovementsHistory
         specificFilter={selectedTarget}
-        handleClose={() => setSelectedTarget(null)}
-        totalMovements={3}
+        handleClose={() => {
+          switch (selectedTarget?.type) {
+            case 'user':
+              clearUser()
+              break
+            default:
+              break
+          }
+          setSelectedTarget(null)
+        }}
         handleSelectMovement={handleOpenAction}
-        handleSelectUser={(user) =>
-          actions?.handleOpenDrawer({
-            body: <UserDrawer user={user} selectUser={setSelectedTarget} />,
-            config: {
-              withoutBackdrop: true
-            }
-          })
-        }
+        handleSelectUser={(user) => {
+          openDrawer(user.id)
+        }}
       />
     </div>
   )

@@ -10,6 +10,7 @@ import {
   updatePayload
 } from './types'
 import { Params } from 'utils/ParamsBuilder'
+import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
 
 const orderByMapper = {
   name: 'name',
@@ -20,6 +21,7 @@ const orderByMapper = {
 export const useActions = (state: State, dispatch): Actions => {
   const { pagination, dateFilter, searchFilter } = state
   const resource = useService('devices')
+  const { actions: auditActions } = useModuleAudits()
 
   const getData = async (
     params?: getDataPayload,
@@ -42,6 +44,16 @@ export const useActions = (state: State, dispatch): Actions => {
         })
 
         dispatch(actions.setTotal(total.size))
+      }
+
+      if (params?.query && params?.filters) {
+        try {
+          auditActions?.genAudit(
+            ModuleAuditsTypes.AuditableModules.DEVICES,
+            ModuleAuditsTypes.AuditableActions.SEARCH,
+            'searched'
+          )
+        } catch {}
       }
 
       dispatch(

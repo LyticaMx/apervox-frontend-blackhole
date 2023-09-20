@@ -19,6 +19,7 @@ import Typography from 'components/Typography'
 import { formatTotal } from 'utils/formatTotal'
 import { useDrawer } from 'context/Drawer'
 import { useIntl } from 'react-intl'
+import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
 
 interface SynchroEditIds {
   ids: string[]
@@ -47,10 +48,12 @@ const WorkGroups = (): ReactElement => {
     usersPagination,
     totalWorkGroups
   } = useWorkGroups()
+  const { actions: auditActions } = useModuleAudits()
 
   useEffect(() => {
     actions?.selectWorkGroup()
     actions?.getWorkGroups({}, true)
+    auditActions?.genAudit(ModuleAuditsTypes.AuditableModules.GROUPS)
   }, [])
 
   useEffect(() => {

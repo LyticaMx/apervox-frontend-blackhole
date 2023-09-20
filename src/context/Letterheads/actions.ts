@@ -4,6 +4,7 @@ import { Letterhead } from 'types/letterhead'
 import { actions } from './constants'
 import { Actions, getDataPayload, State } from './types'
 import { Params } from 'utils/ParamsBuilder'
+import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
 
 const orderByMapper = {
   name: 'name',
@@ -13,6 +14,7 @@ const orderByMapper = {
 
 export const useActions = (state: State, dispatch): Actions => {
   const { pagination, dateFilter, searchFilter } = state
+  const { actions: auditActions } = useModuleAudits()
   const resource = useService('letterheads')
 
   const getData = async (params?: getDataPayload): Promise<void> => {
@@ -28,6 +30,16 @@ export const useActions = (state: State, dispatch): Actions => {
       })
 
       dispatch(actions.setData(response.data))
+
+      if (params?.query && params?.filters) {
+        try {
+          auditActions?.genAudit(
+            ModuleAuditsTypes.AuditableModules.LETTERHEADS,
+            ModuleAuditsTypes.AuditableActions.SEARCH,
+            'searched'
+          )
+        } catch {}
+      }
 
       dispatch(
         actions.setPagination({

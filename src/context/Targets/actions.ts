@@ -8,11 +8,13 @@ import {
 } from 'types/target'
 import { Params } from 'utils/ParamsBuilder'
 import { actions } from './constants'
+import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
 
 export const useActions = (state: State, dispatch): Actions => {
   const { pagination, dateFilter, searchFilter, total } = state
   const resource = useService('targets')
   const techniqueService = useService('techniques')
+  const { actions: auditActions } = useModuleAudits()
 
   const findAll = (
     techniqueId?: string,
@@ -50,6 +52,16 @@ export const useActions = (state: State, dispatch): Actions => {
           ? findAll(techniqueId, { page: 1, limit: 1 })
           : Promise.resolve(null)
       ])
+
+      if (params?.query && params?.filters) {
+        try {
+          auditActions?.genAudit(
+            ModuleAuditsTypes.AuditableModules.TARGETS,
+            ModuleAuditsTypes.AuditableActions.SEARCH,
+            'searched'
+          )
+        } catch {}
+      }
 
       dispatch(actions.setData(response.data))
 

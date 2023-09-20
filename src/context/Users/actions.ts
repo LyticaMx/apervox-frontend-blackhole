@@ -10,6 +10,7 @@ import {
 } from 'types/user'
 import { actions } from './constants'
 import { Params } from 'utils/ParamsBuilder'
+import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
 
 const orderByMapper = {
   name: 'profile.names',
@@ -38,6 +39,7 @@ export const useActions = (
     endpoint: 'sessions',
     method: 'delete'
   })
+  const { actions: auditActions } = useModuleAudits()
 
   const getUsers = async (
     params?: UsersPaginationParams &
@@ -77,6 +79,16 @@ export const useActions = (
           ? getUsersService({ urlParams: { page: 1, limit: 1 } })
           : Promise.resolve(null)
       ])
+
+      if (params?.query && params?.filters) {
+        try {
+          auditActions?.genAudit(
+            ModuleAuditsTypes.AuditableModules.USERS,
+            ModuleAuditsTypes.AuditableActions.SEARCH,
+            'searched'
+          )
+        } catch {}
+      }
 
       dispatch(
         actions.setUsers({

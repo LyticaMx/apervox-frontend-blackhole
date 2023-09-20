@@ -13,9 +13,11 @@ import EditDeviceDrawer from './EditDeviceDrawer'
 import { useDevices } from 'context/Devices'
 import { get } from 'lodash'
 import { formatTotal } from 'utils/formatTotal'
+import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
 
 const DeviceTab = (): ReactElement => {
   const { data, total, dateFilter, searchFilter, actions } = useDevices()
+  const { actions: auditActions } = useModuleAudits()
   const { actions: drawerActions } = useDrawer()
   const { formatMessage } = useIntl()
   const [openDelete, setOpenDelete] = useState(false)
@@ -23,6 +25,7 @@ const DeviceTab = (): ReactElement => {
 
   useEffect(() => {
     actions?.getData({}, true)
+    auditActions?.genAudit(ModuleAuditsTypes.AuditableModules.DEVICES)
   }, [])
 
   const handleDelete = async (): Promise<void> => {

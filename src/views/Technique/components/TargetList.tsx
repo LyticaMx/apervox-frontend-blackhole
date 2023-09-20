@@ -20,6 +20,7 @@ import { messages } from 'components/Table/messages'
 import DeleteTargetDialog from './DeleteTargetDialog'
 import CreateTargetDialog from 'views/Techniques/components/CreateTargetDialog'
 import { Target } from 'types/target'
+import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
 
 const TargetList = (): ReactElement => {
   let timer
@@ -31,9 +32,11 @@ const TargetList = (): ReactElement => {
   const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false)
   const [openTargetForm, setOpenTargetForm] = useState(false)
   const { formatMessage } = useIntl()
+  const { actions: auditActions } = useModuleAudits()
 
   useEffect(() => {
     targetsActions?.getData({ page: 1, technique_id: techniqueId }, true)
+    auditActions?.genAudit(ModuleAuditsTypes.AuditableModules.TARGETS)
   }, [techniqueId])
 
   const filteredSpeakers = useMemo(() => {

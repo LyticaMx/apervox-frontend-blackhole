@@ -33,13 +33,6 @@ const Navigator = (): ReactElement => {
     }
   }, [isSocketConnected, auth.profile.id])
 
-  useEffect(() => {
-    if (!isSocketConnected) return
-    if (auth.token) {
-      socket?.emit('refresh_token', auth.token)
-    }
-  }, [auth.token, isSocketConnected])
-
   return (
     <Switch>
       {routes.map((route) => {

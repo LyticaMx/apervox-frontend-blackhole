@@ -23,6 +23,7 @@ import EditVerificationLineDrawer from './components/EditVerificationLineDrawer'
 import Tabs from './components/Tabs'
 import DisableVerificationLineDialog from './components/DisableVerificationLineDialog'
 import VerificationHeader from './components/VerificationHeader'
+import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
 
 const Verification = (): ReactElement => {
   const { formatMessage } = useIntl()
@@ -34,10 +35,7 @@ const Verification = (): ReactElement => {
 
   const [openEdit, setOpenEdit] = useState(false)
   const { data, pagination, actions } = useVerificationLine()
-  console.log(
-    '🚀 ~ file: Verification.tsx:37 ~ Verification ~ pagination:',
-    pagination
-  )
+  const { actions: auditActions } = useModuleAudits()
 
   const columns = useTableColumns<VerificationLine>(() => [
     {
@@ -108,6 +106,9 @@ const Verification = (): ReactElement => {
 
   useEffect(() => {
     actions?.get({}, true)
+    auditActions?.genAudit(
+      ModuleAuditsTypes.AuditableModules.VERIFICATION_LINES
+    )
   }, [])
 
   return (

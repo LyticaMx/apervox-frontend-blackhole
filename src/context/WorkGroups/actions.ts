@@ -15,6 +15,7 @@ import { initialState } from './context'
 import useApi from 'hooks/useApi'
 import { ResponseData, SearchParams } from 'types/api'
 import { Params } from 'utils/ParamsBuilder'
+import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
 
 const orderByMapper = {
   registered_by: 'created_by.username',
@@ -37,6 +38,7 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
     techniquesPagination,
     totalWorkGroups
   } = state
+  const { actions: auditActions } = useModuleAudits()
   const getWorkgroupsService = useApi({ endpoint: 'groups', method: 'get' })
   const createWorkgroupService = useApi({ endpoint: 'groups', method: 'post' })
   const updateWorkGroupService = useApi({ endpoint: 'groups', method: 'put' })
@@ -150,6 +152,16 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
           ? getWorkgroupsService({ urlParams: { page: 1, limit: 1 } })
           : Promise.resolve(null)
       ])
+
+      if (params?.query && params?.filters) {
+        try {
+          auditActions?.genAudit(
+            ModuleAuditsTypes.AuditableModules.GROUPS,
+            ModuleAuditsTypes.AuditableActions.SEARCH,
+            'searched'
+          )
+        } catch {}
+      }
 
       // para acceder a las funciones de array
       const data: any[] = response.data
