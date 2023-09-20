@@ -78,6 +78,22 @@ export const auditableModules = defineMessages({
   carriers: {
     id: 'views.Audit.AuditableModules.carriers',
     defaultMessage: 'Compañías telefónicas'
+  },
+  labels: {
+    id: 'views.Audit.AuditableModules.labels',
+    defaultMessage: 'Etiquetas'
+  },
+  letterheads: {
+    id: 'views.Audit.AuditableModules.letterheads',
+    defaultMessage: 'Membretes'
+  },
+  roles: {
+    id: 'views.Audit.AuditableModules.roles',
+    defaultMessage: 'Roles'
+  },
+  workgroups: {
+    id: 'views.Audit.AuditableModules.workgroups',
+    defaultMessage: 'Grupos'
   }
 })
 
