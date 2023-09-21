@@ -55,7 +55,7 @@ export interface WorkingEvidenceActions {
   deleteTranscriptionSegment: (id: string) => Promise<boolean>
   getTranscriptionSegments: () => Promise<TranscriptionSegment[]>
   getRegions: () => Promise<Region[]>
-  updateRegions: (regions: Region[]) => Promise<boolean>
+  updateRegions: (regions: Region[]) => Promise<Region[]>
   deleteRegion: (id: string) => Promise<boolean>
 }
 

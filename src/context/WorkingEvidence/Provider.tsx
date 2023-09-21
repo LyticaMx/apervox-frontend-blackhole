@@ -239,10 +239,10 @@ const WorkingEvidenceProvider = (props: Props): ReactElement => {
     }
   }
 
-  const updateRegions = async (regions: Region[]): Promise<boolean> => {
+  const updateRegions = async (regions: Region[]): Promise<Region[]> => {
     try {
-      if (!workingEvidence.id) return false
-      await evidenceService.put({
+      if (!workingEvidence.id) return []
+      const response = await evidenceService.put({
         queryString: `${workingEvidence.id}/regions`,
         body: regions.map((item) => ({
           id: item.id,
@@ -251,9 +251,15 @@ const WorkingEvidenceProvider = (props: Props): ReactElement => {
           tag: item.tag
         }))
       })
-      return true
+
+      return (response.data as any[]).map((item) => ({
+        id: item.id,
+        startTime: item.start_time,
+        endTime: item.end_time,
+        tag: item.tag
+      }))
     } catch {
-      return false
+      return []
     }
   }
 

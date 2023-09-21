@@ -77,7 +77,8 @@ const Evidence = (): ReactElement => {
   const workingEvidence = useWorkingEvidence()
   const { techniqueId } = useTechnique()
   const { launchToast } = useToast()
-  const wavesurferRef = useRef<any>() // obtener el tipo del objeto
+  const $wsRef = useRef<any>() // obtener el tipo del objeto
+  const tempRegionsRef = useRef<any>()
   const { canWork, getNextEvidence } = useLockEvidence(
     workingEvidence.id ?? '',
     location.state.from ?? 'monitor',
@@ -138,16 +139,26 @@ const Evidence = (): ReactElement => {
     } catch {}
 
     try {
+      const tempRegions = tempRegionsRef.current ?? $wsRef.current.regions ?? []
+      const sendRegions = tempRegions
+        .filter((r) => Boolean(r.data.name))
+        .map((region) => ({
+          tag: region.data?.name ?? '',
+          startTime: region.start,
+          endTime: region.end,
+          id: !region.id.startsWith('wavesurfer') ? region.id : undefined
+        }))
+
       const updatedRegions =
-        (await workingEvidence.actions?.updateRegions(
-          commonRegions.map((region) => ({
-            id: region.id,
-            tag: region.data?.name ?? '',
-            startTime: region.start,
-            endTime: region.end
-          }))
-        )) ?? false
+        (await workingEvidence.actions?.updateRegions(sendRegions)) ?? false
+
+      // TODO: Falta eliminar regiones
       if (updatedRegions) {
+        for (let i = 0; i < tempRegions.length; i++) {
+          tempRegions[i].update({
+            id: tempRegions[i].id.replace('wavesurfer_', '')
+          })
+        }
         launchToast({
           title: 'Regiones guardadas correctamente',
           type: 'Success'
@@ -158,7 +169,9 @@ const Evidence = (): ReactElement => {
           type: 'Danger'
         })
       }
-    } catch {}
+    } catch (e) {
+      console.log(e)
+    }
 
     // TODO: Implementar logica de generación de transcripciones
   }
@@ -265,7 +278,7 @@ const Evidence = (): ReactElement => {
             })
           )
         : commonRegions,
-    [currentTab]
+    [currentTab, commonRegions]
   )
 
   useEffect(() => {
@@ -288,36 +301,40 @@ const Evidence = (): ReactElement => {
   }, [location.state.type, canWork])
 
   const handleChangeTab = (newTab: string): void => {
-    setCurrentTab((actualTab) => {
-      if (actualTab !== newTab) {
-        const regions = wavesurferRef.current.regions.map((region) => {
-          const savedRegion: RegionInterface = {
-            id: region.id,
-            start: region.start,
-            end: region.end
-          }
-
-          if (region.data?.name) {
-            savedRegion.data = { name: region?.data?.name }
-          } else if (region.data?.id) {
-            savedRegion.data = {
-              // buscar como reducir el find
-              text: transcriptionRegions.find((item) => item.id === region.id)
-                ?.data?.text
-            }
-          }
-
-          return savedRegion
-        })
-        if (actualTab === 'transcription') {
-          setTranscriptionRegions(regions)
-        } else {
-          setCommonRegions(regions)
+    setCurrentTab((oldTab) => {
+      if (oldTab !== newTab) {
+        if (newTab === 'transcription') {
+          tempRegionsRef.current = $wsRef.current?.regions?.filter((region) =>
+            region.id.startsWith('wavesurfer')
+          )
         }
       }
+
       return newTab
     })
   }
+
+  useEffect(() => {
+    if (currentTab === 'transcription') return
+
+    if (tempRegionsRef.current && tempRegionsRef.current.length > 0) {
+      for (let i = 0; i < tempRegionsRef.current.length; i++) {
+        const tRegion = tempRegionsRef.current[i]
+
+        const wsRegion = $wsRef.current?.wavesurfer?.addRegion({
+          id: tRegion.id,
+          start: tRegion.start,
+          end: tRegion.end
+        })
+
+        if (tRegion.data?.name) {
+          wsRegion.update({ data: { name: tRegion.data?.name } })
+        }
+      }
+    }
+
+    tempRegionsRef.current = null
+  }, [currentTab])
 
   // TODO: Agregar dependencias de acciones de transcripción
   const handleTranscript = useCallback(
@@ -387,6 +404,7 @@ const Evidence = (): ReactElement => {
               )) ?? false
           } else deleted = false
         }
+        console.log({ deleted, transcriptionRegions, regionId })
         if (deleted) {
           setTranscriptionRegions(
             transcriptionRegions.filter((region) => region.id !== regionId)
@@ -571,7 +589,7 @@ const Evidence = (): ReactElement => {
                 showTimeline
                 showZoom
                 wsRef={(ws) => {
-                  wavesurferRef.current = ws
+                  $wsRef.current = ws
                 }}
               />
             )}
