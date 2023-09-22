@@ -14,6 +14,7 @@ const useRegions = (
       $ws.current = wavesurfer
       $ws.current.on('region-created', regionCreatedHandler)
       $ws.current.on('region-updated', regionUpdatedHandler)
+      $ws.current.on('region-removed', regionRemovedHandler)
     }
   }, [wavesurfer])
 
@@ -45,7 +46,7 @@ const useRegions = (
     return () => {
       $ws.current?.regions.clear()
     }
-  }, [wavesurfer, regionsDefault])
+  }, [wavesurfer, JSON.stringify(regionsDefault)])
 
   const regionUpdatedHandler = useCallback((region) => {
     setRegions((prev) =>
@@ -55,6 +56,10 @@ const useRegions = (
         return item
       })
     )
+  }, [])
+
+  const regionRemovedHandler = useCallback((region) => {
+    setRegions((prev) => prev.filter((item) => item.id !== region.id))
   }, [])
 
   return regions
