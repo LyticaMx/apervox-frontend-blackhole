@@ -149,3 +149,14 @@ export const transcriptionTabMessages = defineMessages({
     defaultMessage: '¿Se eliminará el segmento y su transcripción, está seguro?'
   }
 })
+
+export const deleteRegionDialog = defineMessages({
+  deleteRegion: {
+    id: 'views.Evidence.deleteRegionDialog',
+    defaultMessage: 'Eliminar región'
+  },
+  deleteRegionDialogQuestion: {
+    id: 'views.Evidence.TranscriptionTab.deleteRegionQuestion',
+    defaultMessage: '¿Se eliminará la región, está seguro?'
+  }
+})

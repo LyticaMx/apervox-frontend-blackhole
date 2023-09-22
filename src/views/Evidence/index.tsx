@@ -39,10 +39,12 @@ import { RegionInterface } from 'components/WaveSurferContext/types'
 import { UpdateData } from 'context/WorkingEvidence/types'
 import { TranscriptionRegion } from './components/TranscriptionRegion'
 import asRegion from 'components/WaveSurferContext/hoc/asRegion'
-import { DeleteRegionDialog } from './components/DeleteRegionDialog'
+import { DeleteTranscriptionDialog } from './components/DeleteTranscriptionDialog'
 import { useTechnique } from 'context/Technique'
 import { useLockEvidence } from './hooks/useLockEvidence'
 import WaitToWork from './components/WaitToWork/WaitToWork'
+import { CommonRegion } from './components/CommonRegion'
+import { DeleteRegionDialog } from './components/DeleteDialog'
 
 interface EvidenceLocation {
   type: 'audio' | 'video' | 'image' | 'doc'
@@ -64,6 +66,8 @@ const Evidence = (): ReactElement => {
     RegionInterface[]
   >([])
   const [peek, setPeek] = useState<number[]>([]) // Es más facil descargar un state de 2 megas xD
+  const [resolveTranscriptionRegion, setResolveTranscriptionRegion] =
+    useState<ResolveDeleteRegion | null>(null)
   const [resolveRegion, setResolveRegion] =
     useState<ResolveDeleteRegion | null>(null)
   const [currentTab, setCurrentTab] = useState('synopsis')
@@ -139,8 +143,9 @@ const Evidence = (): ReactElement => {
     } catch {}
 
     try {
-      const tempRegions = tempRegionsRef.current ?? $wsRef.current.regions ?? []
-      const sendRegions = tempRegions
+      const currentRegions =
+        tempRegionsRef.current ?? $wsRef.current.regions ?? []
+      const sendRegions = currentRegions
         .filter((r) => Boolean(r.data.name))
         .map((region) => ({
           tag: region.data?.name ?? '',
@@ -152,13 +157,16 @@ const Evidence = (): ReactElement => {
       const updatedRegions =
         (await workingEvidence.actions?.updateRegions(sendRegions)) ?? false
 
-      // TODO: Falta eliminar regiones
       if (updatedRegions) {
-        for (let i = 0; i < tempRegions.length; i++) {
-          tempRegions[i].update({
-            id: tempRegions[i].id.replace('wavesurfer_', '')
-          })
-        }
+        setCommonRegions(
+          updatedRegions.map<RegionInterface>((region) => ({
+            id: region.id ?? '',
+            start: region.startTime,
+            end: region.endTime,
+            data: { name: region.tag }
+          }))
+        )
+
         launchToast({
           title: 'Regiones guardadas correctamente',
           type: 'Success'
@@ -169,9 +177,7 @@ const Evidence = (): ReactElement => {
           type: 'Danger'
         })
       }
-    } catch (e) {
-      console.log(e)
-    }
+    } catch (e) {}
 
     // TODO: Implementar logica de generación de transcripciones
   }
@@ -404,7 +410,6 @@ const Evidence = (): ReactElement => {
               )) ?? false
           } else deleted = false
         }
-        console.log({ deleted, transcriptionRegions, regionId })
         if (deleted) {
           setTranscriptionRegions(
             transcriptionRegions.filter((region) => region.id !== regionId)
@@ -437,6 +442,42 @@ const Evidence = (): ReactElement => {
         />
       )),
     [handleTranscript, deleteTranscript]
+  )
+
+  const handleDeleteRegion = useCallback(
+    async (regionId: string) => {
+      try {
+        let deleted = true
+        if (!regionId.startsWith('wavesurfer')) {
+          const canBeDeleted = await new Promise<boolean>((resolve) => {
+            setResolveRegion(() => resolve)
+          })
+          if (canBeDeleted) {
+            deleted =
+              (await workingEvidence.actions?.deleteRegion(regionId)) ?? false
+          } else deleted = false
+        }
+
+        if (deleted) {
+          setCommonRegions(
+            commonRegions.filter((region) => region.id !== regionId)
+          )
+        }
+
+        return deleted
+      } catch {
+        return false
+      }
+    },
+    [commonRegions]
+  )
+
+  const Region = useMemo(
+    () =>
+      asRegion((props) => (
+        <CommonRegion {...props} deleteRegion={handleDeleteRegion} />
+      )),
+    [handleDeleteRegion]
   )
 
   const toolTabs = useMemo<NonEmptyArray<ToolTab>>(() => {
@@ -524,6 +565,17 @@ const Evidence = (): ReactElement => {
             )}`}
           </Typography>
         </div>
+        <DeleteTranscriptionDialog
+          open={Boolean(resolveTranscriptionRegion)}
+          onAccept={() => {
+            resolveTranscriptionRegion?.(true)
+            setResolveTranscriptionRegion(null)
+          }}
+          onClose={() => {
+            resolveTranscriptionRegion?.(false)
+            setResolveTranscriptionRegion(null)
+          }}
+        />
         <DeleteRegionDialog
           open={Boolean(resolveRegion)}
           onAccept={() => {
@@ -580,7 +632,7 @@ const Evidence = (): ReactElement => {
                 }}
                 regions={regions}
                 CustomRegion={
-                  currentTab === 'transcription' ? CustomRegion : undefined
+                  currentTab === 'transcription' ? CustomRegion : Region
                 }
                 splitChannels
                 showEqualizer

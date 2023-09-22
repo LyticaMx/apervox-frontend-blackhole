@@ -12,7 +12,7 @@ interface Props {
   onClose: () => void
 }
 
-const DeleteRegionDialog = (props: Props): ReactElement => {
+const DeleteTranscriptionDialog = (props: Props): ReactElement => {
   const { open, onAccept, onClose } = props
   const { formatMessage } = useIntl()
 
@@ -46,4 +46,4 @@ const DeleteRegionDialog = (props: Props): ReactElement => {
   )
 }
 
-export { DeleteRegionDialog }
+export { DeleteTranscriptionDialog }
