@@ -11,15 +11,20 @@ export interface Comment {
   targetPhone: string
 }
 
+export interface CommentsPagination extends PaginationFilter {
+  hasNextPage: boolean
+}
+
 export interface State {
   comments: Comment[]
-  pagination: PaginationFilter
+  pagination: CommentsPagination
 }
 
 export interface Actions {
   addComments: (comments: Comment[], page: number) => Promise<void>
   createComment: (comment: Comment) => Promise<void>
   updateComment: (comment: Comment) => Promise<void>
+  resetComments: () => Promise<void>
 }
 
 export interface ContextType extends State {

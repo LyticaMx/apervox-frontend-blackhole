@@ -13,7 +13,13 @@ export const useActions = (state: State, dispatch): Actions => {
     const release = await lock()
     try {
       dispatch(actions.setData([...data, ...comments]))
-      dispatch(actions.setPagination({ ...pagination, page }))
+      dispatch(
+        actions.setPagination({
+          ...pagination,
+          page,
+          hasNextPage: comments.length > 0
+        })
+      )
     } finally {
       release()
     }
@@ -42,9 +48,22 @@ export const useActions = (state: State, dispatch): Actions => {
     }
   }
 
+  const resetComments = async (): Promise<void> => {
+    const release = await lock()
+    try {
+      dispatch(actions.setData([]))
+      dispatch(
+        actions.setPagination({ page: 1, limit: 20, hasNextPage: false })
+      )
+    } finally {
+      release()
+    }
+  }
+
   return {
     addComments,
     createComment,
-    updateComment
+    updateComment,
+    resetComments
   }
 }

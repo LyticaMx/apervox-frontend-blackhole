@@ -1,6 +1,5 @@
 import { createAction } from 'types/contextReducer'
-import { Comment } from './types'
-import { PaginationFilter } from 'types/filters'
+import { Comment, CommentsPagination } from './types'
 
 export enum Types {
   SET_DATA = 'comments/setData',
@@ -9,5 +8,5 @@ export enum Types {
 
 export const actions = {
   setData: createAction<Types, Comment[]>(Types.SET_DATA),
-  setPagination: createAction<Types, PaginationFilter>(Types.SET_PAGINATION)
+  setPagination: createAction<Types, CommentsPagination>(Types.SET_PAGINATION)
 }
