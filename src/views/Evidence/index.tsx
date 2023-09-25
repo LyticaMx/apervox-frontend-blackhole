@@ -43,6 +43,8 @@ import { DeleteRegionDialog } from './components/DeleteRegionDialog'
 import { useTechnique } from 'context/Technique'
 import { useLockEvidence } from './hooks/useLockEvidence'
 import WaitToWork from './components/WaitToWork/WaitToWork'
+import { useCommentsRoom } from './hooks/useCommentsRoom'
+import { CommentsProvider } from './context'
 
 interface EvidenceLocation {
   type: 'audio' | 'video' | 'image' | 'doc'
@@ -83,6 +85,7 @@ const Evidence = (): ReactElement => {
     location.state.from ?? 'monitor',
     techniqueId
   )
+  useCommentsRoom(workingEvidence.id ?? '', canWork)
 
   const saveSynopsis = async (): Promise<void> => {
     try {
@@ -605,4 +608,10 @@ const Evidence = (): ReactElement => {
   )
 }
 
-export default Evidence
+export const EvidenceWithComments = (): ReactElement => (
+  <CommentsProvider>
+    <Evidence />
+  </CommentsProvider>
+)
+
+export default EvidenceWithComments

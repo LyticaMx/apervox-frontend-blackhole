@@ -31,7 +31,7 @@ export const useLockEvidence = (
   }, [socket])
 
   useEffect(() => {
-    if (!socket) return () => {}
+    if (!socket) return
 
     const busyListener = (): void => {
       if (from === 'monitor') {
