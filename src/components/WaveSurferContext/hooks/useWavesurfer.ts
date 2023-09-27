@@ -29,7 +29,6 @@ const useWavesurfer = ({
     const ws = createWavesurfer({
       container,
       height: 150,
-      backend: 'MediaElementWebAudio', //* Necesito esto para el streaming
       splitChannelsOptions: {
         overlay: false,
         filterChannels: [],

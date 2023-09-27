@@ -9,7 +9,7 @@ import {
 } from './types'
 import { WorkingEvidenceContext, initialState } from './context'
 import { useService } from 'hooks/useApi'
-import { get } from 'lodash'
+import { useAuth } from 'context/Auth'
 
 interface Props {
   children: ReactNode
@@ -17,6 +17,9 @@ interface Props {
 
 const WorkingEvidenceProvider = (props: Props): ReactElement => {
   const { children } = props
+  const {
+    auth: { token }
+  } = useAuth()
   const [workingEvidence, setWorkingEvidence] = useState(initialState)
   const evidenceService = useService('call-evidences')
 
@@ -95,18 +98,9 @@ const WorkingEvidenceProvider = (props: Props): ReactElement => {
   const getAudioUrl = async (): Promise<string> => {
     try {
       if (!workingEvidence.id) return ''
-
-      const response = await evidenceService.post({
-        queryString: `${workingEvidence.id}/auth-stream`
-      })
-
-      const authToken = get(response, 'data.token', '')
-
-      if (!authToken) return ''
-
       return `${process.env.REACT_APP_MAIN_BACKEND_URL}call-evidences/${
         workingEvidence.id ?? 0
-      }/stream?token=${authToken}`
+      }/compressed-audio?extension=opus&token=${token}`
     } catch {
       return ''
     }

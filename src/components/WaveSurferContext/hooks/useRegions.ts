@@ -39,7 +39,13 @@ const useRegions = (
     if (!wavesurfer) return
     if (regionsDefault) {
       setRegions(
-        regionsDefault.map((region) => $ws.current?.regions?.add(region))
+        regionsDefault.filter((region) => {
+          if (region) {
+            $ws.current?.regions?.add(region)
+            return true
+          }
+          return false
+        })
       )
     }
 

@@ -67,7 +67,7 @@ const Evidence = (): ReactElement => {
   const [transcriptionRegions, setTranscriptionRegions] = useState<
     RegionInterface[]
   >([])
-  const [peek, setPeek] = useState<number[]>([]) // Es más facil descargar un state de 2 megas xD
+  // const [peek, setPeek] = useState<number[]>([]) // Es más facil descargar un state de 2 megas xD
   const [resolveTranscriptionRegion, setResolveTranscriptionRegion] =
     useState<ResolveDeleteRegion | null>(null)
   const [resolveRegion, setResolveRegion] =
@@ -200,12 +200,14 @@ const Evidence = (): ReactElement => {
     } catch {}
   }
 
+  /*
   const getPeaks = async (): Promise<void> => {
     try {
       const peaks = (await workingEvidence.actions?.getAudioWave()) ?? []
       setPeek(peaks)
     } catch {}
   }
+  */
 
   const getRegions = async (): Promise<void> => {
     try {
@@ -300,13 +302,18 @@ const Evidence = (): ReactElement => {
     }
     workingEvidence.actions?.getData()
     getAudioUrl()
-    getPeaks()
+    // getPeaks()
   }, [workingEvidence.id, canWork])
 
   useEffect(() => {
     if (!canWork) return
     if (location.state.type !== 'audio') return
     getRegions()
+
+    return () => {
+      setCommonRegions([])
+      setTranscriptionRegions([])
+    }
   }, [location.state.type, canWork])
 
   const handleChangeTab = (newTab: string): void => {
@@ -390,7 +397,6 @@ const Evidence = (): ReactElement => {
             )
             .sort((a, b) => a.start - b.start)
         )
-        console.log('Actualizar region desde back') // TODO: Transcripciones automáticas
       }
 
       return regionId
@@ -599,7 +605,9 @@ const Evidence = (): ReactElement => {
           </button>
           <button
             className="p-1 w-8 h-8 bg-white shadow-md border rounded-md text-secondary-gray hover:enabled:text-secondary"
-            onClick={getNextEvidence}
+            onClick={() => {
+              getNextEvidence()
+            }}
           >
             <BsSkipEnd className="h-6 w-6" />
           </button>
@@ -627,8 +635,7 @@ const Evidence = (): ReactElement => {
               <WaveSurfer
                 plugins={['Regions', 'Timeline', 'Minimap']}
                 audio={{
-                  url,
-                  peek
+                  url
                 }}
                 onDownload={async () => {
                   console.log('hola')
