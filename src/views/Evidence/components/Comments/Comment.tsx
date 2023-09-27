@@ -11,6 +11,7 @@ interface Props {
   eventId: string
   date: string
   message: string
+  evidenceId: string
 }
 
 const Comment = (props: Props): ReactElement => {

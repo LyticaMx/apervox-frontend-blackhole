@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { pathRoute } from 'router/routes'
 import { NextEvidence, WorkingArgs, WorkingEvidence } from 'types/evidence'
+import { useCommentsContext } from '../context'
 
 interface LockMechanism {
   canWork: boolean
@@ -19,6 +20,7 @@ export const useLockEvidence = (
   const [canWork, setCanWork] = useState(false)
   const { actions: loaderActions } = useLoader()
   const { actions: workingEvidenceActions } = useWorkingEvidence()
+  const { actions: commentsActions } = useCommentsContext()
   const nextRef = useRef<boolean>(false)
   const socket = useEvidenceSocket()
   const history = useHistory()
@@ -31,7 +33,7 @@ export const useLockEvidence = (
   }, [socket])
 
   useEffect(() => {
-    if (!socket) return () => {}
+    if (!socket) return
 
     const busyListener = (): void => {
       if (from === 'monitor') {
@@ -50,6 +52,7 @@ export const useLockEvidence = (
       }
 
       setCanWork(false)
+      commentsActions?.resetComments()
       workingEvidenceActions?.setEvidence(evidence.id)
     }
 

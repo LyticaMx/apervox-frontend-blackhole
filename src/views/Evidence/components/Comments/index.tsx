@@ -2,12 +2,16 @@ import Button from 'components/Button'
 import Form from 'components/Form'
 import Typography from 'components/Typography'
 import { useLanguage } from 'context/Language'
-import { FormikConfig, FormikContextType } from 'formik'
-import { actionsMessages, generalMessages } from 'globalMessages'
-import { ReactElement, useMemo, useRef } from 'react'
+import { FormikConfig, FormikContextType, FormikHelpers } from 'formik'
+import { actionsMessages, formMessages, generalMessages } from 'globalMessages'
+import { ReactElement, useCallback, useEffect, useMemo, useRef } from 'react'
 import { useIntl } from 'react-intl'
 import { Field } from 'types/form'
 import Comment from './Comment'
+import * as yup from 'yup'
+import { useCommentsContext } from 'views/Evidence/context'
+import { useEvidenceSocket } from 'context/EvidenceSocket'
+import { useVirtualizer } from '@tanstack/react-virtual'
 
 interface FormValues {
   message: string
@@ -16,7 +20,26 @@ interface FormValues {
 const Comments = (): ReactElement => {
   const { formatMessage } = useIntl()
   const { localeI18n } = useLanguage()
+  const { comments, pagination } = useCommentsContext()
+  const socket = useEvidenceSocket()
   const formikRef = useRef<FormikContextType<FormValues>>()
+  const parentRef = useRef<HTMLDivElement>(null)
+  const fetchingRef = useRef<boolean>(false)
+
+  const handleNewComment = useCallback(
+    (values: FormValues, helpers: FormikHelpers<FormValues>): void => {
+      socket?.emit('new_comment', values.message)
+      helpers.resetForm()
+    },
+    [socket]
+  )
+
+  const rowVirtualizer = useVirtualizer({
+    count: pagination.hasNextPage ? comments.length + 1 : comments.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 100,
+    overscan: 10
+  })
 
   const fields = useMemo<Array<Field<FormValues>>>(
     () => [
@@ -33,34 +56,56 @@ const Comments = (): ReactElement => {
 
   const formikConfig: FormikConfig<FormValues> = {
     initialValues: { message: '' },
-    onSubmit: (values) => {
-      console.log(values)
-    }
+    validationSchema: yup.object({
+      message: yup
+        .string()
+        .trim()
+        .required(formatMessage(formMessages.required))
+    }),
+    validateOnBlur: false,
+    onSubmit: handleNewComment
   }
 
-  const demoData = useMemo(
-    () => [
-      {
-        id: '002',
-        eventId: 'A001',
-        target: '5563456789',
-        date: '2022-11-28T16:00:00.000Z',
-        user: 'g.garcia',
-        message:
-          'Vivamus quis viverra erat. Aenean ac ultricies velit, at semper dolor. Aenean ac ipsum mollis, efficitur ex et, malesuada est. Praesent massa leo, dapibus ac auctor sed, euismod et sem. Nam sed tortor quam. Nulla a sollicitudin ligula. Vivamus suscipit diam ut scelerisque finibus. Duis tincidunt sapien non urna bibendum vestibulum.'
-      },
-      {
-        id: '001',
-        eventId: 'A001',
-        target: '5563456789',
-        date: '2022-11-28T16:00:00.000Z',
-        user: 'i.hinojosa',
-        message:
-          'In vitae sapien eget sapien convallis pretium. Duis placerat lacus at tellus hendrerit, sit amet condimentum quam vulputate. Suspendisse a magna lacus. Vivamus eget dapibus massa. Sed ut tristique mi, ac venenatis augue. Nulla ac diam non risus porta sollicitudin in at enim. Donec odio nisi, interdum in lorem quis, sagittis consectetur lectus.'
-      }
-    ],
-    []
-  )
+  const getNextComments = useCallback(() => {
+    socket?.emit('get_comments', {
+      page: pagination.page + 1,
+      limit: pagination.limit
+    })
+  }, [socket, pagination.page])
+
+  useEffect(() => {
+    if (!socket) return
+
+    const handleFetchRef = (): void => {
+      fetchingRef.current = false
+    }
+
+    socket.on('comments', handleFetchRef)
+
+    return () => {
+      socket.off('comments', handleFetchRef)
+    }
+  }, [socket])
+
+  useEffect(() => {
+    const [lastItem] = [...rowVirtualizer.getVirtualItems()].reverse()
+
+    if (!lastItem) return
+
+    if (
+      lastItem.index >= comments.length - 1 &&
+      pagination.hasNextPage &&
+      !fetchingRef.current
+    ) {
+      fetchingRef.current = true
+      getNextComments()
+    }
+  }, [
+    pagination.hasNextPage,
+    getNextComments,
+    comments.length,
+    rowVirtualizer.getVirtualItems()
+  ])
 
   return (
     <div>
@@ -71,7 +116,7 @@ const Comments = (): ReactElement => {
       >
         {formatMessage(generalMessages.comments)}
       </Typography>
-      <div className="flex gap-2 items-center mr-6">
+      <div className="flex gap-2 items-start mr-6">
         <Form
           fields={fields}
           formikConfig={formikConfig}
@@ -80,14 +125,66 @@ const Comments = (): ReactElement => {
           className="flex-1"
         />
 
-        <Button color="primary" variant="contained">
+        <Button
+          color="primary"
+          variant="contained"
+          onClick={() => formikRef.current?.submitForm()}
+        >
           {formatMessage(actionsMessages.comment)}
         </Button>
       </div>
-      <div className="shadow rounded-md mt-3 px-10 py-5 bg-background">
-        {demoData.map((comment) => (
-          <Comment {...comment} key={comment.id} />
-        ))}
+      <div
+        className="shadow rounded-md mt-3 px-10 py-5 bg-background h-[350px] overflow-auto"
+        ref={parentRef}
+      >
+        <div
+          style={{
+            height: `${rowVirtualizer.getTotalSize()}px`,
+            width: '100%',
+            position: 'relative'
+          }}
+        >
+          {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+            const isLoaderRow = virtualRow.index > comments.length - 1
+            const comment = comments[virtualRow.index]
+            return (
+              <div
+                key={virtualRow.index}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: `${virtualRow.size}px`,
+                  transform: `translateY(${virtualRow.start}px)`
+                }}
+              >
+                <div
+                  key={virtualRow.key}
+                  data-index={virtualRow.index}
+                  ref={rowVirtualizer.measureElement}
+                >
+                  {isLoaderRow ? (
+                    pagination.hasNextPage ? (
+                      'Loading more...'
+                    ) : (
+                      'Nothing more to load'
+                    )
+                  ) : (
+                    <Comment
+                      date={comment.createdAt}
+                      evidenceId={comment.evidenceId}
+                      eventId={comment.evidenceNumber}
+                      message={comment.data}
+                      target={comment.targetPhone}
+                      user={comment.author}
+                    />
+                  )}
+                </div>
+              </div>
+            )
+          })}
+        </div>
       </div>
     </div>
   )
