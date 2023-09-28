@@ -4,7 +4,14 @@ import Typography from 'components/Typography'
 import { useLanguage } from 'context/Language'
 import { FormikConfig, FormikContextType, FormikHelpers } from 'formik'
 import { actionsMessages, formMessages, generalMessages } from 'globalMessages'
-import { ReactElement, useCallback, useEffect, useMemo, useRef } from 'react'
+import {
+  ReactElement,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react'
 import { useIntl } from 'react-intl'
 import { Field } from 'types/form'
 import Comment from './Comment'
@@ -12,6 +19,7 @@ import * as yup from 'yup'
 import { useCommentsContext } from 'views/Evidence/context'
 import { useEvidenceSocket } from 'context/EvidenceSocket'
 import { useVirtualizer } from '@tanstack/react-virtual'
+import { useAuth } from 'context/Auth'
 
 interface FormValues {
   message: string
@@ -20,6 +28,10 @@ interface FormValues {
 const Comments = (): ReactElement => {
   const { formatMessage } = useIntl()
   const { localeI18n } = useLanguage()
+  const {
+    auth: { profile }
+  } = useAuth()
+  const [editingId, setEditingId] = useState<string>('')
   const { comments, pagination } = useCommentsContext()
   const socket = useEvidenceSocket()
   const formikRef = useRef<FormikContextType<FormValues>>()
@@ -30,6 +42,15 @@ const Comments = (): ReactElement => {
     (values: FormValues, helpers: FormikHelpers<FormValues>): void => {
       socket?.emit('new_comment', values.message)
       helpers.resetForm()
+    },
+    [socket]
+  )
+
+  const handleEditComment = useCallback(
+    (id: string, text: string) => {
+      if (!socket) return
+      socket.emit('update_comment', { id, text })
+      setEditingId('')
     },
     [socket]
   )
@@ -178,6 +199,12 @@ const Comments = (): ReactElement => {
                       message={comment.data}
                       target={comment.targetPhone}
                       user={comment.author}
+                      canBeEdited={comment.authorId === profile.id}
+                      isEditing={comment.id === editingId}
+                      onClickEdit={() => setEditingId(comment.id)}
+                      onSave={(text: string) =>
+                        handleEditComment(comment.id, text)
+                      }
                     />
                   )}
                 </div>

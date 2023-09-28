@@ -1,8 +1,13 @@
-import { UserCircleIcon } from '@heroicons/react/24/outline'
+import {
+  PaperAirplaneIcon,
+  PencilSquareIcon,
+  UserCircleIcon
+} from '@heroicons/react/24/outline'
+import IconButton from 'components/Button/IconButton'
 import Typography from 'components/Typography'
 import { format } from 'date-fns'
 import { platformMessages } from 'globalMessages'
-import { ReactElement } from 'react'
+import { ReactElement, useRef, useState } from 'react'
 import { useIntl } from 'react-intl'
 
 interface Props {
@@ -12,11 +17,33 @@ interface Props {
   date: string
   message: string
   evidenceId: string
+  canBeEdited: boolean
+  isEditing: boolean
+  onClickEdit: () => void
+  onSave: (text: string) => void
 }
 
 const Comment = (props: Props): ReactElement => {
-  const { user, date, eventId, message, target } = props
+  const {
+    user,
+    date,
+    eventId,
+    message,
+    target,
+    canBeEdited,
+    isEditing,
+    onClickEdit,
+    onSave
+  } = props
   const { formatMessage } = useIntl()
+  const [comment, setComment] = useState(message)
+  const areaRef = useRef<HTMLTextAreaElement>(null)
+
+  const autoRezise = (): void => {
+    if (!areaRef.current) return
+    areaRef.current.style.height = 'auto'
+    areaRef.current.style.height = `${areaRef.current.scrollHeight}px`
+  }
 
   return (
     <div className="flex items-start gap-2 mb-3 last:mb-0">
@@ -38,9 +65,33 @@ const Comment = (props: Props): ReactElement => {
             </Typography>
           </div>
         </div>
-        <Typography variant="body2" className="text-secondary">
-          {message}
-        </Typography>
+        <div className="flex justify-between">
+          {isEditing ? (
+            <textarea
+              ref={areaRef}
+              className="w-full bg-transparent border border-primary-400 resize-none rounded-md scrollbar-hide"
+              maxLength={500}
+              value={comment}
+              onInput={autoRezise}
+              onChange={(e) => setComment(e.target.value)}
+            />
+          ) : (
+            <Typography variant="body2" className="text-secondary">
+              {message}
+            </Typography>
+          )}
+          {canBeEdited ? (
+            isEditing ? (
+              <IconButton onClick={() => onSave(comment)}>
+                <PaperAirplaneIcon className="h-5 w-5" />
+              </IconButton>
+            ) : (
+              <IconButton onClick={onClickEdit}>
+                <PencilSquareIcon className="h-5 w-5" />
+              </IconButton>
+            )
+          ) : null}
+        </div>
       </div>
     </div>
   )

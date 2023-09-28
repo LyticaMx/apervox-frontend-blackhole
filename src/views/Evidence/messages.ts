@@ -156,7 +156,7 @@ export const deleteRegionDialog = defineMessages({
     defaultMessage: 'Eliminar región'
   },
   deleteRegionDialogQuestion: {
-    id: 'views.Evidence.TranscriptionTab.deleteRegionQuestion',
+    id: 'views.Evidence.TranscriptionTab.deleteRegionDialogQuestion',
     defaultMessage: '¿Se eliminará la región, está seguro?'
   }
 })
