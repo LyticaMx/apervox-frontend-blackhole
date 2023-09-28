@@ -42,9 +42,8 @@ const useRegions = (
         regionsDefault.filter((region) => {
           if (region) {
             $ws.current?.regions?.add(region)
-            return true
           }
-          return false
+          return !!region
         })
       )
     }
