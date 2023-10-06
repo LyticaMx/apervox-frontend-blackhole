@@ -21,6 +21,7 @@ import { EvidencesProvider } from './Evidences'
 import { WorkingEvidenceProvider } from './WorkingEvidence'
 import { ModuleAuditsProvider, SpecificUserAuditsProvider } from './Audit'
 import { EvidenceSocketProvider } from './EvidenceSocket'
+import { AbilityProvider } from './Ability'
 
 interface Props {
   children: ReactNode
@@ -28,6 +29,7 @@ interface Props {
 
 export const AppContextProvider = (props: Props): any => {
   const providers = [
+    AbilityProvider,
     ModuleAuditsProvider,
     TargetsProvider,
     SettingsProvider,
