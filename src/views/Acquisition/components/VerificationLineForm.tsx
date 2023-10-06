@@ -44,6 +44,10 @@ const VerificationLineForm = ({
       .string()
       .required(formatMessage(formMessages.required))
       .length(10, formatMessage(formMessages.length, { length: 10 }))
+      .matches(/^\d{10}$/, {
+        message: formatMessage(formMessages.invalidPhoneNumber),
+        name: 'onlyNumbers'
+      })
   })
 
   const formikConfig = useMemo<FormikConfig<FormValues>>(

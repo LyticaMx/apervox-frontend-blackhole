@@ -67,7 +67,11 @@ const OverflowLineForm = ({
     phone: yup
       .string()
       .required(formatMessage(formMessages.required))
-      .length(10, formatMessage(formMessages.length, { length: 10 })),
+      .length(10, formatMessage(formMessages.length, { length: 10 }))
+      .matches(/^\d{10}$/, {
+        message: formatMessage(formMessages.invalidPhoneNumber),
+        name: 'onlyNumbers'
+      }),
     medium: yup.object().test({
       name: 'ifRequired',
       message: formatMessage(formMessages.required),

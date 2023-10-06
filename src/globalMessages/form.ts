@@ -128,5 +128,9 @@ export const formMessages = defineMessages({
   chooseAtLeastOneField: {
     id: 'global.form.chooseAtLeastOneField',
     defaultMessage: 'Debes escoger al menos un campo'
+  },
+  invalidPhoneNumber: {
+    id: 'global.form.invalidPhoneNumber',
+    defaultMessage: 'Número telefónico no valido'
   }
 })
