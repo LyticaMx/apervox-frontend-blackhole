@@ -8,22 +8,16 @@ import ChangePassword from './components/ChangePassword'
 import { useAuth } from 'context/Auth'
 import { useModuleAudits } from 'context/Audit'
 import { AuditableModules } from 'context/Audit/ModuleAudits/types'
-import { useAbility } from 'context/Ability'
 
 const UserAccount = (): ReactElement => {
   const { formatMessage } = useIntl()
   const { actions } = useAuth()
   const { actions: auditActions } = useModuleAudits()
-  const ability = useAbility()
 
   useEffect(() => {
     actions?.getProfile()
     auditActions?.genAudit(AuditableModules.ME)
   }, [])
-
-  useEffect(() => {
-    console.log({ readUsers: ability.can('r', 'users') })
-  }, [ability.rules])
 
   return (
     <>
