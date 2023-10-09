@@ -6,6 +6,7 @@ import { Field, Section } from 'types/form'
 import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
 import { formMessages } from 'globalMessages'
 import { workGroupsFormMessages } from '../messages'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 interface Option {
   value: string
@@ -36,6 +37,7 @@ const WorkGroupForm = ({
   const getMessage = useFormatMessage(formMessages)
   const getLocalFormMessage = useFormatMessage(workGroupsFormMessages)
   const getGlobalMessage = useGlobalMessage()
+  const ability = useAbility()
   const formikRef = useRef<FormikContextType<FormValues>>()
 
   const fields: Array<Field<FormValues>> = [
@@ -81,7 +83,8 @@ const WorkGroupForm = ({
         placeholder: getLocalFormMessage('selectUsersPlaceholder'),
         loadingMessage: () => `${getLocalFormMessage('loading')}...`,
         noOptionsMessage: () => getLocalFormMessage('noOptions'),
-        debounceTimeout: 300
+        debounceTimeout: 300,
+        disabled: ability.cannot(ACTION.READ, SUBJECT.USERS)
       }
     },
     {
@@ -102,7 +105,8 @@ const WorkGroupForm = ({
         placeholder: getLocalFormMessage('selectTechniquesPlaceholder'),
         loadingMessage: () => `${getLocalFormMessage('loading')}...`,
         noOptionsMessage: () => getLocalFormMessage('noOptions'),
-        debounceTimeout: 300
+        debounceTimeout: 300,
+        disabled: ability.cannot(ACTION.READ, SUBJECT.TECHNIQUES)
       }
     }
   ]

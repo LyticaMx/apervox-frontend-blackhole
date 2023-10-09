@@ -4,6 +4,7 @@ import { useFormatMessage } from 'hooks/useIntl'
 import { generalMessages } from 'globalMessages'
 import { workGroupsMessages } from '../messages'
 import { useWorkGroups } from 'context/WorkGroups'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 interface Props {
   toggleOpen: () => void
@@ -13,6 +14,7 @@ const WorkGroupFilter = ({ toggleOpen }: Props): ReactElement => {
   const getMessage = useFormatMessage(workGroupsMessages)
   const getGeneralMessage = useFormatMessage(generalMessages)
   const { actions, dateFilter, searchFilter, staticFilter } = useWorkGroups()
+  const ability = useAbility()
 
   const filterItems = [
     {
@@ -32,7 +34,11 @@ const WorkGroupFilter = ({ toggleOpen }: Props): ReactElement => {
   return (
     <ViewFilter
       fields={filterItems}
-      action={{ label: getMessage('button'), onClick: toggleOpen }}
+      action={{
+        label: getMessage('button'),
+        onClick: toggleOpen,
+        disabled: ability.cannot(ACTION.CREATE, SUBJECT.GROUPS)
+      }}
       download={(document) => alert(document)}
       onChange={(data) =>
         actions?.getWorkGroups({

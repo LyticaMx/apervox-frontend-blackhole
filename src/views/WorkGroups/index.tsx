@@ -20,6 +20,8 @@ import { formatTotal } from 'utils/formatTotal'
 import { useDrawer } from 'context/Drawer'
 import { useIntl } from 'react-intl'
 import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
+import WrongPermissions from 'components/WrongPermissions'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 interface SynchroEditIds {
   ids: string[]
@@ -48,6 +50,7 @@ const WorkGroups = (): ReactElement => {
     usersPagination,
     totalWorkGroups
   } = useWorkGroups()
+  const ability = useAbility()
   const { actions: auditActions } = useModuleAudits()
 
   useEffect(() => {
@@ -181,7 +184,7 @@ const WorkGroups = (): ReactElement => {
               {
                 id: 'users',
                 name: 'Usuarios asignados',
-                component: (
+                component: ability.can(ACTION.READ, SUBJECT.USERS) ? (
                   <div className="py-2">
                     <p className="uppercase mb-2">
                       {formatTotal(
@@ -189,15 +192,16 @@ const WorkGroups = (): ReactElement => {
                         getMessage('assignedUsersSubtitle')
                       )}
                     </p>
-
                     <AssociatedUserList />
                   </div>
+                ) : (
+                  <WrongPermissions />
                 )
               },
               {
                 id: 'techniques',
                 name: 'Técnicas Asignadas',
-                component: (
+                component: ability.can(ACTION.READ, SUBJECT.TECHNIQUES) ? (
                   <div className="py-2">
                     <p className="uppercase mb-2">
                       {formatTotal(
@@ -208,6 +212,8 @@ const WorkGroups = (): ReactElement => {
 
                     <TechniqueList />
                   </div>
+                ) : (
+                  <WrongPermissions />
                 )
               }
             ]}
