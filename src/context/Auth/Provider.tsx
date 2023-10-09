@@ -17,6 +17,8 @@ import { useLoader } from 'context/Loader'
 import { AuthContext, initialState } from './context'
 import { format } from 'date-fns'
 import { ResponseData } from 'types/api'
+import { AbilityBuilder, createMongoAbility } from '@casl/ability'
+import { ACTION, useAbility } from 'context/Ability'
 
 interface Props {
   children: ReactNode
@@ -24,6 +26,7 @@ interface Props {
 
 const AuthProvider = ({ children }: Props): ReactElement => {
   const history = useHistory()
+  const ability = useAbility()
   const { actions: loaderActions } = useLoader()
   const intl = useIntl()
 
@@ -83,6 +86,21 @@ const AuthProvider = ({ children }: Props): ReactElement => {
       if (id) {
         setItem('token', token)
         setItem('rToken', rToken)
+
+        try {
+          const { can, rules } = new AbilityBuilder(createMongoAbility)
+          const { scopes } = jwtDecode<any>(token)
+          for (const scope of scopes) {
+            if (scope.create) can(ACTION.CREATE, scope.name)
+            if (scope.read) can(ACTION.READ, scope.name)
+            if (scope.update) can(ACTION.UPDATE, scope.name)
+            if (scope.delete) can(ACTION.DELETE, scope.name)
+            if (scope.export) can(ACTION.EXPORT, scope.name)
+          }
+          ability.update(rules)
+        } catch (e) {
+          console.error(e)
+        }
 
         const authData: Auth = {
           isLogguedIn: true,
