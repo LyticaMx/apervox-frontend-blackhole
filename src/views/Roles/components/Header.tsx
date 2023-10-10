@@ -10,6 +10,7 @@ import { StaticFilter } from 'components/FilterByField'
 import { rolesMessages } from '../messages'
 import { useIntl } from 'react-intl'
 import { formMessages, generalMessages } from 'globalMessages'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 interface Props {
   onAction: () => void
@@ -18,6 +19,7 @@ const status = { active: true, inactive: false, both: undefined }
 const Header = ({ onAction }: Props): ReactElement => {
   const { total, actions, searchFilter, dateFilter, staticFilter } = useRoles()
   const { formatMessage } = useIntl()
+  const ability = useAbility()
 
   const getMessage = useFormatMessage(rolesMessages)
 
@@ -56,7 +58,11 @@ const Header = ({ onAction }: Props): ReactElement => {
       </div>
       <ViewFilter
         fields={items}
-        action={{ label: getMessage('button'), onClick: onAction }}
+        action={{
+          label: getMessage('button'),
+          onClick: onAction,
+          disabled: ability.cannot(ACTION.CREATE, SUBJECT.ROLES)
+        }}
         download={(document) => alert(document)}
         staticFilters={staticFilters}
         initialValues={{

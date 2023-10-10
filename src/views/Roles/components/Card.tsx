@@ -15,6 +15,7 @@ import Typography from 'components/Typography'
 
 import ActionTooltip from './Tooltip'
 import { rolesCardMessages } from '../messages'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 interface Props {
   data: Role
@@ -32,6 +33,7 @@ const RoleCard = ({
 }: Props): ReactElement => {
   const getMessage = useFormatMessage(rolesCardMessages)
   const getGlobalMessage = useGlobalMessage()
+  const ability = useAbility()
 
   const formatDate = (createAt?: string): string => {
     if (!createAt) return ''
@@ -58,10 +60,13 @@ const RoleCard = ({
       </p>
       <div className="flex justify-end gap-2 mt-2">
         <ActionTooltip content={getGlobalMessage('history', 'generalMessages')}>
-          <RectangleGroupIcon
-            className="h-5 w-5 text-muted hover:text-primary cursor-pointer"
+          <button
             onClick={() => onHistory(data)}
-          />
+            disabled={ability.cannot(ACTION.READ, SUBJECT.AUDITS)}
+            className=" text-muted enabled:hover:text-primary cursor-pointer"
+          >
+            <RectangleGroupIcon className="h-5 w-5" />
+          </button>
         </ActionTooltip>
         <ActionTooltip
           content={getGlobalMessage(
@@ -69,16 +74,22 @@ const RoleCard = ({
             'actionsMessages'
           )}
         >
-          <NoSymbolIcon
-            className="h-5 w-5 text-muted hover:text-primary cursor-pointer"
+          <button
             onClick={() => onBlock(data)}
-          />
+            disabled={ability.cannot(ACTION.UPDATE, SUBJECT.ROLES)}
+            className="text-muted enabled:hover:text-primary cursor-pointer"
+          >
+            <NoSymbolIcon className="h-5 w-5" />
+          </button>
         </ActionTooltip>
         <ActionTooltip content={getGlobalMessage('delete', 'actionsMessages')}>
-          <TrashIcon
-            className="h-5 w-5 text-muted hover:text-primary cursor-pointer"
+          <button
+            className="text-muted enabled:hover:text-primary cursor-pointer"
             onClick={() => onDelete(data)}
-          />
+            disabled={ability.cannot(ACTION.DELETE, SUBJECT.ROLES)}
+          >
+            <TrashIcon className="h-5 w-5" />
+          </button>
         </ActionTooltip>
       </div>
     </Card>
