@@ -13,12 +13,14 @@ import CreateOverflowLineDrawer from './CreateOverflowLineDrawer'
 import { formatTotal } from 'utils/formatTotal'
 import { useOverflowLine } from 'context/OverflowLines'
 import { omit } from 'lodash'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 const Header = (): ReactElement => {
   const getMessage = useFormatMessage(messages)
   const [open, toggle] = useToggle(false)
 
   const { totals, dateFilter, searchFilter, actions } = useOverflowLine()
+  const ability = useAbility()
   const counters = omit(totals, 'all')
 
   const items = [
@@ -38,7 +40,13 @@ const Header = (): ReactElement => {
         <ViewFilter
           fields={items}
           download={(document) => alert(document)}
-          action={{ label: getMessage('button'), onClick: () => toggle() }}
+          action={{
+            label: getMessage('button'),
+            onClick: () => toggle(),
+            disabled:
+              ability.cannot(ACTION.CREATE, SUBJECT.OVERFLOW_LINES) ||
+              ability.cannot(ACTION.READ, SUBJECT.ACQUISITION_MEDIUMS)
+          }}
           onChange={(data) => {
             actions?.get({
               start_time: data.dateRange[0],
