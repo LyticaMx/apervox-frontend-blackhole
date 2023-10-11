@@ -30,7 +30,7 @@ export const techniquesMessages = defineMessages({
 export const techniquesDeleteDialogMessages = defineMessages({
   title: {
     id: 'views.techniques.deleteDialog.title',
-    defaultMessage: 'Eliminar {selected, plural, one{técnica} other={técnicas}}'
+    defaultMessage: 'Eliminar {selected, plural, one{técnica} other{técnicas}}'
   },
   message: {
     id: 'views.techniques.deleteDialog.message',

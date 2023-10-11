@@ -31,6 +31,7 @@ import DeleteTechinqueDialog from './DeleteTechinqueDialog'
 import { techniquesDeleteDialogMessages, techniquesMessages } from '../messages'
 import { useLanguage } from 'context/Language'
 import { useIntl } from 'react-intl'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 interface SynchroDeleteIds {
   ids: string[]
@@ -50,6 +51,7 @@ const TechniqueList = (): ReactElement => {
   })
   const [openActionNotification, setOpenActionNotification] = useState(false)
   const { locale } = useLanguage()
+  const ability = useAbility()
 
   const handleDelete = async (ids: string[]): Promise<boolean> =>
     await new Promise<boolean>((resolve) =>
@@ -211,7 +213,9 @@ const TechniqueList = (): ReactElement => {
                 }}
                 className="text-muted hover:text-primary"
                 disabled={
-                  table.getIsSomeRowsSelected() || table.getIsAllRowsSelected()
+                  table.getIsSomeRowsSelected() ||
+                  table.getIsAllRowsSelected() ||
+                  ability.cannot(ACTION.DELETE, SUBJECT.TECHNIQUES)
                 }
               >
                 <TrashIcon className="h-5 w-5 mx-1" />
@@ -223,7 +227,10 @@ const TechniqueList = (): ReactElement => {
     }
   ]
 
-  const columns = useTableColumns<Technique>(() => normalModeColumns)
+  const columns = useTableColumns<Technique>(
+    () => normalModeColumns,
+    [ability.rules]
+  )
 
   return (
     <>
@@ -254,7 +261,8 @@ const TechniqueList = (): ReactElement => {
             tooltip: getMessage('delete'),
             action: async (items) =>
               await handleDelete(items.map((item) => item.id ?? '')),
-            Icon: TrashIcon
+            Icon: TrashIcon,
+            disabled: ability.cannot(ACTION.DELETE, SUBJECT.TECHNIQUES)
           }
         ]}
         onRowClicked={handleClick}
