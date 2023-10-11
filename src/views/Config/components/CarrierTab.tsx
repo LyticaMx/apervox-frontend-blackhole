@@ -12,6 +12,7 @@ import CompanyDrawer from './CompanyDrawer'
 import { useCarriers } from 'context/Carriers'
 import { formatTotal } from 'utils/formatTotal'
 import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 interface FormValues {
   id?: string
@@ -25,6 +26,7 @@ const CarrierTab = (): ReactElement => {
   const { actions: auditActions } = useModuleAudits()
   const [openDeleteCarrier, setOpenDeleteCarrier] = useState(false)
   const [deleteIds, setDeleteIds] = useState<string[]>([])
+  const ability = useAbility()
 
   useEffect(() => {
     actions?.getData({}, true)
@@ -99,6 +101,7 @@ const CarrierTab = (): ReactElement => {
             fields={[{ label: formatMessage(formMessages.name), name: 'name' }]}
             action={{
               label: formatMessage(mediaMessages.createCarrier),
+              disabled: ability.cannot(ACTION.CREATE, SUBJECT.CARRIERS),
               onClick: () =>
                 drawerActions?.handleOpenDrawer({
                   title: (
@@ -142,7 +145,8 @@ const CarrierTab = (): ReactElement => {
           <GeneralMediaList
             type="carrier"
             data={data}
-            handleEdit={(row) =>
+            handleEdit={(row) => {
+              if (ability.cannot(ACTION.UPDATE, SUBJECT.CARRIERS)) return
               drawerActions?.handleOpenDrawer({
                 title: (
                   <Typography
@@ -163,7 +167,8 @@ const CarrierTab = (): ReactElement => {
                   />
                 )
               })
-            }
+            }}
+            disableDelete={ability.cannot(ACTION.DELETE, SUBJECT.CARRIERS)}
             handleDelete={(row) => {
               setDeleteIds([row.id])
               setOpenDeleteCarrier(true)
