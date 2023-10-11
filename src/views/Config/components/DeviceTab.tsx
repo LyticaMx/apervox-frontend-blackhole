@@ -100,7 +100,9 @@ const DeviceTab = (): ReactElement => {
             fields={[{ label: formatMessage(formMessages.name), name: 'name' }]}
             action={{
               label: formatMessage(mediaMessages.addDevice),
-              disabled: ability.cannot(ACTION.CREATE, SUBJECT.DEVICES),
+              disabled:
+                ability.cannot(ACTION.CREATE, SUBJECT.DEVICES) ||
+                ability.cannot(ACTION.READ, SUBJECT.ACQUISITION_MEDIUMS),
               onClick: () =>
                 drawerActions?.handleOpenDrawer({
                   title: (
@@ -137,7 +139,12 @@ const DeviceTab = (): ReactElement => {
             type="device"
             data={data}
             handleEdit={(row) => {
-              if (ability.cannot(ACTION.UPDATE, SUBJECT.DEVICES)) return
+              if (
+                ability.cannot(ACTION.UPDATE, SUBJECT.DEVICES) ||
+                ability.cannot(ACTION.READ, SUBJECT.ACQUISITION_MEDIUMS)
+              ) {
+                return
+              }
               drawerActions?.handleOpenDrawer({
                 title: (
                   <Typography
