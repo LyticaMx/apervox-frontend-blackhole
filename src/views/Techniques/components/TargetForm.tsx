@@ -8,6 +8,7 @@ import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
 import Grid from 'components/Grid'
 import Radio from 'components/Form/Radio'
 import { targetFormMessages } from '../messages'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 type TargetType = 'etsi' | 'conventional'
 
@@ -29,7 +30,7 @@ interface Props {
 const TargetForm = ({ initialValues, onSubmit }: Props): ReactElement => {
   const getMessage = useFormatMessage(targetFormMessages)
   const getGlobalMessage = useGlobalMessage()
-
+  const ability = useAbility()
   const [targetType, setTargetType] = useState<TargetType>('etsi')
 
   const fields: Array<Field<FormValues>> = [
@@ -170,6 +171,7 @@ const TargetForm = ({ initialValues, onSubmit }: Props): ReactElement => {
               label={getMessage('conventionalTargets')}
               value="conventional"
               checked={targetType === 'conventional'}
+              disabled={ability.cannot(ACTION.READ, SUBJECT.OVERFLOW_LINES)}
               onChange={() => setTargetType('conventional')}
             />
           </Grid>
