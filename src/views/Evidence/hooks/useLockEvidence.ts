@@ -48,6 +48,7 @@ export const useLockEvidence = (
     const nextEvidenceListener = (evidence: NextEvidence): void => {
       loaderActions?.hideLoader()
       if (evidence.id === null) {
+        nextRef.current = false
         return
       }
 
