@@ -21,6 +21,7 @@ import DeleteTargetDialog from './DeleteTargetDialog'
 import CreateTargetDialog from 'views/Techniques/components/CreateTargetDialog'
 import { Target } from 'types/target'
 import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 const TargetList = (): ReactElement => {
   let timer
@@ -33,6 +34,7 @@ const TargetList = (): ReactElement => {
   const [openTargetForm, setOpenTargetForm] = useState(false)
   const { formatMessage } = useIntl()
   const { actions: auditActions } = useModuleAudits()
+  const ability = useAbility()
 
   useEffect(() => {
     targetsActions?.getData({ page: 1, technique_id: techniqueId }, true)
@@ -123,6 +125,10 @@ const TargetList = (): ReactElement => {
           color="indigo"
           tooltip={formatMessage(targetListMessages.addTarget)}
           onClick={() => setOpenTargetForm(true)}
+          disabled={
+            ability.cannot(ACTION.CREATE, SUBJECT.TARGETS) ||
+            ability.cannot(ACTION.READ, SUBJECT.CARRIERS)
+          }
         >
           <PlusCircleIcon className="h-5 w-5" />
         </IconButton>

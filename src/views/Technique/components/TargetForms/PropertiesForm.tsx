@@ -14,6 +14,7 @@ import { TechniqueTabs } from 'types/technique'
 import useToast from 'hooks/useToast'
 import { useTechnique } from 'context/Technique'
 import useTargetMeta from 'hooks/useTargetMeta'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 interface FormValues extends AddressFormValues {
   id?: string
@@ -32,6 +33,7 @@ const PropertiesForm = (): ReactElement => {
   >(null)
   const { addressFields, addressValidationSchema } =
     useAddressForm<FormValues>('address')
+  const ability = useAbility()
 
   const types = [
     { value: 'house', text: formatMessage(propertiesFormMessages.house) },
@@ -61,7 +63,8 @@ const PropertiesForm = (): ReactElement => {
         items: types,
         textField: 'text',
         valueField: 'value',
-        portal: true
+        portal: true,
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12, md: 4, sm: 6 }
     },
@@ -72,7 +75,8 @@ const PropertiesForm = (): ReactElement => {
         labelSpacing: '1',
         id: 'other-type',
         label: formatMessage(propertiesFormMessages.otherType),
-        placeholder: formatMessage(propertiesFormMessages.otherTypePlaceholder)
+        placeholder: formatMessage(propertiesFormMessages.otherTypePlaceholder),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12, md: 4, sm: 6 },
       renderIf: {
@@ -178,6 +182,7 @@ const PropertiesForm = (): ReactElement => {
   }
 
   useEffect(() => {
+    if (!target?.id) return
     getData()
   }, [target?.id])
 

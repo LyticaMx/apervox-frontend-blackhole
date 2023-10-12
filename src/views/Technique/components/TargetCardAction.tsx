@@ -7,12 +7,14 @@ interface Props {
   content: ReactNode
   children: ReactNode
   onClick: (e?: any) => void
+  disabled?: boolean
 }
 
 const TargetCardAction = ({
   content,
   children,
-  onClick
+  onClick,
+  disabled
 }: Props): ReactElement => {
   return (
     <Tooltip
@@ -25,7 +27,9 @@ const TargetCardAction = ({
       }}
       placement="top"
     >
-      <IconButton onClick={onClick}>{children}</IconButton>
+      <IconButton onClick={onClick} disabled={disabled}>
+        {children}
+      </IconButton>
     </Tooltip>
   )
 }

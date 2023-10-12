@@ -17,6 +17,7 @@ import { useTechnique } from 'context/Technique'
 import useToast from 'hooks/useToast'
 import { format } from 'date-fns'
 import { TechniqueTabs } from 'types/technique'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 interface FormValues extends AddressFormValues {
   alias: string
@@ -60,6 +61,7 @@ const PersonalDataForm = (): ReactElement => {
   const { target, actions: techniqueActions } = useTechnique()
   const actions = useTargetMeta(target?.id ?? '', 'personal-data')
   const { launchToast } = useToast()
+  const ability = useAbility()
 
   const fields: Array<Field<FormValues>> = [
     {
@@ -68,7 +70,8 @@ const PersonalDataForm = (): ReactElement => {
       options: {
         id: 'alias',
         label: getMessage('targetAlias'),
-        placeholder: getMessage('targetAliasPlaceholder')
+        placeholder: getMessage('targetAliasPlaceholder'),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 6 }
     },
@@ -78,7 +81,8 @@ const PersonalDataForm = (): ReactElement => {
       options: {
         id: 'personal-data-name',
         label: getMessage('targetName'),
-        placeholder: getMessage('targetNamePlaceholder')
+        placeholder: getMessage('targetNamePlaceholder'),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 6 }
     },
@@ -88,7 +92,8 @@ const PersonalDataForm = (): ReactElement => {
       options: {
         id: 'personal-data-phone',
         label: getMessage('targetPhone'),
-        placeholder: formatMessage(targetFormsGeneralMessages.phonePlaceholder)
+        placeholder: formatMessage(targetFormsGeneralMessages.phonePlaceholder),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 3 }
     },
@@ -112,7 +117,8 @@ const PersonalDataForm = (): ReactElement => {
         textField: 'label',
         valueField: 'id',
         className: 'bg-white-500 mt-3',
-        optionsContainerClassname: 'w-[95%]'
+        optionsContainerClassname: 'w-[95%]',
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 3 }
     },
@@ -123,7 +129,8 @@ const PersonalDataForm = (): ReactElement => {
         formatDisplay: 'dd/MM/yyyy',
         id: 'personal-data-birthdate',
         label: getMessage('birthDate'),
-        placeholder: getMessage('birthDatePlaceholder')
+        placeholder: getMessage('birthDatePlaceholder'),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 3 }
     },
@@ -133,7 +140,8 @@ const PersonalDataForm = (): ReactElement => {
       options: {
         id: 'personal-data-age',
         label: getMessage('age'),
-        placeholder: getMessage('agePlaceholder')
+        placeholder: getMessage('agePlaceholder'),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 3 }
     },
@@ -143,7 +151,8 @@ const PersonalDataForm = (): ReactElement => {
       options: {
         id: 'personal-data-curp',
         label: 'CURP',
-        placeholder: getMessage('curpPlaceholder')
+        placeholder: getMessage('curpPlaceholder'),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 3 }
     },
@@ -153,7 +162,8 @@ const PersonalDataForm = (): ReactElement => {
       options: {
         id: 'personal-data-rfc',
         label: 'RFC',
-        placeholder: getMessage('rfcPlaceholder')
+        placeholder: getMessage('rfcPlaceholder'),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 3 }
     },
@@ -174,7 +184,8 @@ const PersonalDataForm = (): ReactElement => {
         cityPlaceholder: getMessage('birthCityPlaceholder'),
         cityBreakpoints: { xs: 3 },
         className: 'bg-white-500 mt-3',
-        optionsContainerClassname: '!w-full'
+        optionsContainerClassname: '!w-full',
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       }
     },
     ...addressFields
@@ -272,6 +283,7 @@ const PersonalDataForm = (): ReactElement => {
   }
 
   useEffect(() => {
+    if (!target?.id) return
     getValues()
   }, [target?.id])
 
@@ -289,7 +301,8 @@ const PersonalDataForm = (): ReactElement => {
           submitButtonLabel={getGlobalMessage('save', 'actionsMessages')}
           submitButtonProps={{
             color: 'indigo',
-            variant: 'contained'
+            variant: 'contained',
+            disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
           }}
           className="user-account-data-form"
           withSections={{

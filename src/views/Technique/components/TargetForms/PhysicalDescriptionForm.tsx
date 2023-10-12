@@ -15,6 +15,7 @@ import useTargetMeta from 'hooks/useTargetMeta'
 import useToast from 'hooks/useToast'
 import { useIntl } from 'react-intl'
 import { TechniqueTabs } from 'types/technique'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 interface FormValues {
   height: string
@@ -48,6 +49,7 @@ const PhysicalDescriptionForm = (): ReactElement => {
   const { target, actions: techniqueActions } = useTechnique()
   const actions = useTargetMeta(target?.id ?? '', 'physical-description')
   const { launchToast } = useToast()
+  const ability = useAbility()
 
   const fields: Array<Field<FormValues>> = [
     {
@@ -56,7 +58,8 @@ const PhysicalDescriptionForm = (): ReactElement => {
       options: {
         id: 'physical-description-height',
         label: getMessage('height'),
-        placeholder: getMessage('heightPlaceholder')
+        placeholder: getMessage('heightPlaceholder'),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 3 }
     },
@@ -66,7 +69,8 @@ const PhysicalDescriptionForm = (): ReactElement => {
       options: {
         id: 'physical-description-weight',
         label: getMessage('weight'),
-        placeholder: getMessage('weightPlaceholder')
+        placeholder: getMessage('weightPlaceholder'),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 3 }
     },
@@ -80,7 +84,8 @@ const PhysicalDescriptionForm = (): ReactElement => {
         items: bodyTypes,
         textField: 'text',
         valueField: 'value',
-        optionsContainerClassname: '!w-full'
+        optionsContainerClassname: '!w-full',
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 3 }
     },
@@ -90,7 +95,8 @@ const PhysicalDescriptionForm = (): ReactElement => {
       options: {
         id: 'physical-description-other-body',
         label: getMessage('otherBody'),
-        placeholder: getMessage('otherBodyPlaceholder')
+        placeholder: getMessage('otherBodyPlaceholder'),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 3 },
       renderIf: {
@@ -107,7 +113,8 @@ const PhysicalDescriptionForm = (): ReactElement => {
         items: skinTypes,
         textField: 'text',
         valueField: 'value',
-        optionsContainerClassname: '!w-full'
+        optionsContainerClassname: '!w-full',
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 3 }
     },
@@ -121,7 +128,8 @@ const PhysicalDescriptionForm = (): ReactElement => {
         items: hairLength,
         textField: 'text',
         valueField: 'value',
-        optionsContainerClassname: '!w-full'
+        optionsContainerClassname: '!w-full',
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 3 }
     },
@@ -135,7 +143,8 @@ const PhysicalDescriptionForm = (): ReactElement => {
         items: hairTypes,
         textField: 'text',
         valueField: 'value',
-        optionsContainerClassname: '!w-full'
+        optionsContainerClassname: '!w-full',
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 3 },
       renderIf: {
@@ -152,7 +161,8 @@ const PhysicalDescriptionForm = (): ReactElement => {
         items: hairColor,
         textField: 'text',
         valueField: 'value',
-        optionsContainerClassname: '!w-full'
+        optionsContainerClassname: '!w-full',
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 3 },
       renderIf: {
@@ -165,7 +175,8 @@ const PhysicalDescriptionForm = (): ReactElement => {
       options: {
         id: 'other-hair-color',
         label: getMessage('otherHairColor'),
-        placeholder: getMessage('otherHairColorPlaceholder')
+        placeholder: getMessage('otherHairColorPlaceholder'),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 3 },
       renderIf: {
@@ -255,6 +266,7 @@ const PhysicalDescriptionForm = (): ReactElement => {
   )
 
   useEffect(() => {
+    if (!target?.id) return
     getData()
   }, [target?.id])
 
@@ -272,7 +284,8 @@ const PhysicalDescriptionForm = (): ReactElement => {
           submitButtonLabel={getGlobalMessage('save', 'actionsMessages')}
           submitButtonProps={{
             color: 'indigo',
-            variant: 'contained'
+            variant: 'contained',
+            disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
           }}
           className="user-account-data-form"
         />

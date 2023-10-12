@@ -14,6 +14,7 @@ import { useTechnique } from 'context/Technique'
 import useTargetMeta from 'hooks/useTargetMeta'
 import DeleteFormConfirmation from './DeleteFormConfirmation'
 import { TechniqueTabs } from 'types/technique'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 interface FormValues extends AddressFormValues {
   id?: string
@@ -32,6 +33,7 @@ const SocialCircleForm = (): ReactElement => {
   >(null)
   const { addressFields, addressValidationSchema } =
     useAddressForm<FormValues>('address')
+  const ability = useAbility()
 
   const fields: Array<Field<FormValues>> = [
     {
@@ -39,7 +41,8 @@ const SocialCircleForm = (): ReactElement => {
       name: 'name',
       options: {
         label: formatMessage(socialCircleFormMessages.name),
-        placeholder: formatMessage(socialCircleFormMessages.namePlaceholder)
+        placeholder: formatMessage(socialCircleFormMessages.namePlaceholder),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: {
         xs: 12,
@@ -51,7 +54,10 @@ const SocialCircleForm = (): ReactElement => {
       name: 'activity',
       options: {
         label: formatMessage(socialCircleFormMessages.activity),
-        placeholder: formatMessage(socialCircleFormMessages.activityPlaceholder)
+        placeholder: formatMessage(
+          socialCircleFormMessages.activityPlaceholder
+        ),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: {
         xs: 12,
@@ -158,7 +164,7 @@ const SocialCircleForm = (): ReactElement => {
   }
 
   useEffect(() => {
-    getData()
+    if (!target?.id) getData()
   }, [target?.id])
 
   return (

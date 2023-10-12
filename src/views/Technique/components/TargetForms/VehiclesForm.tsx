@@ -14,6 +14,7 @@ import DeleteFormConfirmation from './DeleteFormConfirmation'
 import { useTechnique } from 'context/Technique'
 import useToast from 'hooks/useToast'
 import useTargetMeta from 'hooks/useTargetMeta'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 interface FormValues {
   id?: string
@@ -38,6 +39,7 @@ const VehiclesForm = (): ReactElement => {
   const [deleteFormConfirm, setDeleteFormConfirm] = useState<
     ((value: boolean | PromiseLike<boolean>) => void) | null
   >(null)
+  const ability = useAbility()
 
   const carBrand = [
     { value: 'audi', text: 'Audi' },
@@ -117,7 +119,8 @@ const VehiclesForm = (): ReactElement => {
         items: carBrand,
         textField: 'text',
         valueField: 'value',
-        portal: true
+        portal: true,
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12, md: 4, sm: 6 }
     },
@@ -128,7 +131,8 @@ const VehiclesForm = (): ReactElement => {
         labelSpacing: '1',
         id: 'other-language',
         label: formatMessage(vehiclesFormMessages.otherBrand),
-        placeholder: formatMessage(vehiclesFormMessages.otherBrandPlaceholder)
+        placeholder: formatMessage(vehiclesFormMessages.otherBrandPlaceholder),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12, md: 4, sm: 6 },
       renderIf: {
@@ -142,7 +146,8 @@ const VehiclesForm = (): ReactElement => {
         labelSpacing: '1',
         id: 'vehicle-model',
         label: formatMessage(vehiclesFormMessages.model),
-        placeholder: formatMessage(vehiclesFormMessages.modelPlaceholder)
+        placeholder: formatMessage(vehiclesFormMessages.modelPlaceholder),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12, md: 4, sm: 6 }
     },
@@ -153,7 +158,8 @@ const VehiclesForm = (): ReactElement => {
         labelSpacing: '1',
         id: 'vehicle-year',
         label: formatMessage(vehiclesFormMessages.year),
-        placeholder: formatMessage(vehiclesFormMessages.yearPlaceholder)
+        placeholder: formatMessage(vehiclesFormMessages.yearPlaceholder),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12, md: 4, sm: 6 }
     },
@@ -167,7 +173,8 @@ const VehiclesForm = (): ReactElement => {
         items: vehicleType,
         textField: 'text',
         valueField: 'value',
-        portal: true
+        portal: true,
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12, md: 4, sm: 6 }
     },
@@ -178,7 +185,8 @@ const VehiclesForm = (): ReactElement => {
         labelSpacing: '1',
         id: 'other-type',
         label: formatMessage(vehiclesFormMessages.otherType),
-        placeholder: formatMessage(vehiclesFormMessages.otherTypePlaceholder)
+        placeholder: formatMessage(vehiclesFormMessages.otherTypePlaceholder),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12, md: 4, sm: 6 },
       renderIf: {
@@ -195,7 +203,8 @@ const VehiclesForm = (): ReactElement => {
         items: vehicleColor,
         textField: 'text',
         valueField: 'value',
-        portal: true
+        portal: true,
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12, md: 4, sm: 6 }
     },
@@ -206,7 +215,8 @@ const VehiclesForm = (): ReactElement => {
         labelSpacing: '1',
         id: 'other-color',
         label: formatMessage(vehiclesFormMessages.otherColor),
-        placeholder: formatMessage(vehiclesFormMessages.otherColorPlaceholder)
+        placeholder: formatMessage(vehiclesFormMessages.otherColorPlaceholder),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12, md: 4, sm: 6 },
       renderIf: {
@@ -220,7 +230,8 @@ const VehiclesForm = (): ReactElement => {
         id: 'vehicle-plates',
         labelSpacing: '1',
         label: formatMessage(vehiclesFormMessages.plates),
-        placeholder: formatMessage(vehiclesFormMessages.platesPlaceholder)
+        placeholder: formatMessage(vehiclesFormMessages.platesPlaceholder),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12, md: 4, sm: 6 }
     },
@@ -235,7 +246,8 @@ const VehiclesForm = (): ReactElement => {
           targetFormsGeneralMessages.commentsPlaceholder
         ),
         multiline: true,
-        rows: 4
+        rows: 4,
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12, md: 12 }
     }
@@ -338,7 +350,7 @@ const VehiclesForm = (): ReactElement => {
   }
 
   useEffect(() => {
-    getData()
+    if (!target?.id) getData()
   }, [target?.id])
 
   return (

@@ -11,6 +11,7 @@ import { useTechnique } from 'context/Technique'
 import { TechniqueTabs } from 'types/technique'
 import DeleteBiometric from './DeleteBiometric'
 import useToast from 'hooks/useToast'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 export interface FormValues {
   fingerprints: {
@@ -41,6 +42,7 @@ const BiometricForm = (): ReactElement => {
   const { target, actions: techniqueActions } = useTechnique()
   const formikRef = useRef<FormikContextType<FormValues>>()
   const actions = useTargetMeta(target?.id ?? '', 'biometrics')
+  const ability = useAbility()
 
   const handleSubmit = async (values: FormValues): Promise<void> => {
     // TODO: Revisar Biometricos
@@ -192,6 +194,7 @@ const BiometricForm = (): ReactElement => {
   ]
 
   useEffect(() => {
+    if (!target?.id) return
     try {
       handleGet()
     } catch {
@@ -214,7 +217,8 @@ const BiometricForm = (): ReactElement => {
           submitButtonLabel="Guardar"
           submitButtonProps={{
             color: 'indigo',
-            variant: 'contained'
+            variant: 'contained',
+            disabled: ability.can(ACTION.UPDATE, SUBJECT.TARGETS)
           }}
           withSections={{
             sections

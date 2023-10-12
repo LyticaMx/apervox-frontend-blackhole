@@ -15,6 +15,7 @@ import useTargetMeta from 'hooks/useTargetMeta'
 import { TechniqueTabs } from 'types/technique'
 import useToast from 'hooks/useToast'
 import DeleteFormConfirmation from './DeleteFormConfirmation'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 interface FormValues extends AddressFormValues {
   id?: string
@@ -36,6 +37,7 @@ const AcademicForm = (): ReactElement => {
   const { launchToast } = useToast()
   const { target, actions: techniqueActions } = useTechnique()
   const actions = useTargetMeta(target?.id ?? '', 'academics')
+  const ability = useAbility()
 
   const fields: Array<Field<FormValues>> = [
     {
@@ -45,7 +47,10 @@ const AcademicForm = (): ReactElement => {
         labelSpacing: '1',
         id: 'academic-name',
         label: formatMessage(academicFormMessages.academicName),
-        placeholder: formatMessage(academicFormMessages.academicNamePlaceholder)
+        placeholder: formatMessage(
+          academicFormMessages.academicNamePlaceholder
+        ),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 6 }
     },
@@ -56,7 +61,8 @@ const AcademicForm = (): ReactElement => {
         labelSpacing: '1',
         id: 'academic-specialty',
         label: formatMessage(academicFormMessages.specialty),
-        placeholder: formatMessage(academicFormMessages.specialtyPlaceholder)
+        placeholder: formatMessage(academicFormMessages.specialtyPlaceholder),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 6 }
     },
@@ -69,7 +75,8 @@ const AcademicForm = (): ReactElement => {
         label: getGlobalMessage('email', 'formMessages'),
         placeholder: formatMessage(
           academicFormMessages.academicEmailPlaceholder
-        )
+        ),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 3 }
     },
@@ -82,7 +89,8 @@ const AcademicForm = (): ReactElement => {
         label: formatMessage(academicFormMessages.academicPhone),
         placeholder: formatMessage(
           academicFormMessages.academicPhonePlaceholder
-        )
+        ),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 3 }
     },
@@ -198,6 +206,7 @@ const AcademicForm = (): ReactElement => {
   }
 
   useEffect(() => {
+    if (!target?.id) return
     getData()
   }, [target?.id])
 

@@ -8,12 +8,14 @@ import { ArrowDownTrayIcon } from '@heroicons/react/24/outline'
 import RichTextEditor from 'components/RichTextEditor'
 import { useTechnique } from 'context/Technique'
 import useToast from 'hooks/useToast'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 const TechniqueSummary = (): ReactElement => {
   const { formatMessage } = useIntl()
   const descriptionRef = useRef<Editor>(null)
   const { summary, technique, actions: techniqueActions } = useTechnique()
   const { launchToast } = useToast()
+  const ability = useAbility()
 
   useEffect(() => {
     techniqueActions?.getDescription()
@@ -55,6 +57,7 @@ const TechniqueSummary = (): ReactElement => {
           className="h-max"
           variant="text"
           color="indigo"
+          disabled={ability.cannot(ACTION.UPDATE, SUBJECT.TECHNIQUES)}
           onClick={handleUpdateSummary}
         >
           {formatMessage(techniqueInfoMessages.saveDescription)}
@@ -64,6 +67,7 @@ const TechniqueSummary = (): ReactElement => {
         <RichTextEditor
           initialData={summary}
           editorRef={descriptionRef}
+          readOnly={ability.cannot(ACTION.UPDATE, SUBJECT.TECHNIQUES)}
           className="border mb-3"
           textAreaClassName="editor-demo"
         />

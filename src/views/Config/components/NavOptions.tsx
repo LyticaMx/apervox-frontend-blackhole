@@ -31,7 +31,8 @@ const NavOptions = (): ReactElement => {
       })
     }
 
-    /* TO BE DEFINED
+    // TO BE DEFINED
+    /*
     tabs.push({
       to: pathRoute.config.telecom,
       name: formatMessage(messages.telecomStations)

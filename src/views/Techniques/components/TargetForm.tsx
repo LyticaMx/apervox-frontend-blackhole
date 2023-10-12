@@ -130,7 +130,14 @@ const TargetForm = ({ initialValues, onSubmit }: Props): ReactElement => {
 
   const validationSchema = yup.object({
     name: yup.string().required(getMessage('required')),
-    number: yup.string().required(getMessage('required')),
+    number: yup
+      .string()
+      .required(getMessage('required'))
+      .length(10, getMessage('length', { length: 10 }))
+      .matches(/^\d{10}$/, {
+        message: getMessage('invalidPhoneNumber'),
+        name: 'onlyNumbers'
+      }),
     phoneCompany: yup.mixed().required(getMessage('required'))
   })
 

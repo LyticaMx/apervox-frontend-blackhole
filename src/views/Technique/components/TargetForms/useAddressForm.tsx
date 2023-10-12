@@ -3,6 +3,7 @@ import { useIntl } from 'react-intl'
 import { formMessages } from 'globalMessages'
 import { Field } from 'types/form'
 import { useAddressMessages } from 'views/Technique/messages'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 export interface AddressFormValues {
   country: string
@@ -20,6 +21,7 @@ interface AddressForm<T extends any> {
 
 export const useAddressForm = <T,>(section?: string): AddressForm<T> => {
   const { formatMessage } = useIntl()
+  const ability = useAbility()
 
   const addressFields: Array<Field<AddressFormValues & T>> = [
     {
@@ -41,7 +43,8 @@ export const useAddressForm = <T,>(section?: string): AddressForm<T> => {
         cityPlaceholder: formatMessage(useAddressMessages.cityPlaceholder),
         cityBreakpoints: { xs: 12, md: 6 },
         className: 'bg-white-500 mt-3',
-        optionsContainerClassname: '!w-full'
+        optionsContainerClassname: '!w-full',
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       section
     },
@@ -52,7 +55,8 @@ export const useAddressForm = <T,>(section?: string): AddressForm<T> => {
         id: 'zipCode',
         label: formatMessage(useAddressMessages.zipCode),
         placeholder: formatMessage(useAddressMessages.zipCodePlaceholder),
-        labelSpacing: '1'
+        labelSpacing: '1',
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12, md: 6 },
       section
@@ -64,7 +68,8 @@ export const useAddressForm = <T,>(section?: string): AddressForm<T> => {
         id: 'line1',
         label: formatMessage(useAddressMessages.line1),
         placeholder: formatMessage(useAddressMessages.line1Placeholder),
-        labelSpacing: '1'
+        labelSpacing: '1',
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12 },
       section
@@ -76,7 +81,8 @@ export const useAddressForm = <T,>(section?: string): AddressForm<T> => {
         id: 'line2',
         label: formatMessage(useAddressMessages.line2),
         placeholder: formatMessage(useAddressMessages.line2Placeholder),
-        labelSpacing: '1'
+        labelSpacing: '1',
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12 },
       section

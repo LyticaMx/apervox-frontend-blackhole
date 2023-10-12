@@ -2,7 +2,7 @@ import { ReactElement, useEffect } from 'react'
 import { format } from 'date-fns'
 import { useIntl } from 'react-intl'
 import clsx from 'clsx'
-import { StarIcon, TrashIcon } from '@heroicons/react/24/outline'
+import { StarIcon } from '@heroicons/react/24/outline'
 
 import { useGlobalMessage } from 'hooks/useIntl'
 import useTableColumns from 'hooks/useTableColumns'
@@ -316,17 +316,6 @@ const EvidenceList = ({ onSelectItem }: Props): ReactElement => {
         totalRecords: pagination.totalRecords,
         onChange: (page) => evidencesActions?.getData({ page: page + 1 })
       }}
-      actionsForSelectedItems={[
-        {
-          name: 'Eliminar',
-          action: (items) => {
-            console.log(
-              `onDeleteTechniquesFromWorkGroup(${items.map((user) => user.id)})`
-            )
-          },
-          Icon: TrashIcon
-        }
-      ]}
       onRowClicked={onSelectItem}
     />
   )

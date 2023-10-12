@@ -15,6 +15,7 @@ import { useTechnique } from 'context/Technique'
 import useTargetMeta from 'hooks/useTargetMeta'
 import { TechniqueTabs } from 'types/technique'
 import DeleteFormConfirmation from './DeleteFormConfirmation'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 interface FormValues {
   id?: string
@@ -38,6 +39,7 @@ const AccountBankForm = (): ReactElement => {
   const { launchToast } = useToast()
   const { target, actions: techniqueActions } = useTechnique()
   const actions = useTargetMeta(target?.id ?? '', 'bank-accounts')
+  const ability = useAbility()
 
   const fields: Array<Field<FormValues>> = [
     {
@@ -47,7 +49,8 @@ const AccountBankForm = (): ReactElement => {
         id: 'bankname',
         label: formatMessage(accountBankFormMessages.bank),
         placeholder: formatMessage(accountBankFormMessages.bankPlaceholder),
-        labelSpacing: '1'
+        labelSpacing: '1',
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12, sm: 6, md: 4 }
     },
@@ -60,7 +63,8 @@ const AccountBankForm = (): ReactElement => {
         placeholder: formatMessage(
           accountBankFormMessages.accountNumberPlaceholder
         ),
-        labelSpacing: '1'
+        labelSpacing: '1',
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12, sm: 6, md: 4 }
     },
@@ -76,7 +80,8 @@ const AccountBankForm = (): ReactElement => {
         items: bankAccountTypes,
         portal: true,
         textField: 'text',
-        valueField: 'value'
+        valueField: 'value',
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12, sm: 6, md: 4 }
     },
@@ -89,7 +94,8 @@ const AccountBankForm = (): ReactElement => {
         placeholder: formatMessage(
           accountBankFormMessages.otherAccountTypePlaceholder
         ),
-        labelSpacing: '1'
+        labelSpacing: '1',
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12, sm: 6, md: 4 },
       renderIf: {
@@ -103,7 +109,8 @@ const AccountBankForm = (): ReactElement => {
         id: 'balance',
         label: formatMessage(accountBankFormMessages.balance),
         placeholder: formatMessage(accountBankFormMessages.balancePlaceholder),
-        labelSpacing: '1'
+        labelSpacing: '1',
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12, sm: 6, md: 4 }
     },
@@ -117,7 +124,8 @@ const AccountBankForm = (): ReactElement => {
         items: currencies,
         textField: 'text',
         valueField: 'value',
-        portal: true
+        portal: true,
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12, sm: 6, md: 4 }
     },
@@ -130,7 +138,8 @@ const AccountBankForm = (): ReactElement => {
         placeholder: formatMessage(
           accountBankFormMessages.otherCurrencyPlaceholder
         ),
-        labelSpacing: '1'
+        labelSpacing: '1',
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12, sm: 6, md: 4 },
       renderIf: {
@@ -148,7 +157,8 @@ const AccountBankForm = (): ReactElement => {
         ),
         multiline: true,
         rows: 4,
-        labelSpacing: '1'
+        labelSpacing: '1',
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12, md: 6 }
     }
@@ -262,6 +272,7 @@ const AccountBankForm = (): ReactElement => {
   }
 
   useEffect(() => {
+    if (!target?.id) return
     getData()
   }, [target?.id])
 

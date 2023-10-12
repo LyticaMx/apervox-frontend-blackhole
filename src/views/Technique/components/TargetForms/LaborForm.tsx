@@ -16,6 +16,7 @@ import { ResponseData } from 'types/api'
 import DeleteFormConfirmation from './DeleteFormConfirmation'
 import useToast from 'hooks/useToast'
 import { TechniqueTabs } from 'types/technique'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 interface FormValues extends AddressFormValues {
   id?: string
@@ -41,6 +42,8 @@ const LaborForm = (): ReactElement => {
   const { addressFields, addressValidationSchema } =
     useAddressForm<FormValues>('address')
   const actions = useTargetMeta(target?.id ?? '', 'jobs')
+  const ability = useAbility()
+
   const fields: Array<Field<FormValues>> = [
     {
       type: 'text',
@@ -50,7 +53,8 @@ const LaborForm = (): ReactElement => {
         label: formatMessage(laborFormMessages.organizationName),
         placeholder: formatMessage(
           laborFormMessages.organizationNamePlaceholder
-        )
+        ),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 6 }
     },
@@ -60,7 +64,8 @@ const LaborForm = (): ReactElement => {
       options: {
         id: 'labor-company-job',
         label: formatMessage(laborFormMessages.job),
-        placeholder: formatMessage(laborFormMessages.jobPlaceholder)
+        placeholder: formatMessage(laborFormMessages.jobPlaceholder),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 3 }
     },
@@ -70,7 +75,8 @@ const LaborForm = (): ReactElement => {
       options: {
         id: 'labor-company-email',
         label: formatMessage(formMessages.email),
-        placeholder: formatMessage(targetFormsGeneralMessages.emailPlaceholder)
+        placeholder: formatMessage(targetFormsGeneralMessages.emailPlaceholder),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 3 }
     },
@@ -80,7 +86,8 @@ const LaborForm = (): ReactElement => {
       options: {
         id: 'labor-company-phone',
         label: formatMessage(targetFormsGeneralMessages.phone),
-        placeholder: formatMessage(targetFormsGeneralMessages.phonePlaceholder)
+        placeholder: formatMessage(targetFormsGeneralMessages.phonePlaceholder),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 3 }
     },
@@ -220,6 +227,7 @@ const LaborForm = (): ReactElement => {
   }
 
   useEffect(() => {
+    if (!target?.id) return
     getData()
   }, [target?.id])
 

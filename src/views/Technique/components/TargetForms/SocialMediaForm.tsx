@@ -13,6 +13,7 @@ import { useTechnique } from 'context/Technique'
 import useTargetMeta from 'hooks/useTargetMeta'
 import DeleteFormConfirmation from './DeleteFormConfirmation'
 import { TechniqueTabs } from 'types/technique'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 interface FormValues {
   id?: string
@@ -31,6 +32,7 @@ const SocialMediaForm = (): ReactElement => {
   const [deleteFormConfirm, setDeleteFormConfirm] = useState<
     ((value: boolean | PromiseLike<boolean>) => void) | null
   >(null)
+  const ability = useAbility()
 
   const socialmedia = [
     { value: 'facebook', text: 'Facebook' },
@@ -55,7 +57,8 @@ const SocialMediaForm = (): ReactElement => {
         items: socialmedia,
         textField: 'text',
         valueField: 'value',
-        portal: true
+        portal: true,
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12, md: 4, sm: 6 }
     },
@@ -68,7 +71,8 @@ const SocialMediaForm = (): ReactElement => {
         label: formatMessage(socialMediaFormMessages.otherSocialMedia),
         placeholder: formatMessage(
           socialMediaFormMessages.otherSocialMediaPlaceholder
-        )
+        ),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12, md: 4, sm: 6 },
       renderIf: {
@@ -82,7 +86,8 @@ const SocialMediaForm = (): ReactElement => {
         id: 'social-media-url',
         label: 'URL',
         labelSpacing: '1',
-        placeholder: formatMessage(socialMediaFormMessages.urlPlaceholder)
+        placeholder: formatMessage(socialMediaFormMessages.urlPlaceholder),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12, md: 4, sm: 6 }
     },
@@ -93,7 +98,8 @@ const SocialMediaForm = (): ReactElement => {
         id: 'social-media-username',
         labelSpacing: '1',
         label: formatMessage(socialMediaFormMessages.username),
-        placeholder: formatMessage(socialMediaFormMessages.usernamePlaceholder)
+        placeholder: formatMessage(socialMediaFormMessages.usernamePlaceholder),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12, md: 4, sm: 6 }
     }
@@ -177,7 +183,7 @@ const SocialMediaForm = (): ReactElement => {
   }
 
   useEffect(() => {
-    getData()
+    if (!target?.id) getData()
   }, [target?.id])
 
   return (

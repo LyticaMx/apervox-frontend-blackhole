@@ -26,6 +26,7 @@ import ConfirmationDialog from './ConfirmationDialog'
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline'
 import StaticTargetDialog from './StaticTargetsDialog'
 import { useIntl } from 'react-intl'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 type AdvanceTimeType = 'days' | 'hours'
 type PriorityType = 'urgent' | 'high' | 'medium' | 'low'
@@ -60,6 +61,7 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
   const [waitForAnticipation, setWaitForAnticipation] = useState<
     ((value: PromiseLike<boolean> | boolean) => void) | null
   >(null)
+  const ability = useAbility()
 
   useEffect(() => {
     techniqueActions?.get()
@@ -72,7 +74,9 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
       options: {
         id: 'technique-name',
         label: getMessage('name'),
-        placeholder: getMessage('namePlaceholder')
+        placeholder: getMessage('namePlaceholder'),
+        requiredMarker: true,
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TECHNIQUES)
       },
       breakpoints: { xs: 12 }
     },
@@ -95,7 +99,8 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
         label: getMessage('endDate'),
         formatDisplay: 'dd/MM/yyyy',
         minDate: format(addDays(new Date(), 1), 'yyyy-MM-dd'),
-        requiredMarker: true
+        requiredMarker: true,
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TECHNIQUES)
       },
       breakpoints: { xs: 12 }
     },
@@ -117,7 +122,10 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
         isMulti: true,
         placeholder: `${getMessage('search')}...`,
         loadingMessage: () => getMessage('loadingGroups'),
-        noOptionsMessage: () => getMessage('noGroupsFound')
+        noOptionsMessage: () => getMessage('noGroupsFound'),
+        disabled:
+          ability.cannot(ACTION.UPDATE, SUBJECT.TECHNIQUES) ||
+          ability.cannot(ACTION.READ, SUBJECT.GROUPS)
       }
     },
     {
@@ -125,7 +133,8 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
       type: 'radio',
       options: {
         label: getMessage('days'),
-        value: 'days'
+        value: 'days',
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TECHNIQUES)
       },
       breakpoints: {
         xs: 6
@@ -137,7 +146,8 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
       type: 'radio',
       options: {
         label: getMessage('hours'),
-        value: 'hours'
+        value: 'hours',
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TECHNIQUES)
       },
       breakpoints: {
         xs: 6
@@ -150,7 +160,10 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
       children: ({ name, setFieldValue, values, errors, touched }) => (
         <TextField
           value={values.advanceTimeType === 'days' ? values[name] : ''}
-          disabled={values.advanceTimeType !== 'days'}
+          disabled={
+            values.advanceTimeType !== 'days' ||
+            ability.cannot(ACTION.UPDATE, SUBJECT.TECHNIQUES)
+          }
           placeholder={getMessage('daysPlaceholder')}
           onChange={(e) => setFieldValue(name, e.target.value)}
           error={Boolean(errors[name] && touched[name])}
@@ -166,7 +179,10 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
       children: ({ name, setFieldValue, values, errors, touched }) => (
         <TextField
           value={values.advanceTimeType === 'hours' ? values[name] : ''}
-          disabled={values.advanceTimeType !== 'hours'}
+          disabled={
+            values.advanceTimeType !== 'hours' ||
+            ability.cannot(ACTION.UPDATE, SUBJECT.TECHNIQUES)
+          }
           placeholder={getMessage('hoursPlaceholder')}
           onChange={(e) => setFieldValue(name, e.target.value)}
           error={Boolean(errors[name] && touched[name])}
@@ -181,7 +197,8 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
       type: 'radio',
       options: {
         label: getMessage('urgent'),
-        value: 'urgent'
+        value: 'urgent',
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TECHNIQUES)
       },
       breakpoints: { xs: 12, md: 3 },
       section: 'priority'
@@ -191,7 +208,8 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
       type: 'radio',
       options: {
         label: getMessage('high'),
-        value: 'high'
+        value: 'high',
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TECHNIQUES)
       },
       breakpoints: { xs: 12, md: 3 },
       section: 'priority'
@@ -201,7 +219,8 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
       type: 'radio',
       options: {
         label: getMessage('medium'),
-        value: 'medium'
+        value: 'medium',
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TECHNIQUES)
       },
       breakpoints: { xs: 12, md: 3 },
       section: 'priority'
@@ -211,7 +230,8 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
       type: 'radio',
       options: {
         label: getMessage('low'),
-        value: 'low'
+        value: 'low',
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TECHNIQUES)
       },
       breakpoints: { xs: 12, md: 3 },
       section: 'priority'
@@ -238,7 +258,8 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
           }
         ],
         textField: 'label',
-        valueField: 'id'
+        valueField: 'id',
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TECHNIQUES)
       },
       breakpoints: { xs: 12, md: 6 },
       section: 'follow'
@@ -249,7 +270,8 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
       options: {
         label: getMessage('court'),
         labelSpacing: '1',
-        placeholder: getMessage('courtPlaceholder')
+        placeholder: getMessage('courtPlaceholder'),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TECHNIQUES)
       },
       breakpoints: { xs: 6 },
       section: 'follow'
@@ -434,7 +456,8 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
         submitButtonProps={{
           color: 'indigo',
           variant: 'contained',
-          className: 'mt-6 mb-2'
+          className: 'mt-6 mb-2',
+          disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TECHNIQUES)
         }}
       />
     </div>

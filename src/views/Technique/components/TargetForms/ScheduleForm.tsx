@@ -15,6 +15,7 @@ import useToast from 'hooks/useToast'
 import { useTechnique } from 'context/Technique'
 import useTargetMeta from 'hooks/useTargetMeta'
 import { TechniqueTabs } from 'types/technique'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 interface FormValues extends AddressFormValues {
   id?: string
@@ -33,6 +34,7 @@ const ScheduleForm = (): ReactElement => {
   >(null)
   const { addressFields, addressValidationSchema } =
     useAddressForm<FormValues>('address')
+  const ability = useAbility()
 
   const fields: Array<Field<FormValues>> = [
     {
@@ -42,7 +44,8 @@ const ScheduleForm = (): ReactElement => {
         labelSpacing: '1',
         id: 'contact-name',
         label: formatMessage(scheduleFormMessages.name),
-        placeholder: formatMessage(scheduleFormMessages.namePlaceholder)
+        placeholder: formatMessage(scheduleFormMessages.namePlaceholder),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12, sm: 6, md: 4 }
     },
@@ -53,7 +56,8 @@ const ScheduleForm = (): ReactElement => {
         labelSpacing: '1',
         id: 'contact-phone',
         label: formatMessage(targetFormsGeneralMessages.phone),
-        placeholder: formatMessage(targetFormsGeneralMessages.phonePlaceholder)
+        placeholder: formatMessage(targetFormsGeneralMessages.phonePlaceholder),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12, sm: 6, md: 4 }
     },
@@ -149,6 +153,7 @@ const ScheduleForm = (): ReactElement => {
   }
 
   useEffect(() => {
+    if (!target?.id) return
     getData()
   }, [target?.id])
 
