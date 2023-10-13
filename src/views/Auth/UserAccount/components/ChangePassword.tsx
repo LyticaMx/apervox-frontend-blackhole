@@ -10,6 +10,7 @@ import { formMessages } from 'globalMessages'
 import { changePasswordMessages } from '../messages'
 import { useAuth } from 'context/Auth'
 import useToast from 'hooks/useToast'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 interface FormValues {
   currentPassword: string
@@ -21,6 +22,7 @@ const ChangePassword = (): ReactElement => {
   const { formatMessage } = useIntl()
   const { actions } = useAuth()
   const { launchToast } = useToast()
+  const ability = useAbility()
 
   const fields: Array<Field<FormValues>> = [
     {
@@ -108,7 +110,8 @@ const ChangePassword = (): ReactElement => {
           submitButtonProps={{
             color: 'indigo',
             variant: 'contained',
-            className: 'mt-6 mb-2'
+            className: 'mt-6 mb-2',
+            disabled: ability.cannot(ACTION.UPDATE, SUBJECT.ME)
           }}
           className="user-account-change-password-form"
         />

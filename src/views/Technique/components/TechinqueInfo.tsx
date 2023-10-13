@@ -16,6 +16,8 @@ import TechniqueUpdateForm, {
 import { techniqueInfoMessages } from '../messages'
 import TechniqueSummary from './TechniqueSummary'
 import { FormikContextType } from 'formik'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
+import WrongPermissions from 'components/WrongPermissions'
 
 const TechniqueInfo = (): ReactElement => {
   const [active, setActive, Tab] = useTabs(TECHNIQUE_INFO_TABS.TARGET)
@@ -24,6 +26,7 @@ const TechniqueInfo = (): ReactElement => {
   >()
 
   const { formatMessage } = useIntl()
+  const ability = useAbility()
 
   return (
     <div className="flex flex-col h-full">
@@ -39,7 +42,11 @@ const TechniqueInfo = (): ReactElement => {
       />
 
       <Tab className="flex-1 h-0 " value={TECHNIQUE_INFO_TABS.TARGET}>
-        <TargetList />
+        {ability.can(ACTION.READ, SUBJECT.TARGETS) ? (
+          <TargetList />
+        ) : (
+          <WrongPermissions />
+        )}
       </Tab>
       <Tab value={TECHNIQUE_INFO_TABS.DESCRIPTION}>
         <TechniqueSummary />
@@ -55,6 +62,7 @@ const TechniqueInfo = (): ReactElement => {
           <Button
             color="indigo"
             onClick={() => formikRef.current?.submitForm()}
+            disabled={ability.cannot(ACTION.UPDATE, SUBJECT.TECHNIQUES)}
           >
             {formatMessage(actionsMessages.save)}
           </Button>

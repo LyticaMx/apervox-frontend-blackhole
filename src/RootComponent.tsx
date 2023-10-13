@@ -15,6 +15,7 @@ import { LanguageProvider } from 'context/Language'
 import 'react-toastify/dist/ReactToastify.css'
 import { SidebarProvider } from 'context/Sidebar'
 import { AppContextProvider } from 'context/AppContextProvider'
+import { AbilityProvider } from 'context/Ability'
 
 // const contextConfig = { objectDiffs: true, arrayDiffs: false }
 
@@ -23,24 +24,26 @@ const RootComponent = (): ReactElement => (
     <BrowserRouter>
       <LanguageProvider>
         <LoaderProvider>
-          <AuthProvider>
-            <SidebarProvider>
-              <DrawerProvider>
-                <AppContextProvider>
-                  <>
-                    <Navigator />
+          <AbilityProvider>
+            <AuthProvider>
+              <SidebarProvider>
+                <DrawerProvider>
+                  <AppContextProvider>
+                    <>
+                      <Navigator />
 
-                    {/* {isDev() && (
+                      {/* {isDev() && (
                       <ContextLogger
                         contexts={appContext}
                         config={contextConfig}
                       />
                     )} */}
-                  </>
-                </AppContextProvider>
-              </DrawerProvider>
-            </SidebarProvider>
-          </AuthProvider>
+                    </>
+                  </AppContextProvider>
+                </DrawerProvider>
+              </SidebarProvider>
+            </AuthProvider>
+          </AbilityProvider>
         </LoaderProvider>
       </LanguageProvider>
       <ToastContainer theme="light" position="top-right" limit={5} />

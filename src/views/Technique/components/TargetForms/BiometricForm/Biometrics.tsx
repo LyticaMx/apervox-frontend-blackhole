@@ -4,6 +4,7 @@ import { ReactElement } from 'react'
 import Preview from './Preview'
 import { PlusCircleIcon } from '@heroicons/react/24/outline'
 import { useTechnique } from 'context/Technique'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 interface Props extends CustomFieldFunctionProps<FormValues> {
   onSyncDelete: (id: string, name: string) => Promise<void>
@@ -12,6 +13,7 @@ interface Props extends CustomFieldFunctionProps<FormValues> {
 const Biometrics = (props: Props): ReactElement | null => {
   const { name, values, setFieldValue, onSyncDelete } = props
   const { target } = useTechnique()
+  const ability = useAbility()
 
   if (!target?.id) return null
 
@@ -26,7 +28,10 @@ const Biometrics = (props: Props): ReactElement | null => {
             url={`${process.env.REACT_APP_MAIN_BACKEND_URL}targets/${
               target.id ?? ''
             }/biometrics/${id}`}
-            remove={async () => await onSyncDelete(id, name)}
+            remove={async () => {
+              if (ability.cannot(ACTION.DELETE, SUBJECT.TARGETS)) return
+              await onSyncDelete(id, name)
+            }}
           />
         ))}
         {values[name].toLoad.map((file: File, index: number) => (
@@ -34,14 +39,15 @@ const Biometrics = (props: Props): ReactElement | null => {
             key={`${file.name}-${index}`}
             file={file}
             type={name === 'voiceprints' ? 'audio' : 'image'}
-            remove={() =>
+            remove={() => {
+              if (ability.cannot(ACTION.DELETE, SUBJECT.TARGETS)) return
               setFieldValue(name, {
                 ...values[name],
                 toLoad: values[name].toLoad.filter(
                   (_: any, idx: number) => idx !== index
                 )
               })
-            }
+            }}
           />
         ))}
         <label
@@ -56,6 +62,7 @@ const Biometrics = (props: Props): ReactElement | null => {
         className="hidden"
         type="file"
         accept={name === 'voiceprints' ? 'audio/*' : 'image/*'}
+        disabled={ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)}
         onChange={(e) =>
           setFieldValue(name, {
             ...values[name],

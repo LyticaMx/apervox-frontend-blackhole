@@ -17,6 +17,7 @@ import LetterheadDrawer from './LetterheadDrawer'
 import { useLetterheads } from 'context/Letterheads'
 import Pagination from 'components/Table/Pagination'
 import useToast from 'hooks/useToast'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 type SelectedLetterheads = Record<string, boolean>
 
@@ -33,6 +34,7 @@ const LetterheadAdministration = (): ReactElement => {
   const [selected, setSelected] = useState<SelectedLetterheads>({})
   const [deleteIds, setDeleteIds] = useState<string[]>([])
   const toast = useToast()
+  const ability = useAbility()
 
   useEffect(() => {
     letterheadActions?.getData()
@@ -109,6 +111,7 @@ const LetterheadAdministration = (): ReactElement => {
         <Button
           color="primary"
           variant="contained"
+          disabled={ability.cannot(ACTION.CREATE, SUBJECT.LETTERHEADS)}
           onClick={() =>
             actions?.handleOpenDrawer({
               title: (
@@ -205,6 +208,7 @@ const LetterheadAdministration = (): ReactElement => {
             <IconButton
               className="!hover:text-primary"
               onClick={() => setDeleteIds(selectedIds)}
+              disabled={ability.can(ACTION.DELETE, SUBJECT.LETTERHEADS)}
             >
               <TrashIcon className="w-5 h-5" />
             </IconButton>
@@ -220,7 +224,8 @@ const LetterheadAdministration = (): ReactElement => {
               className="border rounded px-1 py-2 flex flex-col justify-between max-h-40 hover:bg-gray-100 hover:cursor-pointer"
             >
               <div
-                onClick={() =>
+                onClick={() => {
+                  if (ability.cannot(ACTION.UPDATE, SUBJECT.LETTERHEADS)) return
                   actions?.handleOpenDrawer({
                     title: (
                       <Typography
@@ -265,7 +270,7 @@ const LetterheadAdministration = (): ReactElement => {
                       />
                     )
                   })
-                }
+                }}
               >
                 <Typography style="bold" className="text-secondary">
                   {item.name}
@@ -286,7 +291,10 @@ const LetterheadAdministration = (): ReactElement => {
                 <IconButton
                   className="!hover:text-primary"
                   onClick={() => setDeleteIds([item.id])}
-                  disabled={totalSelected > 0}
+                  disabled={
+                    ability.cannot(ACTION.DELETE, SUBJECT.LETTERHEADS) ||
+                    totalSelected > 0
+                  }
                 >
                   <TrashIcon className="w-5 h-5" />
                 </IconButton>

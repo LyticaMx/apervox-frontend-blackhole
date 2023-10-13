@@ -8,13 +8,14 @@ import { generalDataFormMessages } from 'views/Technique/messages'
 import { useTechnique } from 'context/Technique'
 import { get } from 'lodash'
 import { useTargets } from 'context/Targets'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 interface FormValues {
   name: string
   phone: string
   overflowLine: any
   carrier: any
-  endDate: string
+  endDate: Date
 }
 
 const GeneralDataForm = (): ReactElement => {
@@ -22,6 +23,7 @@ const GeneralDataForm = (): ReactElement => {
   const getGlobalMessage = useGlobalMessage()
   const { target, techniqueId } = useTechnique()
   const { actions } = useTargets()
+  const ability = useAbility()
 
   const fields: Array<Field<FormValues>> = [
     {
@@ -30,7 +32,8 @@ const GeneralDataForm = (): ReactElement => {
       options: {
         id: 'general-data-name',
         label: getMessage('name'),
-        placeholder: getMessage('namePlaceholder')
+        placeholder: getMessage('namePlaceholder'),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 4 }
     },
@@ -40,7 +43,8 @@ const GeneralDataForm = (): ReactElement => {
       options: {
         id: 'general-data-phone',
         label: getMessage('phone'),
-        placeholder: getMessage('phonePlaceholder')
+        placeholder: getMessage('phonePlaceholder'),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 4 }
     },
@@ -59,7 +63,10 @@ const GeneralDataForm = (): ReactElement => {
         },
         debounceTimeout: 300,
         label: getMessage('overflowLine'),
-        placeholder: getMessage('phonePlaceholder')
+        placeholder: getMessage('phonePlaceholder'),
+        disabled:
+          ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS) ||
+          ability.cannot(ACTION.READ, SUBJECT.OVERFLOW_LINES)
       },
       breakpoints: { xs: 4 }
     },
@@ -78,7 +85,10 @@ const GeneralDataForm = (): ReactElement => {
         },
         label: getMessage('carrier'),
         placeholder: getMessage('carrierPlaceholder'),
-        debounceTimeout: 300
+        debounceTimeout: 300,
+        disabled:
+          ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS) ||
+          ability.cannot(ACTION.READ, SUBJECT.CARRIERS)
       },
       breakpoints: { xs: 4 }
     },
@@ -89,7 +99,8 @@ const GeneralDataForm = (): ReactElement => {
         id: 'general-data-enddate',
         label: getMessage('endDate'),
         placeholder: getMessage('endDatePlaceholder'),
-        formatDisplay: 'dd-MM-yyyy'
+        formatDisplay: 'dd-MM-yyyy',
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 4 }
     }
@@ -97,7 +108,14 @@ const GeneralDataForm = (): ReactElement => {
 
   const validationSchema = yup.object({
     name: yup.string().required(getMessage('required')),
-    phone: yup.string().required(getMessage('required')),
+    phone: yup
+      .string()
+      .required(getMessage('required'))
+      .length(10, getMessage('length', { length: 10 }))
+      .matches(/^\d{10}$/, {
+        message: getMessage('invalidPhoneNumber'),
+        name: 'onlyNumbers'
+      }),
     overflowLine: yup.mixed().required(getMessage('required')),
     carrier: yup.mixed().required(getMessage('required'))
   })
@@ -118,7 +136,7 @@ const GeneralDataForm = (): ReactElement => {
         phone: target?.phone ?? '',
         overflowLine: getAsyncValue(target?.overflow_line, 'id', 'phone'),
         carrier: getAsyncValue(target?.carrier, 'id', 'name'),
-        endDate: target?.end_date ?? ''
+        endDate: new Date(target?.end_date ?? 0) ?? ''
       },
       enableReinitialize: true,
       validationSchema,
@@ -155,7 +173,8 @@ const GeneralDataForm = (): ReactElement => {
         submitButtonLabel={getGlobalMessage('save', 'actionsMessages')}
         submitButtonProps={{
           color: 'indigo',
-          variant: 'contained'
+          variant: 'contained',
+          disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
         }}
         className="user-account-data-form"
       />

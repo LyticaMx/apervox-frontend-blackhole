@@ -4,6 +4,7 @@ import { useFormatMessage } from 'hooks/useIntl'
 import { generalMessages } from 'globalMessages'
 import { usersMessages } from '../messages'
 import { useUsers } from 'context/Users'
+import { useAbility } from 'context/Ability'
 
 interface Props {
   toggleOpen: () => void
@@ -12,6 +13,7 @@ interface Props {
 const UserFilter = ({ toggleOpen }: Props): ReactElement => {
   const getMessage = useFormatMessage(usersMessages)
   const getGeneralMessage = useFormatMessage(generalMessages)
+  const ability = useAbility()
   const { actions, dateFilter, searchFilter } = useUsers()
   const filterItems = [
     {
@@ -51,7 +53,11 @@ const UserFilter = ({ toggleOpen }: Props): ReactElement => {
         search: searchFilter.query,
         fields: searchFilter.filters
       }}
-      action={{ label: getMessage('button'), onClick: toggleOpen }}
+      action={{
+        label: getMessage('button'),
+        onClick: toggleOpen,
+        disabled: ability.cannot('create', 'users')
+      }}
       download={(document) => alert(document)}
       onChange={(data) =>
         actions?.getUsers({

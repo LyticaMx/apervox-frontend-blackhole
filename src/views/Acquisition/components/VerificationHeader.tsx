@@ -11,11 +11,13 @@ import { messages } from '../messages'
 import { useVerificationLine } from 'context/VerificationLines/useVerificationLine'
 import CreateVerificationLineDrawer from './CreateVerificationLineDrawer'
 import { generalMessages, platformMessages } from 'globalMessages'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 const VerificationHeader = (): ReactElement => {
   const { formatMessage } = useIntl()
   const [open, setOpen] = useState(false)
   const { total, dateFilter, searchFilter, actions } = useVerificationLine()
+  const ability = useAbility()
 
   useEffect(() => {
     actions?.get({}, true)
@@ -42,7 +44,8 @@ const VerificationHeader = (): ReactElement => {
           label: formatMessage(messages.button),
           onClick: () => {
             setOpen(true)
-          }
+          },
+          disabled: ability.cannot(ACTION.CREATE, SUBJECT.VERIFICATION_LINES)
         }}
         onChange={(data) => {
           actions?.get({

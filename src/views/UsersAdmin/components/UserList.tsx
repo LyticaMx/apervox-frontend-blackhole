@@ -16,6 +16,7 @@ import { User, UserGroup } from 'types/user'
 import clsx from 'clsx'
 import { userListMessages } from '../messages'
 import { useAuth } from 'context/Auth'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 const colorByStatus = {
   enabled: 'bg-green-600',
@@ -43,6 +44,7 @@ const UserList = ({
   const getMessage = useFormatMessage(userListMessages)
   const { listOfUsers, usersPagination, actions } = useUsers()
   const { auth } = useAuth()
+  const ability = useAbility()
 
   useEffect(() => {
     actions?.getUsers({}, true)
@@ -194,14 +196,16 @@ const UserList = ({
                   label: getMessage('restorePassword'),
                   onClick: () => {
                     onResetPasswordUser(id)
-                  }
+                  },
+                  disabled: ability.cannot(ACTION.UPDATE, SUBJECT.SESSIONS)
                 },
                 {
                   label: getMessage('unlockUser'),
                   disabled:
                     status !== 'banned' ||
                     table.getIsSomePageRowsSelected() ||
-                    table.getIsAllRowsSelected(),
+                    table.getIsAllRowsSelected() ||
+                    ability.cannot(ACTION.UPDATE, SUBJECT.USERS),
                   onClick: () => {
                     onUnlockUser(id)
                   }
@@ -211,7 +215,8 @@ const UserList = ({
                   disabled:
                     status === 'banned' ||
                     table.getIsSomePageRowsSelected() ||
-                    table.getIsAllRowsSelected(),
+                    table.getIsAllRowsSelected() ||
+                    ability.cannot(ACTION.UPDATE, SUBJECT.USERS),
                   onClick: () => {
                     onDisableUser([id], cell.row.original.status)
                   }
@@ -223,7 +228,8 @@ const UserList = ({
                         label: getMessage('closeSession'),
                         disabled:
                           table.getIsSomePageRowsSelected() ||
-                          table.getIsAllRowsSelected(),
+                          table.getIsAllRowsSelected() ||
+                          ability.cannot(ACTION.DELETE, SUBJECT.USERS),
                         onClick: () => {
                           onRemoteLogOffUser([id])
                         }
@@ -234,7 +240,8 @@ const UserList = ({
                   className: 'text-red-500',
                   disabled:
                     table.getIsSomePageRowsSelected() ||
-                    table.getIsAllRowsSelected(),
+                    table.getIsAllRowsSelected() ||
+                    ability.cannot(ACTION.DELETE, SUBJECT.USERS),
                   onClick: () => {
                     onDeleteUser([id])
                   }
@@ -245,7 +252,7 @@ const UserList = ({
         }
       }
     ],
-    [actions?.getUsers]
+    [actions?.getUsers, ability.rules]
   )
 
   return (
@@ -258,7 +265,9 @@ const UserList = ({
           onSortingChange: (sort) => actions?.getUsers({ sort }),
           sorting: usersPagination.sort
         }}
-        onRowClicked={(row) => onSelectUser(row)}
+        onRowClicked={(row) => {
+          if (ability.can(ACTION.UPDATE, SUBJECT.USERS)) onSelectUser(row)
+        }}
         maxHeight={500}
         manualLimit={{
           options: [15, 25, 50, 100],
@@ -277,24 +286,30 @@ const UserList = ({
         withCheckbox
         actionsForSelectedItems={[
           {
-            name: getMessage('delete'),
+            name: 'deleteUser',
+            tooltip: getMessage('delete'),
             action: async (items) =>
               await onDeleteUser(items.map((user) => user.id ?? '')),
-            Icon: TrashIcon
+            Icon: TrashIcon,
+            disabled: ability.cannot(ACTION.DELETE, SUBJECT.USERS)
           },
           {
-            name: getMessage('disableUser'),
+            name: 'disableUser',
+            tooltip: getMessage('disableSelectedUsers'),
             action: (items) => {
               onDisableUser(items.map((user) => user.id ?? ''))
             },
-            Icon: NoSymbolIcon
+            Icon: NoSymbolIcon,
+            disabled: ability.cannot(ACTION.UPDATE, SUBJECT.USERS)
           },
           {
-            name: getMessage('closeSession'),
+            name: 'closeSession',
+            tooltip: getMessage('closeSession'),
             action: (items) => {
               onRemoteLogOffUser(items.map((user) => user.id ?? ''))
             },
-            Icon: ArrowLeftOnRectangleIcon
+            Icon: ArrowLeftOnRectangleIcon,
+            disabled: ability.cannot(ACTION.DELETE, SUBJECT.SESSIONS)
           }
         ]}
       />

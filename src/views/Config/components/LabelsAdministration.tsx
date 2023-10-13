@@ -21,6 +21,7 @@ import { labelsAdministrationMessages, messages } from '../messages'
 import { useLabels } from 'context/Labels'
 import { Label } from 'types/label'
 import { StaticFilter } from 'components/FilterByField'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 type SelectedLabels = Record<string, boolean>
 
@@ -31,6 +32,7 @@ const LabelsAdministration = (): ReactElement => {
   const [label, setLabel] = useState<Label | undefined>()
   const [selected, setSelected] = useState<SelectedLabels>({})
   const [openDeleteDrawer, setOpenDeleteDrawer] = useState<boolean>(false)
+  const ability = useAbility()
 
   useEffect(() => {
     actions?.getData()
@@ -155,6 +157,7 @@ const LabelsAdministration = (): ReactElement => {
         <Button
           color="primary"
           variant="contained"
+          disabled={ability.cannot(ACTION.CREATE, SUBJECT.LABELS)}
           onClick={() =>
             aDrawer?.handleOpenDrawer({
               title: (
@@ -216,6 +219,7 @@ const LabelsAdministration = (): ReactElement => {
             <IconButton
               className="!hover:text-primary"
               onClick={() => setOpenDeleteDrawer(true)}
+              disabled={ability.cannot(ACTION.DELETE, SUBJECT.LABELS)}
             >
               <TrashIcon className="w-5 h-5" />
             </IconButton>
@@ -232,7 +236,8 @@ const LabelsAdministration = (): ReactElement => {
             >
               <div
                 className="flex gap-1"
-                onClick={() =>
+                onClick={() => {
+                  if (ability.cannot(ACTION.UPDATE, SUBJECT.LABELS)) return
                   aDrawer?.handleOpenDrawer({
                     title: (
                       <Typography
@@ -257,7 +262,7 @@ const LabelsAdministration = (): ReactElement => {
                       />
                     )
                   })
-                }
+                }}
               >
                 <div
                   className="rounded h-11 w-11 shrink-0 border"
@@ -280,6 +285,10 @@ const LabelsAdministration = (): ReactElement => {
                 />
                 <IconButton
                   className="!hover:text-primary"
+                  disabled={
+                    ability.cannot(ACTION.DELETE, SUBJECT.LABELS) ||
+                    totalSelected > 0
+                  }
                   onClick={() => {
                     setLabel(item)
                     setOpenDeleteDrawer(true)

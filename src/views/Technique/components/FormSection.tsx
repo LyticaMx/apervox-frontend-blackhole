@@ -12,12 +12,15 @@ import TargetForms from './TargetForms'
 import GeneralDataForm from './TargetForms/GeneralDataForm'
 import { TechniqueTabs } from 'types/technique'
 import { useWorkingEvidence } from 'context/WorkingEvidence'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
+import WrongPermissions from 'components/WrongPermissions'
 
 const FormSection = (): ReactElement => {
   const history = useHistory()
   const { target, showTargetForms, activeTab, actions } = useTechnique()
   const [active, setActive, Tab] = useTabs(activeTab)
   const { actions: workingActions } = useWorkingEvidence()
+  const ability = useAbility()
 
   useEffect(() => {
     setActive(activeTab)
@@ -51,16 +54,21 @@ const FormSection = (): ReactElement => {
       />
 
       <Tab value={TechniqueTabs.EVIDENCE}>
-        <EvidenceList
-          onSelectItem={async (evidence) => {
-            workingActions?.setEvidence(evidence.id)
+        {ability.can(ACTION.READ, SUBJECT.CALL_EVIDENCES) ? (
+          <EvidenceList
+            onSelectItem={async (evidence) => {
+              if (ability.cannot(ACTION.UPDATE, SUBJECT.CALL_EVIDENCES)) return
+              workingActions?.setEvidence(evidence.id)
 
-            history.push(pathRoute.evidence, {
-              type: 'audio',
-              from: 'technique'
-            })
-          }}
-        />
+              history.push(pathRoute.evidence, {
+                type: 'audio',
+                from: 'technique'
+              })
+            }}
+          />
+        ) : (
+          <WrongPermissions />
+        )}
       </Tab>
 
       <Tab value={TechniqueTabs.GENERAL_DATA}>

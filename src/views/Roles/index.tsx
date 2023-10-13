@@ -15,7 +15,6 @@ import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
 
 const Roles = (): ReactElement => {
   const { data, pagination, actions } = useRoles()
-
   const [role, setRole] = useState<Role | undefined>()
   const [open, toggleOpen] = useToggle(false)
   const [deleteDialog, toggleDelete] = useToggle(false)

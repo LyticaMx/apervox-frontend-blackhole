@@ -13,6 +13,7 @@ import { targetMetaFormMessages } from 'views/Technique/messages'
 import useForceUpdate from 'hooks/useForceUpdate'
 import { useDidMountEffect } from 'hooks/useDidMountEffect'
 import Form from 'components/Form'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 interface Props<T> {
   title: string
@@ -51,6 +52,8 @@ const AccordionForm = <T extends Object>({
   const formikRefs = useRef<
     Map<string, FormikContextType<T & { id?: string }> | undefined>
   >(new Map())
+  const ability = useAbility()
+
   const genEmpty = (): FormData<T> => ({
     isValid: false,
     touched: null,
@@ -286,6 +289,7 @@ const AccordionForm = <T extends Object>({
           variant="contained"
           color="primary"
           className="my-2 float-right"
+          disabled={ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)}
           onClick={() => {
             const isValid = handleValidateAll()
 

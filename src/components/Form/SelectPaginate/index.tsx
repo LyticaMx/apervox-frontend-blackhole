@@ -74,6 +74,7 @@ const SelectPaginate = (props: Props): ReactElement => {
           onChange={props.onChange}
           maxItems={props.maxItems ?? 5}
           selectedItemsTitle={props.selectedItemsTitle}
+          disabled={props.disabled}
         />
       )}
     </div>

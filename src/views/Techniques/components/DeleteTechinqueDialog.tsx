@@ -54,7 +54,9 @@ const DeleteTechinqueDialog = ({
       confirmation={getMessage('passwordConfirm', {
         selected: ids.length
       })}
-      question={getMessage('message')}
+      question={getMessage('message', {
+        selected: ids.length
+      })}
       open={open}
       onAccept={handleDelete}
       onClose={onClose}

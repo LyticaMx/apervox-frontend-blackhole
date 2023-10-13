@@ -22,6 +22,7 @@ import clsx from 'clsx'
 import TargetCardAction from './TargetCardAction'
 import { useTechnique } from 'context/Technique'
 import MetadataDialog from './MetadataDialog'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 interface Props {
   data: Target
@@ -36,6 +37,7 @@ const TargetCard = ({ data, isChecked, onCheck }: Props): ReactElement => {
   const [openMetadataDialog, setOpenMetadataDialog] = useState(false)
   const { formatMessage } = useIntl()
   const getGlobalMessage = useGlobalMessage()
+  const ability = useAbility()
 
   const selected = useMemo(() => target?.id === data.id, [target, data])
 
@@ -74,7 +76,8 @@ const TargetCard = ({ data, isChecked, onCheck }: Props): ReactElement => {
       action: (e) => {
         e?.stopPropagation()
         handleShowForms()
-      }
+      },
+      disabled: ability.cannot(ACTION.READ, SUBJECT.TARGET_METADATA)
     },
     {
       content: formatMessage(targetCardMessages.history),
@@ -84,11 +87,13 @@ const TargetCard = ({ data, isChecked, onCheck }: Props): ReactElement => {
     {
       content: getGlobalMessage('delete', 'actionsMessages'),
       icon: <TrashIcon className="w-4" />,
-      action: handleOpenDeleteDialog
+      action: handleOpenDeleteDialog,
+      disabled: ability.cannot(ACTION.DELETE, SUBJECT.TARGETS)
     }
   ]
 
   const handleClick = (): void => {
+    if (ability.cannot(ACTION.READ, SUBJECT.TARGET_METADATA)) return
     if (target?.id === data.id) actionsTechnique?.setTarget(undefined)
     else actionsTechnique?.setTarget(data)
   }
@@ -131,6 +136,7 @@ const TargetCard = ({ data, isChecked, onCheck }: Props): ReactElement => {
                 key={index}
                 content={item.content}
                 onClick={item.action}
+                disabled={item.disabled}
               >
                 {item.icon}
               </TargetCardAction>

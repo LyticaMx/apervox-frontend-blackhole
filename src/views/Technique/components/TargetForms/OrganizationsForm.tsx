@@ -15,6 +15,7 @@ import useTargetMeta from 'hooks/useTargetMeta'
 import useToast from 'hooks/useToast'
 import { TechniqueTabs } from 'types/technique'
 import DeleteFormConfirmation from './DeleteFormConfirmation'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 interface FormValues extends AddressFormValues {
   id?: string
@@ -36,6 +37,7 @@ const OrganizationsForm = (): ReactElement => {
 
   const { target, actions: techniqueActions } = useTechnique()
   const actions = useTargetMeta(target?.id ?? '', 'organizations')
+  const ability = useAbility()
 
   const fields: Array<Field<FormValues>> = [
     {
@@ -47,7 +49,8 @@ const OrganizationsForm = (): ReactElement => {
         label: formatMessage(organizationFormMessages.organizationName),
         placeholder: formatMessage(
           organizationFormMessages.organizationNamePlaceholder
-        )
+        ),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 6 }
     },
@@ -58,7 +61,8 @@ const OrganizationsForm = (): ReactElement => {
         labelSpacing: '1',
         id: 'organization-email',
         label: formatMessage(formMessages.email),
-        placeholder: formatMessage(targetFormsGeneralMessages.emailPlaceholder)
+        placeholder: formatMessage(targetFormsGeneralMessages.emailPlaceholder),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 3 }
     },
@@ -69,7 +73,8 @@ const OrganizationsForm = (): ReactElement => {
         labelSpacing: '1',
         id: 'organization-phone',
         label: formatMessage(targetFormsGeneralMessages.phone),
-        placeholder: formatMessage(targetFormsGeneralMessages.phonePlaceholder)
+        placeholder: formatMessage(targetFormsGeneralMessages.phonePlaceholder),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 3 }
     },
@@ -179,6 +184,7 @@ const OrganizationsForm = (): ReactElement => {
   }
 
   useEffect(() => {
+    if (!target?.id) return
     getData()
   }, [target?.id])
 

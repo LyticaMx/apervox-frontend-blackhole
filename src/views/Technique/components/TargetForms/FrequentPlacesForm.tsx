@@ -14,6 +14,7 @@ import useTargetMeta from 'hooks/useTargetMeta'
 import useToast from 'hooks/useToast'
 import { TechniqueTabs } from 'types/technique'
 import DeleteFormConfirmation from './DeleteFormConfirmation'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 interface FormValues extends AddressFormValues {
   id?: string
@@ -31,6 +32,7 @@ const FrequentPlacesForm = (): ReactElement => {
   const [deleteFormConfirm, setDeleteFormConfirm] = useState<
     ((value: boolean | PromiseLike<boolean>) => void) | null
   >(null)
+  const ability = useAbility()
 
   const { addressFields, addressValidationSchema } =
     useAddressForm<FormValues>('address')
@@ -72,7 +74,8 @@ const FrequentPlacesForm = (): ReactElement => {
         label: formatMessage(frequentPlacesFormMessages.placeName),
         placeholder: formatMessage(
           frequentPlacesFormMessages.placeNamePlaceholder
-        )
+        ),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 6 }
     },
@@ -85,7 +88,8 @@ const FrequentPlacesForm = (): ReactElement => {
         label: formatMessage(frequentPlacesFormMessages.placeActivity),
         placeholder: formatMessage(
           frequentPlacesFormMessages.placeActivityPlaceholder
-        )
+        ),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 6 }
     },
@@ -101,7 +105,8 @@ const FrequentPlacesForm = (): ReactElement => {
         items: frequency,
         textField: 'text',
         valueField: 'value',
-        portal: true
+        portal: true,
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12, md: 6 }
     },
@@ -209,6 +214,7 @@ const FrequentPlacesForm = (): ReactElement => {
   }
 
   useEffect(() => {
+    if (!target?.id) return
     getData()
   }, [target?.id])
 

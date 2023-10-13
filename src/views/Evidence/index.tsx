@@ -200,15 +200,6 @@ const Evidence = (): ReactElement => {
     } catch {}
   }
 
-  /*
-  const getPeaks = async (): Promise<void> => {
-    try {
-      const peaks = (await workingEvidence.actions?.getAudioWave()) ?? []
-      setPeek(peaks)
-    } catch {}
-  }
-  */
-
   const getRegions = async (): Promise<void> => {
     try {
       const regions = (await workingEvidence.actions?.getRegions()) ?? []
@@ -599,7 +590,13 @@ const Evidence = (): ReactElement => {
         <div className="flex gap-3 items-center">
           <button
             className="p-1 w-8 h-8 bg-white shadow-md border rounded-md text-secondary-gray hover:enabled:text-secondary"
-            onClick={() => history.replace(pathRoute.technique)}
+            onClick={() =>
+              history.replace(
+                location.state.from === 'monitor'
+                  ? pathRoute.monitoring.history
+                  : pathRoute.technique
+              )
+            }
           >
             <BsSkipStart className="h-6 w-6" />
           </button>

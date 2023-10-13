@@ -14,6 +14,7 @@ import { useTechnique } from 'context/Technique'
 import useTargetMeta from 'hooks/useTargetMeta'
 import { TechniqueTabs } from 'types/technique'
 import DeleteFormConfirmation from './DeleteFormConfirmation'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 interface FormValues {
   id?: string
@@ -32,6 +33,7 @@ const LanguagesForm = (): ReactElement => {
   const { launchToast } = useToast()
   const { target, actions: techniqueActions } = useTechnique()
   const actions = useTargetMeta(target?.id ?? '', 'language-levels')
+  const ability = useAbility()
 
   const fields: Array<Field<FormValues>> = [
     {
@@ -44,7 +46,8 @@ const LanguagesForm = (): ReactElement => {
         items: language,
         textField: 'text',
         valueField: 'value',
-        portal: true
+        portal: true,
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12, md: 6 }
     },
@@ -57,7 +60,8 @@ const LanguagesForm = (): ReactElement => {
         label: formatMessage(languagesFormMessages.otherLanguage),
         placeholder: formatMessage(
           languagesFormMessages.otherLanguagePlaceholder
-        )
+        ),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12, md: 6 },
       renderIf: {
@@ -74,7 +78,8 @@ const LanguagesForm = (): ReactElement => {
         items: languageProficiency,
         textField: 'text',
         valueField: 'value',
-        portal: true
+        portal: true,
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12, md: 6 }
     }
@@ -157,6 +162,7 @@ const LanguagesForm = (): ReactElement => {
   }
 
   useEffect(() => {
+    if (!target?.id) return
     getData()
   }, [target?.id])
 

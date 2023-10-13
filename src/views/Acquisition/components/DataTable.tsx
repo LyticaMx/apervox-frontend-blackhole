@@ -20,11 +20,15 @@ import clsx from 'clsx'
 import Tooltip from 'components/Tooltip'
 import { useIntl } from 'react-intl'
 import { actionsMessages } from 'globalMessages'
+import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 const DataTable = (): ReactElement => {
   const { formatMessage } = useIntl()
   const getMessage = useFormatMessage(tableMessages)
   const { data, pagination, actions: overflowLineActions } = useOverflowLine()
+  const { actions: auditActions } = useModuleAudits()
+  const ability = useAbility()
 
   const [open, toggle] = useToggle()
   const [openDisable, setOpenDisable] = useState(false)
@@ -39,128 +43,137 @@ const DataTable = (): ReactElement => {
     quarantine: 'bg-orange-500',
     maintenance: 'bg-yellow-500'
   }
-  const columns = useTableColumns<OverflowLine>(() => [
-    {
-      accessorKey: 'target',
-      id: 'target_phone',
-      header: getMessage('target'),
-      cell: ({ row }) => get(row.original, 'target.phone')
-    },
-    {
-      accessorKey: 'target',
-      id: 'target_carrier',
-      header: getMessage('company'),
-      cell: ({ row }) => get(row.original, 'target.carrier.name')
-    },
-    {
-      accessorKey: 'medium.name',
-      header: getMessage('acquisitionMedium')
-    },
-    {
-      accessorKey: 'phone',
-      header: getMessage('derivation')
-    },
-    {
-      accessorKey: 'created_by',
-      header: getMessage('createdBy')
-    },
-    {
-      accessorKey: 'created_at',
-      header: getMessage('date'),
-      cell: ({ getValue }) =>
-        format(new Date(getValue<string>()), 'dd/MM/yyyy - HH:mm')
-    },
-    {
-      accessorKey: 'target',
-      id: 'target_technique',
-      header: getMessage('technique'),
-      cell: ({ row }) => get(row.original, 'target.technique.name', '')
-    },
-    {
-      accessorKey: 'line_status',
-      header: getMessage('status'),
-      cell: ({ getValue }) => (
-        <div>
-          <p
-            className={clsx(
-              'px-1 py-1 rounded-3xl text-white text-center text-sm leading-none font-light',
-              colorsStatus[getValue<string>()]
-            )}
-          >
-            {getMessage(getValue<string>())}
-          </p>
-        </div>
-      ),
-      meta: {
-        columnFilters: {
-          multiple: true,
-          options: [
-            { name: formatMessage(statusMessages.assigned), value: 'assigned' },
-            {
-              name: formatMessage(statusMessages.available),
-              value: 'available'
-            },
-            {
-              name: formatMessage(statusMessages.quarantine),
-              value: 'quarantine'
-            },
-            {
-              name: formatMessage(statusMessages.maintenance),
-              value: 'maintenance'
-            }
-          ],
-          onChange: (value) => overflowLineActions?.get({ line_status: value })
+  const columns = useTableColumns<OverflowLine>(
+    () => [
+      {
+        accessorKey: 'target',
+        id: 'target_phone',
+        header: getMessage('target'),
+        cell: ({ row }) => get(row.original, 'target.phone')
+      },
+      {
+        accessorKey: 'target',
+        id: 'target_carrier',
+        header: getMessage('company'),
+        cell: ({ row }) => get(row.original, 'target.carrier.name')
+      },
+      {
+        accessorKey: 'medium.name',
+        header: getMessage('acquisitionMedium')
+      },
+      {
+        accessorKey: 'phone',
+        header: getMessage('derivation')
+      },
+      {
+        accessorKey: 'created_by',
+        header: getMessage('createdBy')
+      },
+      {
+        accessorKey: 'created_at',
+        header: getMessage('date'),
+        cell: ({ getValue }) =>
+          format(new Date(getValue<string>()), 'dd/MM/yyyy - HH:mm')
+      },
+      {
+        accessorKey: 'target',
+        id: 'target_technique',
+        header: getMessage('technique'),
+        cell: ({ row }) => get(row.original, 'target.technique.name', '')
+      },
+      {
+        accessorKey: 'line_status',
+        header: getMessage('status'),
+        cell: ({ getValue }) => (
+          <div>
+            <p
+              className={clsx(
+                'px-1 py-1 rounded-3xl text-white text-center text-sm leading-none font-light',
+                colorsStatus[getValue<string>()]
+              )}
+            >
+              {getMessage(getValue<string>())}
+            </p>
+          </div>
+        ),
+        meta: {
+          columnFilters: {
+            multiple: true,
+            options: [
+              {
+                name: formatMessage(statusMessages.assigned),
+                value: 'assigned'
+              },
+              {
+                name: formatMessage(statusMessages.available),
+                value: 'available'
+              },
+              {
+                name: formatMessage(statusMessages.quarantine),
+                value: 'quarantine'
+              },
+              {
+                name: formatMessage(statusMessages.maintenance),
+                value: 'maintenance'
+              }
+            ],
+            onChange: (value) =>
+              overflowLineActions?.get({ line_status: value })
+          }
         }
-      }
-    },
-    {
-      accessorKey: 'target.end_date',
-      header: getMessage('releaseDate'),
-      cell: ({ row }) => {
-        const value = get(row.original, 'target.end_date')
+      },
+      {
+        accessorKey: 'target.end_date',
+        header: getMessage('releaseDate'),
+        cell: ({ row }) => {
+          const value = get(row.original, 'target.end_date')
 
-        if (value) return format(new Date(value), 'dd/MM/yyyy - HH:mm')
+          if (value) return format(new Date(value), 'dd/MM/yyyy - HH:mm')
 
-        return ''
+          return ''
+        }
+      },
+      {
+        header: getMessage('actions'),
+        enableSorting: false,
+        accessorKey: 'status',
+        cell: ({ getValue, row }) => (
+          <div className="flex gap-2 items-center">
+            <Tooltip
+              content={getMessage(getValue() ? 'disable' : 'enable')}
+              floatProps={{ offset: 10, arrow: true }}
+              classNames={{
+                panel:
+                  'bg-secondary text-white py-1 px-2 rounded-md text-sm whitespace-nowrap',
+                arrow: 'absolute bg-white w-2 h-2 rounded-full bg-secondary'
+              }}
+              placement="top"
+            >
+              <Switch
+                color="primary"
+                size="sm"
+                stopPropagation
+                disabled={ability.cannot(ACTION.UPDATE, SUBJECT.OVERFLOW_LINES)}
+                value={getValue<boolean>() ?? false}
+                onChange={() => setSelected(row.original)}
+              />
+            </Tooltip>
+            <IconButton
+              tooltip={getMessage('history')}
+              className="text-muted hover:text-primary"
+            >
+              <DocumentMagnifyingGlassIcon className="w-4 h-4" />
+            </IconButton>
+          </div>
+        )
       }
-    },
-    {
-      header: getMessage('actions'),
-      enableSorting: false,
-      accessorKey: 'status',
-      cell: ({ getValue, row }) => (
-        <div className="flex gap-2 items-center">
-          <Tooltip
-            content={getMessage(getValue() ? 'disable' : 'enable')}
-            floatProps={{ offset: 10, arrow: true }}
-            classNames={{
-              panel:
-                'bg-secondary text-white py-1 px-2 rounded-md text-sm whitespace-nowrap',
-              arrow: 'absolute bg-white w-2 h-2 rounded-full bg-secondary'
-            }}
-            placement="top"
-          >
-            <Switch
-              color="primary"
-              size="sm"
-              stopPropagation
-              value={getValue<boolean>() ?? false}
-              onChange={() => setSelected(row.original)}
-            />
-          </Tooltip>
-          <IconButton
-            tooltip={getMessage('history')}
-            className="text-muted hover:text-primary"
-          >
-            <DocumentMagnifyingGlassIcon className="w-4 h-4" />
-          </IconButton>
-        </div>
-      )
-    }
-  ])
+    ],
+    [ability.rules]
+  )
 
   useEffect(() => {
     overflowLineActions?.get({ page: 1 }, true)
+    auditActions?.genAudit(ModuleAuditsTypes.AuditableModules.OVERFLOW_LINES)
   }, [])
 
   return (
@@ -195,6 +208,7 @@ const DataTable = (): ReactElement => {
         }}
         withCheckbox
         onRowClicked={(row) => {
+          if (ability.cannot(ACTION.UPDATE, SUBJECT.OVERFLOW_LINES)) return
           setSelected(row)
           toggle()
         }}
@@ -207,7 +221,10 @@ const DataTable = (): ReactElement => {
               setSelectedIds(items.map((item) => item.id))
               setOpenDisable(true)
             },
-            Icon: NoSymbolIcon
+            Icon: NoSymbolIcon,
+            disabled:
+              ability.cannot(ACTION.CREATE, SUBJECT.OVERFLOW_LINES) ||
+              ability.cannot(ACTION.READ, SUBJECT.ACQUISITION_MEDIUMS)
           }
         ]}
       />

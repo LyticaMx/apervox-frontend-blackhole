@@ -14,6 +14,7 @@ import { techniqueFormMessages } from '../messages'
 import useSections from 'hooks/useSections'
 import { useDidMountEffect } from 'hooks/useDidMountEffect'
 import { addDays, format } from 'date-fns'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 type AdvanceTimeType = 'days' | 'hours'
 type PriorityType = 'urgent' | 'high' | 'medium' | 'low'
@@ -47,6 +48,7 @@ const TechniqueForm = ({
   const getGlobalMessage = useGlobalMessage()
   const [openTargetForm, setOpenTargetForm] = useState(false)
   const formikRef = useRef<FormikContextType<FormValues>>()
+  const ability = useAbility()
 
   const fields: Array<Field<FormValues>> = [
     {
@@ -114,7 +116,8 @@ const TechniqueForm = ({
         isMulti: true,
         placeholder: `${getMessage('search')}...`,
         loadingMessage: () => getMessage('loadingGroups'),
-        noOptionsMessage: () => getMessage('noGroupsFound')
+        noOptionsMessage: () => getMessage('noGroupsFound'),
+        disabled: ability.cannot(ACTION.READ, SUBJECT.GROUPS)
       }
     },
     {
@@ -266,8 +269,9 @@ const TechniqueForm = ({
           <Button
             className="!bg-transparent !text-slate-700 !font-medium group"
             onClick={() => setOpenTargetForm(true)}
+            disabled={ability.cannot(ACTION.READ, SUBJECT.CARRIERS)}
           >
-            <PlusCircleIcon className="group-hover:text-indigo-500 w-5 mr-1" />
+            <PlusCircleIcon className="group-hover:enabled:text-indigo-500 w-5 mr-1" />
             {getMessage('addTargets')}
           </Button>
         </div>

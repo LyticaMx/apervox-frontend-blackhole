@@ -4,6 +4,7 @@ import { useFormatMessage } from 'hooks/useIntl'
 import { generalMessages } from 'globalMessages'
 import { techniquesMessages } from '../messages'
 import { useTechniques } from 'context/Techniques'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 interface Props {
   toggleOpen: () => void
@@ -17,6 +18,7 @@ const TechniqueFilter = ({ toggleOpen }: Props): ReactElement => {
     dateFilter,
     searchFilter
   } = useTechniques()
+  const ability = useAbility()
 
   const filterItems = [
     {
@@ -32,7 +34,11 @@ const TechniqueFilter = ({ toggleOpen }: Props): ReactElement => {
   return (
     <ViewFilter
       fields={filterItems}
-      action={{ label: getMessage('button'), onClick: toggleOpen }}
+      action={{
+        label: getMessage('button'),
+        onClick: toggleOpen,
+        disabled: ability.cannot(ACTION.CREATE, SUBJECT.TECHNIQUES)
+      }}
       download={(document) => alert(document)}
       initialValues={{
         dateRange: {

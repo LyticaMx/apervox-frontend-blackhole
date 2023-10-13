@@ -22,7 +22,7 @@ const orderByMapper = {
 export const useActions = (state: LiveCallState, dispatch): LiveCallActions => {
   const { pagination, dateFilter, searchFilter, staticFilter } = state
   const getLiveCalls = useApi({
-    endpoint: 'call-evidences/monitor/live',
+    endpoint: 'call-evidences/monitor',
     method: 'get'
   })
 

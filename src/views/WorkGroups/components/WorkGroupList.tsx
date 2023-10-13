@@ -20,6 +20,7 @@ import { Status } from 'types/status'
 import { WorkGroup, WorkGroupTechniques } from 'types/workgroup'
 import * as helpers from './helpers'
 import useToast from 'hooks/useToast'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 interface Props {
   handleClickOnHistory: (id: string) => void
@@ -35,6 +36,7 @@ const WorkGroupList = ({
   const getMessage = useFormatMessage(workGroupListMessages)
   const { launchToast } = useToast()
   const { workGroups, actions, workGroupsPagination } = useWorkGroups()
+  const ability = useAbility()
 
   const columns = useTableColumns<WorkGroup>(
     () => [
@@ -177,7 +179,10 @@ const WorkGroupList = ({
             cell.row.original.status === true
 
           return (
-            <div className="flex pt-1" onClick={(e) => e.stopPropagation()}>
+            <div
+              className="flex pt-1 items-center"
+              onClick={(e) => e.stopPropagation()}
+            >
               <Tooltip
                 content={getMessage(isActive ? 'disable' : 'enable')}
                 floatProps={{ offset: 10, arrow: true }}
@@ -191,6 +196,7 @@ const WorkGroupList = ({
                 <Switch
                   size="sm"
                   value={isActive}
+                  disabled={ability.cannot(ACTION.UPDATE, SUBJECT.GROUPS)}
                   onChange={async (status) => {
                     const updated = await actions?.updateStatusWorkGroup(
                       id,
@@ -220,14 +226,13 @@ const WorkGroupList = ({
                 }}
                 placement="top"
               >
-                <RectangleGroupIcon
-                  className="h-5 w-5 mx-1 ml-2 text-muted hover:text-primary cursor-pointer"
-                  onClick={() => {
-                    handleClickOnHistory(id)
-
-                    console.log(`onViewHistoryGroup(${id})`)
-                  }}
-                />
+                <button
+                  className="text-muted hover:text-primary"
+                  onClick={() => handleClickOnHistory(id)}
+                  disabled={ability.cannot(ACTION.READ, SUBJECT.AUDITS)}
+                >
+                  <RectangleGroupIcon className="h-5 w-5 mx-1 ml-2" />
+                </button>
               </Tooltip>
 
               <Tooltip
@@ -245,7 +250,8 @@ const WorkGroupList = ({
                   onClick={async () => await handleDelete([id])}
                   disabled={
                     table.getIsSomeRowsSelected() ||
-                    table.getIsAllRowsSelected()
+                    table.getIsAllRowsSelected() ||
+                    ability.cannot(ACTION.DELETE, SUBJECT.GROUPS)
                   }
                 >
                   <TrashIcon className="h-5 w-5  " />
@@ -256,7 +262,7 @@ const WorkGroupList = ({
         }
       }
     ],
-    [actions?.getWorkGroups]
+    [actions?.getWorkGroups, ability.rules]
   )
 
   return (
@@ -268,7 +274,11 @@ const WorkGroupList = ({
         onSortingChange: (sort) => actions?.getWorkGroups({ sort }),
         sorting: workGroupsPagination.sort
       }}
-      onRowClicked={(row) => actions?.selectWorkGroup(row)}
+      onRowClicked={(row) => {
+        if (ability.can(ACTION.UPDATE, SUBJECT.GROUPS)) {
+          actions?.selectWorkGroup(row)
+        }
+      }}
       maxHeight={500}
       pageSize={workGroupsPagination.limit}
       manualPagination={{

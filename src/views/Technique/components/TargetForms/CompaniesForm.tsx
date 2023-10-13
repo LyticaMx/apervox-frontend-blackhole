@@ -14,6 +14,7 @@ import { useTechnique } from 'context/Technique'
 import useTargetMeta from 'hooks/useTargetMeta'
 import { TechniqueTabs } from 'types/technique'
 import DeleteFormConfirmation from './DeleteFormConfirmation'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 interface FormValues extends AddressFormValues {
   id?: string
@@ -34,6 +35,7 @@ const CompaniesForm = (): ReactElement => {
   >(null)
   const { addressFields, addressValidationSchema } =
     useAddressForm<FormValues>('address')
+  const ability = useAbility()
 
   const sector = [
     {
@@ -74,7 +76,10 @@ const CompaniesForm = (): ReactElement => {
         labelSpacing: '1',
         id: 'company-name',
         label: formatMessage(companiesFormMessages.companyName),
-        placeholder: formatMessage(companiesFormMessages.companyNamePlaceholder)
+        placeholder: formatMessage(
+          companiesFormMessages.companyNamePlaceholder
+        ),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12, md: 4, sm: 6 }
     },
@@ -88,7 +93,8 @@ const CompaniesForm = (): ReactElement => {
         items: sector,
         textField: 'text',
         valueField: 'value',
-        portal: true
+        portal: true,
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12, md: 4, sm: 6 }
     },
@@ -99,7 +105,10 @@ const CompaniesForm = (): ReactElement => {
         labelSpacing: '1',
         id: 'other-sector',
         label: formatMessage(companiesFormMessages.otherSector),
-        placeholder: formatMessage(companiesFormMessages.otherSectorPlaceholder)
+        placeholder: formatMessage(
+          companiesFormMessages.otherSectorPlaceholder
+        ),
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 12, md: 4, sm: 6 },
       renderIf: {
@@ -228,6 +237,7 @@ const CompaniesForm = (): ReactElement => {
   }
 
   useEffect(() => {
+    if (!target?.id) return
     getData()
   }, [target?.id])
 

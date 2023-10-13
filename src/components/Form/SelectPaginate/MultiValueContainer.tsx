@@ -13,6 +13,7 @@ interface Props {
   onChange: (value: any[]) => void
   maxItems: number
   selectedItemsTitle?: string
+  disabled?: boolean
 }
 
 const MultiValueContainer = (props: Props): ReactElement | null => {
@@ -30,6 +31,7 @@ const MultiValueContainer = (props: Props): ReactElement | null => {
         key={current.value}
         label={current.label}
         value={current.value}
+        disabled={props.disabled}
         onClick={() =>
           props.onChange(
             props.values.filter((item) => item.value !== current.value)
@@ -70,6 +72,7 @@ const MultiValueContainer = (props: Props): ReactElement | null => {
               key={current.value}
               label={current.label}
               value={current.value}
+              disabled={props.disabled}
               onClick={() =>
                 props.onChange(
                   props.values.filter((item) => item.value !== current.value)
@@ -99,12 +102,14 @@ interface ItemProps {
   label: string
   value: string
   onClick: () => void
+  disabled?: boolean
 }
 
 const Item = (props: ItemProps): ReactElement => (
   <div className="flex items-center gap-1 border border-gray-300 px-2 rounded-lg hover:bg-gray-120">
     <p>{props.label}</p>
     <button
+      disabled={props.disabled}
       type="button"
       className="text-muted hover:enabled:bg-opacity-30 rounded-full hover:enabled:text-red-600"
       onClick={props.onClick}

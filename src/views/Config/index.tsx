@@ -26,6 +26,8 @@ import { useLanguage } from 'context/Language'
 import { LocaleType } from 'types/language'
 import { getItem } from 'utils/persistentStorage'
 import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
+import WrongPermissions from 'components/WrongPermissions'
 
 interface FormValues {
   language: LocaleType
@@ -42,30 +44,43 @@ const GeneralConfig = (): ReactElement => {
   const { actions: auditActions } = useModuleAudits()
   const toast = useToast()
   const { actions: languageActions } = useLanguage()
+  const ability = useAbility()
 
   useEffect(() => {
-    settingsActions?.get()
-    auditActions?.genAudit(ModuleAuditsTypes.AuditableModules.SETTINGS)
-  }, [])
+    if (ability.can(ACTION.READ, SUBJECT.SETTINGS)) {
+      settingsActions?.get()
+      auditActions?.genAudit(ModuleAuditsTypes.AuditableModules.SETTINGS)
+    }
+  }, [ability.rules])
 
   const validationSchema = yup.object({
-    url: yup.string().required(formatMessage(formMessages.required)),
-
+    url: yup.string().when({
+      is: () => ability.can(ACTION.UPDATE, SUBJECT.SETTINGS),
+      then: (scheme) => scheme.required(formatMessage(formMessages.required))
+    }),
     inactivityTime: yup
       .number()
       .typeError(formatMessage(formMessages.mustBeNumber))
-      .required(formatMessage(formMessages.required))
-      .min(
-        1,
-        formatMessage(formMessages.minValue, {
-          value: `1 ${formatMessage(timeMessages.minute).toLowerCase()}`
-        })
-      ),
+      .when({
+        is: () => ability.can(ACTION.UPDATE, SUBJECT.SETTINGS),
+        then: (scheme) =>
+          scheme.required(formatMessage(formMessages.required)).min(
+            1,
+            formatMessage(formMessages.minValue, {
+              value: `1 ${formatMessage(timeMessages.minute).toLowerCase()}`
+            })
+          )
+      }),
     openSessions: yup
       .number()
       .typeError(formatMessage(formMessages.mustBeNumber))
-      .required(formatMessage(formMessages.required))
-      .min(1, formatMessage(formMessages.minValue, { value: 1 }))
+      .when({
+        is: () => ability.can(ACTION.UPDATE, SUBJECT.SETTINGS),
+        then: (scheme) =>
+          scheme
+            .required(formatMessage(formMessages.required))
+            .min(1, formatMessage(formMessages.minValue, { value: 1 }))
+      })
   })
 
   const formik = useFormik<FormValues>({
@@ -80,14 +95,16 @@ const GeneralConfig = (): ReactElement => {
     onSubmit: async (values) => {
       languageActions?.changeLocale(values.language)
 
-      const updated = await settingsActions?.update({
-        concurrentSessions: values.openSessions,
-        doubleValidation: values.doubleStepDelete,
-        downloadPath: values.url,
-        fullEvidenceView: values.dataEvidence === 'full',
-        inactivityTime: values.inactivityTime
-      })
-      if (!updated) return // TODO: revisar cuando falle si es necesario un toast
+      if (ability.can(ACTION.UPDATE, SUBJECT.SETTINGS)) {
+        const updated = await settingsActions?.update({
+          concurrentSessions: values.openSessions,
+          doubleValidation: values.doubleStepDelete,
+          downloadPath: values.url,
+          fullEvidenceView: values.dataEvidence === 'full',
+          inactivityTime: values.inactivityTime
+        })
+        if (!updated) return // TODO: revisar cuando falle si es necesario un toast
+      }
 
       toast.success(formatMessage(messages.updatedSuccessfully))
     },
@@ -153,31 +170,39 @@ const GeneralConfig = (): ReactElement => {
             md={4}
             className="bg-white rounded-md px-6 py-4 shadow-md h-40"
           >
-            <Typography className="uppercase text-secondary" style="medium">
-              {formatMessage(messages.audioEvidences)}
-            </Typography>
-            <Typography>
-              {formatMessage(messages.selectAudioEvidenceViewType)}
-            </Typography>
-            <div className="mt-2">
-              <Radio
-                value="simple"
-                label={formatMessage(messages.summarizedView)}
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                name="dataEvidence"
-                checked={formik.values.dataEvidence === 'simple'}
-              />
-              <Radio
-                value="full"
-                label={formatMessage(messages.fullView)}
-                className="ml-2"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                name="dataEvidence"
-                checked={formik.values.dataEvidence === 'full'}
-              />
-            </div>
+            {ability.can(ACTION.READ, SUBJECT.SETTINGS) ? (
+              <>
+                <Typography className="uppercase text-secondary" style="medium">
+                  {formatMessage(messages.audioEvidences)}
+                </Typography>
+                <Typography>
+                  {formatMessage(messages.selectAudioEvidenceViewType)}
+                </Typography>
+                <div className="mt-2">
+                  <Radio
+                    value="simple"
+                    label={formatMessage(messages.summarizedView)}
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    name="dataEvidence"
+                    checked={formik.values.dataEvidence === 'simple'}
+                    disabled={ability.cannot(ACTION.UPDATE, SUBJECT.SETTINGS)}
+                  />
+                  <Radio
+                    value="full"
+                    label={formatMessage(messages.fullView)}
+                    className="ml-2"
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    name="dataEvidence"
+                    checked={formik.values.dataEvidence === 'full'}
+                    disabled={ability.cannot(ACTION.UPDATE, SUBJECT.SETTINGS)}
+                  />
+                </div>
+              </>
+            ) : (
+              <WrongPermissions />
+            )}
           </Grid>
           <Grid
             item
@@ -185,63 +210,79 @@ const GeneralConfig = (): ReactElement => {
             md={4}
             className="bg-white rounded-md px-6 py-4 shadow-md row-span-3"
           >
-            <Typography className="mt-3 text-primary uppercase" style="medium">
-              {formatMessage(generalMessages.inactivity)}
-            </Typography>
-            <Typography>
-              {formatMessage(messages.waitTimeUntilInactivityClosePolicy)}
-            </Typography>
-            <SelectField
-              items={[
-                { value: 10 },
-                { value: 9 },
-                { value: 8 },
-                { value: 7 },
-                { value: 6 },
-                { value: 5 }
-              ]}
-              textField="value"
-              valueField="value"
-              className="mt-2"
-              onChange={async (val) =>
-                await formik.setFieldValue('inactivityTime', val)
-              }
-              value={formik.values.inactivityTime}
-              label={formatMessage(messages.waitTimeUntilClose)}
-              error={Boolean(
-                formik.touched.inactivityTime && formik.errors.inactivityTime
-              )}
-              helperText={
-                formik.touched.inactivityTime && formik.errors.inactivityTime
-                  ? formik.errors.inactivityTime
-                  : ''
-              }
-            />
-            <Typography className="mt-3 text-primary uppercase" style="medium">
-              {formatMessage(messages.openSessions)}
-            </Typography>
-            <Typography>
-              {formatMessage(messages.openSessionsPolicy)}
-            </Typography>
-            <SelectField
-              items={[{ value: 1 }, { value: 2 }, { value: 3 }]}
-              textField="value"
-              valueField="value"
-              className="mt-2"
-              onChange={async (val) =>
-                await formik.setFieldValue('openSessions', val)
-              }
-              value={formik.values.openSessions}
-              label={formatMessage(messages.maximunOpenSessions)}
-              error={Boolean(
-                formik.touched.openSessions && formik.errors.openSessions
-              )}
-              helperText={
-                formik.touched.openSessions && formik.errors.openSessions
-                  ? formik.errors.openSessions
-                  : ''
-              }
-            />
+            {ability.can(ACTION.READ, SUBJECT.SETTINGS) ? (
+              <>
+                <Typography
+                  className="mt-3 text-primary uppercase"
+                  style="medium"
+                >
+                  {formatMessage(generalMessages.inactivity)}
+                </Typography>
+                <Typography>
+                  {formatMessage(messages.waitTimeUntilInactivityClosePolicy)}
+                </Typography>
+                <SelectField
+                  items={[
+                    { value: 10 },
+                    { value: 9 },
+                    { value: 8 },
+                    { value: 7 },
+                    { value: 6 },
+                    { value: 5 }
+                  ]}
+                  textField="value"
+                  valueField="value"
+                  className="mt-2"
+                  onChange={async (val) =>
+                    await formik.setFieldValue('inactivityTime', val)
+                  }
+                  value={formik.values.inactivityTime}
+                  label={formatMessage(messages.waitTimeUntilClose)}
+                  disabled={ability.cannot(ACTION.UPDATE, SUBJECT.SETTINGS)}
+                  error={Boolean(
+                    formik.touched.inactivityTime &&
+                      formik.errors.inactivityTime
+                  )}
+                  helperText={
+                    formik.touched.inactivityTime &&
+                    formik.errors.inactivityTime
+                      ? formik.errors.inactivityTime
+                      : ''
+                  }
+                />
+                <Typography
+                  className="mt-3 text-primary uppercase"
+                  style="medium"
+                >
+                  {formatMessage(messages.openSessions)}
+                </Typography>
+                <Typography>
+                  {formatMessage(messages.openSessionsPolicy)}
+                </Typography>
+                <SelectField
+                  items={[{ value: 1 }, { value: 2 }, { value: 3 }]}
+                  textField="value"
+                  valueField="value"
+                  className="mt-2"
+                  onChange={async (val) =>
+                    await formik.setFieldValue('openSessions', val)
+                  }
+                  value={formik.values.openSessions}
+                  label={formatMessage(messages.maximunOpenSessions)}
+                  error={Boolean(
+                    formik.touched.openSessions && formik.errors.openSessions
+                  )}
+                  disabled={ability.cannot(ACTION.UPDATE, SUBJECT.SETTINGS)}
+                  helperText={
+                    formik.touched.openSessions && formik.errors.openSessions
+                      ? formik.errors.openSessions
+                      : ''
+                  }
+                />
+              </>
+            ) : (
+              <WrongPermissions />
+            )}
           </Grid>
           <Grid
             item
@@ -249,21 +290,32 @@ const GeneralConfig = (): ReactElement => {
             md={4}
             className="bg-white rounded-md px-6 py-4 shadow-md h-52"
           >
-            <Typography style="medium" className="text-secondary uppercase">
-              {formatMessage(messages.downloadRoute)}
-            </Typography>
-            <Typography>{formatMessage(messages.selectRoutePath)}</Typography>
-            <TextField
-              label="URL"
-              name="url"
-              value={formik.values.url}
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-              error={Boolean(formik.touched.url && formik.errors.url)}
-              helperText={
-                formik.touched.url && formik.errors.url ? formik.errors.url : ''
-              }
-            />
+            {ability.can(ACTION.READ, SUBJECT.SETTINGS) ? (
+              <>
+                <Typography style="medium" className="text-secondary uppercase">
+                  {formatMessage(messages.downloadRoute)}
+                </Typography>
+                <Typography>
+                  {formatMessage(messages.selectRoutePath)}
+                </Typography>
+                <TextField
+                  label="URL"
+                  name="url"
+                  value={formik.values.url}
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  disabled={ability.cannot(ACTION.UPDATE, SUBJECT.SETTINGS)}
+                  error={Boolean(formik.touched.url && formik.errors.url)}
+                  helperText={
+                    formik.touched.url && formik.errors.url
+                      ? formik.errors.url
+                      : ''
+                  }
+                />
+              </>
+            ) : (
+              <WrongPermissions />
+            )}
           </Grid>
           <Grid
             item
@@ -271,25 +323,32 @@ const GeneralConfig = (): ReactElement => {
             md={4}
             className="bg-white rounded-md px-6 py-4 shadow-md h-52"
           >
-            <Typography style="medium" className="text-secondary uppercase">
-              {formatMessage(messages.doubleStepDelete)}
-            </Typography>
-            <Typography>
-              {formatMessage(messages.doubleStepDeletePolicy)}
-            </Typography>
-            <div className="flex items-center gap-2 mt-3">
-              <Switch
-                color="primary"
-                value={formik.values.doubleStepDelete}
-                onChange={async (value) =>
-                  await formik.setFieldValue('doubleStepDelete', value)
-                }
-                size="sm"
-              />
-              <Typography variant="caption">
-                {formatMessage(messages.activateDoubleStepDelete)}
-              </Typography>
-            </div>
+            {ability.can(ACTION.READ, SUBJECT.SETTINGS) ? (
+              <>
+                <Typography style="medium" className="text-secondary uppercase">
+                  {formatMessage(messages.doubleStepDelete)}
+                </Typography>
+                <Typography>
+                  {formatMessage(messages.doubleStepDeletePolicy)}
+                </Typography>
+                <div className="flex items-center gap-2 mt-3">
+                  <Switch
+                    color="primary"
+                    value={formik.values.doubleStepDelete}
+                    disabled={ability.cannot(ACTION.UPDATE, SUBJECT.SETTINGS)}
+                    onChange={async (value) =>
+                      await formik.setFieldValue('doubleStepDelete', value)
+                    }
+                    size="sm"
+                  />
+                  <Typography variant="caption">
+                    {formatMessage(messages.activateDoubleStepDelete)}
+                  </Typography>
+                </div>
+              </>
+            ) : (
+              <WrongPermissions />
+            )}
           </Grid>
           <Grid
             item
@@ -297,7 +356,11 @@ const GeneralConfig = (): ReactElement => {
             md={4}
             className="bg-white rounded-md px-6 py-4 shadow-md"
           >
-            <LabelsAdministration />
+            {ability.can(ACTION.READ, SUBJECT.LABELS) ? (
+              <LabelsAdministration />
+            ) : (
+              <WrongPermissions />
+            )}
           </Grid>
           <Grid
             item
@@ -305,7 +368,11 @@ const GeneralConfig = (): ReactElement => {
             md={4}
             className="bg-white rounded-md px-6 py-4 shadow-md "
           >
-            <LetterheadAdministration />
+            {ability.can(ACTION.READ, SUBJECT.LETTERHEADS) ? (
+              <LetterheadAdministration />
+            ) : (
+              <WrongPermissions />
+            )}
           </Grid>
         </Grid>
         <div className="mt-4 text-right">

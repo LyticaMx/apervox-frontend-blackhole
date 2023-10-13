@@ -13,6 +13,7 @@ import EditMediaDrawer from './EditMediaDrawer'
 import { useAcquisitionMediums } from 'context/AcquisitionMediums'
 import { formatTotal } from 'utils/formatTotal'
 import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 interface FormValues {
   id?: string
@@ -27,6 +28,7 @@ const MediaTab = (): ReactElement => {
   const [openDeleteMedia, setOpenDeleteMedia] = useState(false)
   const [deleteIds, setDeleteIds] = useState<string[]>([])
   const { actions: auditActions } = useModuleAudits()
+  const ability = useAbility()
 
   useEffect(() => {
     actions?.getData({}, true)
@@ -112,7 +114,11 @@ const MediaTab = (): ReactElement => {
                     </Typography>
                   ),
                   body: <MediaDrawer formType="media" onAccept={handleCreate} />
-                })
+                }),
+              disabled: ability.cannot(
+                ACTION.CREATE,
+                SUBJECT.ACQUISITION_MEDIUMS
+              )
             }}
             initialValues={{
               dateRange: {
@@ -137,7 +143,10 @@ const MediaTab = (): ReactElement => {
           <GeneralMediaList
             type="medium"
             data={data}
-            handleEdit={(row) =>
+            handleEdit={(row) => {
+              if (ability.cannot(ACTION.UPDATE, SUBJECT.ACQUISITION_MEDIUMS)) {
+                return
+              }
               drawerActions?.handleOpenDrawer({
                 title: (
                   <Typography
@@ -155,7 +164,11 @@ const MediaTab = (): ReactElement => {
                   />
                 )
               })
-            }
+            }}
+            disableDelete={ability.cannot(
+              ACTION.UPDATE,
+              SUBJECT.ACQUISITION_MEDIUMS
+            )}
             handleDelete={(row) => {
               setDeleteIds([row.id])
               setOpenDeleteMedia(true)

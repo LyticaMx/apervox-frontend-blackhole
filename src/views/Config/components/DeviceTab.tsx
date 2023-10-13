@@ -14,6 +14,7 @@ import { useDevices } from 'context/Devices'
 import { get } from 'lodash'
 import { formatTotal } from 'utils/formatTotal'
 import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 const DeviceTab = (): ReactElement => {
   const { data, total, dateFilter, searchFilter, actions } = useDevices()
@@ -22,6 +23,7 @@ const DeviceTab = (): ReactElement => {
   const { formatMessage } = useIntl()
   const [openDelete, setOpenDelete] = useState(false)
   const [deleteIds, setDeleteIds] = useState<string[]>([])
+  const ability = useAbility()
 
   useEffect(() => {
     actions?.getData({}, true)
@@ -98,6 +100,9 @@ const DeviceTab = (): ReactElement => {
             fields={[{ label: formatMessage(formMessages.name), name: 'name' }]}
             action={{
               label: formatMessage(mediaMessages.addDevice),
+              disabled:
+                ability.cannot(ACTION.CREATE, SUBJECT.DEVICES) ||
+                ability.cannot(ACTION.READ, SUBJECT.ACQUISITION_MEDIUMS),
               onClick: () =>
                 drawerActions?.handleOpenDrawer({
                   title: (
@@ -133,7 +138,13 @@ const DeviceTab = (): ReactElement => {
           <GeneralMediaList
             type="device"
             data={data}
-            handleEdit={(row) =>
+            handleEdit={(row) => {
+              if (
+                ability.cannot(ACTION.UPDATE, SUBJECT.DEVICES) ||
+                ability.cannot(ACTION.READ, SUBJECT.ACQUISITION_MEDIUMS)
+              ) {
+                return
+              }
               drawerActions?.handleOpenDrawer({
                 title: (
                   <Typography
@@ -159,7 +170,8 @@ const DeviceTab = (): ReactElement => {
                   />
                 )
               })
-            }
+            }}
+            disableDelete={ability.cannot(ACTION.DELETE, SUBJECT.DEVICES)}
             handleDelete={(row) => {
               setDeleteIds([row.id])
               setOpenDelete(true)

@@ -1,4 +1,4 @@
-import { ReactElement, useMemo, useState } from 'react'
+import { ReactElement, useEffect, useMemo, useState } from 'react'
 import { useIntl } from 'react-intl'
 import { FormikConfig } from 'formik'
 import { useHistory } from 'react-router-dom'
@@ -17,6 +17,8 @@ import { pathRoute } from 'router/routes'
 import { getItem } from 'utils/persistentStorage'
 import { SignedIn } from 'types/auth'
 import CloseAllSessions from './components/CloseAllSessions'
+import { AbilityBuilder, createMongoAbility } from '@casl/ability'
+import { useAbility } from 'context/Ability'
 
 interface FormValues {
   user: string
@@ -32,6 +34,7 @@ const SignIn = (): ReactElement => {
   const { formatMessage } = useIntl()
   const history = useHistory()
   const { actions } = useAuth()
+  const ability = useAbility()
 
   const validationSchema = yup.object({
     user: yup.string().required(formatMessage(formMessages.required)),
@@ -98,6 +101,13 @@ const SignIn = (): ReactElement => {
     ],
     []
   )
+
+  useEffect(() => {
+    try {
+      const { rules } = new AbilityBuilder(createMongoAbility)
+      ability.update(rules)
+    } catch {}
+  }, [])
 
   return (
     <div className="bg-blackhole w-screen h-screen bg-no-repeat bg-center bg-cover overflow-hidden relative before:absolute before:top-0 before:left-0 before:right-0 before:bottom-0 before:bg-[#131B28] before:bg-opacity-[85%] flex items-center justify-center">

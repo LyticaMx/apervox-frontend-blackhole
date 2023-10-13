@@ -13,6 +13,7 @@ import { formMessages } from 'globalMessages'
 import { userInfoMessages } from '../messages'
 import useToast from 'hooks/useToast'
 import { ProfileGroup } from 'types/profile'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 interface FormValues {
   name: string
@@ -28,6 +29,7 @@ const UserInfo = (): ReactElement => {
   const { formatMessage } = useIntl()
   const { auth, actions } = useAuth()
   const { launchToast } = useToast()
+  const ability = useAbility()
 
   const fields: Array<Field<FormValues>> = [
     {
@@ -213,7 +215,8 @@ const UserInfo = (): ReactElement => {
               submitButtonProps={{
                 color: 'indigo',
                 variant: 'contained',
-                className: 'mt-6 mb-2'
+                className: 'mt-6 mb-2',
+                disabled: ability.cannot(ACTION.UPDATE, SUBJECT.ME)
               }}
               className="user-account-data-form"
             />

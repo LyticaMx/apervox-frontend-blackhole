@@ -18,6 +18,7 @@ import { Module, scopes } from '../constants'
 import { Scope } from 'types/scope'
 import SelectPaginate from 'components/Form/SelectPaginate'
 import { omit } from 'lodash'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 interface Props {
   open: boolean
@@ -35,6 +36,8 @@ const StoreDrawer = ({ open, role, onClose }: Props): ReactElement => {
   const [items, setItems] = useState<Module[]>(scopes)
   const [roleUsers, setRoleUsers] = useState<any[]>([])
   const { actions } = useRoles()
+  const ability = useAbility()
+  const isEdit = Boolean(role)
 
   const validationSchema = yup.object({
     name: yup.string().required(getMessage('required')),
@@ -220,6 +223,7 @@ const StoreDrawer = ({ open, role, onClose }: Props): ReactElement => {
             }}
             placeholder={getMessage('usersPlaceholder')}
             debounceTimeout={300}
+            disabled={ability.cannot(ACTION.READ, SUBJECT.USERS)}
             value={formik.values.users}
             isMulti={true}
             loadingMessage={() =>
@@ -234,7 +238,16 @@ const StoreDrawer = ({ open, role, onClose }: Props): ReactElement => {
           />
         </div>
         <div className="text-right mt-4">
-          <Button variant="contained" color="primary" type="submit">
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            disabled={
+              isEdit
+                ? ability.cannot(ACTION.UPDATE, SUBJECT.ROLES)
+                : ability.cannot(ACTION.CREATE, SUBJECT.ROLES)
+            }
+          >
             {getGlobalMessage('save', 'actionsMessages')}
           </Button>
         </div>

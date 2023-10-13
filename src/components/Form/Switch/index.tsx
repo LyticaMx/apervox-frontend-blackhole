@@ -5,6 +5,7 @@ import { backgroudColorClassNames } from 'utils/classes'
 
 export interface Props {
   value?: boolean
+  disabled?: boolean
   onChange?: (value: boolean) => void
   size?: 'sm' | 'md' | 'lg'
   color?: string
@@ -15,6 +16,7 @@ const Switch = ({
   color = 'gray',
   value,
   onChange,
+  disabled,
   stopPropagation = false
 }: Props): ReactElement => {
   const colorClass =
@@ -33,6 +35,7 @@ const Switch = ({
   return (
     <SwitchHL
       checked={value}
+      disabled={disabled}
       onChange={onChange}
       onClick={(e) => {
         if (stopPropagation) e.stopPropagation()

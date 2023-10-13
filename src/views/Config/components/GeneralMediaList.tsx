@@ -21,6 +21,7 @@ interface Props<T> {
   handleDelete: (row: T) => void | Promise<void>
   handleEdit: (row: T, event: any) => void
   handleMultipleDelete: ((items: T[]) => void) | ((items: T[]) => Promise<void>)
+  disableDelete?: boolean
 }
 
 const GeneralMediaList = <
@@ -82,49 +83,52 @@ const GeneralMediaList = <
     []
   )
 
-  const columns = useTableColumns<DataType>(() => [
-    {
-      header: '',
-      id: 'media-data',
-      cell: renderMediaType
-    },
-    {
-      header: '',
-      accessorKey: 'created_at',
-      cell: ({ getValue }) => (
-        <span className="text-secondary-gray">
-          {format(new Date(getValue<string>()), 'dd/MM/yyyy - hh:mm')}
-        </span>
-      )
-    },
-    {
-      header: '',
-      accessorKey: 'id',
-      id: 'info',
-      cell: ({ row }) => (
-        <Tooltip
-          content={formatMessage(actionsMessages.delete)}
-          floatProps={{ offset: 10, arrow: true }}
-          classNames={{
-            panel:
-              'bg-secondary text-white py-1 px-2 rounded-md text-sm whitespace-nowrap',
-            arrow: 'absolute bg-white w-2 h-2 rounded-full bg-secondary'
-          }}
-          placement="top"
-        >
-          <IconButton
-            className="hover:text-primary"
-            disabled={row.getIsSelected()}
-            onClick={() => {
-              props.handleDelete(row.original)
+  const columns = useTableColumns<DataType>(
+    () => [
+      {
+        header: '',
+        id: 'media-data',
+        cell: renderMediaType
+      },
+      {
+        header: '',
+        accessorKey: 'created_at',
+        cell: ({ getValue }) => (
+          <span className="text-secondary-gray">
+            {format(new Date(getValue<string>()), 'dd/MM/yyyy - hh:mm')}
+          </span>
+        )
+      },
+      {
+        header: '',
+        accessorKey: 'id',
+        id: 'info',
+        cell: ({ row }) => (
+          <Tooltip
+            content={formatMessage(actionsMessages.delete)}
+            floatProps={{ offset: 10, arrow: true }}
+            classNames={{
+              panel:
+                'bg-secondary text-white py-1 px-2 rounded-md text-sm whitespace-nowrap',
+              arrow: 'absolute bg-white w-2 h-2 rounded-full bg-secondary'
             }}
+            placement="top"
           >
-            <TrashIcon className="h-5 w-5" />
-          </IconButton>
-        </Tooltip>
-      )
-    }
-  ])
+            <IconButton
+              className="hover:text-primary"
+              disabled={row.getIsSelected() || props.disableDelete}
+              onClick={() => {
+                props.handleDelete(row.original)
+              }}
+            >
+              <TrashIcon className="h-5 w-5" />
+            </IconButton>
+          </Tooltip>
+        )
+      }
+    ],
+    [props.disableDelete]
+  )
 
   return (
     <Table
@@ -137,7 +141,9 @@ const GeneralMediaList = <
         {
           action: props.handleMultipleDelete,
           Icon: TrashIcon,
-          name: 'deleteMedia'
+          name: 'deleteMedia',
+          tooltip: formatMessage(actionsMessages.delete),
+          disabled: props.disableDelete
         }
       ]}
     />
