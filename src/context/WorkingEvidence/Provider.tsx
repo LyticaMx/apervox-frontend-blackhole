@@ -175,6 +175,15 @@ const WorkingEvidenceProvider = (props: Props): ReactElement => {
     }
   }
 
+  const createFullTranscription = async (): Promise<void> => {
+    try {
+      if (!workingEvidence.id) return
+      await evidenceService.post({
+        queryString: `${workingEvidence.id}/transcriptions`
+      })
+    } catch {}
+  }
+
   const updateTranscriptionSegments = async (
     segments: TranscriptionSegment[]
   ): Promise<TranscriptionSegment[]> => {
@@ -278,6 +287,7 @@ const WorkingEvidenceProvider = (props: Props): ReactElement => {
     updateFollow,
     classifyEvidence,
     getTranscriptionSegments,
+    createFullTranscription,
     updateTranscriptionSegments,
     deleteTranscriptionSegment,
     getRegions,

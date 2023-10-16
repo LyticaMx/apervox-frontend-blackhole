@@ -57,6 +57,7 @@ export interface WorkingEvidenceActions {
   getRegions: () => Promise<Region[]>
   updateRegions: (regions: Region[]) => Promise<Region[]>
   deleteRegion: (id: string) => Promise<boolean>
+  createFullTranscription: () => Promise<void>
 }
 
 export interface WorkingEvidenceContextType extends WorkingEvidence {
