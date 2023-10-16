@@ -1,6 +1,6 @@
 import { ReactElement } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
-import { routes } from 'router/routes'
+import { pathRoute, routes } from 'router/routes'
 import Item from './components/Item'
 import { SignalIcon, UserCircleIcon } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
@@ -8,12 +8,15 @@ import { useSidebar } from 'context/Sidebar'
 import Tooltip from 'components/Tooltip'
 import { useIntl } from 'react-intl'
 import { sidebarMessages } from 'globalMessages'
+import LiveCalls from './components/LiveCalls'
+import Popover from 'components/Popover'
 
 const Sidebar = (): ReactElement => {
   const { pathname } = useLocation()
   const { open } = useSidebar()
   const { formatMessage } = useIntl()
   const history = useHistory()
+  const location = useLocation()
 
   return (
     <aside
@@ -55,12 +58,23 @@ const Sidebar = (): ReactElement => {
       </nav>
 
       <div className="flex flex-col space-y-6">
-        <a
-          href="#"
-          className="p-1.5 text-gray-700 focus:outline-nones transition-colors duration-200 rounded-lg   hover:bg-gray-100"
+        <Popover
+          content={<LiveCalls />}
+          classNames={{
+            panel:
+              'rounded-md shadow-md bg-white border border-gray-200 text-sm max-w-md'
+          }}
         >
-          <SignalIcon className="w-6 h-6 text-red-500" />
-        </a>
+          <button
+            className="p-1.5 text-gray-700 focus:outline-nones transition-colors duration-200 rounded-lg hover:enabled:bg-gray-100 enabled:text-red-500 disabled:text-slate-300 disabled:cursor-not-allowed"
+            disabled={
+              location.pathname === pathRoute.monitoring.base ||
+              location.pathname === pathRoute.monitoring.history
+            }
+          >
+            <SignalIcon className="w-6 h-6" />
+          </button>
+        </Popover>
       </div>
     </aside>
   )

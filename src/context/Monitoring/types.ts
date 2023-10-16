@@ -1,4 +1,5 @@
 import { SortingState } from '@tanstack/react-table'
+import { CallEvidenceForSocket } from 'context/LiveCallSocket'
 import { PaginationParams, SearchParams } from 'types/api'
 import { DateFilter, PaginationFilter, SearchFilter } from 'types/filters'
 
@@ -11,6 +12,7 @@ export interface LiveCall {
   type: string
   status: string
   date: string
+  endedAt?: string
 }
 
 export interface LiveCallPaginationParams extends PaginationParams {
@@ -46,11 +48,21 @@ export interface LiveCallState {
 }
 
 export interface LiveCallActions {
+  /**
+   * @deprecated
+   * @param params
+   * @param getTotal
+   * @returns Promise<void>
+   */
   getData: (
     params: LiveCallPaginationParams & SearchParams & DateFilter & StaticFilter,
     getTotal?: boolean
   ) => Promise<void>
+  getAllData: (getTotal?: boolean) => Promise<void>
   hangUp: (id: string) => Promise<boolean>
+  addLiveCall: (call: CallEvidenceForSocket) => void
+  updateLiveCall: (call: CallEvidenceForSocket) => void
+  removeLiveCall: (id: string) => void
 }
 
 export interface ContextType extends LiveCallState {
