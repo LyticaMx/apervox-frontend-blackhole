@@ -41,6 +41,7 @@ const CallsTable = (): ReactElement => {
 
     const intervalId = setInterval(() => {
       data.forEach((call) => {
+        if (!call.endedAt) return
         if (
           isAfter(
             new Date(call.endedAt ?? 0),
