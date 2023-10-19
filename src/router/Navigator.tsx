@@ -6,9 +6,11 @@ import { useAuth } from 'context/Auth'
 import { pathRoute, routes } from './routes'
 import { useSocket } from 'hooks/useSocket'
 import { getItem } from 'utils/persistentStorage'
+import { useAbility } from 'context/Ability'
 
 const Navigator = (): ReactElement => {
   const { auth, actions: authActions } = useAuth()
+  const ability = useAbility()
   const { socket, isSocketConnected } = useSocket({
     namespace: 'sessions',
     query: {
@@ -47,31 +49,48 @@ const Navigator = (): ReactElement => {
                 </route.layout>
               )}
             </Route>,
-            ...route.modules.map((subRoute) => (
-              <Route exact key={subRoute.id} path={subRoute.path}>
-                {subRoute.private && !auth.isLogguedIn ? (
-                  <Redirect to={pathRoute.auth.signIn} />
-                ) : (
-                  <subRoute.layout>
-                    <subRoute.component />
-                  </subRoute.layout>
-                )}
-              </Route>
-            ))
+            ...route.modules.map((subRoute) => {
+              if (
+                route.scopes.every((scope) =>
+                  ability.can(scope.action, scope.subject)
+                )
+              ) {
+                return (
+                  <Route exact key={subRoute.id} path={subRoute.path}>
+                    {subRoute.private && !auth.isLogguedIn ? (
+                      <Redirect to={pathRoute.auth.signIn} />
+                    ) : (
+                      <subRoute.layout>
+                        <subRoute.component />
+                      </subRoute.layout>
+                    )}
+                  </Route>
+                )
+              }
+              return null
+            })
           ]
         }
 
-        return (
-          <Route exact key={route.id} path={route.path}>
-            {route.private && !auth.isLogguedIn ? (
-              <Redirect to={pathRoute.auth.signIn} />
-            ) : (
-              <route.layout>
-                <route.component />
-              </route.layout>
-            )}
-          </Route>
-        )
+        if (
+          route.scopes.every((scope) =>
+            ability.can(scope.action, scope.subject)
+          )
+        ) {
+          return (
+            <Route exact key={route.id} path={route.path}>
+              {route.private && !auth.isLogguedIn ? (
+                <Redirect to={pathRoute.auth.signIn} />
+              ) : (
+                <route.layout>
+                  <route.component />
+                </route.layout>
+              )}
+            </Route>
+          )
+        }
+
+        return null
       })}
       <Redirect to={pathRoute.auth.userAccount} />
     </Switch>

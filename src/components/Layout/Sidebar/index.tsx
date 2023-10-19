@@ -10,6 +10,7 @@ import { useIntl } from 'react-intl'
 import { sidebarMessages } from 'globalMessages'
 import LiveCalls from './components/LiveCalls'
 import Popover from 'components/Popover'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 const Sidebar = (): ReactElement => {
   const { pathname } = useLocation()
@@ -17,6 +18,7 @@ const Sidebar = (): ReactElement => {
   const { formatMessage } = useIntl()
   const history = useHistory()
   const location = useLocation()
+  const ability = useAbility()
 
   return (
     <aside
@@ -46,7 +48,13 @@ const Sidebar = (): ReactElement => {
         </Tooltip>
 
         {routes
-          .filter((route) => route.sidebar)
+          .filter(
+            (route) =>
+              route.sidebar &&
+              route.scopes.every((scope) =>
+                ability.can(scope.action, scope.subject)
+              )
+          )
           .map((route) => (
             <Item
               key={route.id}
@@ -58,23 +66,25 @@ const Sidebar = (): ReactElement => {
       </nav>
 
       <div className="flex flex-col space-y-6">
-        <Popover
-          content={<LiveCalls />}
-          classNames={{
-            panel:
-              'rounded-md shadow-md bg-white border border-gray-200 text-sm max-w-md'
-          }}
-        >
-          <button
-            className="p-1.5 text-gray-700 focus:outline-nones transition-colors duration-200 rounded-lg hover:enabled:bg-gray-100 enabled:text-red-500 disabled:text-slate-300 disabled:cursor-not-allowed"
-            disabled={
-              location.pathname === pathRoute.monitoring.base ||
-              location.pathname === pathRoute.monitoring.history
-            }
+        {ability.can(ACTION.READ, SUBJECT.CALL_EVIDENCES) && (
+          <Popover
+            content={<LiveCalls />}
+            classNames={{
+              panel:
+                'rounded-md shadow-md bg-white border border-gray-200 text-sm max-w-md'
+            }}
           >
-            <SignalIcon className="w-6 h-6" />
-          </button>
-        </Popover>
+            <button
+              className="p-1.5 text-gray-700 focus:outline-nones transition-colors duration-200 rounded-lg hover:enabled:bg-gray-100 enabled:text-red-500 disabled:text-slate-300 disabled:cursor-not-allowed"
+              disabled={
+                location.pathname === pathRoute.monitoring.base ||
+                location.pathname === pathRoute.monitoring.history
+              }
+            >
+              <SignalIcon className="w-6 h-6" />
+            </button>
+          </Popover>
+        )}
       </div>
     </aside>
   )
