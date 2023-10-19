@@ -8,12 +8,14 @@ import { useSidebar } from 'context/Sidebar'
 import Tooltip from 'components/Tooltip'
 import { useIntl } from 'react-intl'
 import { sidebarMessages } from 'globalMessages'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 const Sidebar = (): ReactElement => {
   const { pathname } = useLocation()
   const { open } = useSidebar()
   const { formatMessage } = useIntl()
   const history = useHistory()
+  const ability = useAbility()
 
   return (
     <aside
@@ -43,7 +45,13 @@ const Sidebar = (): ReactElement => {
         </Tooltip>
 
         {routes
-          .filter((route) => route.sidebar)
+          .filter(
+            (route) =>
+              route.sidebar &&
+              route.scopes.every((scope) =>
+                ability.can(scope.action, scope.subject)
+              )
+          )
           .map((route) => (
             <Item
               key={route.id}
@@ -55,12 +63,11 @@ const Sidebar = (): ReactElement => {
       </nav>
 
       <div className="flex flex-col space-y-6">
-        <a
-          href="#"
-          className="p-1.5 text-gray-700 focus:outline-nones transition-colors duration-200 rounded-lg   hover:bg-gray-100"
-        >
-          <SignalIcon className="w-6 h-6 text-red-500" />
-        </a>
+        {ability.can(ACTION.READ, SUBJECT.CALL_EVIDENCES) && (
+          <button className="p-1.5 text-gray-700 focus:outline-nones transition-colors duration-200 rounded-lg   hover:bg-gray-100">
+            <SignalIcon className="w-6 h-6 text-red-500" />
+          </button>
+        )}
       </div>
     </aside>
   )
