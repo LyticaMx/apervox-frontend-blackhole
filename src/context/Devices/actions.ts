@@ -51,7 +51,7 @@ export const useActions = (state: State, dispatch): Actions => {
           auditActions?.genAudit(
             ModuleAuditsTypes.AuditableModules.DEVICES,
             ModuleAuditsTypes.AuditableActions.SEARCH,
-            'searched'
+            `${params.filters?.[0]}:${params.query}`
           )
         } catch {}
       }
