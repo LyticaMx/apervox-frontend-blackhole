@@ -53,6 +53,12 @@ import VideoPlayer from 'views/Demo/VideoPlayer'
 import RichTextEditor from 'views/Demo/RichTextEditor'
 import EvidenceViewDemo from 'views/Demo/EvidenceViewDemo'
 import Verification from 'views/Acquisition/Verification'
+import { ACTION, SUBJECT } from 'context/Ability'
+
+interface Ability {
+  action: ACTION
+  subject: SUBJECT
+}
 
 export interface Route {
   id: string
@@ -61,7 +67,7 @@ export interface Route {
   path: string
   modules: Route[]
   icon?: any
-  scopes: string[] // permissions for access to route => "admin, superadmin..."
+  scopes: Ability[] // permissions for access to route => "admin, superadmin..."
   component: () => ReactElement
   layout: ({ children }: Layout) => ReactElement
   private?: boolean
@@ -148,7 +154,7 @@ export const routes: Route[] = [
     id: 'mi-cuenta',
     path: pathRoute.auth.userAccount,
     modules: [],
-    scopes: [],
+    scopes: [{ action: ACTION.READ, subject: SUBJECT.ME }],
     component: UserAccount,
     layout: BaseLayout,
     private: true
@@ -159,7 +165,7 @@ export const routes: Route[] = [
     icon: UsersIcon,
     i18Key: 'users',
     modules: [],
-    scopes: [],
+    scopes: [{ action: ACTION.READ, subject: SUBJECT.USERS }],
     component: UsersAdmin,
     layout: BaseLayout,
     private: true,
@@ -171,7 +177,7 @@ export const routes: Route[] = [
     icon: UserGroupIcon,
     i18Key: 'workGroups',
     modules: [],
-    scopes: [],
+    scopes: [{ action: ACTION.READ, subject: SUBJECT.GROUPS }],
     component: WorkGroups,
     layout: BaseLayout,
     private: true,
@@ -183,7 +189,7 @@ export const routes: Route[] = [
     icon: IdentificationIcon,
     i18Key: 'roles',
     modules: [],
-    scopes: [],
+    scopes: [{ action: ACTION.READ, subject: SUBJECT.ROLES }],
     component: Roles,
     layout: BaseLayout,
     private: true,
@@ -199,12 +205,16 @@ export const routes: Route[] = [
         component: Media,
         layout: BaseLayout,
         modules: [],
-        scopes: [],
+        scopes: [
+          { action: ACTION.READ, subject: SUBJECT.DEVICES },
+          { action: ACTION.READ, subject: SUBJECT.ACQUISITION_MEDIUMS },
+          { action: ACTION.READ, subject: SUBJECT.CARRIERS }
+        ],
         path: pathRoute.config.media,
         private: true
       },
       {
-        id: 'config-media',
+        id: 'config-telecom',
         component: Telecom,
         layout: BaseLayout,
         modules: [],
@@ -225,7 +235,7 @@ export const routes: Route[] = [
     icon: ComputerDesktopIcon,
     i18Key: 'monitoring',
     modules: [],
-    scopes: [],
+    scopes: [{ action: ACTION.READ, subject: SUBJECT.CALL_EVIDENCES }],
     component: CallsHistory,
     layout: BaseLayout,
     private: true,
@@ -237,7 +247,7 @@ export const routes: Route[] = [
     icon: ComputerDesktopIcon,
     i18Key: 'monitoring',
     modules: [],
-    scopes: [],
+    scopes: [{ action: ACTION.READ, subject: SUBJECT.CALL_EVIDENCES }],
     component: Monitoring,
     layout: BaseLayout,
     private: true,
@@ -254,12 +264,15 @@ export const routes: Route[] = [
         component: Verification,
         layout: BaseLayout,
         modules: [],
-        scopes: [],
+        scopes: [
+          { action: ACTION.READ, subject: SUBJECT.OVERFLOW_LINES },
+          { action: ACTION.READ, subject: SUBJECT.VERIFICATION_LINES }
+        ],
         path: pathRoute.acquisition.verificationLine,
         private: true
       }
     ],
-    scopes: [],
+    scopes: [{ action: ACTION.READ, subject: SUBJECT.OVERFLOW_LINES }],
     component: Acquisition,
     layout: BaseLayout,
     private: true,
@@ -276,7 +289,7 @@ export const routes: Route[] = [
         component: FailedLoginAttemps,
         layout: BaseLayout,
         modules: [],
-        scopes: [],
+        scopes: [{ action: ACTION.READ, subject: SUBJECT.AUDITS }],
         path: pathRoute.audit.failedLoginAttemps,
         private: true
       },
@@ -285,12 +298,12 @@ export const routes: Route[] = [
         component: BlockedUsers,
         layout: BaseLayout,
         modules: [],
-        scopes: [],
+        scopes: [{ action: ACTION.READ, subject: SUBJECT.AUDITS }],
         path: pathRoute.audit.blockedUsers,
         private: true
       }
     ],
-    scopes: [],
+    scopes: [{ action: ACTION.READ, subject: SUBJECT.AUDITS }],
     component: Audit,
     layout: BaseLayout,
     private: true,
@@ -299,7 +312,10 @@ export const routes: Route[] = [
   {
     id: 'evidence',
     path: pathRoute.evidence,
-    scopes: [],
+    scopes: [
+      { action: ACTION.READ, subject: SUBJECT.CALL_EVIDENCES },
+      { action: ACTION.UPDATE, subject: SUBJECT.CALL_EVIDENCES }
+    ],
     modules: [],
     component: Evidence,
     layout: EvidenceLayout,
@@ -312,7 +328,7 @@ export const routes: Route[] = [
     icon: FolderOpenIcon,
     i18Key: 'techniques',
     modules: [],
-    scopes: [],
+    scopes: [{ action: ACTION.READ, subject: SUBJECT.TECHNIQUES }],
     component: Techniques,
     layout: BaseLayout,
     private: true,
@@ -324,7 +340,7 @@ export const routes: Route[] = [
     icon: FolderOpenIcon,
     i18Key: 'techniques',
     modules: [],
-    scopes: [],
+    scopes: [{ action: ACTION.READ, subject: SUBJECT.TECHNIQUES }],
     component: Technique,
     layout: BaseLayout,
     private: true,
