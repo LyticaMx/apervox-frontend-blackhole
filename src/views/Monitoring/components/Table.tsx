@@ -1,9 +1,9 @@
 import { PhoneIcon, PhoneXMarkIcon } from '@heroicons/react/24/outline'
 import Table from 'components/Table'
-import { format } from 'date-fns'
+import { format, addHours, isAfter } from 'date-fns'
 import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
 import useTableColumns from 'hooks/useTableColumns'
-import { ReactElement, useEffect } from 'react'
+import { ReactElement, useEffect, useMemo } from 'react'
 import { tableMessages } from '../messages'
 import { useMonitoring } from 'context/Monitoring'
 import { LiveCall } from 'context/Monitoring/types'
@@ -11,16 +11,61 @@ import clsx from 'clsx'
 import Tooltip from 'components/Tooltip'
 import IconButton from 'components/Button/IconButton'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
+import { useLiveCallSocket } from 'context/LiveCallSocket'
 
 const CallsTable = (): ReactElement => {
   const getMessage = useFormatMessage(tableMessages)
   const getGlobalMessage = useGlobalMessage()
-  const { actions, pagination, data } = useMonitoring()
+  const { actions, data } = useMonitoring()
   const ability = useAbility()
+  const { socket } = useLiveCallSocket()
 
   useEffect(() => {
-    actions?.getData({}, true)
+    actions?.getAllData(true)
   }, [])
+
+  useEffect(() => {
+    if (!socket || !actions) return
+
+    socket.on('new_call', actions.addLiveCall)
+    socket.on('call_ended', actions.updateLiveCall)
+
+    return () => {
+      socket.off('new_call', actions.addLiveCall)
+      socket.off('call_ended', actions.updateLiveCall)
+    }
+  }, [socket, actions])
+
+  useEffect(() => {
+    if (!actions) return
+
+    const intervalId = setInterval(() => {
+      data.forEach((call) => {
+        if (!call.endedAt) return
+        if (
+          isAfter(
+            new Date(call.endedAt ?? 0),
+            addHours(new Date(call.endedAt ?? 0), 1)
+          )
+        ) {
+          actions.removeLiveCall(call.id)
+        }
+      })
+    }, 2000) // TODO: Revisar mejor tiempo de eliminación
+
+    return () => {
+      clearInterval(intervalId)
+    }
+  }, [data, actions])
+
+  const phoneColor = useMemo(
+    () => ({
+      evidence: 'text-primary-500',
+      trash: 'text-orange-500',
+      verification: 'text-green-400'
+    }),
+    []
+  )
 
   const columns = useTableColumns<LiveCall>(
     () => [
@@ -89,7 +134,9 @@ const CallsTable = (): ReactElement => {
         header: getMessage('callType'),
         cell: ({ getValue }) => (
           <p className="px-1 py-0.5 rounded-3xl text-sm flex items-center gap-2">
-            <PhoneIcon className="w-4 h-4 text-muted" />
+            <PhoneIcon
+              className={clsx('w-4 h-4', phoneColor[getValue<string>()])}
+            />
             {getMessage(getValue<string>())}
           </p>
         ),
@@ -170,22 +217,7 @@ const CallsTable = (): ReactElement => {
       columns={columns}
       data={data}
       className="overflow-x-auto shadow rounded-lg"
-      manualSorting={{
-        onSortingChange: (sort) => actions?.getData({ sort }),
-        sorting: pagination.sort
-      }}
       maxHeight={500}
-      manualLimit={{
-        options: [15, 25, 50, 100],
-        onChangeLimit: (page, limit) =>
-          actions?.getData({ page: page + 1, limit })
-      }}
-      pageSize={pagination.limit}
-      manualPagination={{
-        currentPage: pagination.page,
-        totalRecords: pagination.totalRecords,
-        onChange: (page) => actions?.getData({ page: page + 1 })
-      }}
     />
   )
 }
