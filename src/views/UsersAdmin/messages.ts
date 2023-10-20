@@ -36,6 +36,11 @@ export const userListMessages = defineMessages({
   closeSession: {
     id: 'views.users.list.closeSession',
     defaultMessage: 'Cerrar sesión'
+  },
+  enabled: { id: 'views.users.list.enabled', defaultMessage: 'Activo' },
+  disabled: {
+    id: 'views.users.list.disabled',
+    defaultMessage: 'Inactivo'
   }
 })
 
