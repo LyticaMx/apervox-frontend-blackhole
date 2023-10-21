@@ -15,6 +15,7 @@ import { useTechnique } from 'context/Technique'
 import useToast from 'hooks/useToast'
 import useTargetMeta from 'hooks/useTargetMeta'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
+import { simpleText } from 'utils/patterns'
 
 interface FormValues {
   id?: string
@@ -259,17 +260,35 @@ const VehiclesForm = (): ReactElement => {
       .string()
       .when('brand', (brand, field) =>
         brand === 'other'
-          ? yup.string().required(formatMessage(formMessages.required))
+          ? yup
+              .string()
+              .required(formatMessage(formMessages.required))
+              .matches(
+                simpleText,
+                formatMessage(formMessages.invalidSimpleText)
+              )
           : field
       ),
-    model: yup.string().required(formatMessage(formMessages.required)),
-    year: yup.string().required(formatMessage(formMessages.required)),
+    model: yup
+      .string()
+      .required(formatMessage(formMessages.required))
+      .matches(simpleText, formatMessage(formMessages.invalidSimpleText)),
+    year: yup
+      .string()
+      .required(formatMessage(formMessages.required))
+      .matches(/^\d{4}$/, formatMessage(vehiclesFormMessages.invalidYear)),
     type: yup.string().required(formatMessage(formMessages.required)),
     other_type: yup
       .string()
       .when('type', (type, field) =>
         type === 'other'
-          ? yup.string().required(formatMessage(formMessages.required))
+          ? yup
+              .string()
+              .required(formatMessage(formMessages.required))
+              .matches(
+                simpleText,
+                formatMessage(formMessages.invalidSimpleText)
+              )
           : field
       ),
     plates: yup.string().required(formatMessage(formMessages.required)),

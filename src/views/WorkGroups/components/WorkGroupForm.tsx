@@ -7,6 +7,7 @@ import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
 import { formMessages } from 'globalMessages'
 import { workGroupsFormMessages } from '../messages'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
+import { onlyLetters, simpleText } from 'utils/patterns'
 
 interface Option {
   value: string
@@ -112,8 +113,14 @@ const WorkGroupForm = ({
   ]
 
   const validationSchema = yup.object({
-    name: yup.string().required(getMessage('required')),
-    description: yup.string().required(getMessage('required'))
+    name: yup
+      .string()
+      .required(getMessage('required'))
+      .matches(onlyLetters, getMessage('onlyLetters')),
+    description: yup
+      .string()
+      .required(getMessage('required'))
+      .matches(simpleText, getMessage('invalidSimpleTest'))
   })
 
   const formikConfig = useMemo<FormikConfig<FormValues>>(

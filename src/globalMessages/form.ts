@@ -132,5 +132,34 @@ export const formMessages = defineMessages({
   invalidPhoneNumber: {
     id: 'global.form.invalidPhoneNumber',
     defaultMessage: 'Número telefónico no valido'
+  },
+  onlyLetters: {
+    id: 'global.form.onlyLetters',
+    defaultMessage: 'El campo sólo debe contener letras'
+  },
+  onlyLettersAndNumbers: {
+    id: 'global.form.onlyLettersAndNumbers',
+    defaultMessage: 'El campo sólo debe contener letras y/o números'
+  },
+  invalidUsername: {
+    id: 'global.form.invalidUsername',
+    defaultMessage: 'Nombre de usuario no valido'
+  },
+  invalidSimpleText: {
+    id: 'global.form.invalidUsername',
+    defaultMessage: 'El campo contiene simbolos o caracteres invalidos'
+  },
+  invalidZipCode: {
+    id: 'global.form.invalidZipCode',
+    defaultMessage: 'Código postal no valido'
+  },
+  invalidURL: {
+    id: 'global.form.invalidURL',
+    defaultMessage: 'No es una URL valida'
+  },
+  invalidMetricNumber: {
+    id: 'global.form.invalidMetricNumber',
+    defaultMessage:
+      'Ingrese un número válido en formato decimal con hasta 2 decimales, por ejemplo, 65.5, 75, 100.25, etc.'
   }
 })

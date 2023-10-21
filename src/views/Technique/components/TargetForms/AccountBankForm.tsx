@@ -16,6 +16,7 @@ import useTargetMeta from 'hooks/useTargetMeta'
 import { TechniqueTabs } from 'types/technique'
 import DeleteFormConfirmation from './DeleteFormConfirmation'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
+import { onlyLetters, simpleText } from 'utils/patterns'
 
 interface FormValues {
   id?: string
@@ -165,7 +166,10 @@ const AccountBankForm = (): ReactElement => {
   ]
 
   const validationSchema = yup.object({
-    bankname: yup.string().required(formatMessage(formMessages.required)),
+    bankname: yup
+      .string()
+      .required(formatMessage(formMessages.required))
+      .matches(onlyLetters, formatMessage(formMessages.onlyLetters)),
     accountNumber: yup.string().required(formatMessage(formMessages.required)),
     type: yup.string().required(formatMessage(formMessages.required)),
     otherType: yup
@@ -184,10 +188,16 @@ const AccountBankForm = (): ReactElement => {
       .string()
       .when('currency', (type, field) =>
         type === 'other'
-          ? yup.string().required(formatMessage(formMessages.required))
+          ? yup
+              .string()
+              .required(formatMessage(formMessages.required))
+              .matches(onlyLetters, formatMessage(formMessages.onlyLetters))
           : field
       ),
-    comments: yup.string()
+    comments: yup.string().matches(simpleText, {
+      excludeEmptyString: true,
+      message: formatMessage(formMessages.invalidSimpleText)
+    })
   })
 
   const getData = async (): Promise<void> => {

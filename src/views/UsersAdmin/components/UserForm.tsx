@@ -5,6 +5,11 @@ import Form from 'components/Form'
 import { Field } from 'types/form'
 import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
 import { userFormMessages } from '../messages'
+import {
+  onlyLetters,
+  onlyLettersAndNumbers,
+  username as usernamePattern
+} from 'utils/patterns'
 
 export interface FormValues {
   name: string
@@ -153,16 +158,28 @@ const UserForm = ({
   ]
 
   const validationSchema = yup.object({
-    name: yup.string().required(getMessage('required')),
-    lastname: yup.string().required(getMessage('required')),
-    username: yup.string().required(getMessage('required')),
+    name: yup
+      .string()
+      .required(getMessage('required'))
+      .matches(onlyLetters, getMessage('onlyLetters')),
+    lastname: yup
+      .string()
+      .required(getMessage('required'))
+      .matches(onlyLetters, getMessage('onlyLetters')),
+    username: yup
+      .string()
+      .required(getMessage('required'))
+      .matches(usernamePattern, getMessage('invalidUsername')),
     email: yup
       .string()
       .trim()
       .email(getMessage('invalidEmail'))
       .required(getMessage('required')),
     extension: yup.string(),
-    position: yup.string().required(getMessage('required')),
+    position: yup
+      .string()
+      .required(getMessage('required'))
+      .matches(onlyLettersAndNumbers, getMessage('onlyLettersAndNumbers')),
     role: yup.object().required(getMessage('required')), // revisar validación
     groups: yup.array().required(getMessage('required')),
     automaticSessionExpiration: yup

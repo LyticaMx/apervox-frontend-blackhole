@@ -17,6 +17,7 @@ import DeleteFormConfirmation from './DeleteFormConfirmation'
 import useToast from 'hooks/useToast'
 import { TechniqueTabs } from 'types/technique'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
+import { phoneNumber, simpleText } from 'utils/patterns'
 
 interface FormValues extends AddressFormValues {
   id?: string
@@ -96,14 +97,23 @@ const LaborForm = (): ReactElement => {
 
   const validationSchema = yup
     .object({
-      name: yup.string().required(formatMessage(formMessages.required)),
-      job: yup.string().required(formatMessage(formMessages.required)),
+      name: yup
+        .string()
+        .required(formatMessage(formMessages.required))
+        .matches(simpleText, formatMessage(formMessages.invalidSimpleText)),
+      job: yup
+        .string()
+        .required(formatMessage(formMessages.required))
+        .matches(simpleText, formatMessage(formMessages.invalidSimpleText)),
       email: yup
         .string()
         .trim()
         .email(formatMessage(formMessages.invalidEmail))
         .required(formatMessage(formMessages.required)),
-      phone: yup.string().required(formatMessage(formMessages.required))
+      phone: yup
+        .string()
+        .required(formatMessage(formMessages.required))
+        .matches(phoneNumber, formatMessage(formMessages.invalidPhoneNumber))
     })
     .concat(addressValidationSchema)
 

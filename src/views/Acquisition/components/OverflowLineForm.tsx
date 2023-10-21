@@ -9,6 +9,7 @@ import {
 import { MutableRefObject, ReactElement, useMemo } from 'react'
 import { useIntl } from 'react-intl'
 import { Field } from 'types/form'
+import { phoneNumber } from 'utils/patterns'
 import * as yup from 'yup'
 
 export interface FormValues {
@@ -68,7 +69,7 @@ const OverflowLineForm = ({
       .string()
       .required(formatMessage(formMessages.required))
       .length(10, formatMessage(formMessages.length, { length: 10 }))
-      .matches(/^\d{10}$/, {
+      .matches(phoneNumber, {
         message: formatMessage(formMessages.invalidPhoneNumber),
         name: 'onlyNumbers'
       }),

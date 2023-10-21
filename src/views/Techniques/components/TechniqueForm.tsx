@@ -15,6 +15,7 @@ import useSections from 'hooks/useSections'
 import { useDidMountEffect } from 'hooks/useDidMountEffect'
 import { addDays, format } from 'date-fns'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
+import { simpleText } from 'utils/patterns'
 
 type AdvanceTimeType = 'days' | 'hours'
 type PriorityType = 'urgent' | 'high' | 'medium' | 'low'
@@ -341,8 +342,15 @@ const TechniqueForm = ({
   }, [open])
 
   const validationSchema = yup.object({
-    name: yup.string().required(getMessage('required')),
-    description: yup.string().required(getMessage('required'))
+    name: yup
+      .string()
+      .required(getMessage('required'))
+      .matches(simpleText, getMessage('invalidSimpleText')),
+    description: yup
+      .string()
+      .required(getMessage('required'))
+      .matches(simpleText, getMessage('invalidSimpleText')),
+    endDate: yup.mixed().required(getMessage('required'))
   })
 
   const formikConfig = useMemo<FormikConfig<FormValues>>(

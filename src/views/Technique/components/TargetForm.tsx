@@ -16,6 +16,7 @@ import Datepicker from 'components/Form/Datepicker'
 import Typography from 'components/Typography'
 
 import { targetFormMessages } from '../messages'
+import { phoneNumber, simpleText } from 'utils/patterns'
 
 type TargetType = 'etsi' | 'conventional'
 
@@ -185,8 +186,14 @@ const TargetForm = ({ initialValues, onSubmit }: Props): ReactElement => {
   ]
 
   const validationSchema = yup.object({
-    name: yup.string().required(getMessage('required')),
-    number: yup.string().required(getMessage('required')),
+    name: yup
+      .string()
+      .required(getMessage('required'))
+      .matches(simpleText, getMessage('invalidSimpleText')),
+    number: yup
+      .string()
+      .required(getMessage('required'))
+      .matches(phoneNumber, getMessage('invalidPhoneNumber')),
     phoneCompany: yup.string().required(getMessage('required'))
   })
 

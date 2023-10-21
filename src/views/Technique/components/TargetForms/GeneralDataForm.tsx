@@ -9,6 +9,7 @@ import { useTechnique } from 'context/Technique'
 import { get } from 'lodash'
 import { useTargets } from 'context/Targets'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
+import { phoneNumber } from 'utils/patterns'
 
 interface FormValues {
   name: string
@@ -112,7 +113,7 @@ const GeneralDataForm = (): ReactElement => {
       .string()
       .required(getMessage('required'))
       .length(10, getMessage('length', { length: 10 }))
-      .matches(/^\d{10}$/, {
+      .matches(phoneNumber, {
         message: getMessage('invalidPhoneNumber'),
         name: 'onlyNumbers'
       }),

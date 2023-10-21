@@ -9,6 +9,7 @@ import Grid from 'components/Grid'
 import Radio from 'components/Form/Radio'
 import { targetFormMessages } from '../messages'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
+import { phoneNumber } from 'utils/patterns'
 
 type TargetType = 'etsi' | 'conventional'
 
@@ -134,7 +135,7 @@ const TargetForm = ({ initialValues, onSubmit }: Props): ReactElement => {
       .string()
       .required(getMessage('required'))
       .length(10, getMessage('length', { length: 10 }))
-      .matches(/^\d{10}$/, {
+      .matches(phoneNumber, {
         message: getMessage('invalidPhoneNumber'),
         name: 'onlyNumbers'
       }),

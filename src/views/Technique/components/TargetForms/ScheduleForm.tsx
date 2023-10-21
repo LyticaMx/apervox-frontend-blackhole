@@ -16,6 +16,7 @@ import { useTechnique } from 'context/Technique'
 import useTargetMeta from 'hooks/useTargetMeta'
 import { TechniqueTabs } from 'types/technique'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
+import { onlyLetters, phoneNumber } from 'utils/patterns'
 
 interface FormValues extends AddressFormValues {
   id?: string
@@ -67,8 +68,14 @@ const ScheduleForm = (): ReactElement => {
 
   const validationSchema = yup
     .object({
-      name: yup.string().required(formatMessage(formMessages.required)),
-      phone: yup.string().required(formatMessage(formMessages.required))
+      name: yup
+        .string()
+        .required(formatMessage(formMessages.required))
+        .matches(onlyLetters, formatMessage(formMessages.onlyLetters)),
+      phone: yup
+        .string()
+        .required(formatMessage(formMessages.required))
+        .matches(phoneNumber, formatMessage(formMessages.invalidPhoneNumber))
     })
     .concat(addressValidationSchema)
 

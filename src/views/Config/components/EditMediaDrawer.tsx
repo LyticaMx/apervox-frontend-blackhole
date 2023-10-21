@@ -7,6 +7,7 @@ import { useIntl } from 'react-intl'
 import { Field } from 'types/form'
 import { mediaMessages } from '../messages'
 import * as yup from 'yup'
+import { simpleText } from 'utils/patterns'
 
 interface FormValues {
   id?: string
@@ -24,7 +25,10 @@ const EditMediaDrawer = (props: Props): ReactElement => {
   const { formatMessage } = useIntl()
 
   const validationSchema = yup.object({
-    name: yup.string().required(formatMessage(formMessages.required))
+    name: yup
+      .string()
+      .required(formatMessage(formMessages.required))
+      .matches(simpleText, formatMessage(formMessages.invalidSimpleText))
   })
 
   const fields = useMemo<Array<Field<FormValues>>>(

@@ -4,6 +4,7 @@ import { formMessages } from 'globalMessages'
 import { Field } from 'types/form'
 import { useAddressMessages } from 'views/Technique/messages'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
+import { simpleText, zipCode } from 'utils/patterns'
 
 export interface AddressFormValues {
   country: string
@@ -90,11 +91,26 @@ export const useAddressForm = <T,>(section?: string): AddressForm<T> => {
   ]
 
   const addressValidationSchema = yup.object({
-    country: yup.string().required(formatMessage(formMessages.required)),
-    state: yup.string().required(formatMessage(formMessages.required)),
-    city: yup.string().required(formatMessage(formMessages.required)),
-    zipCode: yup.string().required(formatMessage(formMessages.required)),
-    line1: yup.string().required(formatMessage(formMessages.required))
+    country: yup
+      .string()
+      .required(formatMessage(formMessages.required))
+      .matches(simpleText, formatMessage(formMessages.invalidSimpleText)),
+    state: yup
+      .string()
+      .required(formatMessage(formMessages.required))
+      .matches(simpleText, formatMessage(formMessages.invalidSimpleText)),
+    city: yup
+      .string()
+      .required(formatMessage(formMessages.required))
+      .matches(simpleText, formatMessage(formMessages.invalidSimpleText)),
+    zipCode: yup
+      .string()
+      .required(formatMessage(formMessages.required))
+      .matches(zipCode, formatMessage(formMessages.invalidZipCode)),
+    line1: yup
+      .string()
+      .required(formatMessage(formMessages.required))
+      .matches(simpleText, formatMessage(formMessages.invalidSimpleText))
   })
 
   return {
