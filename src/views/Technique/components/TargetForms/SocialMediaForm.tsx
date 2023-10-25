@@ -14,6 +14,7 @@ import useTargetMeta from 'hooks/useTargetMeta'
 import DeleteFormConfirmation from './DeleteFormConfirmation'
 import { TechniqueTabs } from 'types/technique'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
+import { simpleText, urlPattern } from 'utils/patterns'
 
 interface FormValues {
   id?: string
@@ -106,15 +107,27 @@ const SocialMediaForm = (): ReactElement => {
   ]
 
   const validationSchema = yup.object({
-    name: yup.string().required(formatMessage(formMessages.required)),
+    name: yup
+      .string()
+      .required(formatMessage(formMessages.required))
+      .matches(simpleText, formatMessage(formMessages.invalidSimpleText)),
     other: yup
       .string()
       .when('name', (value, field) =>
         value === 'other'
-          ? yup.string().required(formatMessage(formMessages.required))
+          ? yup
+              .string()
+              .required(formatMessage(formMessages.required))
+              .matches(
+                simpleText,
+                formatMessage(formMessages.invalidSimpleText)
+              )
           : field
       ),
-    url: yup.string().required(formatMessage(formMessages.required)),
+    url: yup
+      .string()
+      .required(formatMessage(formMessages.required))
+      .matches(urlPattern, formatMessage(formMessages.invalidURL)),
     username: yup.string().required(formatMessage(formMessages.required))
   })
 

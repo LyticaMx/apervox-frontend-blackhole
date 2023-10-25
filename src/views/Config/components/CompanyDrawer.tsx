@@ -7,6 +7,7 @@ import * as yup from 'yup'
 import { FormikConfig } from 'formik'
 import Form from 'components/Form'
 import { Field } from 'types/form'
+import { simpleText } from 'utils/patterns'
 
 interface FormValues {
   id?: string
@@ -24,7 +25,10 @@ const CompanyDrawer = (props: Props): ReactElement => {
   const { formatMessage } = useIntl()
 
   const validationSchema = yup.object({
-    name: yup.string().required(formatMessage(formMessages.required))
+    name: yup
+      .string()
+      .required(formatMessage(formMessages.required))
+      .matches(simpleText, formatMessage(formMessages.invalidSimpleText))
   })
 
   const formikConfig: FormikConfig<FormValues> = {

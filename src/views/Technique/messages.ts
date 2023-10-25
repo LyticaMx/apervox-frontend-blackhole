@@ -1381,6 +1381,10 @@ export const vehiclesFormMessages = defineMessages({
   purple: {
     id: 'views.techniques.VehiclesForm.purple',
     defaultMessage: 'Morado'
+  },
+  invalidYear: {
+    id: 'views.techniques.VehiclesForm.invalidYear',
+    defaultMessage: 'No es un año valido'
   }
 })
 

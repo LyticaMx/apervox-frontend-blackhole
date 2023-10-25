@@ -9,6 +9,7 @@ import { Field } from 'types/form'
 import { letterheadAdministrationMessages } from '../messages'
 import * as yup from 'yup'
 import clsx from 'clsx'
+import { simpleText } from 'utils/patterns'
 
 interface FormValues {
   documentType: 'pdf' | 'excel' | 'word' | 'csv'
@@ -40,10 +41,14 @@ const LetterheadDrawer = (props: Props): ReactElement => {
   const formikRef = useRef<FormikContextType<FormValues>>()
 
   const validationSchema = yup.object({
-    letterheadName: yup.string().required(formatMessage(formMessages.required)),
+    letterheadName: yup
+      .string()
+      .required(formatMessage(formMessages.required))
+      .matches(simpleText, formatMessage(formMessages.invalidSimpleText)),
     organizationName: yup
       .string()
-      .required(formatMessage(formMessages.required)),
+      .required(formatMessage(formMessages.required))
+      .matches(simpleText, formatMessage(formMessages.invalidSimpleText)),
     file: yup.mixed().test({
       name: 'isFilename',
       params: { fileName },
@@ -81,7 +86,7 @@ const LetterheadDrawer = (props: Props): ReactElement => {
           items: [
             { text: 'PDF', value: 'pdf' },
             { text: 'XLS', value: 'excel' },
-            { text: 'CSV', value: 'csv' },
+            // { text: 'CSV', value: 'csv' },
             { text: 'Word', value: 'word' }
           ],
           clearable: false,

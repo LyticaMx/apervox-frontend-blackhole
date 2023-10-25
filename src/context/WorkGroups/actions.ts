@@ -158,7 +158,7 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
           auditActions?.genAudit(
             ModuleAuditsTypes.AuditableModules.GROUPS,
             ModuleAuditsTypes.AuditableActions.SEARCH,
-            'searched'
+            `${params.filters?.[0]}:${params.query}`
           )
         } catch {}
       }

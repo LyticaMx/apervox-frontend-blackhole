@@ -92,7 +92,11 @@ const Navigator = (): ReactElement => {
 
         return null
       })}
-      <Redirect to={pathRoute.auth.userAccount} />
+      <Redirect
+        to={
+          auth.isLogguedIn ? pathRoute.auth.userAccount : pathRoute.auth.signIn
+        }
+      />
     </Switch>
   )
 }

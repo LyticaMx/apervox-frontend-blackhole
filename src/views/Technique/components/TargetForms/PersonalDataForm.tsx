@@ -18,6 +18,8 @@ import useToast from 'hooks/useToast'
 import { format } from 'date-fns'
 import { TechniqueTabs } from 'types/technique'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
+import { onlyLetters } from 'utils/patterns'
+import { formMessages } from 'globalMessages'
 
 interface FormValues extends AddressFormValues {
   alias: string
@@ -193,7 +195,10 @@ const PersonalDataForm = (): ReactElement => {
 
   const validationSchema = yup
     .object({
-      name: yup.string().required(getMessage('required'))
+      name: yup
+        .string()
+        .required(getMessage('required'))
+        .matches(onlyLetters, formatMessage(formMessages.onlyLetters))
     })
     .concat(addressValidationSchema)
 

@@ -16,6 +16,8 @@ import useToast from 'hooks/useToast'
 import { useIntl } from 'react-intl'
 import { TechniqueTabs } from 'types/technique'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
+import { onlyDecimalNumbers, onlyLetters } from 'utils/patterns'
+import { formMessages } from 'globalMessages'
 
 interface FormValues {
   height: string
@@ -186,8 +188,20 @@ const PhysicalDescriptionForm = (): ReactElement => {
   ]
 
   const validationSchema = yup.object({
-    height: yup.string().required(getMessage('required')),
-    weight: yup.string().required(getMessage('required')),
+    height: yup
+      .string()
+      .required(getMessage('required'))
+      .matches(
+        onlyDecimalNumbers,
+        formatMessage(formMessages.invalidMetricNumber)
+      ),
+    weight: yup
+      .string()
+      .required(getMessage('required'))
+      .matches(
+        onlyDecimalNumbers,
+        formatMessage(formMessages.invalidMetricNumber)
+      ),
     bodyType: yup.string().required(getMessage('required')),
     skinColor: yup.string().required(getMessage('required')),
     hairType: yup.string().required(getMessage('required')),
@@ -196,7 +210,10 @@ const PhysicalDescriptionForm = (): ReactElement => {
       .string()
       .when('bodyType', (value, field) =>
         value === 'other'
-          ? yup.string().required(getMessage('required'))
+          ? yup
+              .string()
+              .required(getMessage('required'))
+              .matches(onlyLetters, formatMessage(formMessages.onlyLetters))
           : field
       )
   })

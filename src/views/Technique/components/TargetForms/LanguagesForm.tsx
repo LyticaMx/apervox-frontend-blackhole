@@ -15,6 +15,7 @@ import useTargetMeta from 'hooks/useTargetMeta'
 import { TechniqueTabs } from 'types/technique'
 import DeleteFormConfirmation from './DeleteFormConfirmation'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
+import { onlyLetters } from 'utils/patterns'
 
 interface FormValues {
   id?: string
@@ -91,7 +92,10 @@ const LanguagesForm = (): ReactElement => {
       .string()
       .when('language', (value, field) =>
         value === 'other'
-          ? yup.string().required(formatMessage(formMessages.required))
+          ? yup
+              .string()
+              .required(formatMessage(formMessages.required))
+              .matches(onlyLetters, formatMessage(formMessages.onlyLetters))
           : field
       ),
     level: yup.string().required(formatMessage(formMessages.required))

@@ -10,6 +10,7 @@ import { Field } from 'types/form'
 import { labelsAdministrationMessages } from '../messages'
 import * as yup from 'yup'
 import { LabelType } from 'types/label'
+import { simpleText } from 'utils/patterns'
 
 export interface FormValues {
   id?: string
@@ -133,7 +134,10 @@ const LabelDrawer = (props: Props): ReactElement => {
   )
 
   const validationSchema = yup.object({
-    name: yup.string().required(formatMessage(formMessages.required)),
+    name: yup
+      .string()
+      .required(formatMessage(formMessages.required))
+      .matches(simpleText, formatMessage(formMessages.invalidSimpleText)),
     color: yup.string().required(formatMessage(formMessages.required))
   })
 

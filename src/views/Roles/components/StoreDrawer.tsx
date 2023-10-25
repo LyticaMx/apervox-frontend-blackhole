@@ -19,6 +19,7 @@ import { Scope } from 'types/scope'
 import SelectPaginate from 'components/Form/SelectPaginate'
 import { omit } from 'lodash'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
+import { onlyLettersAndNumbers } from 'utils/patterns'
 
 interface Props {
   open: boolean
@@ -40,7 +41,10 @@ const StoreDrawer = ({ open, role, onClose }: Props): ReactElement => {
   const isEdit = Boolean(role)
 
   const validationSchema = yup.object({
-    name: yup.string().required(getMessage('required')),
+    name: yup
+      .string()
+      .required(getMessage('required'))
+      .matches(onlyLettersAndNumbers, getMessage('onlyLettersAndNumbers')),
     users: yup.array().required(getMessage('required'))
   })
   const formik = useFormik<FormValues>({

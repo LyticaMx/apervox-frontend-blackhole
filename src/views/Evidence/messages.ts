@@ -127,6 +127,10 @@ export const locationInformationMessages = defineMessages({
 })
 
 export const transcriptionTabMessages = defineMessages({
+  transcriptAllAudio: {
+    id: 'views.Evidence.TranscriptionTab.transcriptAllAudio',
+    defaultMessage: 'Transcribir todo el audio'
+  },
   eventTranscription: {
     id: 'views.Evidence.TranscriptionTab.eventTranscription',
     defaultMessage: 'Transcripción del evento'
@@ -147,6 +151,15 @@ export const transcriptionTabMessages = defineMessages({
   deleteTranscriptionRegionQuestion: {
     id: 'views.Evidence.TranscriptionTab.deleteRegionQuestion',
     defaultMessage: '¿Se eliminará el segmento y su transcripción, está seguro?'
+  },
+  makeFullTranscription: {
+    id: 'views.Evidence.TranscriptionTab.makeFullTranscription',
+    defaultMessage: 'Transcribir todo el audio'
+  },
+  allTranscriptionRegionsWillBeDeleted: {
+    id: 'views.Evidence.TranscriptionTab.allTranscriptionRegionsWillBeDeleted',
+    defaultMessage:
+      '¿Deseas transcribir todo el audio?, esto eliminará todas las regiones transcritas anteriormente y generará nuevas.'
   }
 })
 

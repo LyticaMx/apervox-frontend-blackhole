@@ -15,6 +15,7 @@ import useToast from 'hooks/useToast'
 import { useTechnique } from 'context/Technique'
 import useTargetMeta from 'hooks/useTargetMeta'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
+import { onlyLetters } from 'utils/patterns'
 
 interface FormValues extends AddressFormValues {
   id?: string
@@ -93,7 +94,10 @@ const PropertiesForm = (): ReactElement => {
         .string()
         .when('type', (value, field) =>
           value === 'other'
-            ? yup.string().required(formatMessage(formMessages.required))
+            ? yup
+                .string()
+                .required(formatMessage(formMessages.required))
+                .matches(onlyLetters, formatMessage(formMessages.onlyLetters))
             : field
         )
     })
