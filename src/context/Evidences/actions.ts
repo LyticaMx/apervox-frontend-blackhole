@@ -12,6 +12,7 @@ import { DateFilter } from 'types/filters'
 import { Params } from 'utils/ParamsBuilder'
 import { actions } from './constants'
 import mutexify from 'mutexify/promise'
+import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
 
 const orderByMapper = {
   evidenceNumber: 'evidence_number',
@@ -28,6 +29,7 @@ const lock = mutexify()
 
 export const useActions = (state: EvidenceState, dispatch): EvidenceActions => {
   const { pagination, dateFilter, searchFilter, staticFilter, data } = state
+  const { actions: auditActions } = useModuleAudits()
 
   // Buscar una manera de vincular esto
   const { technique, target } = useTechnique()
@@ -117,6 +119,16 @@ export const useActions = (state: EvidenceState, dispatch): EvidenceActions => {
       )
 
       if (total != null) dispatch(actions.setTotal(total))
+
+      if (params?.query && params?.filters) {
+        try {
+          auditActions?.genAudit(
+            ModuleAuditsTypes.AuditableModules.CALL_EVIDENCES,
+            ModuleAuditsTypes.AuditableActions.SEARCH,
+            `${params.filters?.[0]}:${params.query}`
+          )
+        } catch {}
+      }
 
       dispatch(
         actions.setPagination({

@@ -18,7 +18,14 @@ export enum AuditableModules {
   VERIFICATION_LINES = 'verification_lines',
   TECHNIQUES = 'techniques',
   TARGETS = 'targets',
-  AUTH = 'auth'
+  AUTH = 'auth',
+  METADATA = 'metadata',
+  CALL_EVIDENCES = 'call_evidences',
+  PASSWORD_RESET = 'password_reset',
+  HANGUP = 'hangup',
+  REGION = 'region',
+  SYNOPSIS = 'synopsis',
+  TRANSCRIPTION = 'transcription'
 }
 
 export enum AuditableActions {
