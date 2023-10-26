@@ -22,11 +22,14 @@ import { useIntl } from 'react-intl'
 import { actionsMessages } from 'globalMessages'
 import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
+import LineHistory from './LineHistory'
+import { useLineHistory } from 'context/LineHistory'
 
 const DataTable = (): ReactElement => {
   const { formatMessage } = useIntl()
   const getMessage = useFormatMessage(tableMessages)
   const { data, pagination, actions: overflowLineActions } = useOverflowLine()
+  const { actions: lineHistoryActions } = useLineHistory()
   const { actions: auditActions } = useModuleAudits()
   const ability = useAbility()
 
@@ -158,12 +161,24 @@ const DataTable = (): ReactElement => {
                 onChange={() => setSelected(row.original)}
               />
             </Tooltip>
-            <IconButton
-              tooltip={getMessage('history')}
-              className="text-muted hover:text-primary"
+            <Tooltip
+              content="Ver historial de línea"
+              floatProps={{ offset: 10, arrow: true }}
+              classNames={{
+                panel:
+                  'bg-secondary text-white py-1 px-2 rounded-md text-sm whitespace-nowrap',
+                arrow: 'absolute bg-white w-2 h-2 rounded-full bg-secondary'
+              }}
+              placement="top"
             >
-              <DocumentMagnifyingGlassIcon className="w-4 h-4" />
-            </IconButton>
+              <IconButton
+                tooltip={getMessage('history')}
+                className="text-muted hover:text-primary"
+                onClick={() => lineHistoryActions?.setLineId(row.original.id)}
+              >
+                <DocumentMagnifyingGlassIcon className="w-4 h-4" />
+              </IconButton>
+            </Tooltip>
           </div>
         )
       }
@@ -198,6 +213,7 @@ const DataTable = (): ReactElement => {
           setOpenDisable(false)
         }}
       />
+      <LineHistory />
       <Table
         tableRef={tableRef}
         columns={columns}
@@ -211,6 +227,17 @@ const DataTable = (): ReactElement => {
           if (ability.cannot(ACTION.UPDATE, SUBJECT.OVERFLOW_LINES)) return
           setSelected(row)
           toggle()
+        }}
+        manualLimit={{
+          onChangeLimit: (page, limit) =>
+            overflowLineActions?.get({ page: page + 1, limit }),
+          options: pagination.limitOptions ?? [15]
+        }}
+        pageSize={pagination.limit}
+        manualPagination={{
+          currentPage: pagination.page,
+          totalRecords: pagination.totalRecords,
+          onChange: (page) => overflowLineActions?.get({ page: page + 1 })
         }}
         actionsForSelectedItems={[
           {

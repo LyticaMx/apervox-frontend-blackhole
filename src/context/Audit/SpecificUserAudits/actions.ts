@@ -38,7 +38,7 @@ export const useActions = (
         .searchFilters(searchFilter)
         .sort(pagination.sort, orderByMapper)
         .dates(dateFilter)
-        .putStaticFilter('user', id)
+        .putStaticFilter('user_id', id)
         .build()
 
       const [response, total] = await Promise.all([

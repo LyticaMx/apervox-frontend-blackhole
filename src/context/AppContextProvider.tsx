@@ -22,6 +22,7 @@ import { WorkingEvidenceProvider } from './WorkingEvidence'
 import { ModuleAuditsProvider, SpecificUserAuditsProvider } from './Audit'
 import { EvidenceSocketProvider } from './EvidenceSocket'
 import { LiveCallSocketProvider } from './LiveCallSocket'
+import { LineHistoryProvider } from './LineHistory'
 
 interface Props {
   children: ReactNode
@@ -52,7 +53,8 @@ export const AppContextProvider = (props: Props): any => {
     WorkingEvidenceProvider,
     EvidenceSocketProvider,
     SpecificUserAuditsProvider,
-    LiveCallSocketProvider
+    LiveCallSocketProvider,
+    LineHistoryProvider
   ]
 
   const CombinedProviders = providers.reduce(
