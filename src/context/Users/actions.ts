@@ -11,6 +11,9 @@ import {
 import { actions } from './constants'
 import { Params } from 'utils/ParamsBuilder'
 import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
+import { DocumentType, RowsQuantity } from 'types/utils'
+import useDownloadFile from 'hooks/useDownloadFile'
+import { format } from 'date-fns'
 
 const orderByMapper = {
   name: 'profile.names',
@@ -35,6 +38,10 @@ export const useActions = (
   const createUserService = useApi({ endpoint: 'users', method: 'post' })
   const updateUserService = useApi({ endpoint: 'users', method: 'put' })
   const deleteUserService = useApi({ endpoint: 'users', method: 'delete' })
+  const exportUsersService = useDownloadFile({
+    endpoint: 'exports/users',
+    method: 'get'
+  })
   const deleteSessionsService = useApi({
     endpoint: 'sessions',
     method: 'delete'
@@ -289,7 +296,43 @@ export const useActions = (
     }
   }
 
-  const exportTable = async (): Promise<void> => {}
+  const exportTable = async (
+    exportType: DocumentType,
+    quantity: RowsQuantity
+  ): Promise<void> => {
+    try {
+      const params = quantity === 'full' ? { limit: -1 } : {}
+      const urlParams = Params.Builder(params)
+        .paginateAndSeach({ ...usersPagination, ...searchFilter })
+        .sort(usersPagination.sort, orderByMapper)
+        .putStaticFilter(
+          'sessions',
+          staticFilter.sessions?.[0] === 'logged'
+            ? true
+            : staticFilter.sessions?.[0] === 'not logged'
+            ? false
+            : undefined
+        )
+        .putStaticFilter(
+          'status',
+          staticFilter.status?.[0] === 'enabled'
+            ? true
+            : staticFilter.sessions?.[0] === 'disabled'
+            ? false
+            : undefined
+        )
+        .dates(dateFilter)
+        .build()
+      await exportUsersService(
+        `users_${format(new Date(), 'ddMMyyyy_HHmmss')}`,
+        {
+          urlParams: { ...urlParams, export_type: exportType }
+        }
+      )
+    } catch (e) {
+      console.error(e)
+    }
+  }
 
   return {
     getUsers,

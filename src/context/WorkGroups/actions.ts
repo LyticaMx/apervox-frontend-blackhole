@@ -16,6 +16,9 @@ import useApi from 'hooks/useApi'
 import { ResponseData, SearchParams } from 'types/api'
 import { Params } from 'utils/ParamsBuilder'
 import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
+import useDownloadFile from 'hooks/useDownloadFile'
+import { DocumentType, RowsQuantity } from 'types/utils'
+import { format } from 'date-fns'
 
 const orderByMapper = {
   registered_by: 'created_by.username',
@@ -45,6 +48,10 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
   const deleteWorkGroupService = useApi({
     endpoint: 'groups',
     method: 'delete'
+  })
+  const exportWorkGroupService = useDownloadFile({
+    endpoint: 'exports/groups',
+    method: 'get'
   })
 
   const getHistory = async (id: string): Promise<boolean> => {
@@ -483,6 +490,48 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
     }
   }
 
+  const exportTable = async (
+    exportType: DocumentType,
+    quantity: RowsQuantity
+  ): Promise<void> => {
+    try {
+      const params = quantity === 'full' ? { limit: -1 } : {}
+      const urlParams = Params.Builder(params)
+        .paginateAndSeach({ ...searchFilter, ...workGroupsPagination })
+        .sort(workGroupsPagination.sort, orderByMapper)
+        .dates(dateFilter)
+        .putManyStaticFilters({
+          has_techniques:
+            staticFilter.hasTechniques?.[0] === 'yes'
+              ? true
+              : staticFilter.hasTechniques?.[0] === 'no'
+              ? false
+              : undefined,
+          has_users:
+            staticFilter.hasUsers?.[0] === 'yes'
+              ? true
+              : staticFilter.hasUsers?.[0] === 'no'
+              ? false
+              : undefined,
+          status:
+            staticFilter.status?.[0] === 'enabled'
+              ? true
+              : staticFilter.hasUsers?.[0] === 'disabled'
+              ? false
+              : undefined
+        })
+        .build()
+      await exportWorkGroupService(
+        `groups_${format(new Date(), 'ddMMyyyy_HHmmss')}`,
+        {
+          urlParams: { ...urlParams, export_type: exportType }
+        }
+      )
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
   return {
     getHistory,
     getWorkGroups,
@@ -496,7 +545,8 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
     deleteUsersOfWorkGroup,
     deleteWorkGroups,
     toggleDisableWorkGroups,
-    deleteTechniquesOfWorkGroup
+    deleteTechniquesOfWorkGroup,
+    exportTable
   }
 }
 

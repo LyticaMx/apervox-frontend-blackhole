@@ -23,6 +23,10 @@ export const apiMessages = defineMessages({
     id: 'global.api.noContent',
     defaultMessage: 'No se encontraron registros'
   },
+  noContentToDownload: {
+    id: 'global.api.noContentToDownload',
+    defaultMessage: 'No se encontró contenido para descargar'
+  },
   invalid_credentials: {
     id: 'global.api.invalid_credentials',
     defaultMessage: 'Credenciales inválidas'

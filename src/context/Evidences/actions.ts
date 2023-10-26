@@ -12,6 +12,10 @@ import { DateFilter } from 'types/filters'
 import { Params } from 'utils/ParamsBuilder'
 import { actions } from './constants'
 import mutexify from 'mutexify/promise'
+import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
+import { DocumentType, RowsQuantity } from 'types/utils'
+import useDownloadFile from 'hooks/useDownloadFile'
+import { format } from 'date-fns'
 
 const orderByMapper = {
   evidenceNumber: 'evidence_number',
@@ -28,6 +32,7 @@ const lock = mutexify()
 
 export const useActions = (state: EvidenceState, dispatch): EvidenceActions => {
   const { pagination, dateFilter, searchFilter, staticFilter, data } = state
+  const { actions: auditActions } = useModuleAudits()
 
   // Buscar una manera de vincular esto
   const { technique, target } = useTechnique()
@@ -45,6 +50,14 @@ export const useActions = (state: EvidenceState, dispatch): EvidenceActions => {
   const getEvidence = useApi({ endpoint: 'call-evidences', method: 'get' })
 
   const _updateFollow = useApi({ endpoint: 'call-evidences', method: 'put' })
+  const exportEvidencesByTarget = useDownloadFile({
+    endpoint: 'exports/targets',
+    method: 'get'
+  })
+  const exportEvidencesByTechnique = useDownloadFile({
+    endpoint: 'exports/techniques',
+    method: 'get'
+  })
 
   const getData = async (
     params?: EvidencePaginationParams &
@@ -117,6 +130,16 @@ export const useActions = (state: EvidenceState, dispatch): EvidenceActions => {
       )
 
       if (total != null) dispatch(actions.setTotal(total))
+
+      if (params?.query && params?.filters) {
+        try {
+          auditActions?.genAudit(
+            ModuleAuditsTypes.AuditableModules.CALL_EVIDENCES,
+            ModuleAuditsTypes.AuditableActions.SEARCH,
+            `${params.filters?.[0]}:${params.query}`
+          )
+        } catch {}
+      }
 
       dispatch(
         actions.setPagination({
@@ -210,5 +233,48 @@ export const useActions = (state: EvidenceState, dispatch): EvidenceActions => {
     }
   }
 
-  return { getData, updateEvidence, updateFollow, toggleFollow }
+  const exportTable = async (
+    document: DocumentType,
+    quantity: RowsQuantity
+  ): Promise<void> => {
+    try {
+      const params = quantity === 'full' ? { limit: -1 } : {}
+      const urlParams = Params.Builder(params, 'call_start_date')
+        .pagination(pagination)
+        .searchFilters(searchFilter)
+        .sort(pagination.sort, orderByMapper)
+        .dates(dateFilter)
+        .putStaticFilter('relevance', staticFilter?.relevance)
+        .putStaticFilter(
+          'is_tracked',
+          staticFilter?.follow?.[0] === 'withFollow'
+            ? true
+            : staticFilter?.follow?.[0] === 'withoutFollow'
+            ? false
+            : undefined
+        )
+        .build()
+      if (target) {
+        await exportEvidencesByTarget(
+          `evidences_${format(new Date(), 'ddMMyyyy_HHmmss')}`,
+          {
+            queryString: `${target.id}/call-evidences`,
+            urlParams: { ...urlParams, export_type: document }
+          }
+        )
+      } else {
+        await exportEvidencesByTechnique(
+          `evidences_${format(new Date(), 'ddMMyyyy_HHmmss')}`,
+          {
+            queryString: `${technique?.id}/call-evidences`,
+            urlParams: { ...urlParams, export_type: document }
+          }
+        )
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  return { getData, updateEvidence, updateFollow, toggleFollow, exportTable }
 }

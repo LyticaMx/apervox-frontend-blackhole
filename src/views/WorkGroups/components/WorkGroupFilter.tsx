@@ -39,7 +39,9 @@ const WorkGroupFilter = ({ toggleOpen }: Props): ReactElement => {
         onClick: toggleOpen,
         disabled: ability.cannot(ACTION.CREATE, SUBJECT.GROUPS)
       }}
-      download={(document) => alert(document)}
+      download={async (document, quantity) => {
+        await actions?.exportTable(document, quantity)
+      }}
       onChange={(data) =>
         actions?.getWorkGroups({
           start_time: data.dateRange[0],
