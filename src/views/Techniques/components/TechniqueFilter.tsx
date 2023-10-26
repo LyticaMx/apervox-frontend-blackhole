@@ -39,7 +39,9 @@ const TechniqueFilter = ({ toggleOpen }: Props): ReactElement => {
         onClick: toggleOpen,
         disabled: ability.cannot(ACTION.CREATE, SUBJECT.TECHNIQUES)
       }}
-      download={(document) => alert(document)}
+      download={async (document, quantity) => {
+        await techniquesActions?.exportTable(document, quantity)
+      }}
       initialValues={{
         dateRange: {
           start_time: dateFilter.start_time,

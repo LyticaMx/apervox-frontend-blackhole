@@ -58,7 +58,9 @@ const UserFilter = ({ toggleOpen }: Props): ReactElement => {
         onClick: toggleOpen,
         disabled: ability.cannot('create', 'users')
       }}
-      download={(document) => alert(document)}
+      download={async (document, quantity) =>
+        await actions?.exportTable(document, quantity)
+      }
       onChange={(data) =>
         actions?.getUsers({
           start_time: data.dateRange[0],

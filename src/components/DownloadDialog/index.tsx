@@ -8,19 +8,22 @@ import Typography from 'components/Typography'
 import { FormikConfig, FormikContextType } from 'formik'
 import { actionsMessages } from 'globalMessages'
 import { useAutoCloseDialog } from 'hooks/useAutoCloseDialog'
+import useSections from 'hooks/useSections'
 import { ReactElement, useEffect, useRef } from 'react'
 import { useIntl } from 'react-intl'
-import { DocumentType } from 'types/utils'
+import { DocumentType, RowsQuantity } from 'types/utils'
+import { messages } from './messages'
 
 interface FormValues {
   documentType: DocumentType
+  fullData: RowsQuantity
 }
 
 interface Props {
   onExport:
-    | ((documentType: DocumentType) => Promise<void>)
-    | ((documentType: DocumentType) => Promise<boolean>)
-    | ((documentType: DocumentType) => void)
+    | ((documentType: DocumentType, quantity: RowsQuantity) => Promise<void>)
+    | ((documentType: DocumentType, quantity: RowsQuantity) => Promise<boolean>)
+    | ((documentType: DocumentType, quantity: RowsQuantity) => void)
 }
 
 const DownloadDialog = (props: Props): ReactElement => {
@@ -30,9 +33,9 @@ const DownloadDialog = (props: Props): ReactElement => {
   const toggle = (): void => setShow(!show)
 
   const formikConfig: FormikConfig<FormValues> = {
-    initialValues: { documentType: 'xls' },
+    initialValues: { documentType: 'excel', fullData: 'page' },
     onSubmit: async (values) => {
-      await props.onExport(values.documentType)
+      await props.onExport(values.documentType, values.fullData)
       setShow(false)
     }
   }
@@ -52,9 +55,25 @@ const DownloadDialog = (props: Props): ReactElement => {
     }
   }, [show])
 
+  const sections = useSections(() => [
+    {
+      name: 'type',
+      title: {
+        text: formatMessage(messages.documentType)
+      },
+      removeSeparator: true
+    },
+    {
+      name: 'quantity',
+      title: { text: formatMessage(messages.rows) },
+      removeSeparator: true
+    }
+  ])
+
   return (
     <Popover className="relative inline-block">
       <Float
+        zIndex={99} // Indice menor al loader
         show={show}
         placement="bottom-start"
         offset={5}
@@ -132,9 +151,10 @@ const DownloadDialog = (props: Props): ReactElement => {
                       type: 'radio',
                       name: 'documentType',
                       options: {
-                        label: 'XLS',
-                        value: 'xls'
-                      }
+                        label: 'Excel',
+                        value: 'excel'
+                      },
+                      section: 'type'
                     },
                     {
                       type: 'radio',
@@ -142,8 +162,10 @@ const DownloadDialog = (props: Props): ReactElement => {
                       options: {
                         label: 'CSV',
                         value: 'csv'
-                      }
+                      },
+                      section: 'type'
                     },
+                    /* Deshabilitado temporalmente
                     {
                       type: 'radio',
                       name: 'documentType',
@@ -152,7 +174,28 @@ const DownloadDialog = (props: Props): ReactElement => {
                         value: 'pdf'
                       }
                     }
+                    */
+                    {
+                      type: 'radio',
+                      name: 'fullData',
+                      options: {
+                        label: formatMessage(messages.actualPage),
+                        className: 'w-24',
+                        value: 'page'
+                      },
+                      section: 'quantity'
+                    },
+                    {
+                      type: 'radio',
+                      name: 'fullData',
+                      options: {
+                        label: formatMessage(messages.allRows),
+                        value: 'full'
+                      },
+                      section: 'quantity'
+                    }
                   ]}
+                  withSections={{ sections }}
                   renderSubmitButton={false}
                   formikRef={formRef}
                 />

@@ -8,11 +8,12 @@ import { createInstance, BaseURL } from 'providers/api'
 import { useLoader } from 'context/Loader'
 
 import { apiMessages } from 'globalMessages/api'
-import { GeneralParams, ResponseData } from 'types/api'
+import { GeneralParams } from 'types/api'
 import { useAuth } from 'context/Auth'
 import { getItem, setItem } from 'utils/persistentStorage'
 import useToast from './useToast'
 import { formatParams } from 'utils/formatParams'
+import mimeDB from 'types/mime-db.json'
 
 interface Props {
   endpoint: string
@@ -37,7 +38,7 @@ interface Fetch {
 
 const lock = mutexify() // Cambiar a mutex propio
 
-const useApi = ({
+const useDownloadFile = ({
   endpoint,
   method,
   base = 'default',
@@ -51,9 +52,10 @@ const useApi = ({
   const { launchToast } = useToast()
 
   const handleFetch = async (
+    fileName: string,
     { body: data, queryString, urlParams, showToast = true }: Fetch = {},
     headers?: Partial<AxiosRequestHeaders>
-  ): Promise<ResponseData> => {
+  ): Promise<boolean> => {
     const url: string = `${endpoint}${queryString ? `/${queryString}` : ''}`
     const release = await lock()
     try {
@@ -69,19 +71,44 @@ const useApi = ({
         },
         headers,
         params: formattedParams,
-        data
+        data,
+        responseType: 'arraybuffer' // No olvidar este nunca para las descargas
       })
 
       const notContent = response.status === 204
 
       if (notContent && getItem('availableNotification')) {
         launchToast({
-          title: intl.formatMessage(apiMessages.noContent),
+          title: intl.formatMessage(apiMessages.noContentToDownload),
           type: 'Warning'
         })
+
+        return false
       }
 
-      return response.data
+      try {
+        const contentType = response.headers['content-type']
+        const link = document.createElement('a')
+        const downloadUrl = URL.createObjectURL(
+          new Blob([response.data], {
+            type: contentType
+          })
+        )
+        link.href = downloadUrl
+        link.download = `${fileName}.${mimeDB[contentType ?? ''] ?? 'unknown'}`
+        document.body.appendChild(link)
+        link.click()
+        link.remove()
+        setTimeout(() => {
+          URL.revokeObjectURL(url)
+        }, 5000)
+      } catch (e) {
+        console.error('An error ocurred while downloading file')
+        console.error(e)
+        return false
+      }
+
+      return true
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         const response: AxiosResponse = error.response
@@ -124,14 +151,4 @@ const useApi = ({
   return handleFetch
 }
 
-export const useService = (endpoint: string) => {
-  return {
-    get: useApi({ endpoint, method: 'get' }),
-    post: useApi({ endpoint, method: 'post' }),
-    patch: useApi({ endpoint, method: 'patch' }),
-    put: useApi({ endpoint, method: 'put' }),
-    delete: useApi({ endpoint, method: 'delete' })
-  }
-}
-
-export default useApi
+export default useDownloadFile
