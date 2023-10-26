@@ -8,7 +8,7 @@ export const reducer = (
 ): LineHistoryContextState => {
   switch (action.type) {
     case Types.SET_LINE_ID:
-      return { ...state, id: action.payload }
+      return { ...state, line: action.payload }
     case Types.SET_DATA:
       return { ...state, data: action.payload }
     case Types.SET_PAGINATION:

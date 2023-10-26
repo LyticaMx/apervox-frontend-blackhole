@@ -25,15 +25,20 @@ export interface LineHistoryStaticFilter {
   status?: string[]
 }
 
+export interface SelectedLine {
+  id: string
+  phone: string
+}
+
 export interface LineHistoryContextState {
-  id?: string
+  line?: SelectedLine
   data: LineEvent[]
   pagination: LineHistoryPagination
   staticFilter: LineHistoryStaticFilter
 }
 
 export interface LineHistoryActions {
-  setLineId: (lineId?: string) => void
+  setLine: (line?: SelectedLine) => void
   getData: (
     params?: LineHistoryPaginationParams & LineHistoryStaticFilter
   ) => Promise<void>

@@ -2,7 +2,8 @@ import { Filters, createAction } from 'types/contextReducer'
 import {
   LineEvent,
   LineHistoryPagination,
-  LineHistoryStaticFilter
+  LineHistoryStaticFilter,
+  SelectedLine
 } from './types'
 
 export enum Types {
@@ -13,7 +14,7 @@ export enum Types {
 }
 
 export const actions = {
-  setLineID: createAction<Types, string | undefined>(Types.SET_LINE_ID),
+  setLineID: createAction<Types, SelectedLine | undefined>(Types.SET_LINE_ID),
   setData: createAction<Types, LineEvent[]>(Types.SET_DATA),
   setPagination: createAction<Types, LineHistoryPagination>(
     Types.SET_PAGINATION

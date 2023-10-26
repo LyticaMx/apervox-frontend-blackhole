@@ -4,34 +4,42 @@ import {
   LineHistoryActions,
   LineHistoryContextState,
   LineHistoryPaginationParams,
-  LineHistoryStaticFilter
+  LineHistoryStaticFilter,
+  SelectedLine
 } from './types'
 import { actions } from './constants'
 import { Params } from 'utils/ParamsBuilder'
 
-const orderByMapper = {}
+const orderByMapper = {
+  endDate: 'end_date',
+  target: 'target.phone',
+  technique: 'target.technique.name',
+  techniqueStatus: 'target.technique.status',
+  techniqueStartDate: 'target.technique.start_date',
+  techniqueEndDate: 'target.technique.end_date'
+}
 
 export const useActions = (
   state: LineHistoryContextState,
   dispatch
 ): LineHistoryActions => {
-  const { id, pagination, staticFilter } = state
+  const { line, pagination, staticFilter } = state
 
   const getLineHistory = useApi({
     endpoint: 'overflow-lines',
     method: 'get'
   })
 
-  const setLineId = (lineId?: string): void => {
-    dispatch(actions.setLineID(lineId))
-    if (lineId) dispatch(actions.setData([]))
+  const setLine = (line?: SelectedLine): void => {
+    dispatch(actions.setLineID(line))
+    if (line) dispatch(actions.setData([]))
   }
 
   const getData = async (
     params?: LineHistoryPaginationParams & LineHistoryStaticFilter
   ): Promise<void> => {
     try {
-      if (!id) return
+      if (!line) return
       const urlParams = Params.Builder(params)
         .pagination(pagination)
         .sort(pagination.sort, orderByMapper)
@@ -40,7 +48,7 @@ export const useActions = (
 
       const response = await getLineHistory({
         urlParams,
-        queryString: `${id}/history`
+        queryString: `${line.id}/history`
       })
 
       dispatch(
@@ -77,6 +85,6 @@ export const useActions = (
 
   return {
     getData,
-    setLineId
+    setLine
   }
 }

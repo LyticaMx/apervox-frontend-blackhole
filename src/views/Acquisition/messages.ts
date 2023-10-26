@@ -12,6 +12,10 @@ export const tabsMessages = defineMessages({
 })
 
 export const lineHistoryMessages = defineMessages({
+  title: {
+    id: 'views.acquisition.history.title',
+    defaultMessage: 'Historial de la línea de derivación {phone}'
+  },
   status: {
     id: 'views.acquisition.history.technique.status',
     defaultMessage: 'Estatus'

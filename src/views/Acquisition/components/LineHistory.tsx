@@ -9,9 +9,10 @@ import { ReactElement, useEffect } from 'react'
 import { lineHistoryMessages } from '../messages'
 import IconButton from 'components/Button/IconButton'
 import { XCircleIcon } from '@heroicons/react/24/outline'
+import Typography from 'components/Typography'
 
 const LineHistory = (): ReactElement => {
-  const { data, pagination, actions, id } = useLineHistory()
+  const { data, pagination, actions, line } = useLineHistory()
   const getMessage = useFormatMessage(lineHistoryMessages)
 
   const columns = useTableColumns<LineEvent>(() => [
@@ -69,18 +70,21 @@ const LineHistory = (): ReactElement => {
   ])
 
   const handleClose = (): void => {
-    actions?.setLineId()
+    actions?.setLine()
   }
 
   useEffect(() => {
-    if (!id) return
+    if (!line) return
 
     actions?.getData({ page: 1 })
-  }, [id])
+  }, [line])
 
   return (
-    <Dialog open={Boolean(id)} onClose={handleClose} size="6xl">
-      <div className="flex justify-end mb-2">
+    <Dialog open={Boolean(line)} onClose={handleClose} size="6xl">
+      <div className="flex justify-between mb-2">
+        <Typography style="semibold" className="uppercase" variant="subtitle">
+          {getMessage('title', { phone: line?.phone ?? '' })}
+        </Typography>
         <IconButton
           onClick={handleClose}
           className="text-red-600 hover:!bg-red-100 transition-colors"

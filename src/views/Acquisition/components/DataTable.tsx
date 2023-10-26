@@ -174,7 +174,12 @@ const DataTable = (): ReactElement => {
               <IconButton
                 tooltip={getMessage('history')}
                 className="text-muted hover:text-primary"
-                onClick={() => lineHistoryActions?.setLineId(row.original.id)}
+                onClick={() =>
+                  lineHistoryActions?.setLine({
+                    id: row.original.id ?? '',
+                    phone: row.original.phone
+                  })
+                }
               >
                 <DocumentMagnifyingGlassIcon className="w-4 h-4" />
               </IconButton>
