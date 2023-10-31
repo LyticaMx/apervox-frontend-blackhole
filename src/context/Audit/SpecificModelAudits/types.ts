@@ -31,7 +31,7 @@ export interface ModelAuditContextState {
 }
 
 export interface ModelAuditActions {
-  setModelId: (userId?: string) => void
+  setModelId: (modelId?: string) => void
   getData: (
     params?: ModelAuditPaginationParams & SearchParams & DateFilter,
     getTotal?: boolean
