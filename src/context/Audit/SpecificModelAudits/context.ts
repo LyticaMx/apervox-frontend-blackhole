@@ -1,7 +1,7 @@
 import { Context, createContext } from 'react'
-import { GroupAuditContextState } from './types'
+import { ModelAuditContextState } from './types'
 
-export const initialState: GroupAuditContextState = {
+export const initialState: ModelAuditContextState = {
   data: [],
   dateFilter: {},
   pagination: {
@@ -15,5 +15,5 @@ export const initialState: GroupAuditContextState = {
   total: 0
 }
 
-export const GroupAuditContext: Context<GroupAuditContextState> =
+export const ModelAuditContext: Context<ModelAuditContextState> =
   createContext(initialState)

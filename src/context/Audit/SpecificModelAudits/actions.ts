@@ -1,10 +1,10 @@
 import { SearchParams } from 'types/api'
 import { actions } from './constants'
 import {
-  GroupAudit,
-  GroupAuditActions,
-  GroupAuditContextState,
-  GroupAuditPaginationParams
+  ModelAudit,
+  ModelAuditActions,
+  ModelAuditContextState,
+  ModelAuditPaginationParams
 } from './types'
 import { DateFilter } from 'types/filters'
 import { Params } from 'utils/ParamsBuilder'
@@ -13,19 +13,19 @@ import useApi from 'hooks/useApi'
 const orderByMapper = {}
 
 export const useActions = (
-  state: GroupAuditContextState,
+  state: ModelAuditContextState,
   dispatch
-): GroupAuditActions => {
+): ModelAuditActions => {
   const { id, dateFilter, pagination, searchFilter } = state
 
   const getAudits = useApi({ endpoint: 'audits', method: 'get' })
 
-  const setGroupId = (groupId?: string): void => {
-    dispatch(actions.setGroupID(groupId))
+  const setModelId = (modelId?: string): void => {
+    dispatch(actions.setModelID(modelId))
   }
 
   const getData = async (
-    params?: GroupAuditPaginationParams & SearchParams & DateFilter,
+    params?: ModelAuditPaginationParams & SearchParams & DateFilter,
     getTotal: boolean = false
   ): Promise<void> => {
     try {
@@ -49,7 +49,7 @@ export const useActions = (
 
       dispatch(
         actions.setData(
-          (response.data as any[]).map<GroupAudit>((datum) => ({
+          (response.data as any[]).map<ModelAudit>((datum) => ({
             id: datum.id,
             action: datum.action,
             createdAt: datum.created_at,
@@ -88,5 +88,5 @@ export const useActions = (
     } catch {}
   }
 
-  return { setGroupId, getData }
+  return { setModelId, getData }
 }

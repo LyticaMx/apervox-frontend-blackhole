@@ -1,6 +1,6 @@
 import { ReactElement, ReactNode, useMemo, useReducer } from 'react'
 import { reducer } from './Reducer'
-import { GroupAuditContext, initialState } from './context'
+import { ModelAuditContext, initialState } from './context'
 import { useActions } from './actions'
 import { ContextType } from './types'
 
@@ -8,7 +8,7 @@ interface Props {
   children: ReactNode
 }
 
-const SpecificGroupAuditsProvider = (props: Props): ReactElement => {
+const SpecificModelAuditsProvider = (props: Props): ReactElement => {
   const { children } = props
   const [state, dispatch] = useReducer(reducer, initialState)
   const actions = useActions(state, dispatch)
@@ -19,10 +19,10 @@ const SpecificGroupAuditsProvider = (props: Props): ReactElement => {
   )
 
   return (
-    <GroupAuditContext.Provider value={contextValue}>
+    <ModelAuditContext.Provider value={contextValue}>
       {children}
-    </GroupAuditContext.Provider>
+    </ModelAuditContext.Provider>
   )
 }
 
-export { SpecificGroupAuditsProvider }
+export { SpecificModelAuditsProvider }

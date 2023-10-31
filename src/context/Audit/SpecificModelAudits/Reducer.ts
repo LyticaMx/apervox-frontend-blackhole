@@ -1,13 +1,13 @@
 import { Action } from 'types/contextReducer'
 import { Types } from './constants'
-import { GroupAuditContextState } from './types'
+import { ModelAuditContextState } from './types'
 
 export const reducer = (
-  state: GroupAuditContextState,
+  state: ModelAuditContextState,
   action: Action<Types>
-): GroupAuditContextState => {
+): ModelAuditContextState => {
   switch (action.type) {
-    case Types.SET_GROUP_ID:
+    case Types.SET_MODEL_ID:
       return { ...state, id: action.payload }
     case Types.SET_DATA:
       return { ...state, data: action.payload }

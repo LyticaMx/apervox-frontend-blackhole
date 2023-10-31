@@ -2,7 +2,7 @@ import { SortingState } from '@tanstack/react-table'
 import { PaginationParams, SearchParams } from 'types/api'
 import { DateFilter, PaginationFilter, SearchFilter } from 'types/filters'
 
-export interface GroupAudit {
+export interface ModelAudit {
   id: string
   userId: string
   username: string
@@ -13,31 +13,31 @@ export interface GroupAudit {
   oldData?: any
 }
 
-export interface GroupAuditPaginationParams extends PaginationParams {
+export interface ModelAuditPaginationParams extends PaginationParams {
   sort?: SortingState
 }
-export interface GroupAuditPagination extends PaginationFilter {
+export interface ModelAuditPagination extends PaginationFilter {
   totalRecords: number
   sort: SortingState
 }
 
-export interface GroupAuditContextState {
+export interface ModelAuditContextState {
   id?: string
-  data: GroupAudit[]
+  data: ModelAudit[]
   total: number
-  pagination: GroupAuditPagination
+  pagination: ModelAuditPagination
   dateFilter: DateFilter
   searchFilter: SearchFilter
 }
 
-export interface GroupAuditActions {
-  setGroupId: (userId?: string) => void
+export interface ModelAuditActions {
+  setModelId: (userId?: string) => void
   getData: (
-    params?: GroupAuditPaginationParams & SearchParams & DateFilter,
+    params?: ModelAuditPaginationParams & SearchParams & DateFilter,
     getTotal?: boolean
   ) => Promise<void>
 }
 
-export interface ContextType extends GroupAuditContextState {
-  actions?: GroupAuditActions
+export interface ContextType extends ModelAuditContextState {
+  actions?: ModelAuditActions
 }
