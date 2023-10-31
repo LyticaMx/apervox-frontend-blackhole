@@ -56,6 +56,7 @@ const useApi = ({
   const checkSessionTime = async (): Promise<void> => {
     const release = await lock()
     try {
+      if (withLoader) loaderActions?.showLoader()
       const token: string = getItem('token')
       const rToken: string = getItem('rToken')
       if (token && rToken) {
@@ -94,6 +95,7 @@ const useApi = ({
         }
       }
     } finally {
+      if (withLoader) loaderActions?.hideLoader()
       release()
     }
   }
