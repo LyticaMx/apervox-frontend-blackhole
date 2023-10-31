@@ -8,8 +8,8 @@ import useTableColumns from 'hooks/useTableColumns'
 import { ReactElement, useEffect, useMemo } from 'react'
 import { useIntl } from 'react-intl'
 import { Target, User } from '..'
-import { messages } from '../messages'
-import { useSpecificUserAudits } from 'context/Audit'
+import { auditableActions, messages } from '../messages'
+import { useSpecificModelAudits, useSpecificUserAudits } from 'context/Audit'
 import { formatTotal } from 'utils/formatTotal'
 
 interface Props {
@@ -30,11 +30,12 @@ const SpecificMovementsHistory = (props: Props): ReactElement | null => {
   } = props
   const { formatMessage } = useIntl()
   const userAudits = useSpecificUserAudits()
+  const modelAudits = useSpecificModelAudits()
 
   const columns = useTableColumns<GenericAudit>(
     () => [
       {
-        accessorKey: 'user',
+        accessorKey: 'username',
         header: formatMessage(generalMessages.user),
         cell: ({ getValue, row }) => {
           const value = getValue<string>()
@@ -72,17 +73,16 @@ const SpecificMovementsHistory = (props: Props): ReactElement | null => {
         }
       },
       {
-        accessorKey: 'description',
+        accessorKey: 'action',
         header: formatMessage(generalMessages.description),
         cell: ({ getValue, row }) => {
           const value = getValue<string>()
 
-          switch (specificFilter?.type) {
-            case 'group':
-            case 'user':
-            default:
-              return value
+          if (auditableActions[value]) {
+            return formatMessage(auditableActions[value])
           }
+
+          return value
         }
       },
       {
@@ -115,29 +115,48 @@ const SpecificMovementsHistory = (props: Props): ReactElement | null => {
     }
   }, [specificFilter?.type])
 
-  const audits = useMemo(() => {
+  const getAudits = useMemo(() => {
     if (!specificFilter) return null
     switch (specificFilter.type) {
       case 'user':
-        return {
-          getData: userAudits.actions?.getData ?? (() => {}),
-          data: userAudits.data,
-          pagination: userAudits.pagination,
-          dateFilter: userAudits.dateFilter,
-          searchFilter: userAudits.searchFilter,
-          total: userAudits.total
-        }
+        return userAudits.actions?.getData ?? (() => {})
+      case 'group':
+        return modelAudits.actions?.getData ?? (() => {})
       default:
         return null
     }
   }, [specificFilter?.type])
 
-  useEffect(() => {
-    if (!specificFilter || !audits) return
-    audits.getData({ page: 1 }, true)
-  }, [audits])
+  const auditedData = useMemo(() => {
+    if (!specificFilter) return null
+    switch (specificFilter.type) {
+      case 'user':
+        return {
+          rows: userAudits.data,
+          pagination: userAudits.pagination,
+          dateFilter: userAudits.dateFilter,
+          searchFilter: userAudits.searchFilter,
+          total: userAudits.total
+        }
+      case 'group':
+        return {
+          rows: modelAudits.data,
+          pagination: modelAudits.pagination,
+          dateFilter: modelAudits.dateFilter,
+          searchFilter: modelAudits.searchFilter,
+          total: modelAudits.total
+        }
+      default:
+        return null
+    }
+  }, [specificFilter?.type, userAudits, modelAudits])
 
-  if (!specificFilter || !audits) return null
+  useEffect(() => {
+    if (!specificFilter || !getAudits) return
+    getAudits({ page: 1 }, true)
+  }, [getAudits])
+
+  if (!specificFilter || !getAudits || !auditedData) return null
 
   return (
     <div className="mt-2 bg-white shadow-sm shadow-gray-300 rounded px-2 pt-2 relative">
@@ -157,7 +176,10 @@ const SpecificMovementsHistory = (props: Props): ReactElement | null => {
             {title}
           </Typography>
           <Typography className="uppercase">
-            {formatTotal(audits.total, 'Movimientos auditados registrados')}
+            {formatTotal(
+              auditedData.total,
+              'Movimientos auditados registrados'
+            )}
           </Typography>
         </div>
         <ViewFilter
@@ -180,23 +202,22 @@ const SpecificMovementsHistory = (props: Props): ReactElement | null => {
       </div>
       <Table
         columns={columns}
-        data={audits.data}
+        data={auditedData.rows}
         manualSorting={{
-          onSortingChange: (sort) => audits.getData({ sort }),
-          sorting: audits.pagination.sort
+          onSortingChange: (sort) => getAudits({ sort }),
+          sorting: auditedData.pagination.sort
         }}
         manualLimit={{
           options: [15, 25, 50, 100],
-          onChangeLimit: (page, limit) =>
-            audits.getData({ page: page + 1, limit })
+          onChangeLimit: (page, limit) => getAudits({ page: page + 1, limit })
         }}
         onRowClicked={handleSelectMovement}
         maxHeight={225}
-        pageSize={audits.pagination.limit}
+        pageSize={auditedData.pagination.limit}
         manualPagination={{
-          currentPage: audits.pagination.page,
-          totalRecords: audits.pagination.totalRecords,
-          onChange: (page) => audits.getData({ page: page + 1 })
+          currentPage: auditedData.pagination.page,
+          totalRecords: auditedData.pagination.totalRecords,
+          onChange: (page) => getAudits({ page: page + 1 })
         }}
       />
     </div>

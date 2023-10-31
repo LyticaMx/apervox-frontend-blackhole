@@ -22,7 +22,7 @@ import { WorkingEvidenceProvider } from './WorkingEvidence'
 import {
   LoginAuditsProvider,
   ModuleAuditsProvider,
-  SpecificGroupAuditsProvider,
+  SpecificModelAuditsProvider,
   SpecificUserAuditsProvider
 } from './Audit'
 import { EvidenceSocketProvider } from './EvidenceSocket'
@@ -58,7 +58,7 @@ export const AppContextProvider = (props: Props): any => {
     WorkingEvidenceProvider,
     EvidenceSocketProvider,
     SpecificUserAuditsProvider,
-    SpecificGroupAuditsProvider,
+    SpecificModelAuditsProvider,
     LoginAuditsProvider,
     LiveCallSocketProvider,
     LineHistoryProvider

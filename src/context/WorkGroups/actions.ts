@@ -3,7 +3,6 @@ import {
   WorkgroupState,
   WorkGroup,
   WorkGroupUser,
-  WorkGroupHistory,
   WorkgroupPaginationParams,
   WorkgroupStaticFilter,
   WorkGroupTechnique
@@ -53,69 +52,6 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
     endpoint: 'exports/groups',
     method: 'get'
   })
-
-  const getHistory = async (id: string): Promise<boolean> => {
-    try {
-      const mockedData = [
-        {
-          id: '001',
-          action: 'Usuario agregado',
-          description:
-            'Se agrego el usuario (i.dominguez) al grupo de trabajo.',
-          user: 'armandoalbor',
-          created_at: new Date().toISOString()
-        },
-        {
-          id: '002',
-          action: 'Técnica agregada',
-          description:
-            'Se agrego la técnica (T1.23/2022-2) al grupo de trabajo.',
-          user: 'efracuadras',
-          created_at: new Date().toISOString()
-        },
-        {
-          id: '003',
-          action: 'Cambio de nombre',
-          description:
-            'Se cambio el nombre del grupo de trabajo (grupo10) por el de (Auditoria).',
-          user: 'javieralbor',
-          created_at: new Date().toISOString()
-        },
-        {
-          id: '004',
-          action: 'Eliminación de usuario',
-          description: 'Se removió al usuario (d.olvera) del grupo de trabajo.',
-          user: 'armandoalbor',
-          created_at: new Date().toISOString()
-        }
-      ]
-
-      let data: WorkGroupHistory[] = []
-
-      if (id === '001') {
-        data = [...mockedData]
-      }
-
-      if (id === '003') {
-        data.push(mockedData[1])
-        data.push(mockedData[3])
-      }
-
-      if (id === '004') {
-        data.push(mockedData[1])
-        data.push(mockedData[2])
-        data.push(mockedData[3])
-      }
-
-      dispatch(actions.setHistory(data ?? initialState.history))
-
-      return Boolean(data)
-    } catch (error) {
-      dispatch(actions.setHistory(initialState.history))
-
-      return false
-    }
-  }
 
   const getWorkGroups = async (
     params?: WorkgroupPaginationParams &
@@ -533,7 +469,6 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
   }
 
   return {
-    getHistory,
     getWorkGroups,
     getWorkGroupUsers,
     getWorkGroupTechniques,

@@ -52,14 +52,6 @@ export interface WorkGroupTechniques {
   concluded: number
 }
 
-export interface WorkGroupHistory {
-  id: string
-  action: string
-  description: string
-  user: string
-  created_at: string
-}
-
 export interface WorkGroupUser {
   id: string
   name: string
@@ -101,7 +93,6 @@ export interface WorkgroupStaticFilter {
 export interface WorkgroupState {
   selected: WorkGroup
   workGroups: WorkGroup[]
-  history: WorkGroupHistory[]
   users: GenericItem[]
   techniques: GenericItem[]
   associatedUsers: WorkGroupUser[]
@@ -135,7 +126,6 @@ export interface WorkgroupPaginationParams extends PaginationParams {
 }
 
 export interface WorkgroupActions {
-  getHistory: (id: string) => Promise<boolean>
   getWorkGroups: (
     params?: WorkgroupPaginationParams &
       SearchParams &

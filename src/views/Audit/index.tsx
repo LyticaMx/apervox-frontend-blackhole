@@ -9,24 +9,18 @@ import { ReactElement, useCallback, useEffect, useState } from 'react'
 import { useIntl } from 'react-intl'
 import { Link } from 'react-router-dom'
 import { pathRoute } from 'router/routes'
-// import { SimpleDrawerConfig } from 'types/drawer'
 import AuditDrawer from './components/AuditDrawer'
-// import GroupDrawer from './components/GroupDrawer'
-// import LineDrawer from './components/LineDrawer'
 import SpecificMovementsHistory from './components/SpecificMovementsHistory'
-// import TiDrawer from './components/TiDrawer'
 import {
   auditDrawerMessages,
   auditableActions,
   auditableModules,
-  // groupDrawerMessages,
-  // lineDrawerMessages,
   messages
-  // tiDrawerMessages
 } from './messages'
 import { useModuleAudits, useSpecificUserAudits } from 'context/Audit'
-import { Audit as AuditInterface } from 'context/Audit/ModuleAudits/types'
+import { Audit as AuditInterface } from 'context/Audit/types'
 import useUserDrawer from './hooks/useUserDrawer'
+import { getActionChangeMessage, getActionTitle } from './utils'
 
 type TargetTypes = 'user' | 'group' | 'rol' | 'line' | 'ti' | null
 
@@ -69,10 +63,21 @@ const Audit = (): ReactElement => {
         ),
         body: (
           <AuditDrawer
-            action="Cambio de nombre"
-            moduleName="Roles y permisos"
+            action={getActionTitle(
+              formatMessage,
+              row.moduleName ?? row.specificModule,
+              row.action,
+              row.name
+            )}
+            moduleName={formatMessage(auditableModules[row.moduleName])}
             date={row.createdAt}
-            change="Editó el rol de usuario (Auditoria) cambiando su nombre por (Auditor)"
+            change={getActionChangeMessage(
+              formatMessage,
+              row.moduleName ?? row.specificModule,
+              row.action,
+              row.old,
+              row.new
+            )}
             user={row.username}
           />
         ),
@@ -84,89 +89,10 @@ const Audit = (): ReactElement => {
     [actions?.handleOpenDrawer]
   )
 
-  /*
-  const handleMoreData = useCallback((type: TargetTypes) => {
-    const drawerConfig: SimpleDrawerConfig = {
-      type: 'aside',
-      body: null,
-      config: {
-        withoutBackdrop: true
-      }
-    }
-
-    switch (type) {
-      case 'group':
-        drawerConfig.title = (
-          <span className="text-secondary text-lg uppercase font-extrabold">
-            {formatMessage(groupDrawerMessages.groupData)}
-          </span>
-        )
-        drawerConfig.body = (
-          <GroupDrawer groupId="002" handleFilter={setSelectedTarget} />
-        )
-        break
-      case 'line':
-        drawerConfig.title = (
-          <span className="text-secondary text-lg uppercase font-extrabold">
-            {formatMessage(lineDrawerMessages.lineData)}
-          </span>
-        )
-        drawerConfig.body = (
-          <LineDrawer lineId="003" handleFilter={setSelectedTarget} />
-        )
-        break
-      case 'ti':
-        drawerConfig.title = (
-          <span className="text-secondary text-lg uppercase font-extrabold">
-            {formatMessage(tiDrawerMessages.tiData)}
-          </span>
-        )
-        drawerConfig.body = (
-          <TiDrawer tiId="004" handleFilter={setSelectedTarget} />
-        )
-        break
-      case 'user':
-        drawerConfig.body = (
-          <UserDrawer
-            user={{
-              name: 'Pruebas',
-              surnames: 'Uno',
-              email: 'test@test.com',
-              createdBy: 'SuperAdmin',
-              createdOn: new Date('2023-02-14T18:58:02.626Z'),
-              extension: '150',
-              groups: 'Auditoria, Grupo 4',
-              id: '002',
-              position: 'General',
-              username: 'PUno',
-              userRol: 'Administrador'
-            }}
-            selectUser={setSelectedTarget}
-          />
-        )
-
-        break
-      default:
-        break
-    }
-    if (drawerConfig.body) {
-      actions?.handleOpenDrawer(drawerConfig)
-    }
-  }, [])
-  */
-
   const columns = useTableColumns<AuditInterface>(() => [
     {
       accessorKey: 'username',
       id: 'user',
-      /* TODO: Se comenta de manera temporal
-      meta: {
-        columnFilters: {
-          optionsName: formatMessage(generalMessages.user),
-          onChange: () => {}
-        }
-      }
-      */
       header: formatMessage(generalMessages.user),
       cell: ({ getValue, row }) => (
         <button
@@ -187,7 +113,12 @@ const Audit = (): ReactElement => {
         const action = getValue<string>()
 
         if (auditableActions[action]) {
-          return formatMessage(auditableActions[action])
+          return getActionTitle(
+            formatMessage,
+            row.original.specificModule ?? row.original.moduleName,
+            row.original.action,
+            row.original.name
+          )
         }
 
         return action
@@ -269,7 +200,7 @@ const Audit = (): ReactElement => {
   }, [selectedUser])
 
   useEffect(() => {
-    auditActions?.getData()
+    auditActions?.getData({ page: 1 })
   }, [])
 
   return (
@@ -298,7 +229,7 @@ const Audit = (): ReactElement => {
             }
           ]}
           onChange={(data) => console.log(data, null, 2)}
-          download={(type) => console.log(type)}
+          // download={(type) => console.log(type)}
         />
       </div>
       <div className="flex gap-4">

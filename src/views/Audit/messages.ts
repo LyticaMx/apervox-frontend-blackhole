@@ -51,6 +51,14 @@ export const auditableModules = defineMessages({
     id: 'views.Audit.AuditableModules.users',
     defaultMessage: 'Usuarios'
   },
+  adquisition: {
+    id: 'views.Audit.AuditableModules.adquisition',
+    defaultMessage: 'Medios de adquisición'
+  },
+  transcription: {
+    id: 'views.Audit.AuditableModules.transcription',
+    defaultMessage: 'Transcripción'
+  },
   overflow_lines: {
     id: 'views.Audit.AuditableModules.overflow_lines',
     defaultMessage: 'Medios de adquisición'
@@ -91,24 +99,182 @@ export const auditableModules = defineMessages({
     id: 'views.Audit.AuditableModules.roles',
     defaultMessage: 'Roles'
   },
-  workgroups: {
+  groups: {
     id: 'views.Audit.AuditableModules.workgroups',
     defaultMessage: 'Grupos'
   }
 })
 
 export const auditableActions = defineMessages({
+  logged: {
+    id: 'views.Audit.AuditableActions.logged',
+    defaultMessage: 'Inició sesión'
+  },
+  logout: {
+    id: 'views.Audit.AuditableActions.logout',
+    defaultMessage: 'Cerró sesión'
+  },
+  logging_attemp: {
+    id: 'views.Audit.AuditableActions.logging_attemp',
+    defaultMessage: 'Intento de inicio de sesión'
+  },
   get_in: {
     id: 'views.Audit.AuditableActions.get_in',
-    defaultMessage: 'Visitó el módulo'
+    defaultMessage: 'Ingreso al módulo'
   },
   view: {
     id: 'views.Audit.AuditableActions.view',
-    defaultMessage: 'Revisó los detalles'
+    defaultMessage: 'Visualización'
   },
   search: {
     id: 'views.Audit.AuditableActions.search',
-    defaultMessage: 'Buscó en el módulo'
+    defaultMessage: 'Busqueda'
+  },
+  created: {
+    id: 'views.Audit.AuditableActions.created',
+    defaultMessage: 'Creación'
+  },
+  updated: {
+    id: 'views.Audit.AuditableActions.updated',
+    defaultMessage: 'Actualización'
+  },
+  deleted: {
+    id: 'views.Audit.AuditableActions.deleted',
+    defaultMessage: 'Eliminación'
+  },
+  started_automatic_transcription: {
+    id: 'views.Audit.AuditableActions.started_automatic_transcription',
+    defaultMessage: 'Comenzó una transcripción automática'
+  },
+  stream: {
+    id: 'views.Audit.AuditableActions.stream',
+    defaultMessage: 'Reproducción de audio'
+  },
+  exported: {
+    id: 'views.Audit.AuditableActions.exported',
+    defaultMessage: 'Exporte'
+  }
+})
+
+export const auditableActionOf = defineMessages({
+  me: {
+    id: 'views.Audit.AuditableModules.of.me',
+    defaultMessage: 'de mi cuenta'
+  },
+  techniques: {
+    id: 'views.Audit.AuditableModules.of.techniques',
+    defaultMessage: 'de técnica'
+  },
+  users: {
+    id: 'views.Audit.AuditableModules.of.users',
+    defaultMessage: 'de usuario'
+  },
+  adquisition: {
+    id: 'views.Audit.AuditableModules.of.adquisition',
+    defaultMessage: 'de medio de adquisición'
+  },
+  overflow_lines: {
+    id: 'views.Audit.AuditableModules.of.overflow_lines',
+    defaultMessage: 'de medio de adquisición'
+  },
+  verification_lines: {
+    id: 'views.Audit.AuditableModules.of.verification_lines',
+    defaultMessage: 'de línea de verificación'
+  },
+  targets: {
+    id: 'views.Audit.AuditableModules.of.targets',
+    defaultMessage: 'de objetivo'
+  },
+  settings: {
+    id: 'views.Audit.AuditableModules.of.settings',
+    defaultMessage: 'de configuración'
+  },
+  acquisition_mediums: {
+    id: 'views.Audit.AuditableModules.of.acquisition_mediums',
+    defaultMessage: 'de medio'
+  },
+  devices: {
+    id: 'views.Audit.AuditableModules.of.devices',
+    defaultMessage: 'de equipo'
+  },
+  carriers: {
+    id: 'views.Audit.AuditableModules.of.carriers',
+    defaultMessage: 'de compañía telefónica'
+  },
+  labels: {
+    id: 'views.Audit.AuditableModules.of.labels',
+    defaultMessage: 'de etiqueta'
+  },
+  letterheads: {
+    id: 'views.Audit.AuditableModules.of.letterheads',
+    defaultMessage: 'de membrete'
+  },
+  roles: {
+    id: 'views.Audit.AuditableModules.of.roles',
+    defaultMessage: 'de rol'
+  },
+  groups: {
+    id: 'views.Audit.AuditableModules.of.workgroups',
+    defaultMessage: 'de grupo'
+  }
+})
+
+export const auditableActionTableOf = defineMessages({
+  techniques: {
+    id: 'views.Audit.AuditableModules.of.table.techniques',
+    defaultMessage: 'de tabla de técnicas'
+  },
+  users: {
+    id: 'views.Audit.AuditableModules.of.table.users',
+    defaultMessage: 'de tabla de usuarios'
+  },
+  adquisition: {
+    id: 'views.Audit.AuditableModules.of.table.adquisition',
+    defaultMessage: 'de tabla de medios de adquisición'
+  },
+  overflow_lines: {
+    id: 'views.Audit.AuditableModules.of.table.overflow_lines',
+    defaultMessage: 'de tabla de medios de adquisición'
+  },
+  verification_lines: {
+    id: 'views.Audit.AuditableModules.of.table.verification_lines',
+    defaultMessage: 'de tabla de líneas de verificación'
+  },
+  targets: {
+    id: 'views.Audit.AuditableModules.of.table.targets',
+    defaultMessage: 'de tabla de objetivos'
+  },
+  settings: {
+    id: 'views.Audit.AuditableModules.of.table.settings',
+    defaultMessage: 'de tabla de configuración'
+  },
+  acquisition_mediums: {
+    id: 'views.Audit.AuditableModules.of.table.acquisition_mediums',
+    defaultMessage: 'de tabla de medios'
+  },
+  devices: {
+    id: 'views.Audit.AuditableModules.of.table.devices',
+    defaultMessage: 'de tabla de equipos'
+  },
+  carriers: {
+    id: 'views.Audit.AuditableModules.of.table.carriers',
+    defaultMessage: 'de tabla de compañías telefónicas'
+  },
+  labels: {
+    id: 'views.Audit.AuditableModules.of.table.labels',
+    defaultMessage: 'de tabla de etiquetas'
+  },
+  letterheads: {
+    id: 'views.Audit.AuditableModules.of.table.letterheads',
+    defaultMessage: 'de tabla de membretes'
+  },
+  roles: {
+    id: 'views.Audit.AuditableModules.of.table.roles',
+    defaultMessage: 'de tabla de roles'
+  },
+  groups: {
+    id: 'views.Audit.AuditableModules.of.table.workgroups',
+    defaultMessage: 'de tabla de grupos'
   }
 })
 
