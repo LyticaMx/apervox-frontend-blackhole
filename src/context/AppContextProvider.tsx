@@ -19,7 +19,12 @@ import { MonitoringProvider } from './Monitoring'
 import { CallHistoryProvider } from './CallHistory'
 import { EvidencesProvider } from './Evidences'
 import { WorkingEvidenceProvider } from './WorkingEvidence'
-import { ModuleAuditsProvider, SpecificUserAuditsProvider } from './Audit'
+import {
+  LoginAuditsProvider,
+  ModuleAuditsProvider,
+  SpecificGroupAuditsProvider,
+  SpecificUserAuditsProvider
+} from './Audit'
 import { EvidenceSocketProvider } from './EvidenceSocket'
 import { LiveCallSocketProvider } from './LiveCallSocket'
 import { LineHistoryProvider } from './LineHistory'
@@ -53,6 +58,8 @@ export const AppContextProvider = (props: Props): any => {
     WorkingEvidenceProvider,
     EvidenceSocketProvider,
     SpecificUserAuditsProvider,
+    SpecificGroupAuditsProvider,
+    LoginAuditsProvider,
     LiveCallSocketProvider,
     LineHistoryProvider
   ]

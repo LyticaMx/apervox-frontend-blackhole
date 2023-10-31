@@ -1,6 +1,9 @@
-import { SortingState } from '@tanstack/react-table'
-import { PaginationParams, SearchParams } from 'types/api'
-import { DateFilter, PaginationFilter, SearchFilter } from 'types/filters'
+import { SearchParams } from 'types/api'
+import { DateFilter } from 'types/filters'
+import {
+  AuditPaginationParams,
+  AuditContextState as GeneralContextState
+} from '../types'
 
 export enum AuditableModules {
   ME = 'me',
@@ -33,20 +36,6 @@ export enum AuditableActions {
   SEARCH = 'search'
 }
 
-export interface Audit {
-  id: string
-  userId: string
-  username: string
-  moduleName: string
-  specificModule: string
-  action: string
-  name: string
-  modelId: string
-  old: Record<string, any>
-  new: Record<string, any>
-  createdAt: string
-}
-
 export interface AuditedUser {
   name: string
   surnames: string
@@ -61,28 +50,13 @@ export interface AuditedUser {
   userRol: string
 }
 
-export interface AuditPaginationParams extends PaginationParams {
-  sort?: SortingState
-}
-
-export interface AuditPagination extends PaginationFilter {
-  totalRecords: number
-  sort: SortingState
-}
-
 export interface StaticFilter {
   module?: string[]
 }
 
-export interface AuditContextState {
-  data: Audit[]
-  total: number
-  pagination: AuditPagination
-  dateFilter: DateFilter
-  searchFilter: SearchFilter
+export interface AuditContextState extends GeneralContextState {
   staticFilter: StaticFilter
 }
-
 export interface AuditActions {
   getData: (
     params?: AuditPaginationParams & SearchParams & DateFilter & StaticFilter,

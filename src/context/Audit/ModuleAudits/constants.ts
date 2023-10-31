@@ -1,5 +1,6 @@
 import { Filters, createAction } from 'types/contextReducer'
-import { Audit, AuditPagination, StaticFilter } from './types'
+import { StaticFilter } from './types'
+import { Audit, AuditPagination } from '../types'
 
 export enum Types {
   SET_DATA = 'moduleAudits/setData',

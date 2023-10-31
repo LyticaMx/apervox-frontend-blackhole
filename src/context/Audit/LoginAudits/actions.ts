@@ -1,50 +1,45 @@
+import useApi from 'hooks/useApi'
+import { Audit, AuditContextState, AuditPaginationParams } from '../types'
+import { AuditActions } from './types'
 import { SearchParams } from 'types/api'
-import {
-  UserAudit,
-  UserAuditActions,
-  UserAuditContextState,
-  UserAuditPaginationParams
-} from './types'
 import { DateFilter } from 'types/filters'
 import { Params } from 'utils/ParamsBuilder'
 import { actions } from './constants'
-import useApi from 'hooks/useApi'
 
-const orderByMapper = {}
+const orderByMapper = {
+  user: 'user.username',
+  date: 'created_at',
+  hour: 'created_at'
+}
 
 export const useActions = (
-  state: UserAuditContextState,
+  state: AuditContextState,
   dispatch
-): UserAuditActions => {
-  const { id, dateFilter, pagination, searchFilter } = state
+): AuditActions => {
+  const { pagination, dateFilter, searchFilter } = state
 
   const getAudits = useApi({
     endpoint: 'audits',
     method: 'get'
   })
 
-  const setUserId = (userId?: string): void => {
-    dispatch(actions.setUserID(userId))
-  }
-
   const getData = async (
-    params?: UserAuditPaginationParams & SearchParams & DateFilter,
+    params?: AuditPaginationParams & SearchParams & DateFilter,
     getTotal: boolean = false
   ): Promise<void> => {
     try {
-      if (!id) return
       const urlParams = Params.Builder(params)
         .pagination(pagination)
         .searchFilters(searchFilter)
         .sort(pagination.sort, orderByMapper)
         .dates(dateFilter)
-        .putStaticFilter('user_id', id)
+        .putStaticFilter('module', 'auth')
         .build()
 
       const [response, total] = await Promise.all([
         getAudits({ urlParams }),
         getTotal
-          ? getAudits({ urlParams: { ...urlParams, page: 1, limit: 1 } })
+          ? getAudits({ urlParams: { page: 1, limit: 1, module: 'auth' } })
               .then((res) => res.size)
               .catch(() => null)
           : Promise.resolve(null)
@@ -52,13 +47,18 @@ export const useActions = (
 
       dispatch(
         actions.setData(
-          (response.data as any[]).map<UserAudit>((datum) => ({
+          (response.data as any[]).map<Audit>((datum) => ({
             id: datum.id,
-            action: datum.action,
-            createdAt: datum.created_at,
-            name: datum.name,
             userId: datum?.user?.id ?? '',
-            username: datum?.user?.username ?? ''
+            username: datum?.user?.username ?? '',
+            moduleName: datum.module,
+            specificModule: datum.specific_module ?? '',
+            action: datum.action,
+            name: datum.name,
+            modelId: datum.model_id,
+            old: datum.old,
+            new: datum.new,
+            createdAt: datum.created_at
           }))
         )
       )
@@ -89,8 +89,5 @@ export const useActions = (
     } catch {}
   }
 
-  return {
-    setUserId,
-    getData
-  }
+  return { getData }
 }

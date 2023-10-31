@@ -1,34 +1,31 @@
 import { SearchParams } from 'types/api'
+import { actions } from './constants'
 import {
-  UserAudit,
-  UserAuditActions,
-  UserAuditContextState,
-  UserAuditPaginationParams
+  GroupAudit,
+  GroupAuditActions,
+  GroupAuditContextState,
+  GroupAuditPaginationParams
 } from './types'
 import { DateFilter } from 'types/filters'
 import { Params } from 'utils/ParamsBuilder'
-import { actions } from './constants'
 import useApi from 'hooks/useApi'
 
 const orderByMapper = {}
 
 export const useActions = (
-  state: UserAuditContextState,
+  state: GroupAuditContextState,
   dispatch
-): UserAuditActions => {
+): GroupAuditActions => {
   const { id, dateFilter, pagination, searchFilter } = state
 
-  const getAudits = useApi({
-    endpoint: 'audits',
-    method: 'get'
-  })
+  const getAudits = useApi({ endpoint: 'audits', method: 'get' })
 
-  const setUserId = (userId?: string): void => {
-    dispatch(actions.setUserID(userId))
+  const setGroupId = (groupId?: string): void => {
+    dispatch(actions.setGroupID(groupId))
   }
 
   const getData = async (
-    params?: UserAuditPaginationParams & SearchParams & DateFilter,
+    params?: GroupAuditPaginationParams & SearchParams & DateFilter,
     getTotal: boolean = false
   ): Promise<void> => {
     try {
@@ -38,7 +35,7 @@ export const useActions = (
         .searchFilters(searchFilter)
         .sort(pagination.sort, orderByMapper)
         .dates(dateFilter)
-        .putStaticFilter('user_id', id)
+        .putStaticFilter('model_id', id)
         .build()
 
       const [response, total] = await Promise.all([
@@ -52,13 +49,15 @@ export const useActions = (
 
       dispatch(
         actions.setData(
-          (response.data as any[]).map<UserAudit>((datum) => ({
+          (response.data as any[]).map<GroupAudit>((datum) => ({
             id: datum.id,
             action: datum.action,
             createdAt: datum.created_at,
             name: datum.name,
             userId: datum?.user?.id ?? '',
-            username: datum?.user?.username ?? ''
+            username: datum?.user?.username ?? '',
+            newData: datum.new,
+            oldData: datum.old
           }))
         )
       )
@@ -89,8 +88,5 @@ export const useActions = (
     } catch {}
   }
 
-  return {
-    setUserId,
-    getData
-  }
+  return { setGroupId, getData }
 }

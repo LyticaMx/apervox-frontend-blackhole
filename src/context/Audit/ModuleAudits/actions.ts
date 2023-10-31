@@ -2,9 +2,7 @@ import { SearchParams } from 'types/api'
 import {
   AuditContextState,
   AuditActions,
-  AuditPaginationParams,
   StaticFilter,
-  Audit,
   AuditableModules,
   AuditableActions,
   AuditedUser
@@ -13,6 +11,7 @@ import { DateFilter } from 'types/filters'
 import { Params } from 'utils/ParamsBuilder'
 import useApi from 'hooks/useApi'
 import { actions } from './constants'
+import { Audit, AuditPaginationParams } from '../types'
 
 const orderByMapper = {
   user: 'user.username',
@@ -44,22 +43,15 @@ export const useActions = (
         .sort(pagination.sort, orderByMapper)
         .dates(dateFilter)
         // TODO Añadir filtros estaticos
-        .putStaticFilter('specific_module', [
-          'me',
-          'users',
-          'sessions',
+        .putStaticFilter('module', [
           'roles',
           'groups',
-          'settings',
-          'labels',
-          'letterheads',
-          'carriers',
-          'acquisition_mediums',
-          'devices',
-          'overflow_lines',
-          'verification_lines',
+          'adquisition',
+          'users',
           'techniques',
-          'targets'
+          'monitor',
+          'settings',
+          'metadata'
         ])
         .build()
 
