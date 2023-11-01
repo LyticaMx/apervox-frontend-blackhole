@@ -2,6 +2,7 @@ import { SortingState } from '@tanstack/react-table'
 import { PaginationParams, SearchParams } from 'types/api'
 import { DateFilter, PaginationFilter, SearchFilter } from 'types/filters'
 import { Target, Technique } from 'types/technique'
+import { DocumentType, RowsQuantity } from 'types/utils'
 
 export interface TechniquesPagination extends PaginationFilter {
   totalRecords: number
@@ -53,6 +54,7 @@ export interface Actions {
   create: (technique: TechniqueCreator) => Promise<boolean>
   deleteOne: (id: string) => Promise<boolean>
   deleteMany: (ids: string[]) => Promise<boolean>
+  exportTable: (document: DocumentType, quantity: RowsQuantity) => Promise<void>
 }
 
 export interface ContextType extends State {

@@ -3,6 +3,7 @@ import { Priority } from './priority'
 import { DateFilter, PaginationFilter, SearchFilter } from './filters'
 import { Status } from './status'
 import { PaginationParams, SearchParams } from './api'
+import { DocumentType, RowsQuantity } from './utils'
 
 export enum TechiniqueStatus {
   ACTIVE,
@@ -158,6 +159,10 @@ export interface WorkgroupActions {
     ids: string[],
     disable?: boolean
   ) => Promise<boolean>
+  exportTable: (
+    exportType: DocumentType,
+    quantity: RowsQuantity
+  ) => Promise<void>
 }
 
 export interface ContextType extends WorkgroupState {

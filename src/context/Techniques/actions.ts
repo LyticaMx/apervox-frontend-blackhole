@@ -14,6 +14,9 @@ import { Params } from 'utils/ParamsBuilder'
 import useToast from 'hooks/useToast'
 import { Status } from 'types/status'
 import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
+import { DocumentType, RowsQuantity } from 'types/utils'
+import useDownloadFile from 'hooks/useDownloadFile'
+import { format } from 'date-fns'
 
 const orderByMapper = {
   created_at: 'start_date',
@@ -26,6 +29,10 @@ const orderByMapper = {
 const useActions = (state: State, dispatch): Actions => {
   const { pagination, searchFilter, dateFilter, staticFilter } = state
   const techniquesService = useService('techniques')
+  const exportTechniqueTables = useDownloadFile({
+    endpoint: 'exports/techniques',
+    method: 'get'
+  })
   const { launchToast } = useToast()
   const { actions: auditActions } = useModuleAudits()
 
@@ -194,11 +201,37 @@ const useActions = (state: State, dispatch): Actions => {
     }
   }
 
+  const exportTable = async (
+    exportType: DocumentType,
+    quantity: RowsQuantity
+  ): Promise<void> => {
+    try {
+      const params = quantity === 'full' ? { limit: -1 } : {}
+      const urlParams = Params.Builder(params)
+        .pagination(pagination)
+        .dates(dateFilter)
+        .searchFilters(searchFilter)
+        .sort(pagination.sort, orderByMapper)
+        .putStaticFilter('priority', staticFilter?.priority)
+        .putStaticFilter('status', staticFilter?.status)
+        .putStaticFilter('shift', staticFilter?.turn)
+        .putStaticFilter('has_targets', staticFilter?.withTargets)
+        .build()
+      await exportTechniqueTables(
+        `techniques_${format(new Date(), 'ddMMyyyy_HHmmss')}`,
+        { urlParams: { ...urlParams, export_type: exportType } }
+      )
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
   return {
     get,
     create,
     deleteOne,
-    deleteMany
+    deleteMany,
+    exportTable
   }
 }
 

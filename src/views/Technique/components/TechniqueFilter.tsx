@@ -47,7 +47,9 @@ const TechniqueFilter = (): ReactElement => {
   return (
     <ViewFilter
       fields={filterItems}
-      download={(document) => alert(document)}
+      download={async (document, quantity) => {
+        await actions?.exportTable(document, quantity)
+      }}
       initialValues={{
         dateRange: {
           start_time: dateFilter.start_time,

@@ -1,6 +1,7 @@
 import { SortingState } from '@tanstack/react-table'
 import { DateFilter, PaginationFilter, SearchFilter } from './filters'
 import { PaginationParams, SearchParams } from './api'
+import { DocumentType, RowsQuantity } from './utils'
 
 export interface UserGroup {
   name: string
@@ -65,7 +66,10 @@ export interface UserContextActions {
   closeSession: (id: string) => Promise<boolean>
   closeMultipleSessions: (ids: string[]) => Promise<boolean>
   resetPassword: (id: string) => Promise<string>
-  exportTable: () => Promise<void>
+  exportTable: (
+    exportType: DocumentType,
+    quantity: RowsQuantity
+  ) => Promise<void>
 }
 
 export interface UserContextType extends UserContextState {

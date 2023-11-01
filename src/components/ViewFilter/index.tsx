@@ -4,7 +4,7 @@ import FilterByField, { StaticFilter } from 'components/FilterByField'
 import Daterangepicker from 'components/Form/Daterangepicker'
 import { useDidMountEffect } from 'hooks/useDidMountEffect'
 import { ReactElement, ReactNode, useState } from 'react'
-import { DocumentType } from 'types/utils'
+import { DocumentType, RowsQuantity } from 'types/utils'
 
 interface Field {
   label: string
@@ -33,9 +33,9 @@ interface Props {
   onChange?: (values: FilterStatus) => void
   action?: ActionButton | ActionButton[]
   download?:
-    | ((documentType: DocumentType) => void)
-    | ((documentType: DocumentType) => Promise<void>)
-    | ((documentType: DocumentType) => Promise<boolean>)
+    | ((documentType: DocumentType, quantity: RowsQuantity) => void)
+    | ((documentType: DocumentType, quantity: RowsQuantity) => Promise<void>)
+    | ((documentType: DocumentType, quantity: RowsQuantity) => Promise<boolean>)
 
   initialValues?: {
     dateRange?: {
