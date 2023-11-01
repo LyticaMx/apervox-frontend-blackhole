@@ -6,17 +6,13 @@ import Title from 'components/Title'
 import UserInfo from './components/UserInfo'
 import ChangePassword from './components/ChangePassword'
 import { useAuth } from 'context/Auth'
-import { useModuleAudits } from 'context/Audit'
-import { AuditableModules } from 'context/Audit/ModuleAudits/types'
 
 const UserAccount = (): ReactElement => {
   const { formatMessage } = useIntl()
   const { actions } = useAuth()
-  const { actions: auditActions } = useModuleAudits()
 
   useEffect(() => {
     actions?.getProfile()
-    auditActions?.genAudit(AuditableModules.ME)
   }, [])
 
   return (

@@ -101,7 +101,8 @@ const CallsTable = (): ReactElement => {
             <span className="w-3 h-3 rounded-full bg-primary inline-block mr-2" />
             {getMessage(`${getValue<string>()}Priority`)}
           </p>
-        ),
+        )
+        /* TODO: Generar filtros manuales
         meta: {
           columnFilters: {
             options: [
@@ -128,6 +129,7 @@ const CallsTable = (): ReactElement => {
             multiple: true
           }
         }
+        */
       },
       {
         accessorKey: 'type',
@@ -139,7 +141,8 @@ const CallsTable = (): ReactElement => {
             />
             {getMessage(getValue<string>())}
           </p>
-        ),
+        )
+        /*
         meta: {
           columnFilters: {
             options: [
@@ -162,6 +165,7 @@ const CallsTable = (): ReactElement => {
             multiple: true
           }
         }
+        */
       },
       {
         accessorKey: 'status',

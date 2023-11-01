@@ -19,7 +19,11 @@ import Typography from 'components/Typography'
 import { formatTotal } from 'utils/formatTotal'
 import { useDrawer } from 'context/Drawer'
 import { useIntl } from 'react-intl'
-import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
+import {
+  ModuleAuditsTypes,
+  useModuleAudits,
+  useSpecificModelAudits
+} from 'context/Audit'
 import WrongPermissions from 'components/WrongPermissions'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
@@ -33,7 +37,6 @@ const WorkGroups = (): ReactElement => {
   const [tab, setTab] = useState<string>('users')
   const { actions: drawerActions } = useDrawer()
   const { formatMessage } = useIntl()
-  const [openHistoryDrawer, toggleOpenHistoryDrawer] = useToggle(false)
   const [openCreateDrawer, toggleOpenCreateDrawer] = useToggle(false)
   const [disableWorkgroups, setDisableWorkgroups] = useState<SynchroEditIds>({
     ids: [],
@@ -52,6 +55,7 @@ const WorkGroups = (): ReactElement => {
   } = useWorkGroups()
   const ability = useAbility()
   const { actions: auditActions } = useModuleAudits()
+  const { actions: specificGroupAuditActions } = useSpecificModelAudits()
 
   useEffect(() => {
     actions?.selectWorkGroup()
@@ -97,9 +101,7 @@ const WorkGroups = (): ReactElement => {
   }, [openCreateDrawer])
 
   const handleGetHistory = (id: string): void => {
-    toggleOpenHistoryDrawer()
-
-    actions?.getHistory(id)
+    specificGroupAuditActions?.setModelId(id)
   }
 
   return (
@@ -119,10 +121,7 @@ const WorkGroups = (): ReactElement => {
           onClose={toggleOpenCreateDrawer}
         />
 
-        <HistoryDrawer
-          open={openHistoryDrawer}
-          onClose={toggleOpenHistoryDrawer}
-        />
+        <HistoryDrawer />
 
         <DeleteDialog
           ids={deletedWorkgroups.ids}

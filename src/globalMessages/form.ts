@@ -146,7 +146,7 @@ export const formMessages = defineMessages({
     defaultMessage: 'Nombre de usuario no valido'
   },
   invalidSimpleText: {
-    id: 'global.form.invalidUsername',
+    id: 'global.form.invalidSimpleText',
     defaultMessage: 'El campo contiene simbolos o caracteres invalidos'
   },
   invalidZipCode: {

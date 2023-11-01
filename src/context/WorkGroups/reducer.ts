@@ -11,8 +11,6 @@ export const reducer = (
       return { ...state, users: action.payload }
     case Types.SET_TECHNIQUES:
       return { ...state, techniques: action.payload }
-    case Types.SET_HISTORY:
-      return { ...state, history: action.payload }
     case Types.SET_WORKGROUPS:
       return {
         ...state,

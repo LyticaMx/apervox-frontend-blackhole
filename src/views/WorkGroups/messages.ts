@@ -143,6 +143,22 @@ export const workGroupsHistoryDrawerMessages = defineMessages({
     id: 'views.workGroups.historyDrawer.message',
     defaultMessage:
       'Puedes visualizar los movimientos más recientes que han sido registrados en el grupo de trabajo.'
+  },
+  search: {
+    id: 'views.workGroups.historyDrawer.search',
+    defaultMessage: 'Busqueda'
+  },
+  created: {
+    id: 'views.workGroups.historyDrawer.created',
+    defaultMessage: 'Creación'
+  },
+  updated: {
+    id: 'views.workGroups.historyDrawer.updated',
+    defaultMessage: 'Actualización'
+  },
+  deleted: {
+    id: 'views.workGroups.historyDrawer.deleted',
+    defaultMessage: 'Eliminación'
   }
 })
 

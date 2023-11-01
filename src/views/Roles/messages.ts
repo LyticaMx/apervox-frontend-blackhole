@@ -200,3 +200,35 @@ export const scopeNamesMessages = defineMessages({
     defaultMessage: 'Llamadas'
   }
 })
+
+export const rolesHistoryMessages = defineMessages({
+  title: {
+    id: 'views.roles.history.title',
+    defaultMessage: 'Auditoría'
+  },
+  subtitle: {
+    id: 'views.roles.history.subtitle',
+    defaultMessage: 'Historial de movimientos auditados'
+  },
+  message: {
+    id: 'views.roles.history.message',
+    defaultMessage:
+      'Puedes visualizar los movimientos más recientes que han sido registrados en el rol.'
+  },
+  search: {
+    id: 'views.roles.history.search',
+    defaultMessage: 'Busqueda'
+  },
+  created: {
+    id: 'views.roles.history.created',
+    defaultMessage: 'Creación'
+  },
+  updated: {
+    id: 'views.roles.history.updated',
+    defaultMessage: 'Actualización'
+  },
+  deleted: {
+    id: 'views.roles.history.deleted',
+    defaultMessage: 'Eliminación'
+  }
+})

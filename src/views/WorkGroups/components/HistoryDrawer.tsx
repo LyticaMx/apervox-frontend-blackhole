@@ -1,28 +1,32 @@
-import { ReactElement } from 'react'
+import { ReactElement, useEffect } from 'react'
 import { format } from 'date-fns'
 import { generalMessages } from 'globalMessages'
 import { useFormatMessage } from 'hooks/useIntl'
-import { useWorkGroups } from 'context/WorkGroups'
 import Accordion from 'components/Accordion'
 import Drawer from 'components/Drawer'
 import NoData from 'components/NoData'
 import Typography from 'components/Typography'
 import { workGroupsHistoryDrawerMessages } from '../messages'
+import { useSpecificModelAudits } from 'context/Audit'
+import Pagination from 'components/Table/Pagination'
+import { useIntl } from 'react-intl'
+import { getGroupChanges } from './helpers'
 
-interface Props {
-  open: boolean
-  onClose?: () => void
-}
-const HistoryDrawer = ({ open, onClose }: Props): ReactElement => {
+const HistoryDrawer = (): ReactElement => {
   const getGeneralMessage = useFormatMessage(generalMessages)
   const getMessage = useFormatMessage(workGroupsHistoryDrawerMessages)
+  const { formatMessage } = useIntl()
+  const { id, data: history, actions, pagination } = useSpecificModelAudits()
 
-  const { history } = useWorkGroups()
+  useEffect(() => {
+    if (!id) return
+    actions?.getData({ page: 1 })
+  }, [id])
 
   return (
     <Drawer
-      open={open}
-      onClose={onClose}
+      open={Boolean(id)}
+      onClose={() => actions?.setModelId()}
       placement="right"
       className="bg-background-secondary"
     >
@@ -44,47 +48,68 @@ const HistoryDrawer = ({ open, onClose }: Props): ReactElement => {
         </p>
 
         {history.length > 0 ? (
-          history.map((historyItem, index) => (
-            <Accordion
-              key={index}
-              useCustomTitle
-              title={
-                <div className="flex justify-between w-full pr-2">
+          <div>
+            {history.map((historyItem, index) => (
+              <Accordion
+                key={index}
+                useCustomTitle
+                title={
+                  <div className="flex justify-between w-full pr-2">
+                    <Typography variant="caption">
+                      {workGroupsHistoryDrawerMessages[historyItem.action]
+                        ? getMessage(historyItem.action)
+                        : historyItem.action}
+                    </Typography>
+                    <Typography variant="caption">
+                      {format(new Date(historyItem.createdAt), 'dd/MM/yyyy')}
+                    </Typography>
+                  </div>
+                }
+                classNames={{
+                  button:
+                    'bg-white mt-1 rounded-md items-center rounded-b-none',
+                  chevronIcon: 'text-primary-500'
+                }}
+              >
+                <div className="bg-white p-2 rounded-b-md">
+                  <div className="flex justify-between text-primary-500 mb-1">
+                    <Typography variant="body2">{`${getGeneralMessage(
+                      'user'
+                    )}: ${historyItem.username}`}</Typography>
+                    <Typography
+                      variant="caption"
+                      className="bg-primary-50  rounded-md flex items-center px-2"
+                    >
+                      {format(
+                        new Date(historyItem.createdAt),
+                        'dd/MM/yyyy HH:mm'
+                      )}
+                    </Typography>
+                  </div>
+
                   <Typography variant="caption">
-                    {historyItem.action}
-                  </Typography>
-                  <Typography variant="caption">
-                    {format(new Date(historyItem.created_at), 'dd/MM/yyyy')}
-                  </Typography>
-                </div>
-              }
-              classNames={{
-                button: 'bg-white mt-1 rounded-md items-center rounded-b-none',
-                chevronIcon: 'text-primary-500'
-              }}
-            >
-              <div className="bg-white p-2 rounded-b-md">
-                <div className="flex justify-between text-primary-500 mb-1">
-                  <Typography variant="body2">{`${getGeneralMessage('user')}: ${
-                    historyItem.user
-                  }`}</Typography>
-                  <Typography
-                    variant="caption"
-                    className="bg-primary-50  rounded-md flex items-center px-2"
-                  >
-                    {format(
-                      new Date(historyItem.created_at),
-                      'dd/MM/yyyy HH:mm'
+                    {getGroupChanges(
+                      formatMessage,
+                      historyItem.action,
+                      historyItem.oldData,
+                      historyItem.newData
                     )}
                   </Typography>
                 </div>
-
-                <Typography variant="caption">
-                  {historyItem.description}
-                </Typography>
-              </div>
-            </Accordion>
-          ))
+              </Accordion>
+            ))}
+            <Pagination
+              onPageChange={(page) => actions?.getData({ page: page + 1 })}
+              currentPage={pagination.page}
+              pageSize={pagination.limit}
+              totalCount={pagination.totalRecords}
+              manualLimit={{
+                options: pagination.limitOptions ?? [15],
+                onChangeLimit: (page, limit) =>
+                  actions?.getData({ page: page + 1, limit })
+              }}
+            />
+          </div>
         ) : (
           <div className="bg-white rounded-sm">
             <NoData />

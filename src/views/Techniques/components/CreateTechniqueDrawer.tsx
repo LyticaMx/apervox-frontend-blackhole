@@ -20,7 +20,7 @@ const CreateTechniqueDrawer = ({ open, onClose }: Props): ReactElement => {
   const handleSubmit = async (values: FormValues): Promise<void> => {
     if (!values.endDate) return
 
-    const created = techniqueActions?.create({
+    const created = await techniqueActions?.create({
       name: values.name,
       description: values.description,
       starts_at: values.startDate?.toISOString() ?? '',
@@ -44,7 +44,7 @@ const CreateTechniqueDrawer = ({ open, onClose }: Props): ReactElement => {
         title: formatMessage(createTechniqueDrawerMessages.success),
         type: 'Success'
       })
-      techniqueActions?.get({}, true)
+      await techniqueActions?.get({ page: 1 }, true)
       onClose?.()
     }
   }
