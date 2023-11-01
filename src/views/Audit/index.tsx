@@ -65,7 +65,7 @@ const Audit = (): ReactElement => {
           <AuditDrawer
             action={getActionTitle(
               formatMessage,
-              row.moduleName ?? row.specificModule,
+              row.specificModule ?? row.moduleName,
               row.action,
               row.name
             )}
@@ -73,7 +73,7 @@ const Audit = (): ReactElement => {
             date={row.createdAt}
             change={getActionChangeMessage(
               formatMessage,
-              row.moduleName ?? row.specificModule,
+              row.specificModule ?? row.moduleName,
               row.action,
               row.old,
               row.new

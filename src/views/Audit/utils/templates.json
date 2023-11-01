@@ -21,5 +21,42 @@
     "name": "name",
     "users": ["users", { "name": "username" }],
     "active": "status"
+  },
+  "techniques": {
+    "name": "name",
+    "status": "status",
+    "priority": "priority",
+    "startDate": "start_date",
+    "endDate": "end_date",
+    "notification": "notification_time",
+    "notificationTimeUnit": "notification_type",
+    "groups": ["groups", { "name": "name" }]
+  },
+  "targets": {
+    "alias": "alias",
+    "phone": "phone",
+    "carrier": "carrier.name",
+    "overflowLine": "overflow_line.phone",
+    "active": "status",
+    "endDate": "end_date"
+  },
+  "overflow": {
+    "phone": "phone",
+    "lineStatus": "line_status",
+    "medium": "medium.name",
+    "active": "status"
+  },
+  "labels": {
+    "name": "name",
+    "labelType": "label_type",
+    "color": "color",
+    "active": "status"
+  },
+  "letterheads": {
+    "name": "name",
+    "organization": "organization_name",
+    "active": "status",
+    "doc_type": "doc_type",
+    "id": "id"
   }
 }

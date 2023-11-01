@@ -20,7 +20,7 @@ const AuditDrawer = (props: Props): ReactElement => {
     <div className="w-full">
       <Typography
         variant="subtitle"
-        className="text-primary font-medium uppercase"
+        className="text-primary font-medium uppercase break-words"
       >
         {action}
       </Typography>

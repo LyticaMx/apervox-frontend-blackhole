@@ -102,6 +102,22 @@ export const auditableModules = defineMessages({
   groups: {
     id: 'views.Audit.AuditableModules.workgroups',
     defaultMessage: 'Grupos'
+  },
+  synopsis: {
+    id: 'views.Audit.AuditableModules.synopsis',
+    defaultMessage: 'Sinopsis'
+  },
+  region: {
+    id: 'views.Audit.AuditableModules.region',
+    defaultMessage: 'Regiones'
+  },
+  call_evidences: {
+    id: 'views.Audit.AuditableModules.call_evidences',
+    defaultMessage: 'Evidencias'
+  },
+  monitor: {
+    id: 'views.Audit.AuditableModules.monitor',
+    defaultMessage: 'Monitor'
   }
 })
 
@@ -216,6 +232,18 @@ export const auditableActionOf = defineMessages({
   groups: {
     id: 'views.Audit.AuditableModules.of.workgroups',
     defaultMessage: 'de grupo'
+  },
+  synopsis: {
+    id: 'views.Audit.AuditableModules.of.synopsis',
+    defaultMessage: 'de sinopsis'
+  },
+  region: {
+    id: 'views.Audit.AuditableModules.of.region',
+    defaultMessage: 'de regiones'
+  },
+  call_evidences: {
+    id: 'views.Audit.AuditableModules.of.call_evidences',
+    defaultMessage: 'de evidencia'
   }
 })
 

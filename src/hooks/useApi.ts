@@ -94,8 +94,9 @@ const useApi = ({
           }
         }
       }
-    } finally {
+    } catch {
       if (withLoader) loaderActions?.hideLoader()
+    } finally {
       release()
     }
   }

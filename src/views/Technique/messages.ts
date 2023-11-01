@@ -179,6 +179,38 @@ export const targetFormMessages = defineMessages({
   }
 })
 
+export const targetHistoryMessages = defineMessages({
+  title: {
+    id: 'views.technique.target.history.title',
+    defaultMessage: 'Auditoría'
+  },
+  subtitle: {
+    id: 'views.technique.target.history.subtitle',
+    defaultMessage: 'Historial de movimientos auditados'
+  },
+  message: {
+    id: 'views.technique.target.history.message',
+    defaultMessage:
+      'Puedes visualizar los movimientos más recientes que han sido registrados en el grupo de trabajo.'
+  },
+  search: {
+    id: 'views.technique.target.history.search',
+    defaultMessage: 'Busqueda'
+  },
+  created: {
+    id: 'views.technique.target.history.created',
+    defaultMessage: 'Creación'
+  },
+  updated: {
+    id: 'views.technique.target.history.updated',
+    defaultMessage: 'Actualización'
+  },
+  deleted: {
+    id: 'views.technique.target.history.deleted',
+    defaultMessage: 'Eliminación'
+  }
+})
+
 export const targetMetaFormMessages = defineMessages({
   updatedSuccessfully: {
     id: 'views.techniques.TargetMetaForm.updatedSuccessfully',
