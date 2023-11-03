@@ -1,6 +1,6 @@
 export type NonEmptyArray<T> = [T, ...T[]]
 export type ReadOnlyNonEmptyArray<T> = readonly [T, ...T[]]
-export type DocumentType = 'excel' | 'csv' | 'pdf'
+export type DocumentType = 'excel' | 'csv' | 'pdf' | 'word'
 export type RowsQuantity = 'full' | 'page'
 
 export type UniqueArray<T extends unknown[], U = T> = T extends []

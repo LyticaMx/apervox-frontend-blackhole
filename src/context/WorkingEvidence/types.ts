@@ -1,3 +1,5 @@
+import { DocumentType } from 'types/utils'
+
 export interface InnerLabel {
   id?: string
   color?: string
@@ -58,6 +60,7 @@ export interface WorkingEvidenceActions {
   updateRegions: (regions: Region[]) => Promise<Region[]>
   deleteRegion: (id: string) => Promise<boolean>
   createFullTranscription: () => Promise<void>
+  exportTranscription: (document: DocumentType) => Promise<void>
 }
 
 export interface WorkingEvidenceContextType extends WorkingEvidence {

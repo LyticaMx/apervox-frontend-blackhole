@@ -39,7 +39,7 @@ const Header = (): ReactElement => {
         </div>
         <ViewFilter
           fields={items}
-          download={(document) => alert(document)}
+          download={(document, full) => actions?.exportTable(document, full)}
           action={{
             label: getMessage('button'),
             onClick: () => toggle(),

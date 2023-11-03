@@ -41,7 +41,9 @@ const Header = (): ReactElement => {
       </div>
       <ViewFilter
         fields={items}
-        download={(document) => alert(document)}
+        download={(document, quantity) =>
+          callHistoryActions?.exportTable(document, quantity)
+        }
         initialValues={{
           dateRange: {
             start_time: dateFilter.start_time,

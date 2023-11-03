@@ -307,6 +307,7 @@ export const useActions = (
       const urlParams = Params.Builder(params)
         .paginateAndSeach({ ...usersPagination, ...searchFilter })
         .sort(usersPagination.sort, orderByMapper)
+
         .putStaticFilter(
           'sessions',
           staticFilter.sessions?.[0] === 'logged'
@@ -324,12 +325,11 @@ export const useActions = (
             : undefined
         )
         .dates(dateFilter)
+        .putStaticFilter('export_type', exportType)
         .build()
       await exportUsersService(
         `users_${format(new Date(), 'ddMMyyyy_HHmmss')}`,
-        {
-          urlParams: { ...urlParams, export_type: exportType }
-        }
+        { urlParams }
       )
     } catch (e) {
       console.error(e)

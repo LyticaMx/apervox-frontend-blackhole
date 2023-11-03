@@ -1,7 +1,4 @@
-import {
-  ArrowDownTrayIcon,
-  DocumentTextIcon
-} from '@heroicons/react/24/outline'
+import { DocumentTextIcon } from '@heroicons/react/24/outline'
 import Button from 'components/Button'
 import Table from 'components/Table'
 import Typography from 'components/Typography'
@@ -16,6 +13,7 @@ import { RegionInterface } from 'components/WaveSurferContext/types'
 import Tooltip from 'components/Tooltip'
 import TranscriptDialog from './TranscriptDialog'
 import { useWorkingEvidence } from 'context/WorkingEvidence'
+import DownloadDialog from './DownloadDialog'
 
 interface Props {
   transcriptionSegments: RegionInterface[]
@@ -95,12 +93,11 @@ const TranscriptionTab = (props: Props): ReactElement => {
           {formatMessage(transcriptionTabMessages.eventTranscriptionSubtitle)}
         </Typography>
         <div className="flex gap-2 items-center">
-          <button
-            className="text-secondary-gray hover:enabled:text-secondary border shadow-md p-2 rounded-md"
-            disabled={lock}
-          >
-            <ArrowDownTrayIcon className="w-5 h-5" />
-          </button>
+          <DownloadDialog
+            onExport={(document) =>
+              workingEvidenceActions?.exportTranscription(document)
+            }
+          />
           <Tooltip
             content={formatMessage(transcriptionTabMessages.transcriptAllAudio)}
             floatProps={{ offset: 10, arrow: true }}

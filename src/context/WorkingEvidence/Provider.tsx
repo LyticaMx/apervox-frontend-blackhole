@@ -10,6 +10,8 @@ import {
 import { WorkingEvidenceContext, initialState } from './context'
 import { useService } from 'hooks/useApi'
 import { useAuth } from 'context/Auth'
+import { DocumentType } from 'types/utils'
+import useDownloadFile from 'hooks/useDownloadFile'
 
 interface Props {
   children: ReactNode
@@ -22,6 +24,10 @@ const WorkingEvidenceProvider = (props: Props): ReactElement => {
   } = useAuth()
   const [workingEvidence, setWorkingEvidence] = useState(initialState)
   const evidenceService = useService('call-evidences')
+  const exportTranscriptionService = useDownloadFile({
+    endpoint: 'exports/call-evidences',
+    method: 'get'
+  })
 
   const setEvidence = (id?: string): void => {
     if (!id) {
@@ -278,6 +284,20 @@ const WorkingEvidenceProvider = (props: Props): ReactElement => {
     }
   }
 
+  const exportTranscription = async (document: DocumentType): Promise<void> => {
+    try {
+      if (!workingEvidence.id) return
+      await exportTranscriptionService('transcription', {
+        queryString: `${workingEvidence.id}/transcriptions`,
+        urlParams: {
+          export_type: document
+        }
+      })
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
   const actions: WorkingEvidenceActions = {
     setEvidence,
     getData,
@@ -292,7 +312,8 @@ const WorkingEvidenceProvider = (props: Props): ReactElement => {
     deleteTranscriptionSegment,
     getRegions,
     updateRegions,
-    deleteRegion
+    deleteRegion,
+    exportTranscription
   }
 
   const contextValue = useMemo<WorkingEvidenceContextType>(

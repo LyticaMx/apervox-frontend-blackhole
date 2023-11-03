@@ -1,4 +1,6 @@
 {
   "application/x-excel": "xlsx",
-  "text/csv": "csv"
+  "text/csv": "csv",
+  "application/pdf": "pdf",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx"
 }
