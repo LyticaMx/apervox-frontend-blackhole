@@ -3,7 +3,6 @@ import {
   Pagination,
   WorkGroup,
   GenericItem,
-  WorkGroupHistory,
   WorkGroupUser,
   WorkGroupTechnique,
   WorkgroupStaticFilter
@@ -12,7 +11,6 @@ import {
 export enum Types {
   SET_USERS = 'workGroups/setUsers',
   SET_TECHNIQUES = 'workGroups/setTechniques',
-  SET_HISTORY = 'workGroups/setHistory',
   SET_WORKGROUPS = 'workGroups/setWorkGroups',
   SET_WORKGROUP_USERS = 'workGroups/setWorkGroupUsers',
   SET_WORKGROUP_TECHNIQUES = 'workGroups/setWorkgroupTechniques',
@@ -28,7 +26,6 @@ export enum Types {
 export const actions = {
   setUsers: createAction<Types, GenericItem[]>(Types.SET_USERS),
   setTechniques: createAction<Types, GenericItem[]>(Types.SET_TECHNIQUES),
-  setHistory: createAction<Types, WorkGroupHistory[]>(Types.SET_HISTORY),
   setWorkGroups: createAction<
     Types,
     {

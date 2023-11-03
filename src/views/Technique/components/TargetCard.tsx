@@ -23,6 +23,7 @@ import TargetCardAction from './TargetCardAction'
 import { useTechnique } from 'context/Technique'
 import MetadataDialog from './MetadataDialog'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
+import { useSpecificModelAudits } from 'context/Audit'
 
 interface Props {
   data: Target
@@ -33,6 +34,7 @@ interface Props {
 const TargetCard = ({ data, isChecked, onCheck }: Props): ReactElement => {
   const { actions } = useTargets()
   const { actions: actionsTechnique, target } = useTechnique()
+  const { actions: specificModuleAuditActions } = useSpecificModelAudits()
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
   const [openMetadataDialog, setOpenMetadataDialog] = useState(false)
   const { formatMessage } = useIntl()
@@ -82,7 +84,10 @@ const TargetCard = ({ data, isChecked, onCheck }: Props): ReactElement => {
     {
       content: formatMessage(targetCardMessages.history),
       icon: <DocumentMagnifyingGlassIcon className="w-4" />,
-      action: (e) => e?.stopPropagation()
+      action: (e) => {
+        e?.stopPropagation()
+        specificModuleAuditActions?.setModelId(data.id)
+      }
     },
     {
       content: getGlobalMessage('delete', 'actionsMessages'),

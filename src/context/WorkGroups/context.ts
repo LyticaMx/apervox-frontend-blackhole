@@ -14,7 +14,6 @@ export const initialState: WorkgroupState = {
     status: Status.ACTIVE
   },
   workGroups: [],
-  history: [],
   users: [],
   techniques: [],
   associatedUsers: [],

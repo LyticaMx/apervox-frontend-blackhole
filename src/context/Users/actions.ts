@@ -89,12 +89,14 @@ export const useActions = (
 
       if (params?.query && params?.filters) {
         try {
-          auditActions?.genAudit(
+          await auditActions?.genAudit(
             ModuleAuditsTypes.AuditableModules.USERS,
             ModuleAuditsTypes.AuditableActions.SEARCH,
             `${params.filters?.[0]}:${params.query}`
           )
-        } catch {}
+        } catch (e) {
+          console.error(e)
+        }
       }
 
       dispatch(

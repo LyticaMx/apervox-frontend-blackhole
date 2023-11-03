@@ -11,6 +11,49 @@ export const tabsMessages = defineMessages({
   }
 })
 
+export const lineHistoryMessages = defineMessages({
+  title: {
+    id: 'views.acquisition.history.title',
+    defaultMessage: 'Historial de la línea de derivación {phone}'
+  },
+  status: {
+    id: 'views.acquisition.history.technique.status',
+    defaultMessage: 'Estatus'
+  },
+  active: {
+    id: 'views.acquisition.history.technique.status.active',
+    defaultMessage: 'Activo'
+  },
+  concluding: {
+    id: 'views.acquisition.history.technique.status.concluding',
+    defaultMessage: 'Por concluir'
+  },
+  concluded: {
+    id: 'views.acquisition.history.technique.status.concluded',
+    defaultMessage: 'Concluido'
+  },
+  technique: {
+    id: 'views.acquisition.history.technique',
+    defaultMessage: 'Técnica Asignada'
+  },
+  techniqueStartDate: {
+    id: 'views.acquisition.history.technique.startDate',
+    defaultMessage: 'Fecha de inicio de técnica'
+  },
+  techniqueEndDate: {
+    id: 'views.acquisition.history.technique.endDate',
+    defaultMessage: 'Fecha de fin de técnica'
+  },
+  target: {
+    id: 'views.acquisition.history.target',
+    defaultMessage: 'Objetivo'
+  },
+  targetEndDate: {
+    id: 'views.acquisition.history.target.endDate',
+    defaultMessage: 'Fecha de fin de objetivo'
+  }
+})
+
 export const messages = defineMessages({
   title: {
     id: 'views.acquisition.title',
@@ -177,11 +220,13 @@ export const deleteMessages = defineMessages({
 export const disableDialogMessages = defineMessages({
   overflowTitle: {
     id: 'views.acquisition.DisableDialog.overflowTitle',
-    defaultMessage: 'Habilitar / deshabilitar {selected, plural, one{línea} other {líneas}} de derivación'
+    defaultMessage:
+      'Habilitar / deshabilitar {selected, plural, one{línea} other {líneas}} de derivación'
   },
   verificationTitle: {
     id: 'views.acquisition.DisableDialog.verificationTitle',
-    defaultMessage: 'Habilitar / deshabilitar {selected, plural, one{línea} other {líneas}} de verificación'
+    defaultMessage:
+      'Habilitar / deshabilitar {selected, plural, one{línea} other {líneas}} de verificación'
   },
   message: {
     id: 'views.acquisition.DisableDialog.message',

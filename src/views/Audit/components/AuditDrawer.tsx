@@ -1,15 +1,15 @@
 import Typography from 'components/Typography'
 import { format } from 'date-fns'
 import { generalMessages } from 'globalMessages'
-import { ReactElement } from 'react'
+import { ReactElement, ReactNode } from 'react'
 import { useIntl } from 'react-intl'
 
 interface Props {
-  action: string
+  action: ReactNode
   moduleName: string
   date?: string
   user: string
-  change: string
+  change: ReactNode
 }
 
 const AuditDrawer = (props: Props): ReactElement => {
@@ -17,10 +17,10 @@ const AuditDrawer = (props: Props): ReactElement => {
   const { formatMessage } = useIntl()
 
   return (
-    <div className="w-96">
+    <div className="w-full">
       <Typography
         variant="subtitle"
-        className="text-primary font-medium uppercase"
+        className="text-primary font-medium uppercase break-words"
       >
         {action}
       </Typography>
@@ -37,9 +37,8 @@ const AuditDrawer = (props: Props): ReactElement => {
       <Typography variant="body2" className="text-primary">
         {user}
       </Typography>
-      <Typography variant="caption" className="text-secondary">
-        {change}
-      </Typography>
+      <hr />
+      <div className="text-xs text-secondary">{change}</div>
     </div>
   )
 }

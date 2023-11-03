@@ -644,5 +644,10 @@ export const generalMessages = defineMessages({
   other: {
     id: 'global.general.other',
     defaultMessage: 'Otro'
-  }
+  },
+  yes: {
+    id: 'global.general.yes',
+    defaultMessage: 'Si'
+  },
+  no: { id: 'global.general.no', defaultMessage: 'No' }
 })

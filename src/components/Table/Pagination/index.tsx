@@ -49,7 +49,7 @@ const Pagination = ({
 }: Props): ReactElement | null => {
   const { formatMessage } = useIntl()
   const paginationRange = usePagination({
-    currentPage: currentPage + 1,
+    currentPage,
     totalCount,
     siblingCount,
     pageSize
@@ -57,7 +57,7 @@ const Pagination = ({
 
   const onNext = (): void => {
     if (currentPage + 1 < lastPage) {
-      onPageChange(currentPage + 1)
+      onPageChange(currentPage) // Esta con 0
     }
   }
 
@@ -67,7 +67,7 @@ const Pagination = ({
 
   const onPrevious = (): void => {
     if (currentPage > 1) {
-      onPageChange(currentPage - 1)
+      onPageChange(currentPage - 2) // La pagina debe ser -2 porque se suma +1 en las funciones de llamada
     }
   }
 

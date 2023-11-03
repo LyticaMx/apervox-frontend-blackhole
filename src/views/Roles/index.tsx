@@ -11,7 +11,12 @@ import DeleteDialog from './components/DeleteDialog'
 
 import Pagination from 'components/Table/Pagination'
 import Header from './components/Header'
-import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
+import {
+  ModuleAuditsTypes,
+  useModuleAudits,
+  useSpecificModelAudits
+} from 'context/Audit'
+import HistoryDrawer from './components/HistoryDrawer'
 
 const Roles = (): ReactElement => {
   const { data, pagination, actions } = useRoles()
@@ -20,6 +25,7 @@ const Roles = (): ReactElement => {
   const [deleteDialog, toggleDelete] = useToggle(false)
   const [disabledDialog, toggleDisabled] = useToggle(false)
   const { actions: auditActions } = useModuleAudits()
+  const { actions: specificAuditActions } = useSpecificModelAudits()
 
   useEffect(() => {
     actions?.getData({}, true)
@@ -52,7 +58,7 @@ const Roles = (): ReactElement => {
               setRole(item)
               toggleDelete()
             }}
-            onHistory={() => {}}
+            onHistory={() => specificAuditActions?.setModelId(item.id)}
           />
         ))}
       </div>
@@ -71,6 +77,7 @@ const Roles = (): ReactElement => {
             })
         }}
       />
+      <HistoryDrawer />
 
       <StoreDrawer open={open} onClose={toggleOpen} role={role} />
       <DeleteDialog open={deleteDialog} role={role} onClose={toggleDelete} />

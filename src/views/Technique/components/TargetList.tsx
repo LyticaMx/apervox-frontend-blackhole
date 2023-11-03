@@ -22,6 +22,7 @@ import CreateTargetDialog from 'views/Techniques/components/CreateTargetDialog'
 import { Target } from 'types/target'
 import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
+import HistoryDrawer from './HistoryDrawer'
 
 const TargetList = (): ReactElement => {
   let timer
@@ -179,6 +180,7 @@ const TargetList = (): ReactElement => {
             targetsActions?.getData({ page: page + 1, limit })
         }}
       />
+      <HistoryDrawer />
       <CreateTargetDialog
         open={openTargetForm}
         onClose={() => setOpenTargetForm(false)}

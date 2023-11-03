@@ -1,8 +1,4 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
-import { useAuth } from 'context/Auth'
-import { isAfter, isBefore } from 'date-fns'
-import jwtDecode from 'jwt-decode'
-import { ResponseData } from 'types/api'
 import { getItem } from 'utils/persistentStorage'
 
 export const instance = axios.create({
@@ -28,7 +24,6 @@ export const createInstance = ({
   base = 'default',
   ...config
 }: InstanceConfig): AxiosInstance => {
-  const { actions: authActions } = useAuth()
   const instance = axios.create({
     baseURL: instancesURL[base],
     timeout: 60000,
@@ -41,53 +36,13 @@ export const createInstance = ({
   instance.interceptors.request.use(
     async (config) => {
       try {
-        let token: string = getItem('token')
-        const rToken: string = getItem('rToken')
-        if (token && rToken) {
-          const session: any = jwtDecode(token)
-          const decodedRToken: any = jwtDecode(rToken)
-          const sessionTime = session.exp * 1000 - 60000
-          const rTokenTime = decodedRToken.exp * 1000 - 60000
+        const token: string = getItem('token')
 
-          if (
-            isAfter(new Date(), new Date(sessionTime)) &&
-            isBefore(new Date(), new Date(rTokenTime)) &&
-            config.url !== 'auth/login'
-          ) {
-            try {
-              const response: ResponseData = (
-                await axios.post(
-                  `${instancesURL[base]}${
-                    process.env.REACT_APP_REFRESH_TOKEN_ENDPOINT ?? ''
-                  }`,
-                  {},
-                  {
-                    headers: {
-                      'refresh-token': getItem('rToken'),
-                      Authorization: `Bearer ${getItem('token')}`
-                    }
-                  } as any
-                )
-              ).data
-              if (response.data) {
-                const newToken: string = response.data.token
-                const newRToken: string = response.data.refresh_token
-
-                token = newToken
-
-                authActions?.refreshToken(newToken, newRToken)
-              }
-            } catch (e) {
-              console.error(e)
-            }
-          }
-
-          return {
-            ...config,
-            headers: {
-              ...config.headers,
-              Authorization: `Bearer ${token}`
-            }
+        return {
+          ...config,
+          headers: {
+            ...config.headers,
+            Authorization: `Bearer ${token}`
           }
         }
       } catch (e) {
