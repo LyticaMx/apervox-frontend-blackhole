@@ -244,6 +244,14 @@ export const auditableActionOf = defineMessages({
   call_evidences: {
     id: 'views.Audit.AuditableModules.of.call_evidences',
     defaultMessage: 'de evidencia'
+  },
+  monitor: {
+    id: 'views.Audit.AuditableModules.of.monitor',
+    defaultMessage: 'de monitor'
+  },
+  transcription: {
+    id: 'views.Audit.AuditableModules.of.transcription',
+    defaultMessage: 'de transcripción'
   }
 })
 
@@ -303,6 +311,18 @@ export const auditableActionTableOf = defineMessages({
   groups: {
     id: 'views.Audit.AuditableModules.of.table.workgroups',
     defaultMessage: 'de tabla de grupos'
+  },
+  call_evidences: {
+    id: 'views.Audit.AuditableModules.of.call_evidences',
+    defaultMessage: 'de tabla de evidencia'
+  },
+  monitor: {
+    id: 'views.Audit.AuditableModules.of.monitor',
+    defaultMessage: 'de tabla de monitor'
+  },
+  transcription: {
+    id: 'views.Audit.AuditableModules.of.transcription',
+    defaultMessage: 'de transcripción'
   }
 })
 
