@@ -5,7 +5,7 @@ import { differenceParser } from 'utils/differenceParser'
 import { format } from 'date-fns'
 import { platformMessages, timeMessages } from 'globalMessages'
 import { getItem } from 'utils/persistentStorage'
-import { ArrowLongRightIcon } from '@heroicons/react/24/outline'
+import { ArrowLongDownIcon } from '@heroicons/react/24/outline'
 
 export const getActionChangeMessage = (
   formatter: Function,
@@ -14,7 +14,6 @@ export const getActionChangeMessage = (
   oldData?: any,
   newData?: any
 ): ReactNode => {
-  console.log(moduleName)
   switch (moduleName) {
     case 'users':
       return getUserMessage(formatter, action, oldData, newData)
@@ -355,7 +354,7 @@ const getLetterheadMessage = (
 ): ReactNode => {
   const token = getItem('token')
   const getImageUrl = (id: string): string =>
-    `${process.env.REACT_APP_MAIN_BACKEND_URL}letterheads/${id}/image?token=${token}`
+    `${process.env.REACT_APP_MAIN_BACKEND_URL}letterheads/${id}/thumbnail?token=${token}`
 
   switch (action) {
     case 'created': {
@@ -397,9 +396,9 @@ const getLetterheadMessage = (
         <div>
           {differenceParser(formatter, mappedNew, mappedOld)}
           <hr />
-          <div className="flex justify-between items-center gap-2 mt-1">
+          <div className="flex flex-col justify-between items-center gap-2 mt-1">
             {oldImage}
-            <ArrowLongRightIcon className="w-5 h-5" />
+            <ArrowLongDownIcon className="w-5 h-5" />
             {newImage}
           </div>
         </div>
