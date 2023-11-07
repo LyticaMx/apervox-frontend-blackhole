@@ -4,12 +4,14 @@ import { RefObject, useEffect, useRef } from 'react'
 interface RTCOut {
   audioRef: RefObject<HTMLAudioElement>
   openPlayer: boolean
+  phoneNumber: string
+  target?: string
   hidePlayer?: () => void
 }
 
 const useRTC = (): RTCOut => {
   const audioRef = useRef<HTMLAudioElement>(null)
-  const { roomName: fileName, actions } = useRTCPlayer()
+  const { roomName: fileName, phoneNumber, target, actions } = useRTCPlayer()
 
   useEffect(() => {
     if (fileName === '') return
@@ -75,6 +77,8 @@ const useRTC = (): RTCOut => {
   return {
     audioRef,
     openPlayer: Boolean(fileName),
+    phoneNumber,
+    target,
     hidePlayer: actions?.hidePlayer
   }
 }

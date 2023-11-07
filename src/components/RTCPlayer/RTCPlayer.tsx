@@ -10,16 +10,19 @@ import { ReactElement, useRef, useState } from 'react'
 import useRTC from './hooks/useRTC'
 import { secondsToString } from 'utils/timeToString'
 import clsx from 'clsx'
+import { useIntl } from 'react-intl'
+import { messages } from './messages'
 
 const RTCPlayer = (): ReactElement => {
   const [play, setPlay] = useState<boolean>(true)
   const [volume, setVolume] = useState<number>(100)
   const [currentPlayed, setCurrentPlayed] = useState<number>(0)
   const volumeRef = useRef<HTMLInputElement>(null)
+  const { formatMessage } = useIntl()
   // "F_20230927140606_ORIGEN_7777777770_DESTINO_8888888800.wav"
   useProgress(volumeRef, [volume])
   // TODO: Falta definir como se obtendrá la conexión
-  const { audioRef, openPlayer, hidePlayer } = useRTC()
+  const { audioRef, openPlayer, phoneNumber, target, hidePlayer } = useRTC()
 
   const togglePlay = (): void =>
     setPlay((val) => {
@@ -52,12 +55,16 @@ const RTCPlayer = (): ReactElement => {
         }
       />
       <div>
-        <Typography variant="subtitle" style="bold">
-          Nombre / Alias del objetivo
+        <Typography variant="subtitle" style="bold" className="uppercase">
+          {target
+            ? formatMessage(messages.name, { name: target })
+            : formatMessage(messages.target, { phone: phoneNumber })}
         </Typography>
-        <Typography variant="caption" className="text-neutral-300">
-          Número objetivo
-        </Typography>
+        {target && (
+          <Typography variant="caption" className="text-neutral-300">
+            {formatMessage(messages.target, { phone: phoneNumber })}
+          </Typography>
+        )}
       </div>
       <div>
         <div className="flex justify-center items-center">

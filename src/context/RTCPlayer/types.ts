@@ -1,7 +1,9 @@
 export interface RTCPlayerContextType {
   roomName: string
+  phoneNumber: string
+  target?: string
   actions?: {
-    joinRoom: (roomName: string) => void
+    joinRoom: (roomName: string, phoneNumber: string, target?: string) => void
     hidePlayer: () => void
   }
 }
