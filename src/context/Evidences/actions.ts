@@ -245,6 +245,7 @@ export const useActions = (state: EvidenceState, dispatch): EvidenceActions => {
         .sort(pagination.sort, orderByMapper)
         .dates(dateFilter)
         .putStaticFilter('relevance', staticFilter?.relevance)
+        .putStaticFilter('export_type', document)
         .putStaticFilter(
           'is_tracked',
           staticFilter?.follow?.[0] === 'withFollow'
@@ -259,7 +260,7 @@ export const useActions = (state: EvidenceState, dispatch): EvidenceActions => {
           `evidences_${format(new Date(), 'ddMMyyyy_HHmmss')}`,
           {
             queryString: `${target.id}/call-evidences`,
-            urlParams: { ...urlParams, export_type: document }
+            urlParams
           }
         )
       } else {
@@ -267,7 +268,7 @@ export const useActions = (state: EvidenceState, dispatch): EvidenceActions => {
           `evidences_${format(new Date(), 'ddMMyyyy_HHmmss')}`,
           {
             queryString: `${technique?.id}/call-evidences`,
-            urlParams: { ...urlParams, export_type: document }
+            urlParams
           }
         )
       }

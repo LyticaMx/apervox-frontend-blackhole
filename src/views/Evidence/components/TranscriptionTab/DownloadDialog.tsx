@@ -9,24 +9,20 @@ import Typography from 'components/Typography'
 import { FormikConfig, FormikContextType } from 'formik'
 import { actionsMessages } from 'globalMessages'
 import { useAutoCloseDialog } from 'hooks/useAutoCloseDialog'
-import useSections from 'hooks/useSections'
 import { ReactElement, useEffect, useRef } from 'react'
 import { useIntl } from 'react-intl'
-import { DocumentType, RowsQuantity } from 'types/utils'
-import { messages } from './messages'
-import { Section } from 'types/form'
+import { DocumentType } from 'types/utils'
 
 interface FormValues {
   documentType: DocumentType
-  fullData: RowsQuantity
 }
 
 interface Props {
   onExport:
-    | ((documentType: DocumentType, quantity: RowsQuantity) => Promise<void>)
-    | ((documentType: DocumentType, quantity: RowsQuantity) => Promise<boolean>)
-    | ((documentType: DocumentType, quantity: RowsQuantity) => void)
-  disableQuantity?: boolean
+    | ((documentType: DocumentType) => Promise<void>)
+    | ((documentType: DocumentType) => Promise<boolean>)
+    | ((documentType: DocumentType) => void)
+  disabled?: boolean
 }
 
 const DownloadDialog = (props: Props): ReactElement => {
@@ -36,9 +32,9 @@ const DownloadDialog = (props: Props): ReactElement => {
   const toggle = (): void => setShow(!show)
 
   const formikConfig: FormikConfig<FormValues> = {
-    initialValues: { documentType: 'excel', fullData: 'page' },
+    initialValues: { documentType: 'pdf' },
     onSubmit: async (values) => {
-      await props.onExport(values.documentType, values.fullData)
+      await props.onExport(values.documentType)
       setShow(false)
     }
   }
@@ -57,26 +53,6 @@ const DownloadDialog = (props: Props): ReactElement => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [show])
-
-  const sections = useSections(() => [
-    {
-      name: 'type',
-      title: {
-        text: formatMessage(messages.documentType)
-      },
-      removeSeparator: true
-    },
-
-    ...[
-      !props.disableQuantity
-        ? {
-            name: 'quantity',
-            title: { text: formatMessage(messages.rows) },
-            removeSeparator: true
-          }
-        : ({} as Section)
-    ]
-  ])
 
   return (
     <Popover className="relative inline-block">
@@ -107,8 +83,9 @@ const DownloadDialog = (props: Props): ReactElement => {
             placement="top"
           >
             <Popover.Button
-              className="gap-2 btn shadow-blackhole-md p-1.5 py-2.5 text-secondary-gray hover:text-primary"
+              className="text-secondary-gray hover:enabled:text-secondary border shadow-md p-2 rounded-md"
               onClick={toggle}
+              disabled={props.disabled}
             >
               <ArrowDownOnSquareIcon className="w-5 h-5 " />
             </Popover.Button>
@@ -159,51 +136,19 @@ const DownloadDialog = (props: Props): ReactElement => {
                       type: 'radio',
                       name: 'documentType',
                       options: {
-                        label: 'Excel',
-                        value: 'excel'
-                      },
-                      section: 'type'
-                    },
-                    {
-                      type: 'radio',
-                      name: 'documentType',
-                      options: {
-                        label: 'CSV',
-                        value: 'csv'
-                      },
-                      section: 'type'
-                    },
-                    /* Deshabilitado temporalmente
-                    {
-                      type: 'radio',
-                      name: 'documentType',
-                      options: {
                         label: 'PDF',
                         value: 'pdf'
                       }
-                    }
-                    */
-                    {
-                      type: 'radio',
-                      name: 'fullData',
-                      options: {
-                        label: formatMessage(messages.actualPage),
-                        className: 'w-24',
-                        value: 'page'
-                      },
-                      section: 'quantity'
                     },
                     {
                       type: 'radio',
-                      name: 'fullData',
+                      name: 'documentType',
                       options: {
-                        label: formatMessage(messages.allRows),
-                        value: 'full'
-                      },
-                      section: 'quantity'
+                        label: 'WORD',
+                        value: 'word'
+                      }
                     }
                   ]}
-                  withSections={{ sections }}
                   renderSubmitButton={false}
                   formikRef={formRef}
                 />

@@ -27,7 +27,7 @@ const Biometrics = (props: Props): ReactElement | null => {
             id={id}
             url={`${process.env.REACT_APP_MAIN_BACKEND_URL}targets/${
               target.id ?? ''
-            }/biometrics/${id}`}
+            }/biometrics/${id}/thumbnail`}
             remove={async () => {
               if (ability.cannot(ACTION.DELETE, SUBJECT.TARGETS)) return
               await onSyncDelete(id, name)

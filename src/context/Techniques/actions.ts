@@ -216,10 +216,11 @@ const useActions = (state: State, dispatch): Actions => {
         .putStaticFilter('status', staticFilter?.status)
         .putStaticFilter('shift', staticFilter?.turn)
         .putStaticFilter('has_targets', staticFilter?.withTargets)
+        .putStaticFilter('export_type', exportType)
         .build()
       await exportTechniqueTables(
         `techniques_${format(new Date(), 'ddMMyyyy_HHmmss')}`,
-        { urlParams: { ...urlParams, export_type: exportType } }
+        { urlParams }
       )
     } catch (e) {
       console.error(e)

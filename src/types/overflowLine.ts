@@ -1,6 +1,7 @@
 import { SortingState } from '@tanstack/react-table'
 import { DateFilter, PaginationSortFilter, SearchFilter } from './filters'
 import { PaginationParams, SearchParams } from './api'
+import { DocumentType, RowsQuantity } from './utils'
 
 export type LineStatus = 'available' | 'assigned' | 'quarantine' | 'maintenance'
 export interface OverflowLine {
@@ -53,6 +54,10 @@ export interface Actions {
     ids: string[],
     payload: Partial<OverflowLine>
   ) => Promise<boolean>
+  exportTable: (
+    exportType: DocumentType,
+    quantity: RowsQuantity
+  ) => Promise<void>
 }
 
 export interface ContextType extends State {

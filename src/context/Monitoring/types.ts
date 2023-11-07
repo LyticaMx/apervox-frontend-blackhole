@@ -2,6 +2,7 @@ import { SortingState } from '@tanstack/react-table'
 import { CallEvidenceForSocket } from 'context/LiveCallSocket'
 import { PaginationParams, SearchParams } from 'types/api'
 import { DateFilter, PaginationFilter, SearchFilter } from 'types/filters'
+import { DocumentType } from 'types/utils'
 
 export interface LiveCall {
   id: string
@@ -63,6 +64,7 @@ export interface LiveCallActions {
   addLiveCall: (call: CallEvidenceForSocket) => void
   updateLiveCall: (call: CallEvidenceForSocket) => void
   removeLiveCall: (id: string) => void
+  exportTable: (document: DocumentType) => Promise<void>
 }
 
 export interface ContextType extends LiveCallState {

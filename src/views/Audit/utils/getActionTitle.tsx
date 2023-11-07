@@ -108,11 +108,11 @@ const getExported = (
 ): ReactNode => (
   <>
     {`${formatter(auditableActions.exported)} ${
-      auditableActionOf[moduleName]
+      auditableActionTableOf[moduleName]
         ? formatter(auditableActionTableOf[moduleName])
         : moduleName
     } `}
-    <span className="text-primary">{name.split(':')?.[1] ?? ''}</span>
+    <span className="text-primary">{name}</span>
   </>
 )
 

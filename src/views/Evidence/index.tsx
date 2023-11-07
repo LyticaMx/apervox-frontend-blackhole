@@ -47,6 +47,7 @@ import { useCommentsRoom } from './hooks/useCommentsRoom'
 import { CommentsProvider } from './context'
 import { CommonRegion } from './components/CommonRegion'
 import { DeleteRegionDialog } from './components/DeleteDialog'
+import { useTranscription } from './hooks/useTranscription'
 
 interface EvidenceLocation {
   type: 'audio' | 'video' | 'image' | 'doc'
@@ -64,10 +65,6 @@ const CLASSIFICATION_VALUES = [
 
 const Evidence = (): ReactElement => {
   const [commonRegions, setCommonRegions] = useState<RegionInterface[]>([])
-  const [transcriptionRegions, setTranscriptionRegions] = useState<
-    RegionInterface[]
-  >([])
-  // const [peek, setPeek] = useState<number[]>([]) // Es más facil descargar un state de 2 megas xD
   const [resolveTranscriptionRegion, setResolveTranscriptionRegion] =
     useState<ResolveDeleteRegion | null>(null)
   const [resolveRegion, setResolveRegion] =
@@ -90,6 +87,14 @@ const Evidence = (): ReactElement => {
     location.state.from ?? 'monitor',
     techniqueId
   )
+  const {
+    transcriptionRegions,
+    handleChangeSegment,
+    setTranscriptionRegions,
+    updateTranscription,
+    lock: transcriptionLock
+    // progress
+  } = useTranscription(workingEvidence.id ?? '', canWork)
   useCommentsRoom(workingEvidence.id ?? '', canWork)
 
   const saveSynopsis = async (): Promise<void> => {
@@ -214,61 +219,6 @@ const Evidence = (): ReactElement => {
     } catch {
       setCommonRegions([])
     }
-
-    try {
-      const regions =
-        (await workingEvidence.actions?.getTranscriptionSegments()) ?? []
-      setTranscriptionRegions(
-        // TODO: hacer un map antes de enviar al wavesurfer
-        regions.map<RegionInterface>((region) => {
-          return {
-            id: region.id ?? '',
-            start: region.startTime,
-            end: region.endTime,
-            data: { text: region.text }
-          }
-        })
-      )
-    } catch {
-      setTranscriptionRegions([])
-    }
-  }
-
-  const updateTranscription = async (): Promise<void> => {
-    try {
-      const regionsToUpdate = transcriptionRegions.map((region) => {
-        if (!region.id.startsWith('wavesurfer')) {
-          return {
-            id: region.id,
-            startTime: region.start,
-            endTime: region.end,
-            text: region.data?.text ?? ''
-          }
-        }
-
-        return {
-          startTime: region.start,
-          endTime: region.end,
-          text: region.data?.text ?? ''
-        }
-      })
-
-      const updated =
-        (await workingEvidence.actions?.updateTranscriptionSegments(
-          regionsToUpdate
-        )) ?? []
-
-      setTranscriptionRegions(
-        updated.map<RegionInterface>((region) => {
-          return {
-            id: region.id ?? '',
-            start: region.startTime,
-            end: region.endTime,
-            data: { text: region.text }
-          }
-        })
-      )
-    } catch {}
   }
 
   const regions = useMemo(
@@ -424,14 +374,6 @@ const Evidence = (): ReactElement => {
     [transcriptionRegions]
   )
 
-  const handleChangeSegment = (id: string, value: string): void => {
-    setTranscriptionRegions((regions) =>
-      regions.map((region) =>
-        region.id === id ? { ...region, data: { text: value } } : region
-      )
-    )
-  }
-
   const CustomRegion = useMemo(
     () =>
       asRegion((props) => (
@@ -509,6 +451,7 @@ const Evidence = (): ReactElement => {
             onSave={updateTranscription}
             transcriptionSegments={transcriptionRegions}
             onChangeSegment={handleChangeSegment}
+            lock={transcriptionLock}
           />
         ),
         name: 'Transcripción'
@@ -544,7 +487,8 @@ const Evidence = (): ReactElement => {
     localeI18n,
     location.state.type,
     workingEvidence.id,
-    transcriptionRegions
+    transcriptionRegions,
+    transcriptionLock
   ])
 
   if (!canWork) return <WaitToWork />

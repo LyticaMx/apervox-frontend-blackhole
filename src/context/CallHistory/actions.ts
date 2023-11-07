@@ -11,6 +11,9 @@ import { DateFilter } from 'types/filters'
 import { Params } from 'utils/ParamsBuilder'
 import { actions } from './constants'
 import mutexify from 'mutexify/promise'
+import { DocumentType, RowsQuantity } from 'types/utils'
+import useDownloadFile from 'hooks/useDownloadFile'
+import { format } from 'date-fns'
 
 const orderByMapper = {
   source: 'source_number',
@@ -39,6 +42,10 @@ export const useActions = (state: CallState, dispatch): CallActions => {
   const classifyCall = useApi({
     endpoint: 'call-evidences',
     method: 'put'
+  })
+  const exportCallHistory = useDownloadFile({
+    endpoint: 'exports/call-evidences/monitor/history',
+    method: 'get'
   })
 
   const getData = async (
@@ -175,9 +182,44 @@ export const useActions = (state: CallState, dispatch): CallActions => {
     }
   }
 
+  const exportTable = async (
+    document: DocumentType,
+    quantity: RowsQuantity
+  ): Promise<void> => {
+    try {
+      const params = quantity === 'full' ? { limit: -1 } : {}
+      const urlParams = Params.Builder(params, 'call_start_date')
+        .pagination(pagination)
+        .searchFilters(searchFilter)
+        .sort(pagination.sort, orderByMapper)
+        .dates(dateFilter)
+        .putStaticFilter('priority', staticFilter?.priority)
+        .putStaticFilter('relevance', staticFilter?.relevance)
+        .putStaticFilter('type', staticFilter?.type)
+        .putStaticFilter(
+          'has_transcription',
+          staticFilter?.hasTranscription?.[0] === 'withTranscription'
+            ? true
+            : staticFilter?.hasTranscription?.[0] === 'withoutTranscription'
+            ? false
+            : undefined
+        )
+        .putStaticFilter('export_type', document)
+        .build()
+
+      await exportCallHistory(
+        `call_history_${format(new Date(), 'ddMMyyyy_HHmmss')}`,
+        { urlParams }
+      )
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
   return {
     getData,
     classify,
-    updateEvidence
+    updateEvidence,
+    exportTable
   }
 }

@@ -456,12 +456,11 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
               ? false
               : undefined
         })
+        .putStaticFilter('export_type', exportType)
         .build()
       await exportWorkGroupService(
         `groups_${format(new Date(), 'ddMMyyyy_HHmmss')}`,
-        {
-          urlParams: { ...urlParams, export_type: exportType }
-        }
+        { urlParams }
       )
     } catch (e) {
       console.error(e)

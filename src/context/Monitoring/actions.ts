@@ -11,6 +11,9 @@ import { DateFilter } from 'types/filters'
 import { Params } from 'utils/ParamsBuilder'
 import { actions } from './constants'
 import { CallEvidenceForSocket } from 'context/LiveCallSocket'
+import { DocumentType } from 'types/utils'
+import useDownloadFile from 'hooks/useDownloadFile'
+import { format } from 'date-fns'
 
 const orderByMapper = {
   target: 'target_phone',
@@ -24,6 +27,10 @@ export const useActions = (state: LiveCallState, dispatch): LiveCallActions => {
   const { pagination, dateFilter, searchFilter, staticFilter, data } = state
   const getLiveCalls = useApi({
     endpoint: 'call-evidences/monitor',
+    method: 'get'
+  })
+  const exportCallsService = useDownloadFile({
+    endpoint: 'exports/call-evidences/monitor',
     method: 'get'
   })
 
@@ -186,12 +193,22 @@ export const useActions = (state: LiveCallState, dispatch): LiveCallActions => {
 
   const hangUp = async (id: string): Promise<boolean> => false
 
+  const exportTable = async (document: DocumentType): Promise<void> => {
+    try {
+      await exportCallsService(
+        `live_calls_${format(new Date(), 'ddMMyyyy_HHmmss')}`,
+        { urlParams: { limit: -1, export_type: document } }
+      )
+    } catch {}
+  }
+
   return {
     getData,
     getAllData,
     addLiveCall,
     updateLiveCall,
     removeLiveCall,
-    hangUp
+    hangUp,
+    exportTable
   }
 }

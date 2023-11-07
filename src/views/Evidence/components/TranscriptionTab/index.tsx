@@ -1,7 +1,4 @@
-import {
-  ArrowDownTrayIcon,
-  DocumentTextIcon
-} from '@heroicons/react/24/outline'
+import { DocumentTextIcon } from '@heroicons/react/24/outline'
 import Button from 'components/Button'
 import Table from 'components/Table'
 import Typography from 'components/Typography'
@@ -16,15 +13,17 @@ import { RegionInterface } from 'components/WaveSurferContext/types'
 import Tooltip from 'components/Tooltip'
 import TranscriptDialog from './TranscriptDialog'
 import { useWorkingEvidence } from 'context/WorkingEvidence'
+import DownloadDialog from './DownloadDialog'
 
 interface Props {
   transcriptionSegments: RegionInterface[]
   onChangeSegment: (id: string, value: string) => void
   onSave: () => Promise<void>
+  lock: boolean
 }
 
 const TranscriptionTab = (props: Props): ReactElement => {
-  const { onChangeSegment, onSave, transcriptionSegments } = props
+  const { onChangeSegment, onSave, transcriptionSegments, lock } = props
   const [openTranscriptDialog, setOpenTranscriptDialog] = useState(false)
   const { formatMessage } = useIntl()
   const { actions: workingEvidenceActions } = useWorkingEvidence()
@@ -35,37 +34,41 @@ const TranscriptionTab = (props: Props): ReactElement => {
     onChangeSegment(name, value)
   }
 
-  const columns = useTableColumns<RegionInterface>(() => [
-    {
-      id: 'interval',
-      header: () => (
-        <span className="uppercase text-primary">
-          {formatMessage(platformMessages.interval)}
-        </span>
-      ),
-      cell: ({ row }) => (
-        <span className="font-medium">
-          {`${secondsToString(row.original.start)} - ${secondsToString(
-            row.original.end
-          )}`}
-        </span>
-      )
-    },
-    {
-      accessorKey: 'dialog',
-      header: () => (
-        <span className="uppercase text-primary">
-          {formatMessage(platformMessages.dialog)}
-        </span>
-      ),
-      cell: (cellContext) => (
-        <DialogEditor
-          cellContext={cellContext}
-          onChange={handleSegmentChange}
-        />
-      )
-    }
-  ])
+  const columns = useTableColumns<RegionInterface>(
+    () => [
+      {
+        id: 'interval',
+        header: () => (
+          <span className="uppercase text-primary">
+            {formatMessage(platformMessages.interval)}
+          </span>
+        ),
+        cell: ({ row }) => (
+          <span className="font-medium">
+            {`${secondsToString(row.original.start)} - ${secondsToString(
+              row.original.end
+            )}`}
+          </span>
+        )
+      },
+      {
+        accessorKey: 'dialog',
+        header: () => (
+          <span className="uppercase text-primary">
+            {formatMessage(platformMessages.dialog)}
+          </span>
+        ),
+        cell: (cellContext) => (
+          <DialogEditor
+            cellContext={cellContext}
+            onChange={handleSegmentChange}
+            disabled={lock}
+          />
+        )
+      }
+    ],
+    [lock]
+  )
 
   return (
     <div>
@@ -90,9 +93,11 @@ const TranscriptionTab = (props: Props): ReactElement => {
           {formatMessage(transcriptionTabMessages.eventTranscriptionSubtitle)}
         </Typography>
         <div className="flex gap-2 items-center">
-          <button className="text-secondary-gray hover:enabled:text-secondary border shadow-md p-2 rounded-md">
-            <ArrowDownTrayIcon className="w-5 h-5" />
-          </button>
+          <DownloadDialog
+            onExport={(document) =>
+              workingEvidenceActions?.exportTranscription(document)
+            }
+          />
           <Tooltip
             content={formatMessage(transcriptionTabMessages.transcriptAllAudio)}
             floatProps={{ offset: 10, arrow: true }}
@@ -106,11 +111,17 @@ const TranscriptionTab = (props: Props): ReactElement => {
             <button
               className="text-secondary-gray hover:enabled:text-secondary border shadow-md p-2 rounded-md"
               onClick={() => setOpenTranscriptDialog(true)}
+              disabled={lock}
             >
               <DocumentTextIcon className="w-5 h-5" />
             </button>
           </Tooltip>
-          <Button color="primary" variant="contained" onClick={onSave}>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={onSave}
+            disabled={lock}
+          >
             {formatMessage(transcriptionTabMessages.saveTranscription)}
           </Button>
         </div>

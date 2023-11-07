@@ -12,10 +12,17 @@ import {
 } from 'types/overflowLine'
 import { Params } from 'utils/ParamsBuilder'
 import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
+import { DocumentType, RowsQuantity } from 'types/utils'
+import useDownloadFile from 'hooks/useDownloadFile'
+import { format } from 'date-fns'
 
 export const useActions = (state: State, dispatch): Actions => {
-  const { pagination, dateFilter, searchFilter } = state
+  const { pagination, dateFilter, searchFilter, staticFilter } = state
   const resource = useService('overflow-lines')
+  const exportLinesService = useDownloadFile({
+    endpoint: 'exports/overflow-lines',
+    method: 'get'
+  })
   const { actions: auditActions } = useModuleAudits()
 
   const get = async (
@@ -158,10 +165,40 @@ export const useActions = (state: State, dispatch): Actions => {
     }
   }
 
+  const exportTable = async (
+    exportType: DocumentType,
+    quantity: RowsQuantity
+  ): Promise<void> => {
+    try {
+      const params = quantity === 'full' ? { limit: -1 } : {}
+      const urlParams = Params.Builder(params)
+        .paginateAndSeach({ ...pagination, ...searchFilter })
+        .sort(pagination.sort, {
+          created_by: 'created_by.username',
+          target_phone: 'target.phone',
+          target_carrier: 'target.carrier.name',
+          target_technique: 'target.technique.name',
+          target_end_date: 'target.end_date',
+          medium_name: 'medium.name'
+        })
+        .dates(dateFilter)
+        .putStaticFilter('line_status', staticFilter?.line_status)
+        .putStaticFilter('export_type', exportType)
+        .build()
+      await exportLinesService(
+        `overflow_lines_${format(new Date(), 'ddMMyyyy_HHmmss')}`,
+        { urlParams }
+      )
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
   return {
     get,
     create,
     update,
-    updateMany
+    updateMany,
+    exportTable
   }
 }
