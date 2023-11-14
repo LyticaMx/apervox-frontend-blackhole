@@ -19,7 +19,19 @@ const useRTC = (): RTCOut => {
     const socket = new WebSocket(
       `${process.env.REACT_APP_WEBRTC_SOCKET_URL}${fileName}`
     )
-    const pc = new RTCPeerConnection()
+
+    let config: RTCConfiguration | undefined
+    if (process.env.REACT_APP_WEBRTC_ICE_SERVER_URL) {
+      const iceServer: RTCIceServer = {
+        urls: process.env.REACT_APP_WEBRTC_ICE_SERVER_URL
+      }
+      if (process.env.TEST2) {
+        iceServer.username = process.env.REACT_APP_WEBRTC_ICE_SERVER_USER
+        iceServer.credential = process.env.REACT_APP_WEBRTC_ICE_SERVER_PASSWORD
+      }
+    }
+
+    const pc = new RTCPeerConnection(config)
 
     socket.addEventListener('open', () => {
       socket.addEventListener('message', (e) => {
