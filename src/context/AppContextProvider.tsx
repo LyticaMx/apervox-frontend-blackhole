@@ -28,6 +28,7 @@ import {
 import { EvidenceSocketProvider } from './EvidenceSocket'
 import { LiveCallSocketProvider } from './LiveCallSocket'
 import { LineHistoryProvider } from './LineHistory'
+import { RTCPlayerProvider } from './RTCPlayer'
 
 interface Props {
   children: ReactNode
@@ -35,6 +36,7 @@ interface Props {
 
 export const AppContextProvider = (props: Props): any => {
   const providers = [
+    RTCPlayerProvider,
     ModuleAuditsProvider,
     TargetsProvider,
     SettingsProvider,

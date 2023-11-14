@@ -5,12 +5,15 @@ import Typography from 'components/Typography'
 import clsx from 'clsx'
 import { useIntl } from 'react-intl'
 import { liveCallsMessages } from '../messages'
+import { useRTCPlayer } from 'context/RTCPlayer'
 
 const LiveCalls = (): ReactElement => {
   const { data: liveCalls } = useLiveCallSocket()
+  const { actions } = useRTCPlayer()
   const { formatMessage } = useIntl()
 
   useEffect(() => {
+    // eslint-disable-next-line no-console
     console.log({ liveCalls })
   }, [liveCalls])
 
@@ -37,7 +40,15 @@ const LiveCalls = (): ReactElement => {
             key={call.id}
             className="hover:bg-slate-200 py-0.5 px-2 border-b border-slate-200 last-of-type:border-b-0"
           >
-            <button className="flex w-full justify-between items-center">
+            <button
+              className="flex w-full justify-between items-center"
+              onClick={() =>
+                actions?.joinRoom(
+                  'F_20230927140606_ORIGEN_7777777770_DESTINO_8888888800.wav',
+                  call.target
+                )
+              }
+            >
               <span className="flex justify-between items-center gap-2">
                 <PhoneIcon className={clsx('w-4 h-4', phoneColor[call.type])} />
                 {call.target}{' '}

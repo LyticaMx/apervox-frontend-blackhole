@@ -14,6 +14,7 @@ import useToast from 'hooks/useToast'
 import { Aside } from 'components/Layout/Aside'
 import { DEFAULT_DRAWER_WIDTH, useDrawer } from 'context/Drawer'
 import { useSettings } from 'context/Settings'
+import { RTCPlayer } from 'components/RTCPlayer'
 
 const BaseLayout = ({ children }: Layout): ReactElement => {
   const intl = useIntl()
@@ -56,6 +57,7 @@ const BaseLayout = ({ children }: Layout): ReactElement => {
           </main>
           <Aside />
         </div>
+        <RTCPlayer />
       </div>
       <ContextDrawer />
       <Loader />

@@ -41,7 +41,7 @@ Este proyecto tiene por objetivo la creación de un sistema de monitoreo telefó
 
 ## Requisitos de desarrollo
 
-- [NodeJS](https://nodejs.org/download/release/latest-v16.x/)  16.18.1
+- [NodeJS](https://nodejs.org/download/release/latest-v16.x/) 16.18.1
 - [Yarn](https://yarnpkg.com/) 1.22.19
 
 ## Iniciar el proyecto
@@ -54,9 +54,9 @@ Clona el repositorio en tu maquina local:
 git clone git@github.com:LyticaMx/apervox-frontend-blackhole.git
 ```
 
-Instala las dependencias del  proyecto:
+Instala las dependencias del proyecto:
 
-``` bash
+```bash
 yarn install
 ```
 
@@ -80,8 +80,17 @@ yarn start
 El proyecto cuenta con un archivo de variables de entorno
 **.env**
 
-|Nombre|Tipo|Valor por defecto|Descripción|
-|------|----|-----------------|-----------|
-|GENERATE_SOURCEMAP|boolean| |Generación de los sourcemaps de las gráficas de ant design
-REACT_APP_TIME_PER_TRANSCRIPTION_PAG|number| 30 |Intervalo de tiempo expresado en segundos en los que se realizarán los cortes para el paginado de la transcripción
-REACT_APP_ITEMS_PER_TRANSCRIPTION_PAGE|number| 9 |Número de elementos a mostrar en el grid de la paginación de la transcripción
+| Nombre                               | Tipo    | Valor por defecto | Descripción                                                                                |
+| ------------------------------------ | ------- | ----------------- | ------------------------------------------------------------------------------------------ |
+| GENERATE_SOURCEMAP                   | boolean |                   | Generación de los sourcemaps de las gráficas de ant design                                 |
+| PORT                                 | number  |                   | Puerto en el que corre el servidor de desarrollo                                           |
+| REACT_APP_MAIN_SOCKET_URL            | string  |                   | URL del socket principal del back-end                                                      |
+| REACT_APP_MAIN_BACKEND_URL           | string  |                   | URL del API principal del back-end                                                         |
+| REACT_APP_REFRESH_TOKEN_ENDPOINT     | string  |                   | Endpoint de refresco de token                                                              |
+| REACT_APP_WAVESURFER_REGION_COLOR    | string  |                   | Color de las regiones del wavesurfer                                                       |
+| REACT_APP_TABLE_OVERSCAN             | number  | 10                | Filas extras renderizadas en las tablas mostradas para evitar el mostrar la carga excesiva |
+| REACT_APP_WEBRTC_SOCKET_URL          | string  |                   | URL del socket de señalización del servidor RTC                                            |
+| REACT_APP_WEBRTC_ICE_SERVER_URL      | string  |                   | URL del servidor STUN/TURN                                                                 |
+| REACT_APP_WEBRTC_ICE_SERVER_USER     | string  |                   | Usuario para autenticación en el servidor STUN/TURN                                        |
+| REACT_APP_WEBRTC_ICE_SERVER_PASSWORD | string  |                   | Contraseña para autenticación en el servidor STUN/TURN                                     |
+| REACT_APP_X_API_KEY                  | string  |                   | Llave del API principal                                                                    |
