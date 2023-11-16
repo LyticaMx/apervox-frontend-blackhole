@@ -8,6 +8,7 @@ interface Props {
 
 const RTCPlayerProvider = ({ children }: Props): ReactElement => {
   const [room, setRoom] = useState<string>('')
+  const [evidenceID, setEvidenceID] = useState<string>('')
   const [phoneNumber, setPhoneNumber] = useState<string>('')
   const [target, setTarget] = useState<string | undefined>()
 
@@ -16,23 +17,41 @@ const RTCPlayerProvider = ({ children }: Props): ReactElement => {
     phoneNumber: string,
     target?: string
   ): void => {
+    setEvidenceID('')
     setRoom(roomName)
     setPhoneNumber(phoneNumber)
     if (target) setTarget(target)
   }
-  const hidePlayer = (): void => setRoom('')
+
+  const playEvidence = (
+    evidenceID: string,
+    phoneNumber: string,
+    target?: string
+  ): void => {
+    setRoom('')
+    setEvidenceID(evidenceID)
+    setPhoneNumber(phoneNumber)
+    if (target) setTarget(target)
+  }
+
+  const hidePlayer = (): void => {
+    setRoom('')
+    setEvidenceID('')
+  }
 
   const contextValue = useMemo<RTCPlayerContextType>(
     () => ({
       roomName: room,
       phoneNumber,
       target,
+      evidenceID,
       actions: {
         hidePlayer,
-        joinRoom
+        joinRoom,
+        playEvidence
       }
     }),
-    [room]
+    [room, evidenceID]
   )
 
   return (

@@ -12,12 +12,14 @@ import Tooltip from 'components/Tooltip'
 import IconButton from 'components/Button/IconButton'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 import { useLiveCallSocket } from 'context/LiveCallSocket'
+import { useRTCPlayer } from 'context/RTCPlayer'
 
 const CallsTable = (): ReactElement => {
   const getMessage = useFormatMessage(tableMessages)
   const getGlobalMessage = useGlobalMessage()
   const { actions, data } = useMonitoring()
   const ability = useAbility()
+  const { actions: rtcActions } = useRTCPlayer()
   const { socket } = useLiveCallSocket()
 
   useEffect(() => {
@@ -222,6 +224,20 @@ const CallsTable = (): ReactElement => {
       data={data}
       className="overflow-x-auto shadow rounded-lg"
       maxHeight={500}
+      onRowClicked={(row) => {
+        if (row.endedAt) {
+          // TODO: Abrir reproductor de llamadas de historial
+          rtcActions?.playEvidence('64cbce30ebf33155183ce80c', row.target)
+        } else {
+          rtcActions?.playEvidence('64cbce30ebf33155183ce80c', row.target)
+          /*
+          rtcActions?.joinRoom(
+            'F_20230927140606_ORIGEN_7777777770_DESTINO_8888888800.wav',
+            row.target
+          )
+          */
+        }
+      }}
     />
   )
 }

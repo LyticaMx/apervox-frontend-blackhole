@@ -1,4 +1,5 @@
 import { useState, useMemo, ReactNode, ReactElement } from 'react'
+import axios from 'axios'
 import { useHistory } from 'react-router-dom'
 import { useIntl } from 'react-intl'
 import jwtDecode from 'jwt-decode'
@@ -15,7 +16,7 @@ import { apiMessages } from 'globalMessages'
 
 import { useLoader } from 'context/Loader'
 import { AuthContext, initialState } from './context'
-import { format } from 'date-fns'
+import { format, isAfter, isBefore } from 'date-fns'
 import { ResponseData } from 'types/api'
 import { AbilityBuilder, createMongoAbility } from '@casl/ability'
 import { ACTION, useAbility } from 'context/Ability'
@@ -237,11 +238,49 @@ const AuthProvider = ({ children }: Props): ReactElement => {
     }
   }
 
-  const refreshToken = (token: string, rToken: string): void => {
-    setItem('token', token)
-    setItem('rToken', rToken)
+  const refreshToken = async (): Promise<void> => {
+    try {
+      loaderActions?.showLoader()
+      const token: string = getItem('token')
+      const rToken: string = getItem('rToken')
+      if (token && rToken) {
+        const session: any = jwtDecode(token)
+        const decodedRToken: any = jwtDecode(rToken)
+        const sessionTime = session.exp * 1000 - 60000
+        const rTokenTime = decodedRToken.exp * 1000 - 60000
+        if (
+          isAfter(new Date(), new Date(sessionTime)) &&
+          isBefore(new Date(), new Date(rTokenTime))
+        ) {
+          const response: ResponseData = (
+            await axios.post(
+              `${process.env.REACT_APP_MAIN_BACKEND_URL}${
+                process.env.REACT_APP_REFRESH_TOKEN_ENDPOINT ?? ''
+              }`,
+              {},
+              {
+                headers: {
+                  'refresh-token': getItem('rToken'),
+                  Authorization: `Bearer ${getItem('token')}`
+                }
+              } as any
+            )
+          ).data
+          if (response.data) {
+            const newToken: string = response.data.token
+            const newRToken: string = response.data.refresh_token
+            setItem('token', newToken)
+            setItem('rToken', newRToken)
 
-    setAuth((prev) => ({ ...prev, token, rToken }))
+            setAuth((prev) => ({ ...prev, token: newToken, newRToken: rToken }))
+          }
+        }
+      }
+    } catch (e) {
+      console.error(e)
+    } finally {
+      loaderActions?.hideLoader()
+    }
   }
 
   const getProfile = async (): Promise<void> => {
