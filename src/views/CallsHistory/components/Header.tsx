@@ -63,14 +63,17 @@ const Header = (): ReactElement => {
           fields: searchFilter.filters
         }}
         onChange={(data) =>
-          callHistoryActions?.getData({
-            start_time: data.dateRange[0],
-            end_time: data.dateRange[1],
-            clearDates: data.clearDates,
-            filters: data.filterByField.fields,
-            query: data.filterByField.search,
-            page: 1
-          })
+          callHistoryActions?.getData(
+            {
+              start_time: data.dateRange[0],
+              end_time: data.dateRange[1],
+              clearDates: data.clearDates,
+              filters: data.filterByField.fields,
+              query: data.filterByField.search,
+              page: 1
+            },
+            true
+          )
         }
       />
     </div>
