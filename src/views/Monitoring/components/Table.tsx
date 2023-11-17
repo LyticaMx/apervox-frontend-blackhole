@@ -226,8 +226,7 @@ const CallsTable = (): ReactElement => {
       maxHeight={500}
       onRowClicked={(row) => {
         if (row.endedAt) {
-          // TODO: Abrir reproductor de llamadas de historial
-          rtcActions?.playEvidence('64cbce30ebf33155183ce80c', row.target)
+          rtcActions?.playEvidence(row.id, row.target)
         } else {
           rtcActions?.joinRoom(
             'F_20230927140606_ORIGEN_7777777770_DESTINO_8888888800.wav',
