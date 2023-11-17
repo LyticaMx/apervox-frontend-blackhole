@@ -1,5 +1,4 @@
 import {
-  ArchiveBoxIcon,
   DocumentTextIcon,
   EyeIcon,
   PhoneIcon
@@ -226,9 +225,11 @@ const CallsTable = (): ReactElement => {
         cell: ({ row }) =>
           row.original.type === 'evidence' ? (
             <div className="flex">
+              {/* ! Caracteristica no definida
               <IconButton>
                 <ArchiveBoxIcon className="w-4 h-4 text-muted" />
               </IconButton>
+              */}
               <IconButton
                 disabled={ability.cannot(ACTION.UPDATE, SUBJECT.CALL_EVIDENCES)}
                 onClick={() => {

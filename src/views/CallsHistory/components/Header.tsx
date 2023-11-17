@@ -14,7 +14,9 @@ const Header = (): ReactElement => {
   const {
     dateFilter,
     searchFilter,
-    actions: callHistoryActions
+    actions: callHistoryActions,
+    counters,
+    total
   } = useCallHistory()
 
   const items = [
@@ -32,11 +34,19 @@ const Header = (): ReactElement => {
       <div>
         <Title className="uppercase">{getMessage('title')}</Title>
         <div className="flex gap-2">
-          <ViewCounter count={5}>{getMessage('totalEvents')}</ViewCounter>
-          <ViewCounter count={5}>{getMessage('unclassified')}</ViewCounter>
-          <ViewCounter count={5}>{getMessage('noRelevant')}</ViewCounter>
-          <ViewCounter count={5}>{getMessage('relevant')}</ViewCounter>
-          <ViewCounter count={5}>{getMessage('withTranscription')}</ViewCounter>
+          <ViewCounter count={total}>{getMessage('totalEvents')}</ViewCounter>
+          <ViewCounter count={counters.unclassified}>
+            {getMessage('unclassified')}
+          </ViewCounter>
+          <ViewCounter count={counters.notRelevant}>
+            {getMessage('noRelevant')}
+          </ViewCounter>
+          <ViewCounter count={counters.relevant}>
+            {getMessage('relevant')}
+          </ViewCounter>
+          <ViewCounter count={counters.withTranscription}>
+            {getMessage('withTranscription')}
+          </ViewCounter>
         </div>
       </div>
       <ViewFilter

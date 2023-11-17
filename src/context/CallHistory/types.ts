@@ -44,7 +44,7 @@ export interface StaticFilter {
 
 export interface ClassificationCounters {
   unclassified: number
-  discarded: number
+  notRelevant: number
   relevant: number
   withTranscription: number
 }

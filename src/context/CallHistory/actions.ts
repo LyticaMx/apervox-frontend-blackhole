@@ -4,9 +4,10 @@ import {
   CallActions,
   CallPaginationParams,
   CallState,
+  ClassificationCounters,
   StaticFilter
 } from './types'
-import { SearchParams } from 'types/api'
+import { ResponseData, SearchParams } from 'types/api'
 import { DateFilter } from 'types/filters'
 import { Params } from 'utils/ParamsBuilder'
 import { actions } from './constants'
@@ -71,14 +72,66 @@ export const useActions = (state: CallState, dispatch): CallActions => {
         )
         .build()
 
-      const [response, total] = await Promise.all([
-        getHistory({ urlParams }),
-        getTotalRows
-          ? getHistory({ urlParams: { page: 1, limit: 1 } })
-              .then((res) => res.size)
-              .catch(() => null)
-          : Promise.resolve(null)
-      ])
+      const apiCalls: [
+        Promise<ResponseData>,
+        ...Array<Promise<number | null>>
+      ] = [getHistory({ urlParams })]
+      if (getTotalRows) {
+        apiCalls.push(
+          getHistory({ urlParams: { ...urlParams, page: 1, limit: 1 } })
+            .then((res) => res.size)
+            .catch(() => null),
+          getHistory({
+            urlParams: {
+              ...urlParams,
+              page: 1,
+              limit: 1,
+              relevance: ['unclassified']
+            }
+          })
+            .then((res) => res.size)
+            .catch(() => null),
+          getHistory({
+            urlParams: {
+              ...urlParams,
+              page: 1,
+              limit: 1,
+              relevance: ['not_relevant']
+            }
+          })
+            .then((res) => res.size)
+            .catch(() => null),
+          getHistory({
+            urlParams: {
+              ...urlParams,
+              page: 1,
+              limit: 1,
+              relevance: ['relevant']
+            }
+          })
+            .then((res) => res.size)
+            .catch(() => null),
+          getHistory({
+            urlParams: {
+              ...urlParams,
+              page: 1,
+              limit: 1,
+              has_transcription: true
+            }
+          })
+            .then((res) => res.size)
+            .catch(() => null)
+        )
+      }
+
+      const [
+        response,
+        total,
+        unclassified,
+        notRelevant,
+        relevant,
+        withTranscription
+      ] = await Promise.all(apiCalls)
 
       dispatch(
         actions.setData(
@@ -106,7 +159,23 @@ export const useActions = (state: CallState, dispatch): CallActions => {
         )
       )
 
-      if (total != null) dispatch(actions.setTotal(total))
+      if (getTotalRows) {
+        if (total != null) dispatch(actions.setTotal(total))
+        const counters: ClassificationCounters = {
+          notRelevant: 0,
+          relevant: 0,
+          unclassified: 0,
+          withTranscription: 0
+        }
+        if (unclassified != null) counters.unclassified = unclassified
+        if (notRelevant != null) counters.notRelevant = notRelevant
+        if (relevant != null) counters.relevant = relevant
+        if (withTranscription != null) {
+          counters.withTranscription = withTranscription
+        }
+
+        dispatch(actions.setCounters(counters))
+      }
 
       dispatch(
         actions.setPagination({
