@@ -229,13 +229,10 @@ const CallsTable = (): ReactElement => {
           // TODO: Abrir reproductor de llamadas de historial
           rtcActions?.playEvidence('64cbce30ebf33155183ce80c', row.target)
         } else {
-          rtcActions?.playEvidence('64cbce30ebf33155183ce80c', row.target)
-          /*
           rtcActions?.joinRoom(
             'F_20230927140606_ORIGEN_7777777770_DESTINO_8888888800.wav',
             row.target
           )
-          */
         }
       }}
     />

@@ -14,6 +14,7 @@ import clsx from 'clsx'
 import { useIntl } from 'react-intl'
 import { messages } from './messages'
 import { useRTCPlayer } from 'context/RTCPlayer'
+import ProgressBar from './ProgressBar'
 
 const RTCPlayer = (): ReactElement => {
   const [play, setPlay] = useState<boolean>(true)
@@ -109,8 +110,11 @@ const RTCPlayer = (): ReactElement => {
           {evidenceID !== '' && (
             <>
               <p>{secondsToString(currentPlayed)}</p>
-              {/* TODO: hacer la barra interactiva */}
-              <div className="h-1 w-96 bg-primary" />
+              <ProgressBar
+                audioRef={audioRef}
+                currentTime={currentPlayed}
+                duration={duration}
+              />
               <p>{secondsToString(duration)}</p>
             </>
           )}
