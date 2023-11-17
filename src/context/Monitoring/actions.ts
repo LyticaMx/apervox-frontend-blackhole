@@ -29,6 +29,10 @@ export const useActions = (state: LiveCallState, dispatch): LiveCallActions => {
     endpoint: 'call-evidences/monitor',
     method: 'get'
   })
+  const hangUpService = useApi({
+    endpoint: 'call-evidences',
+    method: 'post'
+  })
   const exportCallsService = useDownloadFile({
     endpoint: 'exports/call-evidences/monitor',
     method: 'get'
@@ -191,7 +195,16 @@ export const useActions = (state: LiveCallState, dispatch): LiveCallActions => {
     } catch {}
   }
 
-  const hangUp = async (id: string): Promise<boolean> => false
+  const hangUp = async (id: string): Promise<boolean> => {
+    try {
+      await hangUpService({
+        queryString: `${id}/hangup`
+      })
+      return true
+    } catch {
+      return false
+    }
+  }
 
   const exportTable = async (document: DocumentType): Promise<void> => {
     try {
