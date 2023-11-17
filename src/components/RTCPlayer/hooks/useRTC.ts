@@ -1,18 +1,9 @@
-import { useRTCPlayer } from 'context/RTCPlayer'
-import { RefObject, useEffect, useRef } from 'react'
+import { RefObject, useEffect } from 'react'
 
-interface RTCOut {
-  audioRef: RefObject<HTMLAudioElement>
-  openPlayer: boolean
-  phoneNumber: string
-  target?: string
-  hidePlayer?: () => void
-}
-
-const useRTC = (): RTCOut => {
-  const audioRef = useRef<HTMLAudioElement>(null)
-  const { roomName: fileName, phoneNumber, target, actions } = useRTCPlayer()
-
+const useRTC = (
+  audioRef: RefObject<HTMLAudioElement>,
+  fileName: string = ''
+): void => {
   useEffect(() => {
     if (fileName === '') return
 
@@ -25,7 +16,7 @@ const useRTC = (): RTCOut => {
       const iceServer: RTCIceServer = {
         urls: process.env.REACT_APP_WEBRTC_ICE_SERVER_URL
       }
-      if (process.env.TEST2) {
+      if (process.env.REACT_APP_WEBRTC_ICE_SERVER_USER) {
         iceServer.username = process.env.REACT_APP_WEBRTC_ICE_SERVER_USER
         iceServer.credential = process.env.REACT_APP_WEBRTC_ICE_SERVER_PASSWORD
       }
@@ -48,8 +39,6 @@ const useRTC = (): RTCOut => {
       pc.ontrack = function (event) {
         if (!audioRef.current) return
         audioRef.current.srcObject = event.streams[0]
-        audioRef.current.autoplay = true
-        audioRef.current.controls = true
       }
 
       pc.oniceconnectionstatechange = (e) => {
@@ -82,17 +71,12 @@ const useRTC = (): RTCOut => {
     })
 
     return () => {
+      if (!audioRef.current) return
       socket.close()
+      pc.close()
+      audioRef.current.srcObject = null
     }
   }, [fileName])
-
-  return {
-    audioRef,
-    openPlayer: Boolean(fileName),
-    phoneNumber,
-    target,
-    hidePlayer: actions?.hidePlayer
-  }
 }
 
 export default useRTC

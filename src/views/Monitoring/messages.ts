@@ -11,6 +11,27 @@ export const messages = defineMessages({
   }
 })
 
+export const hangUpMessages = defineMessages({
+  title: {
+    id: 'views.monitoring.hangUp.title',
+    defaultMessage: 'Colgar llamada {target}'
+  },
+  message: {
+    id: 'views.monitoring.hangUp.title',
+    defaultMessage:
+      '¿Estás seguro de querer colgar la llamada del número {target}?'
+  },
+  passwordConfirm: {
+    id: 'views.monitoring.hangUp.passwordConfirm',
+    defaultMessage:
+      'Ingresa tu contraseña para validar tu identidad y colgar la llamada'
+  },
+  success: {
+    id: 'views.monitoring.hangUp.success',
+    defaultMessage: 'Llamada colgada correctamente'
+  }
+})
+
 export const tableMessages = defineMessages({
   date: {
     id: 'views.monitoring.table.date',

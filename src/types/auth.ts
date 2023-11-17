@@ -68,7 +68,7 @@ export interface AuthContextType {
     signOut: () => Promise<boolean>
     getProfile: () => Promise<void>
     updateProfile: (profile: FormProfile) => Promise<boolean>
-    refreshToken: (token: string, rToken: string) => void
+    refreshToken: () => Promise<void>
     killSession: (hideNotification?: boolean) => void
   }
 }

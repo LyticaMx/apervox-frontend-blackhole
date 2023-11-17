@@ -3,7 +3,7 @@ import Table from 'components/Table'
 import { format, addHours, isAfter } from 'date-fns'
 import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
 import useTableColumns from 'hooks/useTableColumns'
-import { ReactElement, useEffect, useMemo } from 'react'
+import { ReactElement, useEffect, useMemo, useState } from 'react'
 import { tableMessages } from '../messages'
 import { useMonitoring } from 'context/Monitoring'
 import { LiveCall } from 'context/Monitoring/types'
@@ -12,12 +12,26 @@ import Tooltip from 'components/Tooltip'
 import IconButton from 'components/Button/IconButton'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 import { useLiveCallSocket } from 'context/LiveCallSocket'
+import { useRTCPlayer } from 'context/RTCPlayer'
+import HangUpDisclaimer from './HangUpDisclaimer'
+
+interface SynchroHangUpCall {
+  id: string
+  target: string
+  resolve: ((value: boolean | PromiseLike<boolean>) => void) | null
+}
 
 const CallsTable = (): ReactElement => {
+  const [hangUpCall, setHangUpCall] = useState<SynchroHangUpCall>({
+    id: '',
+    target: '',
+    resolve: null
+  })
   const getMessage = useFormatMessage(tableMessages)
   const getGlobalMessage = useGlobalMessage()
   const { actions, data } = useMonitoring()
   const ability = useAbility()
+  const { actions: rtcActions } = useRTCPlayer()
   const { socket } = useLiveCallSocket()
 
   useEffect(() => {
@@ -190,7 +204,7 @@ const CallsTable = (): ReactElement => {
         id: 'actions',
         header: getGlobalMessage('actions', 'generalMessages'),
         enableSorting: false,
-        cell: () => (
+        cell: ({ row }) => (
           <div>
             <Tooltip
               content={getMessage('hangUp')}
@@ -205,6 +219,15 @@ const CallsTable = (): ReactElement => {
               <IconButton
                 className="ml-1"
                 disabled={ability.cannot(ACTION.UPDATE, SUBJECT.CALL_EVIDENCES)}
+                onClick={async () =>
+                  await new Promise<boolean>((resolve) =>
+                    setHangUpCall({
+                      id: row.original.id,
+                      resolve,
+                      target: row.original.target
+                    })
+                  )
+                }
               >
                 <PhoneXMarkIcon className="w-4 h-4 text-muted" />
               </IconButton>
@@ -217,12 +240,34 @@ const CallsTable = (): ReactElement => {
   )
 
   return (
-    <Table
-      columns={columns}
-      data={data}
-      className="overflow-x-auto shadow rounded-lg"
-      maxHeight={500}
-    />
+    <>
+      <HangUpDisclaimer
+        id={hangUpCall.id}
+        target={hangUpCall.target}
+        resolve={hangUpCall.resolve ?? (() => {})}
+        onConfirm={() => setHangUpCall({ id: '', target: '', resolve: null })}
+        onClose={() => {
+          if (hangUpCall.resolve) hangUpCall.resolve(false)
+          setHangUpCall({ id: '', resolve: null, target: '' })
+        }}
+      />
+      <Table
+        columns={columns}
+        data={data}
+        className="overflow-x-auto shadow rounded-lg"
+        maxHeight={500}
+        onRowClicked={(row) => {
+          if (row.endedAt) {
+            rtcActions?.playEvidence(row.id, row.target)
+          } else {
+            rtcActions?.joinRoom(
+              'F_20230927140606_ORIGEN_7777777770_DESTINO_8888888800.wav',
+              row.target
+            )
+          }
+        }}
+      />
+    </>
   )
 }
 

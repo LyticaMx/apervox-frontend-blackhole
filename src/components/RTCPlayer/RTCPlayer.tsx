@@ -6,23 +6,40 @@ import {
 } from '@heroicons/react/24/outline'
 import Typography from 'components/Typography'
 import useProgress from 'hooks/useProgress'
-import { ReactElement, useRef, useState } from 'react'
+import { ReactElement, useMemo, useRef, useState } from 'react'
 import useRTC from './hooks/useRTC'
+import useAudioCall from './hooks/useAudioCall'
 import { secondsToString } from 'utils/timeToString'
 import clsx from 'clsx'
 import { useIntl } from 'react-intl'
 import { messages } from './messages'
+import { useRTCPlayer } from 'context/RTCPlayer'
+import ProgressBar from './ProgressBar'
 
 const RTCPlayer = (): ReactElement => {
   const [play, setPlay] = useState<boolean>(true)
   const [volume, setVolume] = useState<number>(100)
   const [currentPlayed, setCurrentPlayed] = useState<number>(0)
+  const [duration, setDuration] = useState<number>(0)
   const volumeRef = useRef<HTMLInputElement>(null)
   const { formatMessage } = useIntl()
-  // "F_20230927140606_ORIGEN_7777777770_DESTINO_8888888800.wav"
+  const audioRef = useRef<HTMLAudioElement>(null)
   useProgress(volumeRef, [volume])
+  const {
+    roomName,
+    phoneNumber,
+    evidenceID,
+    actions: playerActions,
+    target
+  } = useRTCPlayer()
   // TODO: Falta definir como se obtendrá la conexión
-  const { audioRef, openPlayer, phoneNumber, target, hidePlayer } = useRTC()
+  useRTC(audioRef, roomName)
+  useAudioCall(audioRef, evidenceID)
+
+  const openPlayer = useMemo<boolean>(
+    () => Boolean(roomName || evidenceID),
+    [roomName, evidenceID]
+  )
 
   const togglePlay = (): void =>
     setPlay((val) => {
@@ -49,10 +66,13 @@ const RTCPlayer = (): ReactElement => {
     >
       <audio
         className="hidden"
+        autoPlay
+        controls
         ref={audioRef}
         onTimeUpdate={() =>
           setCurrentPlayed(audioRef.current?.currentTime ?? 0)
         }
+        onLoadedMetadata={() => setDuration(audioRef.current?.duration ?? 0)}
       />
       <div>
         <Typography variant="subtitle" style="bold" className="uppercase">
@@ -80,15 +100,30 @@ const RTCPlayer = (): ReactElement => {
           </button>
         </div>
         <div className="flex items-center justify-between gap-2">
-          {/* <p>{secondsToString(0)}</p> */}
-          <div className="h-1 w-96 bg-primary" />
-          <p>{secondsToString(currentPlayed)}</p>
+          {roomName !== '' && (
+            <>
+              {/* <p>{secondsToString(0)}</p> */}
+              <div className="h-1 w-96 bg-primary" />
+              <p>{secondsToString(currentPlayed)}</p>
+            </>
+          )}
+          {evidenceID !== '' && (
+            <>
+              <p>{secondsToString(currentPlayed)}</p>
+              <ProgressBar
+                audioRef={audioRef}
+                currentTime={currentPlayed}
+                duration={duration}
+              />
+              <p>{secondsToString(duration)}</p>
+            </>
+          )}
         </div>
       </div>
       <div className="flex flex-col justify-between items-end">
         <div>
           <button
-            onClick={hidePlayer}
+            onClick={() => playerActions?.hidePlayer()}
             className="text-muted transition-colors hover:enabled:text-white"
           >
             <XCircleIcon className="w-5" />
@@ -96,7 +131,6 @@ const RTCPlayer = (): ReactElement => {
         </div>
         <div className="flex items-center gap-2">
           <SpeakerWaveIcon className="w-4" />
-
           <input
             type="range"
             min={0}

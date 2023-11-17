@@ -20,7 +20,8 @@ interface Props {
 const WorkingEvidenceProvider = (props: Props): ReactElement => {
   const { children } = props
   const {
-    auth: { token }
+    auth: { token },
+    actions: authActions
   } = useAuth()
   const [workingEvidence, setWorkingEvidence] = useState(initialState)
   const evidenceService = useService('call-evidences')
@@ -104,6 +105,7 @@ const WorkingEvidenceProvider = (props: Props): ReactElement => {
   const getAudioUrl = async (): Promise<string> => {
     try {
       if (!workingEvidence.id) return ''
+      await authActions?.refreshToken()
       return `${process.env.REACT_APP_MAIN_BACKEND_URL}call-evidences/${
         workingEvidence.id ?? 0
       }/compressed-audio?extension=opus&token=${token}`

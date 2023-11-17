@@ -3,6 +3,7 @@ import { RTCPlayerContextType } from './types'
 
 const initialState: RTCPlayerContextType = {
   roomName: '',
+  evidenceID: '',
   phoneNumber: ''
 }
 

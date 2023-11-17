@@ -13,8 +13,6 @@ import { useAuth } from 'context/Auth'
 import { getItem, setItem } from 'utils/persistentStorage'
 import useToast from './useToast'
 import { formatParams } from 'utils/formatParams'
-import { isAfter, isBefore } from 'date-fns'
-import jwtDecode from 'jwt-decode'
 
 interface Props {
   endpoint: string
@@ -56,46 +54,7 @@ const useApi = ({
   const checkSessionTime = async (): Promise<void> => {
     const release = await lock()
     try {
-      if (withLoader) loaderActions?.showLoader()
-      const token: string = getItem('token')
-      const rToken: string = getItem('rToken')
-      if (token && rToken) {
-        const session: any = jwtDecode(token)
-        const decodedRToken: any = jwtDecode(rToken)
-        const sessionTime = session.exp * 1000 - 60000
-        const rTokenTime = decodedRToken.exp * 1000 - 60000
-        if (
-          isAfter(new Date(), new Date(sessionTime)) &&
-          isBefore(new Date(), new Date(rTokenTime)) &&
-          endpoint !== 'auth/login'
-        ) {
-          try {
-            const response: ResponseData = (
-              await axios.post(
-                `${process.env.REACT_APP_MAIN_BACKEND_URL}${
-                  process.env.REACT_APP_REFRESH_TOKEN_ENDPOINT ?? ''
-                }`,
-                {},
-                {
-                  headers: {
-                    'refresh-token': getItem('rToken'),
-                    Authorization: `Bearer ${getItem('token')}`
-                  }
-                } as any
-              )
-            ).data
-            if (response.data) {
-              const newToken: string = response.data.token
-              const newRToken: string = response.data.refresh_token
-              authActions?.refreshToken(newToken, newRToken)
-            }
-          } catch (e) {
-            console.error(e)
-          }
-        }
-      }
-    } catch {
-      if (withLoader) loaderActions?.hideLoader()
+      if (endpoint !== 'auth/login') await authActions?.refreshToken()
     } finally {
       release()
     }
