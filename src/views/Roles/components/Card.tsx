@@ -38,7 +38,7 @@ const RoleCard = ({
   const formatDate = (createAt?: string): string => {
     if (!createAt) return ''
 
-    return format(parseISO(createAt), 'dd/MM/yyyy - hh:ss:mm')
+    return format(parseISO(createAt), 'dd/MM/yyyy - HH:mm:ss')
   }
 
   return (
