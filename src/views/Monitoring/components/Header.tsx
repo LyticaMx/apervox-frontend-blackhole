@@ -1,10 +1,9 @@
 import { ReactElement } from 'react'
 
-import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
+import { useFormatMessage } from 'hooks/useIntl'
 
 import Title from 'components/Title'
 import Typography from 'components/Typography'
-import ViewCounter from 'components/ViewCounter'
 import { messages } from '../messages'
 import { useMonitoring } from 'context/Monitoring'
 import { formatTotal } from 'utils/formatTotal'
@@ -12,7 +11,6 @@ import DownloadDialog from 'components/DownloadDialog'
 
 const Header = (): ReactElement => {
   const getMessage = useFormatMessage(messages)
-  const getGlobalMessage = useGlobalMessage()
   const { total, actions } = useMonitoring()
 
   return (
@@ -27,7 +25,7 @@ const Header = (): ReactElement => {
           >
             {formatTotal(total, getMessage('ongoingCalls'))}
           </Typography>
-
+          {/* ! Por definir comportamiento
           <ViewCounter count={5}>
             {getGlobalMessage('hangsup', 'platformMessages')}
           </ViewCounter>
@@ -40,6 +38,7 @@ const Header = (): ReactElement => {
           <ViewCounter count={5}>
             {getGlobalMessage('trash', 'generalMessages')}
           </ViewCounter>
+          */}
         </div>
       </div>
       <DownloadDialog

@@ -4,7 +4,7 @@ import { CallState } from './types'
 export const initialState: CallState = {
   data: [],
   counters: {
-    discarded: 0,
+    notRelevant: 0,
     relevant: 0,
     unclassified: 0,
     withTranscription: 0
