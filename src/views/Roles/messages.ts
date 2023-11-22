@@ -198,6 +198,10 @@ export const scopeNamesMessages = defineMessages({
   call_evidences: {
     id: 'views.roles.scopes.call_evidences',
     defaultMessage: 'Llamadas'
+  },
+  audits: {
+    id: 'views.roles.scopes.audits',
+    defaultMessage: 'Auditorias'
   }
 })
 

@@ -16,6 +16,8 @@ export type Resource =
   | 'targets'
   | 'target_metadata'
   | 'call_evidences'
+  | 'audits'
+// | 'locations'
 
 export interface Scope {
   name: Resource

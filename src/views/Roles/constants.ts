@@ -229,5 +229,14 @@ export const scopes: Module[] = [
       update: false,
       export: false
     }
+  },
+  {
+    id: 'audits',
+    permissions: {
+      read: true
+    },
+    actions: {
+      read: { 'users.read': true }
+    }
   }
 ]
