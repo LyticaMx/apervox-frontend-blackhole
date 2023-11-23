@@ -698,7 +698,7 @@
   "views.acquisition.table.assigned": "Ocupada",
   "views.acquisition.table.available": "Disponible",
   "views.acquisition.table.callType": "Tipo llamada",
-  "views.acquisition.table.company": "Compañía telefónica",
+  "views.acquisition.table.company": "Operadora",
   "views.acquisition.table.createdBy": "Registrada por",
   "views.acquisition.table.date": "Fecha de registro",
   "views.acquisition.table.derivation": "Derivación",

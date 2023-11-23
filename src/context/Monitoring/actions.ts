@@ -24,7 +24,15 @@ const orderByMapper = {
 }
 
 export const useActions = (state: LiveCallState, dispatch): LiveCallActions => {
-  const { pagination, dateFilter, searchFilter, staticFilter, data } = state
+  const {
+    pagination,
+    dateFilter,
+    searchFilter,
+    staticFilter,
+    data,
+    total,
+    totalHanged
+  } = state
   const getLiveCalls = useApi({
     endpoint: 'call-evidences/monitor',
     method: 'get'
@@ -114,24 +122,33 @@ export const useActions = (state: LiveCallState, dispatch): LiveCallActions => {
   const getAllData = async (): Promise<void> => {
     try {
       const response = await getLiveCalls({ urlParams: { limit: -1 } })
+      let totalLive = 0
+      let totalHanged = 0
+      const calls = (response.data as any[]).map<LiveCall>((datum) => {
+        let status = 'ended'
+        if (datum.type.includes('live')) {
+          status = 'live'
+          totalLive++
+        } else {
+          totalHanged++
+        }
+        return {
+          id: datum.id,
+          target: datum.target_phone,
+          carrier: datum.carrier,
+          date: datum.call_start_date,
+          priority: datum.technique?.priority ?? '',
+          technique: datum.technique?.name,
+          endedAt: datum.call_end_date,
+          type: datum.type.split('_')[0],
+          status
+        }
+      })
 
-      dispatch(
-        actions.setData(
-          (response.data as any[]).map<LiveCall>((datum) => ({
-            id: datum.id,
-            target: datum.target_phone,
-            carrier: datum.carrier,
-            date: datum.call_start_date,
-            priority: datum.technique?.priority ?? '',
-            status: datum.type.includes('live') ? 'live' : 'ended',
-            technique: datum.technique?.name,
-            endedAt: datum.call_end_date,
-            type: datum.type.split('_')[0]
-          }))
-        )
-      )
+      dispatch(actions.setData(calls))
 
-      dispatch(actions.setTotal(response.size))
+      dispatch(actions.setTotal(totalLive))
+      dispatch(actions.setTotalHanged(totalHanged))
     } catch {}
   }
 
@@ -161,29 +178,39 @@ export const useActions = (state: LiveCallState, dispatch): LiveCallActions => {
         ...data
       ]
       dispatch(actions.setData(calls))
-      dispatch(actions.setTotal(calls.length))
+      dispatch(actions.setTotal(total + 1))
     } catch {}
   }
 
   const updateLiveCall = (call: CallEvidenceForSocket): void => {
     try {
-      const calls: LiveCall[] = data.map((datum) =>
-        datum.id === call.id
+      let totalLive = 0
+      let totalHanged = 0
+
+      const calls: LiveCall[] = data.map((datum) => {
+        let status = 'ended'
+        if (call.type.includes('live')) {
+          status = 'live'
+          totalLive++
+        } else totalHanged++
+
+        return datum.id === call.id
           ? {
               id: call.id,
               target: call.target_phone,
               carrier: call.carrier,
               date: call.call_start_date,
               priority: call.technique?.priority ?? '',
-              status: call.type.includes('live') ? 'live' : 'ended',
+              status,
               technique: call.technique?.name,
               endedAt: call.call_end_date,
               type: call.type.split('_')[0]
             }
           : datum
-      )
+      })
       dispatch(actions.setData(calls))
-      dispatch(actions.setTotal(calls.length))
+      dispatch(actions.setTotal(totalLive))
+      dispatch(actions.setTotalHanged(totalHanged))
     } catch {}
   }
 
@@ -191,7 +218,7 @@ export const useActions = (state: LiveCallState, dispatch): LiveCallActions => {
     try {
       const calls = data.filter((datum) => datum.id !== id)
       dispatch(actions.setData(calls))
-      dispatch(actions.setTotal(calls.length))
+      dispatch(actions.setTotalHanged(totalHanged - 1))
     } catch {}
   }
 

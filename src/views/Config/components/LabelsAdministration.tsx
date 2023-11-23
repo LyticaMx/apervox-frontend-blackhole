@@ -27,7 +27,7 @@ type SelectedLabels = Record<string, boolean>
 
 const LabelsAdministration = (): ReactElement => {
   const { formatMessage } = useIntl()
-  const { data, actions } = useLabels()
+  const { data, actions, pagination, searchFilter, dateFilter } = useLabels()
   const { actions: aDrawer } = useDrawer()
   const [label, setLabel] = useState<Label | undefined>()
   const [selected, setSelected] = useState<SelectedLabels>({})
@@ -185,6 +185,14 @@ const LabelsAdministration = (): ReactElement => {
       <ViewFilter
         fields={items}
         staticFilters={staticFilters}
+        initialValues={{
+          dateRange: {
+            start_time: dateFilter.start_time,
+            end_time: dateFilter.end_time
+          },
+          fields: searchFilter.filters,
+          search: searchFilter.query
+        }}
         onChange={(data) => {
           const staticF = data.filterByField.staticFilters
           const labelType = staticF?.label_type
@@ -301,13 +309,14 @@ const LabelsAdministration = (): ReactElement => {
           ))}
         </Grid>
         <Pagination
-          currentPage={1}
-          onPageChange={() => {}}
-          pageSize={10}
-          totalCount={2}
+          currentPage={pagination.page}
+          onPageChange={(page) => actions?.getData({ page: page + 1 })}
+          pageSize={pagination.limit}
+          totalCount={pagination.totalRecords}
           manualLimit={{
-            onChangeLimit: () => {},
-            options: [10]
+            onChangeLimit: (page, limit) =>
+              actions?.getData({ page: page + 1, limit }),
+            options: pagination.limitOptions ?? [15]
           }}
         />
       </div>

@@ -34,7 +34,11 @@ const RestorePassword = (): ReactElement => {
     newPassword: yup
       .string()
       .required(formatMessage(formMessages.required))
-      .min(4, formatMessage(formMessages.minLength, { length: 4 })),
+      .min(4, formatMessage(formMessages.minLength, { length: 4 }))
+      .not(
+        [yup.ref('oldPassword')],
+        formatMessage(formMessages.oldPasswordCantMatchNewPassword)
+      ),
     confirmPassword: yup
       .string()
       .equals(

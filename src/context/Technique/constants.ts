@@ -1,6 +1,7 @@
 import { createAction } from 'types/contextReducer'
 import { Target } from 'types/target'
-import { Technique, TechniqueTabs } from 'types/technique'
+import { TechniqueTabs } from 'types/technique'
+import { InnerTechnique } from './types'
 
 export enum Types {
   SET_TECHNIQUE = 'technique/setTechnique',
@@ -11,7 +12,7 @@ export enum Types {
   SET_ACTIVE_TAB = 'technique/setActiveTab'
 }
 export const actions = {
-  setTechnique: createAction<Types, Technique>(Types.SET_TECHNIQUE),
+  setTechnique: createAction<Types, InnerTechnique>(Types.SET_TECHNIQUE),
   setTarget: createAction<Types, Target>(Types.SET_TARGET),
   setTargets: createAction<Types, Target[]>(Types.SET_TARGETS),
   setSummary: createAction<Types, string>(Types.SET_SUMMARY),

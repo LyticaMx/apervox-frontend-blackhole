@@ -121,6 +121,10 @@ export const formMessages = defineMessages({
     id: 'global.form.hourFormat',
     defaultMessage: 'El valor debe estar en formato HH:mm:ss'
   },
+  oldPasswordCantMatchNewPassword: {
+    id: 'global.form.oldPasswordCantMatchNewPassword',
+    defaultMessage: 'La nueva contraseña no puede ser igual a la anterior'
+  },
   passwordsNotMatches: {
     id: 'global.form.passwordsNotMatches',
     defaultMessage: 'Las contraseñas no coinciden'
