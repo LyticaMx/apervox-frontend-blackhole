@@ -166,8 +166,14 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
           }
           placeholder={getMessage('daysPlaceholder')}
           onChange={(e) => setFieldValue(name, e.target.value)}
-          error={Boolean(errors[name] && touched[name])}
-          helperText={errors[name] && touched[name] ? errors[name] : ''}
+          error={Boolean(
+            errors[name] && touched[name] && values.advanceTimeType === 'days'
+          )}
+          helperText={
+            errors[name] && touched[name] && values.advanceTimeType === 'days'
+              ? errors[name]
+              : ''
+          }
         />
       ),
       breakpoints: { xs: 6 },
@@ -185,8 +191,14 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
           }
           placeholder={getMessage('hoursPlaceholder')}
           onChange={(e) => setFieldValue(name, e.target.value)}
-          error={Boolean(errors[name] && touched[name])}
-          helperText={errors[name] && touched[name] ? errors[name] : ''}
+          error={Boolean(
+            errors[name] && touched[name] && values.advanceTimeType === 'hours'
+          )}
+          helperText={
+            errors[name] && touched[name] && values.advanceTimeType === 'hours'
+              ? errors[name]
+              : ''
+          }
         />
       ),
       breakpoints: { xs: 6 },
@@ -321,7 +333,12 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
   ])
 
   const validationSchema = yup.object({
-    name: yup.string().required(getMessage('required'))
+    name: yup.string().required(getMessage('required')),
+    endDate: yup.mixed().required(getMessage('required')),
+    advanceTime: yup
+      .number()
+      .typeError(getMessage('mustBeNumber'))
+      .min(1, getMessage('minValue', { value: 1 }))
   })
 
   const handleFormSubmit = async (values: FormValues): Promise<void> => {
