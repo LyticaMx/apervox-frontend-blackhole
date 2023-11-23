@@ -1,9 +1,4 @@
-import {
-  DocumentMagnifyingGlassIcon,
-  NoSymbolIcon
-} from '@heroicons/react/24/outline'
-import IconButton from 'components/Button/IconButton'
-import Switch from 'components/Form/Switch'
+import { NoSymbolIcon } from '@heroicons/react/24/outline'
 import Table from 'components/Table'
 import { format } from 'date-fns'
 import { useFormatMessage } from 'hooks/useIntl'
@@ -17,13 +12,21 @@ import EditOverflowLineDrawer from './EditOverflowLineDrawer'
 import DisableOverflowLineDialog from './DisableOverflowLineDialog'
 import { get } from 'lodash'
 import clsx from 'clsx'
-import Tooltip from 'components/Tooltip'
 import { useIntl } from 'react-intl'
 import { actionsMessages } from 'globalMessages'
 import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 import LineHistory from './LineHistory'
 import { useLineHistory } from 'context/LineHistory'
+import FloatingActions from 'components/FloatingActions'
+import QuarantineDialog from './QuarantineDialog'
+import MaintenanceDialog from './MaintenanceDialog'
+
+interface UpdateLine {
+  id: string
+  release: boolean
+  phone: string
+}
 
 const DataTable = (): ReactElement => {
   const { formatMessage } = useIntl()
@@ -32,6 +35,16 @@ const DataTable = (): ReactElement => {
   const { actions: lineHistoryActions } = useLineHistory()
   const { actions: auditActions } = useModuleAudits()
   const ability = useAbility()
+  const [quarantine, setQuarantine] = useState<UpdateLine>({
+    id: '',
+    phone: '',
+    release: false
+  })
+  const [maintenance, setMaintenance] = useState<UpdateLine>({
+    id: '',
+    phone: '',
+    release: false
+  })
 
   const [open, toggle] = useToggle()
   const [openDisable, setOpenDisable] = useState(false)
@@ -139,57 +152,61 @@ const DataTable = (): ReactElement => {
       {
         header: getMessage('actions'),
         enableSorting: false,
-        accessorKey: 'status',
-        cell: ({ getValue, row }) => (
-          <div className="flex gap-2 items-center">
-            <Tooltip
-              content={getMessage(getValue() ? 'disable' : 'enable')}
-              floatProps={{ offset: 10, arrow: true }}
-              classNames={{
-                panel:
-                  'bg-secondary text-white py-1 px-2 rounded-md text-sm whitespace-nowrap',
-                arrow: 'absolute bg-white w-2 h-2 rounded-full bg-secondary'
-              }}
-              placement="top"
-            >
-              <Switch
-                color="primary"
-                size="sm"
-                stopPropagation
-                disabled={ability.cannot(ACTION.UPDATE, SUBJECT.OVERFLOW_LINES)}
-                value={getValue<boolean>() ?? false}
-                onChange={() => setSelected(row.original)}
-              />
-            </Tooltip>
-            <Tooltip
-              content="Ver historial de línea"
-              floatProps={{ offset: 10, arrow: true }}
-              classNames={{
-                panel:
-                  'bg-secondary text-white py-1 px-2 rounded-md text-sm whitespace-nowrap',
-                arrow: 'absolute bg-white w-2 h-2 rounded-full bg-secondary'
-              }}
-              placement="top"
-            >
-              <IconButton
-                tooltip={getMessage('history')}
-                className="text-muted hover:text-primary"
-                onClick={() =>
-                  lineHistoryActions?.setLine({
-                    id: row.original.id ?? '',
-                    phone: row.original.phone
-                  })
+        cell: ({ row }) => {
+          const status = row.original.line_status
+          const phone = row.original.phone
+          const id = row.original.id ?? ''
+
+          return (
+            <FloatingActions
+              actions={[
+                {
+                  label: getMessage('history'),
+                  onClick: () =>
+                    lineHistoryActions?.setLine({
+                      id: row.original.id ?? '',
+                      phone: row.original.phone
+                    })
+                },
+                {
+                  label: getMessage('updateQuarantine', { status }),
+                  onClick: () =>
+                    setQuarantine({
+                      id,
+                      phone,
+                      release: status === 'quarantine'
+                    }),
+                  disabled:
+                    status === 'assigned' ||
+                    status === 'maintenance' ||
+                    ability.cannot(ACTION.UPDATE, SUBJECT.OVERFLOW_LINES)
+                },
+                {
+                  label: getMessage('updateMaintenance', { status }),
+                  onClick: () =>
+                    setMaintenance({
+                      id,
+                      phone,
+                      release: status === 'maintenance'
+                    }),
+                  disabled:
+                    status === 'assigned' ||
+                    status === 'quarantine' ||
+                    ability.cannot(ACTION.UPDATE, SUBJECT.OVERFLOW_LINES)
                 }
-              >
-                <DocumentMagnifyingGlassIcon className="w-4 h-4" />
-              </IconButton>
-            </Tooltip>
-          </div>
-        )
+              ]}
+            />
+          )
+        }
       }
     ],
     [ability.rules]
   )
+
+  const handleQuarantineClose = (): void =>
+    setQuarantine({ id: '', phone: '', release: false })
+  const handleMaintenanceClose = (): void =>
+    setMaintenance({ id: '', phone: '', release: false })
 
   useEffect(() => {
     overflowLineActions?.get({ page: 1 }, true)
@@ -198,6 +215,20 @@ const DataTable = (): ReactElement => {
 
   return (
     <>
+      <QuarantineDialog
+        id={quarantine.id}
+        release={quarantine.release}
+        phone={quarantine.phone}
+        onClose={handleQuarantineClose}
+        onSuccess={handleQuarantineClose}
+      />
+      <MaintenanceDialog
+        id={maintenance.id}
+        release={maintenance.release}
+        phone={maintenance.phone}
+        onClose={handleMaintenanceClose}
+        onSuccess={handleMaintenanceClose}
+      />
       <EditOverflowLineDrawer
         open={open}
         overflowLine={selected}
