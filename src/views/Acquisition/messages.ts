@@ -132,7 +132,7 @@ export const tableMessages = defineMessages({
   },
   company: {
     id: 'views.acquisition.table.company',
-    defaultMessage: 'Compañía telefónica'
+    defaultMessage: 'Operadora'
   },
   derivation: {
     id: 'views.acquisition.table.derivation',
