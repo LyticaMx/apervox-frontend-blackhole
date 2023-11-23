@@ -430,8 +430,8 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
         endDate: technique?.expires_at
           ? new Date(technique.expires_at)
           : new Date(),
-        court: technique?.reportEvidenceEvery ?? '',
-        shift: technique?.attention_turn ?? '',
+        court: technique?.attentionTime ?? '',
+        shift: technique?.attentionTurn ?? '',
         groups:
           technique?.groups?.map((item) => ({
             label: item.name,

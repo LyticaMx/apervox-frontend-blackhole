@@ -39,7 +39,17 @@ const TechniqueList = (): ReactElement => {
       <Scroller>
         {data?.map((item) => (
           <button
-            onClick={() => actions?.setTechnique(item)}
+            onClick={() =>
+              actions?.setTechnique({
+                id: item.id,
+                groups: item.groups ?? [],
+                name: item.name,
+                notificationTime: 0,
+                notificationTimeUnit: 'days',
+                priority: item.priority,
+                status: item.status
+              })
+            }
             className={clsx(
               'inline-flex rounded-md items-center font-semibold px-3 py-1 text-sm w-full',
               {

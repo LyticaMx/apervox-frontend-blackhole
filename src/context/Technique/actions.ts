@@ -1,7 +1,7 @@
 import { Actions, InnerTechnique, State } from './types'
 
 import { actions } from './constants'
-import { Technique, TechniqueTabs } from 'types/technique'
+import { TechniqueTabs } from 'types/technique'
 import { useService } from 'hooks/useApi'
 import { Target } from 'types/target'
 
@@ -20,7 +20,26 @@ const useActions = (state: State, dispatch): Actions => {
       dispatch(
         actions.setTechnique({
           id: response.data.id,
+          attentionTurn: response.data.shift ?? '',
+          attentionTime: response.data.shift_cutoff ?? '',
+          notificationTime: response.data.notification_time ?? 0,
+          notificationTimeUnit: response.data.notification_type ?? 'days',
+          created_at: response.data.created_at,
+          expires_at: response.data.end_date,
+          name: response.data.name,
+          priority: response.data.priority,
+          registered_by: response.data.created_by?.username ?? '',
+          status: response.data.status,
+          groups: response.data.groups ?? []
+        })
+      )
+
+      /*
+      dispatch(
+        actions.setTechnique({
+          id: response.data.id,
           attention_turn: response.data.shift ?? '',
+          attention_time: response.data.notification_time ?? 0,
           created_at: response.data.created_at,
           expires_at: response.data.end_date,
           name: response.data.name,
@@ -31,6 +50,7 @@ const useActions = (state: State, dispatch): Actions => {
           groups: response.data.groups ?? []
         })
       )
+      */
 
       return true
     } catch {
@@ -124,7 +144,7 @@ const useActions = (state: State, dispatch): Actions => {
     }
   }
 
-  const setTechnique = (payload: Technique): void => {
+  const setTechnique = (payload: InnerTechnique): void => {
     if (technique && technique.id === payload.id) return
 
     dispatch(actions.setTechnique(payload))

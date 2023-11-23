@@ -64,7 +64,15 @@ const TechniqueList = (): ReactElement => {
   }
 
   const handleClick = (item: Technique): void => {
-    actions?.setTechnique(item)
+    actions?.setTechnique({
+      id: item.id,
+      groups: item.groups ?? [],
+      name: item.name,
+      notificationTime: 0,
+      notificationTimeUnit: 'days',
+      priority: item.priority,
+      status: item.status
+    })
     history.push(pathRoute.technique)
   }
   const normalModeColumns: NonEmptyArray<ColumnDef<Technique>> = [
