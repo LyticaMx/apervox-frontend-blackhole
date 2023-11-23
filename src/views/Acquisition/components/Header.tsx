@@ -6,7 +6,7 @@ import Title from 'components/Title'
 import ViewCounter from 'components/ViewCounter'
 import ViewFilter from 'components/ViewFilter'
 
-import { messages } from '../messages'
+import { messages, tableMessages } from '../messages'
 
 import { useToggle } from 'usehooks-ts'
 import CreateOverflowLineDrawer from './CreateOverflowLineDrawer'
@@ -17,6 +17,7 @@ import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 const Header = (): ReactElement => {
   const getMessage = useFormatMessage(messages)
+  const getTableMessage = useFormatMessage(tableMessages)
   const [open, toggle] = useToggle(false)
 
   const { totals, dateFilter, searchFilter, actions } = useOverflowLine()
@@ -24,8 +25,12 @@ const Header = (): ReactElement => {
   const counters = omit(totals, 'all')
 
   const items = [
+    { label: getTableMessage('derivation'), name: 'phone' },
+    { label: getTableMessage('company'), name: 'carrier' },
+    { label: getTableMessage('technique'), name: 'technique' },
+    { label: getMessage('medium'), name: 'medium' },
     { label: getMessage('registeredBy'), name: 'created_by' },
-    { label: getMessage('target'), name: 'phone' }
+    { label: getMessage('target'), name: 'target' }
   ]
 
   return (

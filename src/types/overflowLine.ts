@@ -50,6 +50,8 @@ export interface Actions {
   get: (params?: GetPayload, getTotal?: boolean) => Promise<void>
   create: (payload: CreatePayload) => Promise<boolean>
   update: (payload: UpdatePayload) => Promise<boolean>
+  updateMaintenance: (id: string, release: boolean) => Promise<boolean>
+  updateQuarantine: (id: string, release: boolean) => Promise<boolean>
   updateMany: (
     ids: string[],
     payload: Partial<OverflowLine>

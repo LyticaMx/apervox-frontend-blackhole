@@ -11,6 +11,7 @@ export const initialState: LiveCallState = {
   },
   dateFilter: {},
   total: 0,
+  totalHanged: 0,
   pagination: {
     limit: 15,
     limitOptions: [15, 25, 50, 100],

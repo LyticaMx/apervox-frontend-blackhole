@@ -52,7 +52,7 @@ export interface Technique {
   status: Status
   attention_turn: Turn | ''
   total_target: number
-  groups?: []
+  groups?: any[]
 }
 
 export interface Target {

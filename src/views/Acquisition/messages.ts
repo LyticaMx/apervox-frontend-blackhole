@@ -132,7 +132,7 @@ export const tableMessages = defineMessages({
   },
   company: {
     id: 'views.acquisition.table.company',
-    defaultMessage: 'Compañía telefónica'
+    defaultMessage: 'Operadora'
   },
   derivation: {
     id: 'views.acquisition.table.derivation',
@@ -161,6 +161,16 @@ export const tableMessages = defineMessages({
   maintenance: {
     id: 'views.acquisition.table.maintenance',
     defaultMessage: 'Mantenimiento'
+  },
+  updateQuarantine: {
+    id: 'views.acquisition.table.updateQuarantine',
+    defaultMessage:
+      '{status,select,quarantine{Liberar} other{Enviar a}} cuarentena'
+  },
+  updateMaintenance: {
+    id: 'views.acquisition.table.updateMaintenance',
+    defaultMessage:
+      '{status,select,maintenance{Liberar} other{Enviar a}} mantenimiento'
   }
 })
 
@@ -237,6 +247,42 @@ export const disableDialogMessages = defineMessages({
     id: 'views.acquisition.DisableDialog.success',
     defaultMessage:
       '{selected, plural, one{Línea} other {Líneas}} {status, select, false{deshabilitada} other{habilitada}} correctamente'
+  }
+})
+
+export const quarantineDialogMessages = defineMessages({
+  title: {
+    id: 'views.acquisition.QuarantineDialog.title',
+    defaultMessage:
+      '{status,select,quarantine{Liberar línea de} other{Enviar línea a}} cuarentena'
+  },
+  question: {
+    id: 'views.acquisition.QuarantineDialog.question',
+    defaultMessage:
+      '¿Está seguro que quiere {status,select,quarantine{liberar} other{enviar a}} cuarentena a la línea {phone}?'
+  },
+  success: {
+    id: 'views.acquisition.QuarantineDialog.success',
+    defaultMessage:
+      'Línea {status,select,free{liberada de} other{enviar a}} cuarentena correctamente'
+  }
+})
+
+export const maintenanceDialogMessages = defineMessages({
+  title: {
+    id: 'views.acquisition.MaintenanceDialog.title',
+    defaultMessage:
+      '{status,select,quarantine{Liberar línea de} other{Enviar línea a}} mantenimiento'
+  },
+  question: {
+    id: 'views.acquisition.MaintenanceDialog.question',
+    defaultMessage:
+      '¿Está seguro que quiere {status,select,quarantine{liberar} other{enviar a}} mantenimiento a la línea {phone}?'
+  },
+  success: {
+    id: 'views.acquisition.MaintenanceDialog.success',
+    defaultMessage:
+      'Línea {status,select,free{liberada de} other{enviar a}} mantenimiento correctamente'
   }
 })
 

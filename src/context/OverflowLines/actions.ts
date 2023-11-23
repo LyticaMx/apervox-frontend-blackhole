@@ -194,11 +194,43 @@ export const useActions = (state: State, dispatch): Actions => {
     }
   }
 
+  const updateQuarantine = async (
+    id: string,
+    release: boolean
+  ): Promise<boolean> => {
+    try {
+      await resource.put({
+        queryString: `${id}/quarantine`,
+        urlParams: { release }
+      })
+      return true
+    } catch {
+      return false
+    }
+  }
+
+  const updateMaintenance = async (
+    id: string,
+    release: boolean
+  ): Promise<boolean> => {
+    try {
+      await resource.put({
+        queryString: `${id}/maintenance`,
+        urlParams: { release }
+      })
+      return true
+    } catch {
+      return false
+    }
+  }
+
   return {
     get,
     create,
     update,
     updateMany,
-    exportTable
+    exportTable,
+    updateMaintenance,
+    updateQuarantine
   }
 }

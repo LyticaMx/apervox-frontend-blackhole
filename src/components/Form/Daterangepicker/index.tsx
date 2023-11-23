@@ -283,8 +283,9 @@ const Daterangepicker = ({
                     Cancel
                   </button>
                   <button
-                    className="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-600 hover:bg-blue-700"
+                    className="px-4 py-2 text-sm text-white enabled:bg-blue-600 disabled:bg-blue-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-600 hover:enabled:bg-blue-700"
                     onClick={() => handleChangeInput()}
+                    disabled={dates.length !== 2}
                   >
                     Accept
                   </button>

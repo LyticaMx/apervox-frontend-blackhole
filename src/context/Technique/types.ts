@@ -1,30 +1,28 @@
 import { DateFilter, SearchFilter } from 'types/filters'
+import { Priority } from 'types/priority'
+import { Status } from 'types/status'
 import { Target } from 'types/target'
-import { Technique, TechniqueTabs } from 'types/technique'
+import { TechniqueTabs, Turn } from 'types/technique'
 
 export interface TechniqueGroup {
   id: string
   name: string
 }
 
-export interface InnerTechnique
-  extends Omit<
-    Technique,
-    | 'id'
-    | 'created_at'
-    | 'expires_at'
-    | 'registered_by'
-    | 'time_on_platform'
-    | 'groups'
-  > {
+export interface InnerTechnique {
   id?: string
-  description: string
+  name: string
+  description?: string
   groups: TechniqueGroup[]
   notificationTimeUnit: 'days' | 'hours'
   notificationTime: number
-  shift: string
-  reportEvidenceEvery: string
+  shift?: string
+  reportEvidenceEvery?: string
   targets?: any[]
+  priority: Priority
+  status: Status
+  attentionTurn?: Turn | ''
+  attentionTime?: string
   etsiTargets?: any[]
   created_at?: string
   expires_at?: string
@@ -47,7 +45,7 @@ export interface Actions {
   get: () => Promise<boolean>
   getDescription: () => Promise<boolean>
   updateDescription: (data: string) => Promise<boolean>
-  setTechnique: (params: Technique) => void
+  setTechnique: (params: InnerTechnique) => void
   setTarget: (params: Target | undefined) => void
   showForms: (params: Target) => void
   setActiveTab: (tab: TechniqueTabs) => void
