@@ -1,5 +1,4 @@
-const electron = require('electron')
-const { app, BrowserWindow } = electron
+const { app, BrowserWindow } = require('electron')
 const path = require('path')
 const isDev = require('electron-is-dev')
 const { ipcMain } = require('electron')
@@ -42,12 +41,11 @@ function createWindow () {
     mainWindow = null
   })
 
-  if (!isDev) {
+  if (isDev) {
     const {
       REACT_DEVELOPER_TOOLS,
       default: installExtension
     } = require('electron-devtools-installer')
-
     installExtension(REACT_DEVELOPER_TOOLS).then(() => {
       mainWindow.webContents.openDevTools()
     })
