@@ -23,10 +23,10 @@ const buildConfig = {
     allowToChangeInstallationDirectory: true
   },
   linux: {
-    target: 'deb'
+    target: ['deb', 'dir'],
+    maintainer: 'Alfredo González'
     // icon: paths.resolveApp('app/public/logo.png')
   },
-  deb: {},
   extraMetadata: {
     main: 'build/electron.js'
   },

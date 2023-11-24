@@ -1,20 +1,12 @@
 import { MinusIcon, StopIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { ReactElement, useCallback } from 'react'
-// Se comenta de manera temporal este import para permitir el desarrollo en la web
-// const { ipcRenderer } = window.require('electron')
+const { ipcRenderer } = window.require('electron')
 
 interface Props {
   className?: string
 }
 
 const WindowControl = (props: Props): ReactElement => {
-  // Se agrega de manera temporal para permitir el uso de el componente sin necesidad de iniciar con electron
-  const ipcRenderer = {
-    send: (temp: string) => {
-      alert(temp)
-    }
-  }
-
   const minimize = useCallback(
     (): void => ipcRenderer.send('minimize-window'),
     []
