@@ -1,11 +1,13 @@
-const electron = require('electron')
-const { app, BrowserWindow } = electron
-const path = require('path')
+const { app, BrowserWindow, protocol } = require('electron')
 const isDev = require('electron-is-dev')
 const { ipcMain } = require('electron')
+const Protocol = require('./protocol')
 let mainWindow
 
 function createWindow () {
+  if (!isDev) {
+    protocol.registerBufferProtocol(Protocol.scheme, Protocol.requestHandler)
+  }
   mainWindow = new BrowserWindow({
     width: 1366,
     minWidth: 768,
@@ -24,7 +26,7 @@ function createWindow () {
   mainWindow.loadURL(
     isDev
       ? 'http://localhost:3000'
-      : `file://${path.join(__dirname, './index.html')}`
+      : `${Protocol.scheme}://rse/index.html`
   )
 
   // Wait until webpack build html page
@@ -42,12 +44,11 @@ function createWindow () {
     mainWindow = null
   })
 
-  if (!isDev) {
+  if (isDev) {
     const {
       REACT_DEVELOPER_TOOLS,
       default: installExtension
     } = require('electron-devtools-installer')
-
     installExtension(REACT_DEVELOPER_TOOLS).then(() => {
       mainWindow.webContents.openDevTools()
     })
@@ -60,6 +61,14 @@ function createWindow () {
   })
   ipcMain.addListener('close-window', () => mainWindow.close())
 }
+
+protocol.registerSchemesAsPrivileged([{
+  scheme: Protocol.scheme,
+  privileges: {
+    standard: true,
+    secure: true
+  }
+}])
 
 app.on('ready', createWindow)
 

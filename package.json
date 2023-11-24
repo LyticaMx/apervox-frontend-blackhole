@@ -1,12 +1,13 @@
 {
   "name": "apervox-frontend-blackhole",
-  "version": "0.1.0",
+  "version": "0.0.3",
   "private": true,
   "main": "public/electron.js",
   "homepage": "./",
   "dependencies": {
     "@ant-design/graphs": "^1.3.1",
     "@ant-design/plots": "^1.2.2",
+    "@babel/core": "^7.16.0",
     "@casl/ability": "^6.5.0",
     "@casl/react": "^3.1.0",
     "@ckeditor/ckeditor5-build-classic": "^35.3.1",
@@ -15,6 +16,8 @@
     "@headlessui/react": "^1.7.1",
     "@heroicons/react": "^2.0.11",
     "@mirei/leaflet-semicircle-ts": "^1.0.6",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
+    "@svgr/webpack": "^5.5.0",
     "@tailwindcss/forms": "^0.5.3",
     "@tanstack/react-table": "^8.5.13",
     "@tanstack/react-virtual": "^3.0.0-beta.60",
@@ -30,21 +33,52 @@
     "@types/react-pdf": "^6.2.0",
     "@types/video-react": "^0.15.1",
     "axios": "^1.1.3",
+    "babel-jest": "^27.4.2",
+    "babel-loader": "^8.2.3",
+    "babel-plugin-named-asset-import": "^0.3.8",
+    "babel-preset-react-app": "^10.0.1",
+    "bfj": "^7.0.2",
+    "browserslist": "^4.18.1",
+    "camelcase": "^6.2.1",
+    "case-sensitive-paths-webpack-plugin": "^2.4.0",
     "clsx": "^1.2.1",
     "country-state-city": "^3.1.4",
+    "css-loader": "^6.5.1",
+    "css-minimizer-webpack-plugin": "^3.2.0",
     "d3": "^7.8.2",
     "date-fns": "^2.29.3",
+    "dotenv": "^10.0.0",
+    "dotenv-expand": "^5.1.0",
     "electron-devtools-installer": "^3.2.0",
     "electron-is-dev": "^2.0.0",
+    "eslint": "^8.3.0",
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-webpack-plugin": "^3.1.1",
+    "file-loader": "^6.2.0",
     "formik": "^2.2.9",
+    "fs-extra": "^10.0.0",
     "hotkeys-js": "^3.10.1",
+    "html-webpack-plugin": "^5.5.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^27.4.3",
+    "jest-resolve": "^27.4.2",
+    "jest-watch-typeahead": "^1.0.0",
     "jwt-decode": "^3.1.2",
     "leaflet": "^1.9.3",
     "lodash": "^4.17.21",
+    "mini-css-extract-plugin": "^2.4.5",
     "mutexify": "^1.4.0",
+    "postcss": "^8.4.4",
+    "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-focus-visible": "^7.1.0",
+    "postcss-loader": "^6.2.1",
+    "postcss-normalize": "^10.0.1",
+    "postcss-preset-env": "^7.0.1",
+    "prompts": "^2.4.2",
     "query-string": "^8.1.0",
     "react": "^18.2.0",
+    "react-app-polyfill": "^3.0.0",
+    "react-dev-utils": "^12.0.1",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
     "react-icons": "^4.8.0",
@@ -53,30 +87,40 @@
     "react-intl": "^6.1.0",
     "react-password-strength-bar": "^0.4.1",
     "react-pdf": "^6.2.2",
+    "react-refresh": "^0.11.0",
     "react-router-dom": "5.3.3",
-    "react-scripts": "5.0.1",
     "react-select": "^5.7.0",
     "react-select-async-paginate": "^0.7.2",
     "react-toastify": "^9.0.8",
     "react-virtual": "^2.10.4",
+    "resolve": "^1.20.0",
+    "resolve-url-loader": "^4.0.0",
+    "sass-loader": "^12.3.0",
+    "semver": "^7.3.5",
     "socket.io-client": "^4.6.1",
+    "source-map-loader": "^3.0.0",
+    "style-loader": "^3.3.1",
+    "terser-webpack-plugin": "^5.2.5",
     "typescript": "^4.4.2",
     "usehooks-ts": "^2.9.1",
     "video-react": "^0.16.0",
     "wavesurfer.js": "^6.3.0",
     "web-vitals": "^2.1.0",
+    "webpack": "^5.64.4",
+    "webpack-dev-server": "^4.6.0",
+    "webpack-manifest-plugin": "^4.0.2",
+    "workbox-webpack-plugin": "^6.4.1",
     "yup": "^0.32.11"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "node scripts/start.js",
     "start:electron": "electron .",
     "prebuild": "rm -rf ./build",
-    "build": "react-scripts build",
-    "prebuild:electron": "rm -rf ./dist && yarn build",
+    "build": "node scripts/build.js",
+    "prebuild:electron": "rm -rf ./dist && ELECTRON_FILE_PROTOCOL=1 yarn build",
     "build:electron": "node ./electron/universal-installer.js",
     "cypress:open": "cypress open",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "test": "node scripts/test.js",
     "lint": "eslint --ext .jsx,.js,.ts,.tsx src/",
     "lint:fix": "yarn lint --fix",
     "extract-intl": "formatjs extract src/**/*.{js,jsx,ts,tsx} --ignore **/*.d.ts --out-file src/translations/es-mx.json --id-interpolation-pattern [sha512:contenthash:base64:6] --format simple",
@@ -126,5 +170,63 @@
     "postcss": "^8.4.16",
     "prettier": "^2.7.1",
     "tailwindcss": "^3.1.8"
+  },
+  "jest": {
+    "roots": [
+      "<rootDir>/src"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!src/**/*.d.ts"
+    ],
+    "setupFiles": [
+      "react-app-polyfill/jsdom"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/setupTests.ts"
+    ],
+    "testMatch": [
+      "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
+      "<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}"
+    ],
+    "testEnvironment": "jsdom",
+    "transform": {
+      "^.+\\.(js|jsx|mjs|cjs|ts|tsx)$": "<rootDir>/config/jest/babelTransform.js",
+      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
+      "^(?!.*\\.(js|jsx|mjs|cjs|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
+    },
+    "transformIgnorePatterns": [
+      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|cjs|ts|tsx)$",
+      "^.+\\.module\\.(css|sass|scss)$"
+    ],
+    "modulePaths": [
+      "/home/alfredo/Documentos/octopy/apervox-blackhole/src"
+    ],
+    "moduleNameMapper": {
+      "^react-native$": "react-native-web",
+      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
+    },
+    "moduleFileExtensions": [
+      "web.js",
+      "js",
+      "web.ts",
+      "ts",
+      "web.tsx",
+      "tsx",
+      "json",
+      "web.jsx",
+      "jsx",
+      "node"
+    ],
+    "watchPlugins": [
+      "jest-watch-typeahead/filename",
+      "jest-watch-typeahead/testname"
+    ],
+    "resetMocks": true
+  },
+  "babel": {
+    "presets": [
+      "react-app"
+    ]
   }
 }
