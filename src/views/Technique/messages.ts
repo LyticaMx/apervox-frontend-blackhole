@@ -197,6 +197,10 @@ export const targetHistoryMessages = defineMessages({
     id: 'views.technique.target.history.search',
     defaultMessage: 'Busqueda'
   },
+  view: {
+    id: 'views.technique.target.history.view',
+    defaultMessage: 'Se ha visualizado'
+  },
   created: {
     id: 'views.technique.target.history.created',
     defaultMessage: 'Creación'
