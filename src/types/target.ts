@@ -11,7 +11,7 @@ export interface Target {
   status: boolean
   created_at: string
   updated_at: string
-
+  metadata_id?: string
   carrier?: {
     id: string
     name: string
