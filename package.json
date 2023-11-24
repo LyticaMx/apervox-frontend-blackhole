@@ -1,5 +1,6 @@
 {
   "name": "apervox-frontend-blackhole",
+  "productName": "BlackHole",
   "version": "0.0.3",
   "private": true,
   "main": "public/electron.js",
