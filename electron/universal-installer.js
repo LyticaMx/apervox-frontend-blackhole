@@ -14,7 +14,7 @@ const buildConfig = {
     category: 'public.app-category.utilities'
   },
   win: {
-    target: 'nsis'
+    target: ['nsis', 'portable']
     // icon: paths.resolveApp('app/public/logo.png')
   },
   nsis: {
