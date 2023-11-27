@@ -134,7 +134,6 @@ const FailedLoginAttemps = (): ReactElement => {
         <Table
           columns={columns}
           data={data}
-          maxHeight={500}
           manualSorting={{
             onSortingChange: (sort) => auditActions?.getData({ sort }),
             sorting: pagination.sort

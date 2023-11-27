@@ -268,7 +268,6 @@ const UserList = ({
         onRowClicked={(row) => {
           if (ability.can(ACTION.UPDATE, SUBJECT.USERS)) onSelectUser(row)
         }}
-        maxHeight={500}
         manualLimit={{
           options: [15, 25, 50, 100],
           onChangeLimit: (page, limit) =>

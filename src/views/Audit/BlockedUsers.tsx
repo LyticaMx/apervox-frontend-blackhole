@@ -22,6 +22,8 @@ interface BlockedUsersAudit {
   date: string
 }
 
+// TODO: Revisar que filtros se usan con bloqued users
+
 const BlockedUsers = (): ReactElement => {
   const { formatMessage } = useIntl()
   const { actions } = useDrawer()

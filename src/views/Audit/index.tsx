@@ -279,7 +279,7 @@ const Audit = (): ReactElement => {
               auditActions?.getData({ page: page + 1, limit })
           }}
           onRowClicked={handleOpenAction}
-          maxHeight={!selectedTarget ? 500 : 225}
+          maxHeight={!selectedTarget ? '70vh' : 225}
           withCheckbox
           pageSize={pagination.limit}
           manualPagination={{

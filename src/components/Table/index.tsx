@@ -65,7 +65,7 @@ interface Props<T> {
   className?: string
   manualSorting?: ManualSorting
   enableSorting?: boolean
-  maxHeight?: number
+  maxHeight?: string | number
   withCheckbox?: boolean
   manualLimit?: PaginationLimit
   actionsForSelectedItems?: Array<ActionForSelectedItems<T>>
@@ -82,7 +82,7 @@ const Table = <DataType,>({
   manualPagination,
   // paginationStyle: paginationType = 'mini',
   pageSize = 10,
-  maxHeight = 800,
+  maxHeight = '70vh',
   withCheckbox = false,
   onRowClicked,
   className,
