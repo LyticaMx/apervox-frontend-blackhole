@@ -56,7 +56,7 @@ const Pagination = ({
   })
 
   const onNext = (): void => {
-    if (currentPage + 1 < lastPage) {
+    if (currentPage < lastPage) {
       onPageChange(currentPage) // Esta con 0
     }
   }
@@ -72,7 +72,7 @@ const Pagination = ({
   }
 
   const goToEnd = (): void => {
-    if (currentPage + 1 < lastPage) onPageChange(lastPage - 1)
+    if (currentPage < lastPage) onPageChange(lastPage - 1)
   }
 
   const onChangeLimit = (newLimit: number): void => {
@@ -104,7 +104,7 @@ const Pagination = ({
           <button
             type="button"
             className="p-1 hover:text-primary hover:font-semibold disabled:text-secondary-gray disabled:hover:bg-inherit"
-            disabled={currentPage === 0}
+            disabled={currentPage === 1}
             onClick={goToStart}
           >
             <ChevronDoubleLeftIcon className="h-5 w-5" aria-hidden="true" />
@@ -113,7 +113,7 @@ const Pagination = ({
             type="button"
             className="p-1 hover:text-primary hover:font-semibold disabled:text-secondary-gray disabled:hover:bg-inherit"
             onClick={onPrevious}
-            disabled={currentPage === 0}
+            disabled={currentPage === 1}
           >
             <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
           </button>
@@ -149,14 +149,14 @@ const Pagination = ({
             type="button"
             className="p-1 hover:text-primary hover:font-semibold disabled:text-secondary-gray disabled:hover:bg-inherit disabled:"
             onClick={onNext}
-            disabled={currentPage + 1 === lastPage}
+            disabled={currentPage === lastPage}
           >
             <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
           </button>
           <button
             type="button"
             className="p-1 hover:text-primary hover:font-semibold disabled:text-secondary-gray disabled:hover:bg-inherit"
-            disabled={currentPage + 1 === lastPage}
+            disabled={currentPage === lastPage}
             onClick={goToEnd}
           >
             <ChevronDoubleRightIcon className="h-5 w-5" aria-hidden="true" />
