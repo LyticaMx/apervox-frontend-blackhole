@@ -1,7 +1,7 @@
 import Form from 'components/Form'
 import { FormikConfig, FormikContextType, FormikHelpers } from 'formik'
 import { actionsMessages, formMessages, platformMessages } from 'globalMessages'
-import { MutableRefObject, ReactElement, useMemo } from 'react'
+import { MutableRefObject, ReactElement } from 'react'
 import { useIntl } from 'react-intl'
 import { Field } from 'types/form'
 import { phoneNumber } from 'utils/patterns'
@@ -51,17 +51,14 @@ const VerificationLineForm = ({
       })
   })
 
-  const formikConfig = useMemo<FormikConfig<FormValues>>(
-    () => ({
-      initialValues: {
-        phone: initialValues?.phone ?? ''
-      },
-      validationSchema,
-      onSubmit,
-      enableReinitialize: true
-    }),
-    [initialValues]
-  )
+  const formikConfig: FormikConfig<FormValues> = {
+    initialValues: {
+      phone: initialValues?.phone ?? ''
+    },
+    validationSchema,
+    onSubmit,
+    enableReinitialize: true
+  }
 
   return (
     <Form

@@ -6,7 +6,7 @@ import {
   generalMessages,
   platformMessages
 } from 'globalMessages'
-import { MutableRefObject, ReactElement, useMemo } from 'react'
+import { MutableRefObject, ReactElement } from 'react'
 import { useIntl } from 'react-intl'
 import { Field } from 'types/form'
 import { phoneNumber } from 'utils/patterns'
@@ -80,18 +80,15 @@ const OverflowLineForm = ({
     })
   })
 
-  const formikConfig = useMemo<FormikConfig<FormValues>>(
-    () => ({
-      initialValues: {
-        phone: initialvalues?.phone ?? '',
-        medium: initialvalues?.medium ?? ''
-      },
-      validationSchema,
-      onSubmit,
-      enableReinitialize: true
-    }),
-    [initialvalues]
-  )
+  const formikConfig: FormikConfig<FormValues> = {
+    initialValues: {
+      phone: initialvalues?.phone ?? '',
+      medium: initialvalues?.medium ?? ''
+    },
+    validationSchema,
+    onSubmit,
+    enableReinitialize: true
+  }
 
   return (
     <Form

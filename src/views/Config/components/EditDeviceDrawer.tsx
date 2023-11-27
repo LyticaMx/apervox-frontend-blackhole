@@ -72,9 +72,7 @@ const EditDeviceDrawer = (props: Props): ReactElement => {
 
   const formikConfig: FormikConfig<FormValues> = {
     initialValues,
-    onSubmit: async (values) => {
-      onAccept(values)
-    },
+    onSubmit: async (values) => await onAccept(values),
     validationSchema
   }
 

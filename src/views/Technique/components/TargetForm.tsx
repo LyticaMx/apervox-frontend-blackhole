@@ -1,4 +1,4 @@
-import { ReactElement, useMemo, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { FormikConfig } from 'formik'
 import * as yup from 'yup'
 
@@ -197,22 +197,19 @@ const TargetForm = ({ initialValues, onSubmit }: Props): ReactElement => {
     phoneCompany: yup.string().required(getMessage('required'))
   })
 
-  const formikConfig = useMemo<FormikConfig<FormValues>>(
-    () => ({
-      initialValues: {
-        name: initialValues?.name ?? '',
-        number: initialValues?.number ?? '',
-        phoneCompany: initialValues?.phoneCompany ?? ''
-      },
-      validationSchema,
-      onSubmit: (values) => {
-        console.log(values)
+  const formikConfig: FormikConfig<FormValues> = {
+    initialValues: {
+      name: initialValues?.name ?? '',
+      number: initialValues?.number ?? '',
+      phoneCompany: initialValues?.phoneCompany ?? ''
+    },
+    validationSchema,
+    onSubmit: (values) => {
+      console.log(values)
 
-        onSubmit(values)
-      }
-    }),
-    [initialValues]
-  )
+      onSubmit(values)
+    }
+  }
 
   return (
     <div>
