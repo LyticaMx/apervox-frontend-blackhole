@@ -59,6 +59,7 @@ export interface Target {
   id?: string
   name: string
   phone_number: string
+  metadata_id?: string
   expires_at?: string
   created_at?: string
   phone_company: string

@@ -103,8 +103,8 @@ export const useActions = (
         actions.setUsers({
           data: response.data.map((item) => ({
             id: item.id,
-            name: item.profile.names,
-            lastName: item.profile.last_name,
+            name: item.profile?.names ?? '',
+            lastName: item.profile?.last_name ?? '',
             username: item.username,
             groups: item.groups,
             role: item.role?.name ?? '',
