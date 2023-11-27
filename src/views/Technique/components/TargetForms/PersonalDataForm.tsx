@@ -298,7 +298,7 @@ const PersonalDataForm = (): ReactElement => {
         {getMessage('title')}
       </Typography>
 
-      <div className="bg-white p-2 py-4 rounded-md max-h-[62vh] overflow-y-auto">
+      <div className="bg-white p-2 py-4 rounded-md max-h-[50vh] lg:max-h-[62vh] xl:max-h-[74vh] overflow-y-auto">
         <Form
           formikConfig={formikConfig}
           fields={fields}

@@ -282,7 +282,7 @@ const AccordionForm = <T extends Object>({
         />
       </div>
 
-      <div className="max-h-[62vh] overflow-y-auto">
+      <div className="max-h-[50vh] lg:max-h-[62vh] xl:max-h-[74vh] overflow-y-auto">
         {forms}
 
         <Button
