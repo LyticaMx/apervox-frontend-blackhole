@@ -43,8 +43,8 @@ export const getTargetChanges = (
         )
       }
       if (mappedOld.endDate) {
-        mappedNew.endDate = format(
-          new Date(mappedNew.endDate),
+        mappedOld.endDate = format(
+          new Date(mappedOld.endDate),
           'dd/MM/yyyy - HH:mm:ss'
         )
       }
