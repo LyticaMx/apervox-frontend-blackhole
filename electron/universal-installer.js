@@ -24,7 +24,8 @@ const buildConfig = {
   },
   linux: {
     target: ['deb', 'dir'],
-    maintainer: 'Alfredo González'
+    maintainer: 'Alfredo González',
+    icon: 'assets/public/logo.png'
     // icon: paths.resolveApp('app/public/logo.png')
   },
   extraMetadata: {

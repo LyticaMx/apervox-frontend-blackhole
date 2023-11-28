@@ -118,7 +118,6 @@
     "start:electron": "electron .",
     "prebuild": "rm -rf ./build",
     "build": "node scripts/build.js",
-    "prebuild:electron": "rm -rf ./dist && ELECTRON_FILE_PROTOCOL=1 yarn build",
     "build:electron": "node ./electron/universal-installer.js",
     "cypress:open": "cypress open",
     "test": "node scripts/test.js",
