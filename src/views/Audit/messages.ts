@@ -404,3 +404,10 @@ export const tiDrawerMessages = defineMessages({
     defaultMessage: 'Historial de movimientos de la técnica'
   }
 })
+
+export const blockedUsersMessages = defineMessages({
+  blocked: {
+    id: 'views.Audit.BlockedUsers.blocked',
+    defaultMessage: 'Usuario bloqueado'
+  }
+})

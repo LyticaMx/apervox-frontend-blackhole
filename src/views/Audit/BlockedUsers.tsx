@@ -2,91 +2,54 @@ import Table from 'components/Table'
 import Typography from 'components/Typography'
 import ViewFilter from 'components/ViewFilter'
 import GoBackButton from 'components/GoBackButton'
-import { formMessages, generalMessages } from 'globalMessages'
+import { generalMessages } from 'globalMessages'
 import useTableColumns from 'hooks/useTableColumns'
 import { format } from 'date-fns'
-import { ReactElement, useState } from 'react'
+import { ReactElement, useEffect } from 'react'
 import { useIntl } from 'react-intl'
 import { Link } from 'react-router-dom'
 import { pathRoute } from 'router/routes'
-import { messages } from './messages'
-import UserDrawer from './components/UserDrawer'
-import { SortingState } from '@tanstack/react-table'
-import { useDrawer } from 'context/Drawer'
-
-interface BlockedUsersAudit {
-  id: string
-  user: string
-  description: string
-  name: string
-  date: string
-}
-
-// TODO: Revisar que filtros se usan con bloqued users
+import { blockedUsersMessages, messages } from './messages'
+// import UserDrawer from './components/UserDrawer'
+// import { useDrawer } from 'context/Drawer'
+import { Audit } from 'context/Audit/types'
+import { useBlockedUserAudits } from 'context/Audit'
 
 const BlockedUsers = (): ReactElement => {
   const { formatMessage } = useIntl()
-  const { actions } = useDrawer()
-  const [sortingState, setSortingState] = useState<SortingState>([])
+  // const { actions } = useDrawer()
+  const {
+    data,
+    searchFilter,
+    dateFilter,
+    actions: auditActions,
+    pagination
+  } = useBlockedUserAudits()
 
-  const columns = useTableColumns<BlockedUsersAudit>(() => [
+  const columns = useTableColumns<Audit>(() => [
     {
-      accessorKey: 'id',
-      header: 'ID',
-      enableSorting: false
-    },
-    {
-      accessorKey: 'user',
-      header: formatMessage(generalMessages.user),
-      cell: ({ getValue }) => (
-        <button
-          className="text-primary hover:underline"
-          onClick={(e) => {
-            e.stopPropagation()
-            actions?.handleOpenDrawer({
-              body: (
-                <UserDrawer
-                  user={{
-                    name: 'Pruebas',
-                    surnames: 'Uno',
-                    email: 'test@test.com',
-                    createdBy: 'SuperAdmin',
-                    createdOn: new Date('2023-02-14T18:58:02.626Z'),
-                    extension: '150',
-                    groups: 'Auditoria, Grupo 4',
-                    id: '002',
-                    position: 'General',
-                    username: 'PUno',
-                    userRol: 'Administrador'
-                  }}
-                />
-              )
-            })
-          }}
-        >
-          {getValue<string>()}
-        </button>
-      )
-    },
-    {
-      accessorKey: 'description',
+      accessorKey: 'action',
       header: formatMessage(generalMessages.description)
     },
     {
       accessorKey: 'name',
-      header: formatMessage(formMessages.name)
+      header: formatMessage(blockedUsersMessages.blocked)
     },
     {
-      accessorKey: 'date',
+      accessorKey: 'createdAt',
       header: formatMessage(generalMessages.date),
       cell: ({ getValue }) => format(new Date(getValue<string>()), 'dd/MM/yyyy')
     },
     {
-      accessorKey: 'date',
+      accessorKey: 'createdAt',
       header: formatMessage(generalMessages.hour),
       cell: ({ getValue }) => format(new Date(getValue<string>()), 'hh:mm')
     }
   ])
+
+  useEffect(() => {
+    auditActions?.getData({ page: 1 }, true)
+  }, [])
 
   return (
     <div>
@@ -103,19 +66,26 @@ const BlockedUsers = (): ReactElement => {
           fields={[
             {
               label: formatMessage(generalMessages.user),
-              name: 'user'
-            },
-            {
-              label: formatMessage(generalMessages.description),
-              name: 'description'
-            },
-            {
-              label: formatMessage(messages.auditedModule),
-              name: 'module'
+              name: 'name'
             }
           ]}
-          onChange={(data) => console.log(data, null, 2)}
-          download={(type) => console.log(type)}
+          initialValues={{
+            search: searchFilter.query ?? '',
+            fields: searchFilter.filters ?? [],
+            dateRange: {
+              start_time: dateFilter.start_time,
+              end_time: dateFilter.end_time
+            }
+          }}
+          onChange={(data) =>
+            auditActions?.getData({
+              start_time: data.dateRange[0],
+              end_time: data.dateRange[1],
+              filters: data.filterByField.fields,
+              clearDates: data.clearDates,
+              page: 1
+            })
+          }
         />
       </div>
       <div className="flex gap-4">
@@ -154,27 +124,21 @@ const BlockedUsers = (): ReactElement => {
       <div className="mt-2">
         <Table
           columns={columns}
-          data={[
-            {
-              id: '001',
-              date: '2023-02-14T18:58:02.626Z',
-              description:
-                'Usuario bloqueado por alcanzar el límite de intentos fallidos',
-              name: 'Pruebas Uno',
-              user: 'PUno'
-            },
-            {
-              id: '002',
-              date: '2023-02-14T14:58:02.626Z',
-              description:
-                'Usuario bloqueado por alcanzar el límite de intentos fallidos',
-              name: 'Pruebas Tres',
-              user: 'PTres'
-            }
-          ]}
+          data={data}
           manualSorting={{
-            onSortingChange: setSortingState,
-            sorting: sortingState
+            onSortingChange: (sort) => auditActions?.getData({ sort }),
+            sorting: pagination.sort
+          }}
+          manualLimit={{
+            options: [15, 25, 50, 100],
+            onChangeLimit: (page, limit) =>
+              auditActions?.getData({ page: page + 1, limit })
+          }}
+          pageSize={pagination.limit}
+          manualPagination={{
+            currentPage: pagination.page,
+            totalRecords: pagination.totalRecords,
+            onChange: (page) => auditActions?.getData({ page: page + 1 })
           }}
         />
       </div>

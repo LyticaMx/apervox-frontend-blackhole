@@ -20,6 +20,7 @@ import { CallHistoryProvider } from './CallHistory'
 import { EvidencesProvider } from './Evidences'
 import { WorkingEvidenceProvider } from './WorkingEvidence'
 import {
+  BlockedUserAuditsProvider,
   LoginAuditsProvider,
   ModuleAuditsProvider,
   SpecificModelAuditsProvider,
@@ -62,6 +63,7 @@ export const AppContextProvider = (props: Props): any => {
     SpecificUserAuditsProvider,
     SpecificModelAuditsProvider,
     LoginAuditsProvider,
+    BlockedUserAuditsProvider,
     LiveCallSocketProvider,
     LineHistoryProvider
   ]
