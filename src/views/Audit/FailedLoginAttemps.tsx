@@ -104,13 +104,7 @@ const FailedLoginAttemps = (): ReactElement => {
             style="semibold"
             className="uppercase text-secondary text-base"
           >
-            {formatMessage(messages.loginFailedAttemps, {
-              attemps: (
-                <span className="text-primary px-2 py-0.5 rounded bg-primary-100 bg-opacity-75">
-                  {7}
-                </span>
-              )
-            })}
+            {formatMessage(messages.loginFailedAttemps)}
           </Typography>
         </Link>
 
@@ -120,13 +114,7 @@ const FailedLoginAttemps = (): ReactElement => {
             style="semibold"
             className="uppercase text-secondary text-base"
           >
-            {formatMessage(messages.blockedUsers, {
-              users: (
-                <span className="text-primary px-2 py-0.5 rounded bg-primary-100 bg-opacity-75">
-                  {2}
-                </span>
-              )
-            })}
+            {formatMessage(messages.blockedUsers)}
           </Typography>
         </Link>
       </div>
