@@ -218,17 +218,18 @@ const Audit = (): ReactElement => {
             {
               label: formatMessage(generalMessages.user),
               name: 'user'
-            },
-            {
-              label: formatMessage(generalMessages.description),
-              name: 'description'
-            },
-            {
-              label: formatMessage(messages.auditedModule),
-              name: 'module'
             }
           ]}
-          onChange={(data) => console.log(data, null, 2)}
+          onChange={async (data) =>
+            await auditActions?.getData({
+              start_time: data.dateRange[0],
+              end_time: data.dateRange[1],
+              filters: data.filterByField.fields,
+              query: data.filterByField.search,
+              clearDates: data.clearDates,
+              page: 1
+            })
+          }
           // download={(type) => console.log(type)}
         />
       </div>

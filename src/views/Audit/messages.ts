@@ -11,11 +11,11 @@ export const messages = defineMessages({
   },
   loginFailedAttemps: {
     id: 'views.Audit.loginFailedAttemps',
-    defaultMessage: 'Intentos fallidos de inicio de sesión {attemps}'
+    defaultMessage: 'Intentos fallidos de inicio de sesión'
   },
   blockedUsers: {
     id: 'views.Audit.blockedUsers',
-    defaultMessage: 'Usuarios bloqueados en el sistema {users}'
+    defaultMessage: 'Usuarios bloqueados en el sistema'
   },
   /* Revisar que tan comunes son estos nombres */
   rolesAndPermissions: {
@@ -313,11 +313,11 @@ export const auditableActionTableOf = defineMessages({
     defaultMessage: 'de tabla de grupos'
   },
   call_evidences: {
-    id: 'views.Audit.AuditableModules.of.call_evidences',
+    id: 'views.Audit.AuditableModules.of.table.call_evidences',
     defaultMessage: 'de tabla de evidencia'
   },
   monitor: {
-    id: 'views.Audit.AuditableModules.of.monitor',
+    id: 'views.Audit.AuditableModules.of.table.monitor',
     defaultMessage: 'de tabla de monitor'
   },
   transcription: {
