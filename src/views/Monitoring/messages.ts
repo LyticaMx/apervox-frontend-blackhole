@@ -17,7 +17,7 @@ export const hangUpMessages = defineMessages({
     defaultMessage: 'Colgar llamada {target}'
   },
   message: {
-    id: 'views.monitoring.hangUp.title',
+    id: 'views.monitoring.hangUp.message',
     defaultMessage:
       '¿Estás seguro de querer colgar la llamada del número {target}?'
   },

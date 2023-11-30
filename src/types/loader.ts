@@ -1,7 +1,9 @@
 export interface LoaderContextType {
   show: boolean
   actions?: {
-    showLoader: () => void
-    hideLoader: () => void
+    addPendingActions: (n?: number) => void
+    removePendingActions: (n?: number) => void
+    forceShowLoader: () => void
+    forceHideLoader: () => void
   }
 }

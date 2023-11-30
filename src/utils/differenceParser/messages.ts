@@ -22,7 +22,7 @@ export const messages = defineMessages({
     defaultMessage: 'Rol'
   },
   email: {
-    id: 'utils.differences.parser.name',
+    id: 'utils.differences.parser.email',
     defaultMessage: 'E-mail'
   },
   phone: {
@@ -82,7 +82,7 @@ export const messages = defineMessages({
     defaultMessage: 'Derivación'
   },
   startDate: {
-    id: 'utils.differences.parser.endDate',
+    id: 'utils.differences.parser.startDate',
     defaultMessage: 'Fecha de inicio'
   },
   endDate: {

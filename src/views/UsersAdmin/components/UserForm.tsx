@@ -1,4 +1,4 @@
-import { MutableRefObject, ReactElement, useMemo } from 'react'
+import { MutableRefObject, ReactElement } from 'react'
 import { FormikConfig, FormikContextType, FormikHelpers } from 'formik'
 import * as yup from 'yup'
 import Form from 'components/Form'
@@ -187,25 +187,22 @@ const UserForm = ({
       .required(getMessage('form.errors.required'))
   })
 
-  const formikConfig = useMemo<FormikConfig<FormValues>>(
-    () => ({
-      initialValues: {
-        name: initialValues?.name ?? '',
-        lastname: initialValues?.lastname ?? '',
-        username: initialValues?.username ?? '',
-        email: initialValues?.email ?? '',
-        extension: initialValues?.extension ?? '',
-        position: initialValues?.position ?? '',
-        role: initialValues?.role ?? '',
-        automaticSessionExpiration:
-          initialValues?.automaticSessionExpiration ?? false,
-        groups: initialValues?.groups ?? []
-      },
-      validationSchema,
-      onSubmit
-    }),
-    [initialValues]
-  )
+  const formikConfig: FormikConfig<FormValues> = {
+    initialValues: {
+      name: initialValues?.name ?? '',
+      lastname: initialValues?.lastname ?? '',
+      username: initialValues?.username ?? '',
+      email: initialValues?.email ?? '',
+      extension: initialValues?.extension ?? '',
+      position: initialValues?.position ?? '',
+      role: initialValues?.role ?? '',
+      automaticSessionExpiration:
+        initialValues?.automaticSessionExpiration ?? false,
+      groups: initialValues?.groups ?? []
+    },
+    validationSchema,
+    onSubmit
+  }
 
   return (
     <div>

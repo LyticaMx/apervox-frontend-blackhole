@@ -67,7 +67,7 @@ const useApi = ({
     const url: string = `${endpoint}${queryString ? `/${queryString}` : ''}`
     await checkSessionTime()
     try {
-      if (withLoader) loaderActions?.showLoader()
+      if (withLoader) loaderActions?.addPendingActions()
 
       const formattedParams = formatParams(urlParams, acceptNulls)
 
@@ -126,7 +126,7 @@ const useApi = ({
 
       throw { error: 1, description: error } as any
     } finally {
-      if (withLoader) loaderActions?.hideLoader()
+      if (withLoader) loaderActions?.removePendingActions()
     }
   }
 

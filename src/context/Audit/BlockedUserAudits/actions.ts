@@ -1,10 +1,10 @@
 import useApi from 'hooks/useApi'
 import { Audit, AuditContextState, AuditPaginationParams } from '../types'
-import { AuditActions } from './types'
 import { SearchParams } from 'types/api'
 import { DateFilter } from 'types/filters'
 import { Params } from 'utils/ParamsBuilder'
 import { actions } from './constants'
+import { AuditActions } from './types'
 
 const orderByMapper = {
   user: 'user.username',
@@ -33,9 +33,8 @@ export const useActions = (
         .searchFilters(searchFilter)
         .sort(pagination.sort, orderByMapper)
         .dates(dateFilter)
-        .putStaticFilter('module', 'auth')
+        .putStaticFilter('action', ['bloqued'])
         .build()
-
       const [response, total] = await Promise.all([
         getAudits({ urlParams }),
         getTotal

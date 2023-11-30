@@ -240,7 +240,7 @@ const AuthProvider = ({ children }: Props): ReactElement => {
 
   const refreshToken = async (): Promise<void> => {
     try {
-      loaderActions?.showLoader()
+      loaderActions?.addPendingActions()
       const token: string = getItem('token')
       const rToken: string = getItem('rToken')
       if (token && rToken) {
@@ -279,7 +279,7 @@ const AuthProvider = ({ children }: Props): ReactElement => {
     } catch (e) {
       console.error(e)
     } finally {
-      loaderActions?.hideLoader()
+      loaderActions?.removePendingActions()
     }
   }
 
@@ -344,7 +344,7 @@ const AuthProvider = ({ children }: Props): ReactElement => {
 
   const killSession = (hideNotification?: boolean): void => {
     try {
-      loaderActions?.showLoader()
+      loaderActions?.addPendingActions()
       removeItem('token')
       removeItem('user')
       removeItem('session')
@@ -358,7 +358,7 @@ const AuthProvider = ({ children }: Props): ReactElement => {
         }
       }
 
-      loaderActions?.hideLoader()
+      loaderActions?.removePendingActions()
       history.push(pathRoute.auth.signIn)
     } catch (error) {
       console.error('Error')

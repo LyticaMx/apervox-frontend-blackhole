@@ -146,6 +146,7 @@ const WorkGroups = (): ReactElement => {
       <div className="flex gap-4 mt-2 mb-4">
         <WorkGroupList
           handleClickOnHistory={handleGetHistory}
+          fullHeight={!selected.id}
           handleDelete={async (ids) =>
             await new Promise<boolean>((resolve) =>
               setDeletedWorkgroups({

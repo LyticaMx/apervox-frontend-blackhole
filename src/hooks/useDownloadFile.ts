@@ -59,7 +59,7 @@ const useDownloadFile = ({
     const url: string = `${endpoint}${queryString ? `/${queryString}` : ''}`
     const release = await lock()
     try {
-      if (withLoader) loaderActions?.showLoader()
+      if (withLoader) loaderActions?.addPendingActions()
 
       const formattedParams = formatParams(urlParams, acceptNulls)
 
@@ -143,7 +143,7 @@ const useDownloadFile = ({
 
       throw { error: 1, description: error } as any
     } finally {
-      if (withLoader) loaderActions?.hideLoader()
+      if (withLoader) loaderActions?.removePendingActions()
       release()
     }
   }
