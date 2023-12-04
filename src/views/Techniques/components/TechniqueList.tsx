@@ -250,7 +250,6 @@ const TechniqueList = (): ReactElement => {
           onSortingChange: (sort) => techniquesActions?.get({ sort }),
           sorting: pagination.sort
         }}
-        maxHeight={500}
         withCheckbox
         manualLimit={{
           options: [15, 25, 50, 100],

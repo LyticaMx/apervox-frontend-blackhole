@@ -26,12 +26,14 @@ interface Props {
   handleClickOnHistory: (id: string) => void
   handleDelete: (ids: string[]) => Promise<boolean>
   handleDisable: (ids: string[]) => Promise<boolean>
+  fullHeight: boolean
 }
 
 const WorkGroupList = ({
   handleClickOnHistory,
   handleDelete,
-  handleDisable
+  handleDisable,
+  fullHeight
 }: Props): ReactElement => {
   const getMessage = useFormatMessage(workGroupListMessages)
   const { launchToast } = useToast()
@@ -279,7 +281,7 @@ const WorkGroupList = ({
           actions?.selectWorkGroup(row)
         }
       }}
-      maxHeight={500}
+      maxHeight={fullHeight ? '70vh' : 500}
       pageSize={workGroupsPagination.limit}
       manualPagination={{
         currentPage: workGroupsPagination.page,

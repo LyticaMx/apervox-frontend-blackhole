@@ -303,7 +303,6 @@ const EvidenceList = ({ onSelectItem }: Props): ReactElement => {
         onSortingChange: (sort) => evidencesActions?.getData({ sort }),
         sorting: pagination.sort
       }}
-      maxHeight={500}
       withCheckbox
       manualLimit={{
         options: [15, 25, 50, 100],

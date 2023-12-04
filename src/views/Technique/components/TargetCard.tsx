@@ -24,6 +24,7 @@ import { useTechnique } from 'context/Technique'
 import MetadataDialog from './MetadataDialog'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 import { useSpecificModelAudits } from 'context/Audit'
+import { TechniqueTabs } from 'types/technique'
 
 interface Props {
   data: Target
@@ -33,7 +34,7 @@ interface Props {
 
 const TargetCard = ({ data, isChecked, onCheck }: Props): ReactElement => {
   const { actions } = useTargets()
-  const { actions: actionsTechnique, target } = useTechnique()
+  const { actions: actionsTechnique, target, activeTab } = useTechnique()
   const { actions: specificModuleAuditActions } = useSpecificModelAudits()
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
   const [openMetadataDialog, setOpenMetadataDialog] = useState(false)
@@ -100,7 +101,12 @@ const TargetCard = ({ data, isChecked, onCheck }: Props): ReactElement => {
   const handleClick = (): void => {
     if (ability.cannot(ACTION.READ, SUBJECT.TARGET_METADATA)) return
     if (target?.id === data.id) actionsTechnique?.setTarget(undefined)
-    else actionsTechnique?.setTarget(data)
+    else {
+      if (!data.metadata_id && activeTab === TechniqueTabs.FORMS) {
+        actionsTechnique?.setActiveTab(TechniqueTabs.GENERAL_DATA)
+      }
+      actionsTechnique?.setTarget(data)
+    }
   }
 
   return (

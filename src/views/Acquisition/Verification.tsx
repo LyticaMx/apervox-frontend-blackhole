@@ -150,7 +150,6 @@ const Verification = (): ReactElement => {
           tableRef={tableRef}
           columns={columns}
           data={data}
-          maxHeight={500}
           withCheckbox
           onRowClicked={(row) => {
             if (ability.cannot(ACTION.UPDATE, SUBJECT.VERIFICATION_LINES)) {

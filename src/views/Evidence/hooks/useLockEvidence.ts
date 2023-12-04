@@ -27,7 +27,7 @@ export const useLockEvidence = (
 
   const getNextEvidence = useCallback(() => {
     if (!socket) return
-    loaderActions?.showLoader()
+    loaderActions?.addPendingActions()
     nextRef.current = true
     socket.emit('next_evidence', {})
   }, [socket])
@@ -46,7 +46,7 @@ export const useLockEvidence = (
       }
     }
     const nextEvidenceListener = (evidence: NextEvidence): void => {
-      loaderActions?.hideLoader()
+      loaderActions?.removePendingActions()
       if (evidence.id === null) {
         nextRef.current = false
         return

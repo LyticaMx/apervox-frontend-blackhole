@@ -255,7 +255,6 @@ const CallsTable = (): ReactElement => {
         columns={columns}
         data={data}
         className="overflow-x-auto shadow rounded-lg"
-        maxHeight={500}
         onRowClicked={(row) => {
           if (row.endedAt) {
             rtcActions?.playEvidence(row.id, row.target)

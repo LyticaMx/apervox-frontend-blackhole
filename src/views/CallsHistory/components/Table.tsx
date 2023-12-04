@@ -262,7 +262,6 @@ const CallsTable = (): ReactElement => {
         onSortingChange: (sort) => historyActions?.getData({ sort }),
         sorting: pagination.sort
       }}
-      maxHeight={500}
       manualLimit={{
         options: [15, 25, 50, 100],
         onChangeLimit: (page, limit) =>

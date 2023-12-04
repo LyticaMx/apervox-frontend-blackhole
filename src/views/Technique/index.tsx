@@ -8,6 +8,7 @@ import Header from './components/Header'
 import { useTechnique } from 'context/Technique'
 import { useHistory } from 'react-router-dom'
 import { pathRoute } from 'router/routes'
+import { TechniqueTabs } from 'types/technique'
 
 const Techniques = (): ReactElement => {
   const { techniqueId, actions: techniqueActions } = useTechnique()
@@ -21,6 +22,8 @@ const Techniques = (): ReactElement => {
 
   useEffect(() => {
     getTechniqueInfo()
+    techniqueActions?.setActiveTab(TechniqueTabs.EVIDENCE)
+    techniqueActions?.setTarget()
   }, [techniqueId])
 
   return (

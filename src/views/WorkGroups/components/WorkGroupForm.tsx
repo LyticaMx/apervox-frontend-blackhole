@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useMemo, useRef } from 'react'
+import { ReactElement, useEffect, useRef } from 'react'
 import { FormikConfig, FormikContextType, FormikHelpers } from 'formik'
 import * as yup from 'yup'
 import Form from 'components/Form'
@@ -123,21 +123,17 @@ const WorkGroupForm = ({
       .matches(simpleText, getMessage('invalidSimpleTest'))
   })
 
-  const formikConfig = useMemo<FormikConfig<FormValues>>(
-    () => ({
-      initialValues: {
-        name: initialValues?.name ?? '',
-        description: initialValues?.description ?? '',
-        techniques: initialValues?.techniques ?? [],
-        users: initialValues?.users ?? []
-      },
-      validationSchema,
-      onSubmit,
-      enableReinitialize: true
-    }),
-    [initialValues]
-  )
-
+  const formikConfig: FormikConfig<FormValues> = {
+    initialValues: {
+      name: initialValues?.name ?? '',
+      description: initialValues?.description ?? '',
+      techniques: initialValues?.techniques ?? [],
+      users: initialValues?.users ?? []
+    },
+    validationSchema,
+    onSubmit,
+    enableReinitialize: true
+  }
   const sections: Section[] = [
     {
       name: 'users',
