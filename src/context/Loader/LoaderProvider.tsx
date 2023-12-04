@@ -1,4 +1,4 @@
-import { useState, useMemo, ReactNode, ReactElement } from 'react'
+import { useState, useMemo, ReactNode, ReactElement, useCallback } from 'react'
 
 import { LoaderContext } from './LoaderContext'
 
@@ -7,24 +7,45 @@ interface Props {
 }
 
 const LoaderProvider = ({ children }: Props): ReactElement => {
-  const [show, setShow] = useState<boolean>(false)
+  const [pendingActions, setPendingActions] = useState<number>(0)
+  const [forceShow, setForceShow] = useState<boolean>(false)
 
-  const showLoader = (): void => {
-    setShow(true)
+  const forceShowLoader = (): void => {
+    setForceShow(true)
   }
-  const hideLoader = (): void => {
-    setShow(false)
+  const forceHideLoader = (): void => {
+    setPendingActions(0)
+    setForceShow(false)
   }
+
+  const addPendingActions = useCallback(
+    (n: number = 1): void => setPendingActions((pending) => pending + n),
+    [pendingActions]
+  )
+  const removePendingActions = useCallback(
+    (n: number = 1): void =>
+      setPendingActions((pending) =>
+        pending > 0 ? (pending - n > 0 ? pending - n : 0) : 0
+      ),
+    [pendingActions]
+  )
+
+  const show = useMemo<boolean>(
+    () => pendingActions > 0 || forceShow,
+    [pendingActions, forceShow]
+  )
 
   const contextValue = useMemo(
     () => ({
       show,
       actions: {
-        showLoader,
-        hideLoader
+        addPendingActions,
+        removePendingActions,
+        forceShowLoader,
+        forceHideLoader
       }
     }),
-    [show]
+    [addPendingActions, removePendingActions]
   )
 
   return (

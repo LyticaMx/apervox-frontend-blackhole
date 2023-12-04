@@ -33,10 +33,7 @@ const CompanyDrawer = (props: Props): ReactElement => {
 
   const formikConfig: FormikConfig<FormValues> = {
     initialValues,
-    onSubmit: async (values) => {
-      console.log(values)
-      await onAccept(values)
-    },
+    onSubmit: async (values) => await onAccept(values),
     validationSchema
   }
 

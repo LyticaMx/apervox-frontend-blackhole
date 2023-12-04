@@ -1,4 +1,4 @@
-import { ReactElement, useMemo, useRef, useState } from 'react'
+import { ReactElement, useRef, useState } from 'react'
 import { FormikConfig, FormikContextType } from 'formik'
 import * as yup from 'yup'
 import Form from 'components/Form'
@@ -369,26 +369,23 @@ const TechniqueForm = ({
       .min(1, getMessage('minValue', { value: 1 }))
   })
 
-  const formikConfig = useMemo<FormikConfig<FormValues>>(
-    () => ({
-      initialValues: {
-        name: initialValues?.name ?? '',
-        description: initialValues?.description ?? '',
-        startDate: initialValues?.startDate ?? new Date(),
-        endDate: initialValues?.endDate ?? null,
-        court: initialValues?.court ?? '',
-        shift: initialValues?.shift ?? '',
-        groups: initialValues?.groups ?? [],
-        advanceTimeType: initialValues?.advanceTimeType ?? 'days',
-        advanceTime: initialValues?.advanceTime ?? '',
-        priority: initialValues?.priority ?? 'medium',
-        targets: initialValues?.targets ?? []
-      },
-      validationSchema,
-      onSubmit
-    }),
-    [initialValues]
-  )
+  const formikConfig: FormikConfig<FormValues> = {
+    initialValues: {
+      name: initialValues?.name ?? '',
+      description: initialValues?.description ?? '',
+      startDate: initialValues?.startDate ?? new Date(),
+      endDate: initialValues?.endDate ?? null,
+      court: initialValues?.court ?? '',
+      shift: initialValues?.shift ?? '',
+      groups: initialValues?.groups ?? [],
+      advanceTimeType: initialValues?.advanceTimeType ?? 'days',
+      advanceTime: initialValues?.advanceTime ?? '',
+      priority: initialValues?.priority ?? 'medium',
+      targets: initialValues?.targets ?? []
+    },
+    validationSchema,
+    onSubmit
+  }
 
   return (
     <div>
