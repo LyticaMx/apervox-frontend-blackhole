@@ -1,6 +1,7 @@
 import { ReactElement, ReactNode, useMemo, useState } from 'react'
 import { RTCPlayerContextType } from './types'
 import { RTCPlayerContext } from './RTCPlayerContext'
+import useApi from 'hooks/useApi'
 
 interface Props {
   children: ReactNode
@@ -11,16 +12,29 @@ const RTCPlayerProvider = ({ children }: Props): ReactElement => {
   const [evidenceID, setEvidenceID] = useState<string>('')
   const [phoneNumber, setPhoneNumber] = useState<string>('')
   const [target, setTarget] = useState<string | undefined>()
+  const getFilename = useApi({
+    endpoint: 'call-evidences',
+    method: 'get'
+  })
 
-  const joinRoom = (
-    roomName: string,
+  const joinRoom = async (
+    id: string,
     phoneNumber: string,
     target?: string
-  ): void => {
-    setEvidenceID('')
-    setRoom(roomName)
-    setPhoneNumber(phoneNumber)
-    if (target) setTarget(target)
+  ): Promise<void> => {
+    try {
+      const response = await getFilename(
+        {
+          queryString: `${id}/filename`
+        },
+        { 'x-api-key': process.env.REACT_APP_X_API_KEY }
+      )
+
+      setEvidenceID('')
+      setRoom(response.data.filename)
+      setPhoneNumber(phoneNumber)
+      if (target) setTarget(target)
+    } catch {}
   }
 
   const playEvidence = (
