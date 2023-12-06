@@ -42,12 +42,7 @@ const LiveCalls = (): ReactElement => {
           >
             <button
               className="flex w-full justify-between items-center"
-              onClick={() =>
-                actions?.joinRoom(
-                  'F_20230927140606_ORIGEN_7777777770_DESTINO_8888888800.wav',
-                  call.target
-                )
-              }
+              onClick={() => actions?.joinRoom(call.id, call.target)}
             >
               <span className="flex justify-between items-center gap-2">
                 <PhoneIcon className={clsx('w-4 h-4', phoneColor[call.type])} />
