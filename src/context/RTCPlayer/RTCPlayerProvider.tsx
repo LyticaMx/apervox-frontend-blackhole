@@ -12,6 +12,7 @@ const RTCPlayerProvider = ({ children }: Props): ReactElement => {
   const [evidenceID, setEvidenceID] = useState<string>('')
   const [phoneNumber, setPhoneNumber] = useState<string>('')
   const [target, setTarget] = useState<string | undefined>()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getFilename = useApi({
     endpoint: 'call-evidences',
     method: 'get'
