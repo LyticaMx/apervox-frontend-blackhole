@@ -15,7 +15,8 @@ const Navigator = (): ReactElement => {
     namespace: 'sessions',
     query: {
       token: getItem('token')
-    }
+    },
+    transports: ['websocket']
   })
 
   useEffect(() => {

@@ -16,7 +16,9 @@ const EvidenceSocketProvider = (props: Props): ReactElement => {
 
   useEffect(() => {
     if (isLogguedIn) {
-      const socket = io(`${process.env.REACT_APP_MAIN_SOCKET_URL}/evidences`)
+      const socket = io(`${process.env.REACT_APP_MAIN_SOCKET_URL}/evidences`, {
+        transports: ['websocket']
+      })
 
       socket.on('connect', () => {
         console.log('Client connected to evidences namespace')
