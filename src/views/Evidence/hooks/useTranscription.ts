@@ -1,11 +1,14 @@
 import { RegionInterface } from 'components/WaveSurferContext/types'
 import { useEvidenceSocket } from 'context/EvidenceSocket'
 import { useWorkingEvidence } from 'context/WorkingEvidence'
+import useToast from 'hooks/useToast'
 import { useEffect, useState } from 'react'
+import { useIntl } from 'react-intl'
+import { transcriptionSocketMessages } from '../messages'
 
-interface TaskStatus {
-  task: 'Transcription' | 'Segmentation'
-  status: 'PENDING' | 'STARTED' | 'SUCCESS' | 'FAILURE'
+interface TranscriptionStatus {
+  task: 'Transcription' | 'Segmentation' | 'IDLE'
+  status: 'PENDING' | 'STARTED' | 'SUCCESS' | 'FAILURE' | 'IDLE'
 }
 
 interface TranscriptionProgress {
@@ -41,6 +44,8 @@ export const useTranscription = (
   >([])
   const [lock, setLock] = useState(false)
   const [progress, setProgress] = useState(0)
+  const { formatMessage } = useIntl()
+  const toast = useToast()
 
   const getTranscription = async (): Promise<void> => {
     try {
@@ -115,16 +120,52 @@ export const useTranscription = (
   // Se puede dividir en 2 para manejar los eventos
   useEffect(() => {
     if (!socket || !canWork) return
-    socket.send('enter_transcription_room', {})
+    socket.emit('enter_transcription_room', {})
   }, [socket, canWork])
 
   useEffect(() => {
     if (!socket) return
-    const transcriptionStatusHandler = (status?: TaskStatus): void => {
-      /* eslint-disable-next-line */
-      console.log({ taskStatus: status })
-      if (status) setLock(true)
-      else setLock(false)
+    const transcriptionStatusHandler = (
+      transcriptionStatus: TranscriptionStatus = {
+        status: 'STARTED',
+        task: 'Transcription'
+      }
+    ): void => {
+      const { status, task } = transcriptionStatus
+      if (task === 'IDLE') {
+        setLock(false)
+        return
+      }
+      if (status === 'FAILURE') {
+        // TODO: Revisar si termina las tareas al momento de fallar la transcripción
+        toast.danger(
+          formatMessage(transcriptionSocketMessages.anErrorOcurred, {
+            type: task
+          })
+        )
+        setLock(false)
+        return
+      }
+      if (status !== 'IDLE') {
+        setLock(true)
+        if (status === 'PENDING') {
+          toast.info(
+            formatMessage(transcriptionSocketMessages.addedPendingTask, {
+              type: task
+            })
+          )
+        } else if (status === 'STARTED') {
+          toast.info(
+            formatMessage(transcriptionSocketMessages.startedTask, {
+              type: task
+            })
+          )
+        } else if (status === 'SUCCESS') {
+          toast.success(
+            formatMessage(transcriptionSocketMessages.endedTask, { type: task })
+          )
+        }
+      }
     }
     const transcriptionProgressHandler = (
       progress: TranscriptionProgress
