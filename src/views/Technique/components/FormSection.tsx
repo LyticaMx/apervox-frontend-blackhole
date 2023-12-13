@@ -57,7 +57,12 @@ const FormSection = (): ReactElement => {
         {ability.can(ACTION.READ, SUBJECT.CALL_EVIDENCES) ? (
           <EvidenceList
             onSelectItem={async (evidence) => {
-              if (ability.cannot(ACTION.UPDATE, SUBJECT.CALL_EVIDENCES)) return
+              if (
+                ability.cannot(ACTION.UPDATE, SUBJECT.CALL_EVIDENCES) ||
+                evidence.workingBy
+              ) {
+                return
+              }
               workingActions?.setEvidence(evidence.id)
 
               history.push(pathRoute.evidence, {
