@@ -191,11 +191,11 @@ const EvidenceList = ({ onSelectItem }: Props): ReactElement => {
     },
     {
       accessorKey: 'obtained_from',
-      header: formatMessage(evidenceListMessages.obtainedFrom).toUpperCase()
+      header: formatMessage(evidenceListMessages.obtainedFrom).toUpperCase(),
+      enableSorting: false
     },
     {
       id: 'label',
-
       header: formatMessage(evidenceListMessages.tag).toUpperCase(),
       cell: ({ row }) => {
         const { label, otherLabel } = row.original
@@ -213,7 +213,9 @@ const EvidenceList = ({ onSelectItem }: Props): ReactElement => {
             <p className="pr-1 py-0.5 text-sm"> {label?.name ?? otherLabel}</p>
           </div>
         )
-      }
+      },
+      // TODO: Revisar porque no funciona, desactivado temporalmente
+      enableSorting: false
     },
     {
       accessorKey: 'relevance',

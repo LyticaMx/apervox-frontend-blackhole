@@ -134,6 +134,7 @@ const TechniqueList = (): ReactElement => {
       header: getMessage('status'),
       cell: ({ getValue }) => {
         const status = getValue<Status>()
+        console.log({ status })
 
         return <StatusTag value={status} />
       },

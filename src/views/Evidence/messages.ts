@@ -173,3 +173,26 @@ export const deleteRegionDialog = defineMessages({
     defaultMessage: '¿Se eliminará la región, está seguro?'
   }
 })
+
+export const transcriptionSocketMessages = defineMessages({
+  anErrorOcurred: {
+    id: 'views.Evidence.toast.anErrorOcurred',
+    defaultMessage:
+      'Ocurrió un problema al realizar la {type,select,Transcription{transcripción}Segmentation{segmentación}other{acción}}'
+  },
+  addedPendingTask: {
+    id: 'views.Evidence.toast.addedPendingTask',
+    defaultMessage:
+      'Se ha agregado la petición a la cola de {type,select,Transcription{transcripción}Segmentation{segmentación}other{acción}}'
+  },
+  startedTask: {
+    id: 'views.Evidence.toast.startedTask',
+    defaultMessage:
+      'Se inicia la tarea de {type,select,Transcription{transcripción}Segmentation{segmentación}other{acción}}'
+  },
+  endedTask: {
+    id: 'views.evidence.toast.endedTask',
+    defaultMessage:
+      'La {type,select,Transcription{transcripción}Segmentation{segmentación}other{acción}} ha finalizado correctamente'
+  }
+})
