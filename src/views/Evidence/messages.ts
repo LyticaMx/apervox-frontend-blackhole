@@ -127,6 +127,10 @@ export const locationInformationMessages = defineMessages({
 })
 
 export const transcriptionTabMessages = defineMessages({
+  waitingToStartTask: {
+    id: 'views.Evidence.TranscriptionTab.waitingToStartTask',
+    defaultMessage: 'Esperando para iniciar tarea'
+  },
   transcriptAllAudio: {
     id: 'views.Evidence.TranscriptionTab.transcriptAllAudio',
     defaultMessage: 'Transcribir todo el audio'

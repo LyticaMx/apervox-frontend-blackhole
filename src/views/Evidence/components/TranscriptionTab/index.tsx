@@ -14,6 +14,7 @@ import Tooltip from 'components/Tooltip'
 import TranscriptDialog from './TranscriptDialog'
 import { useWorkingEvidence } from 'context/WorkingEvidence'
 import DownloadDialog from './DownloadDialog'
+import useToast from 'hooks/useToast'
 
 interface Props {
   transcriptionSegments: RegionInterface[]
@@ -27,6 +28,7 @@ const TranscriptionTab = (props: Props): ReactElement => {
   const [openTranscriptDialog, setOpenTranscriptDialog] = useState(false)
   const { formatMessage } = useIntl()
   const { actions: workingEvidenceActions } = useWorkingEvidence()
+  const toast = useToast()
   const handleSegmentChange = (
     event: ChangeEvent<HTMLTextAreaElement>
   ): void => {
@@ -74,9 +76,10 @@ const TranscriptionTab = (props: Props): ReactElement => {
     <div>
       <TranscriptDialog
         open={openTranscriptDialog}
-        onAccept={() => {
+        onAccept={async () => {
           // TODO: bloquear todas las acciones de la tab hasta recibir evento del socket
-          workingEvidenceActions?.createFullTranscription()
+          await workingEvidenceActions?.createFullTranscription()
+          toast.info(formatMessage(transcriptionTabMessages.waitingToStartTask))
           setOpenTranscriptDialog(false)
         }}
         onClose={() => setOpenTranscriptDialog(false)}
