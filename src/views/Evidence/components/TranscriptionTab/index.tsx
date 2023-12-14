@@ -18,13 +18,15 @@ import useToast from 'hooks/useToast'
 
 interface Props {
   transcriptionSegments: RegionInterface[]
+  resetRegions: () => void
   onChangeSegment: (id: string, value: string) => void
   onSave: () => Promise<void>
   lock: boolean
 }
 
 const TranscriptionTab = (props: Props): ReactElement => {
-  const { onChangeSegment, onSave, transcriptionSegments, lock } = props
+  const { onChangeSegment, onSave, transcriptionSegments, lock, resetRegions } =
+    props
   const [openTranscriptDialog, setOpenTranscriptDialog] = useState(false)
   const { formatMessage } = useIntl()
   const { actions: workingEvidenceActions } = useWorkingEvidence()
@@ -78,6 +80,7 @@ const TranscriptionTab = (props: Props): ReactElement => {
         open={openTranscriptDialog}
         onAccept={async () => {
           // TODO: bloquear todas las acciones de la tab hasta recibir evento del socket
+          resetRegions()
           await workingEvidenceActions?.createFullTranscription()
           toast.info(formatMessage(transcriptionTabMessages.waitingToStartTask))
           setOpenTranscriptDialog(false)

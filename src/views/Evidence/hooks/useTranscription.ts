@@ -29,6 +29,7 @@ interface TranscriptionCRUD {
     React.SetStateAction<RegionInterface[]>
   >
   updateTranscription: () => Promise<void>
+  forceLock: () => void
   lock: boolean
   progress: number
 }
@@ -149,6 +150,7 @@ export const useTranscription = (
       if (status !== 'IDLE') {
         setLock(true)
         if (status === 'PENDING') {
+          if (task === 'Segmentation') setTranscriptionRegions([])
           toast.info(
             formatMessage(transcriptionSocketMessages.addedPendingTask, {
               type: task
@@ -164,6 +166,7 @@ export const useTranscription = (
           toast.success(
             formatMessage(transcriptionSocketMessages.endedTask, { type: task })
           )
+          if (task === 'Transcription') setLock(false)
         }
       }
     }
@@ -173,15 +176,32 @@ export const useTranscription = (
       /* eslint-disable-next-line */
       console.log({ progress })
       setProgress(+((progress.completed / progress.total) * 100).toFixed(2))
-      setTranscriptionRegions((regions) => [
-        ...regions,
-        {
-          id: progress.segment.id,
-          start: progress.segment.start_time,
-          end: progress.segment.end_time,
-          data: { text: progress.segment.content }
-        }
-      ])
+      if (
+        transcriptionRegions.some((region) => region.id === progress.segment.id)
+      ) {
+        setTranscriptionRegions((regions) =>
+          regions.map((region) =>
+            region.id === progress.segment.id
+              ? {
+                  id: progress.segment.id,
+                  start: progress.segment.start_time,
+                  end: progress.segment.end_time,
+                  data: { text: progress.segment.content }
+                }
+              : region
+          )
+        )
+      } else {
+        setTranscriptionRegions((regions) => [
+          ...regions,
+          {
+            id: progress.segment.id,
+            start: progress.segment.start_time,
+            end: progress.segment.end_time,
+            data: { text: progress.segment.content }
+          }
+        ])
+      }
     }
 
     socket.on('transcription_status', transcriptionStatusHandler)
@@ -198,6 +218,7 @@ export const useTranscription = (
     updateTranscription,
     setTranscriptionRegions,
     lock,
+    forceLock: () => setLock(true),
     progress
   }
 }

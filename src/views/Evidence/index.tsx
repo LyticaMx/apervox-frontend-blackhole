@@ -92,7 +92,8 @@ const Evidence = (): ReactElement => {
     handleChangeSegment,
     setTranscriptionRegions,
     updateTranscription,
-    lock: transcriptionLock
+    lock: transcriptionLock,
+    forceLock: forceTranscriptionLock
     // progress
   } = useTranscription(workingEvidence.id ?? '', canWork)
   useCommentsRoom(workingEvidence.id ?? '', canWork)
@@ -230,7 +231,7 @@ const Evidence = (): ReactElement => {
             })
           )
         : commonRegions,
-    [currentTab, commonRegions]
+    [currentTab, commonRegions, transcriptionRegions]
   )
 
   useEffect(() => {
@@ -448,6 +449,10 @@ const Evidence = (): ReactElement => {
         id: 'transcription',
         component: (
           <TranscriptionTab
+            resetRegions={() => {
+              forceTranscriptionLock()
+              setTranscriptionRegions([])
+            }}
             onSave={updateTranscription}
             transcriptionSegments={transcriptionRegions}
             onChangeSegment={handleChangeSegment}
