@@ -5,7 +5,6 @@ import Form from 'components/Form'
 import { Field } from 'types/form'
 import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
 import Typography from 'components/Typography'
-import TextField from 'components/Form/Textfield'
 import Button from 'components/Button'
 import { PlusCircleIcon } from '@heroicons/react/24/outline'
 import { Target, Turn } from 'types/technique'
@@ -17,7 +16,6 @@ import { addDays, format } from 'date-fns'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 import { simpleText } from 'utils/patterns'
 
-type AdvanceTimeType = 'days' | 'hours'
 type PriorityType = 'urgent' | 'high' | 'medium' | 'low'
 
 export interface FormValues {
@@ -28,9 +26,9 @@ export interface FormValues {
   groups: any[]
   shift: string
   court: string
-  advanceTimeType: AdvanceTimeType
   priority: PriorityType
-  advanceTime: string
+  notificationDays: string
+  notificationHours: string
   targets: Target[]
 }
 
@@ -122,70 +120,28 @@ const TechniqueForm = ({
       }
     },
     {
-      name: 'advanceTimeType',
-      type: 'radio',
+      name: 'notificationDays',
+      type: 'select',
       options: {
         label: getMessage('days'),
-        value: 'days'
+        clearable: false,
+        items: Array.from(Array(31), (_, idx) => ({ day: idx.toString() })),
+        textField: 'day',
+        valueField: 'day'
       },
-      breakpoints: {
-        xs: 6
-      },
-      section: 'notification'
-    },
-    {
-      name: 'advanceTimeType',
-      type: 'radio',
-      options: {
-        label: getMessage('hours'),
-        value: 'hours'
-      },
-      breakpoints: {
-        xs: 6
-      },
-      section: 'notification'
-    },
-    {
-      name: 'advanceTime',
-      type: 'custom',
-      children: ({ name, setFieldValue, values, errors, touched }) => (
-        <TextField
-          value={values.advanceTimeType === 'days' ? values[name] : ''}
-          disabled={values.advanceTimeType !== 'days'}
-          placeholder={getMessage('daysPlaceholder')}
-          onChange={(e) => setFieldValue(name, e.target.value)}
-          error={Boolean(
-            errors[name] && touched[name] && values.advanceTimeType === 'days'
-          )}
-          helperText={
-            errors[name] && touched[name] && values.advanceTimeType === 'days'
-              ? errors[name]
-              : ''
-          }
-        />
-      ),
       breakpoints: { xs: 6 },
       section: 'notification'
     },
     {
-      name: 'advanceTime',
-      type: 'custom',
-      children: ({ name, setFieldValue, values, errors, touched }) => (
-        <TextField
-          value={values.advanceTimeType === 'hours' ? values[name] : ''}
-          disabled={values.advanceTimeType !== 'hours'}
-          placeholder={getMessage('hoursPlaceholder')}
-          onChange={(e) => setFieldValue(name, e.target.value)}
-          error={Boolean(
-            errors[name] && touched[name] && values.advanceTimeType === 'hours'
-          )}
-          helperText={
-            errors[name] && touched[name] && values.advanceTimeType === 'hours'
-              ? errors[name]
-              : ''
-          }
-        />
-      ),
+      name: 'notificationHours',
+      type: 'select',
+      options: {
+        label: getMessage('hours'),
+        clearable: false,
+        items: Array.from(Array(24), (_, idx) => ({ hour: idx.toString() })),
+        textField: 'hour',
+        valueField: 'hour'
+      },
       breakpoints: { xs: 6 },
       section: 'notification'
     },
@@ -362,11 +318,7 @@ const TechniqueForm = ({
       .string()
       .required(getMessage('required'))
       .matches(simpleText, getMessage('invalidSimpleText')),
-    endDate: yup.mixed().required(getMessage('required')),
-    advanceTime: yup
-      .number()
-      .typeError(getMessage('mustBeNumber'))
-      .min(1, getMessage('minValue', { value: 1 }))
+    endDate: yup.mixed().required(getMessage('required'))
   })
 
   const formikConfig: FormikConfig<FormValues> = {
@@ -378,8 +330,8 @@ const TechniqueForm = ({
       court: initialValues?.court ?? '',
       shift: initialValues?.shift ?? '',
       groups: initialValues?.groups ?? [],
-      advanceTimeType: initialValues?.advanceTimeType ?? 'days',
-      advanceTime: initialValues?.advanceTime ?? '',
+      notificationDays: initialValues?.notificationDays ?? '0',
+      notificationHours: initialValues?.notificationHours ?? '0',
       priority: initialValues?.priority ?? 'medium',
       targets: initialValues?.targets ?? []
     },

@@ -164,7 +164,7 @@ export const techniqueFormMessages = defineMessages({
   },
   notificationTime: {
     id: 'views.techniques.TechniqueForm.notificationTime',
-    defaultMessage: 'Configura el tiempo de antelación en días u horas'
+    defaultMessage: 'Configura el tiempo de antelación en días y horas'
   },
   daysPlaceholder: {
     id: 'views.techniques.TechniqueForm.daysPlaceholder',
