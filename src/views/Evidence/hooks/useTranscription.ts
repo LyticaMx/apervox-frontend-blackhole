@@ -115,6 +115,7 @@ export const useTranscription = (
   useEffect(() => {
     if (!canWork) return
 
+    setProgress(0)
     getTranscription()
   }, [canWork])
 
@@ -166,7 +167,12 @@ export const useTranscription = (
           toast.success(
             formatMessage(transcriptionSocketMessages.endedTask, { type: task })
           )
-          if (task === 'Transcription') setLock(false)
+          if (task === 'Transcription') {
+            setLock(false)
+            setTimeout(() => {
+              setProgress(0)
+            }, 500)
+          }
         }
       }
     }

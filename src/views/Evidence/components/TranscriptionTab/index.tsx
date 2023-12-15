@@ -1,4 +1,4 @@
-import { DocumentTextIcon } from '@heroicons/react/24/outline'
+import { DocumentTextIcon, XCircleIcon } from '@heroicons/react/24/outline'
 import Button from 'components/Button'
 import Table from 'components/Table'
 import Typography from 'components/Typography'
@@ -15,6 +15,7 @@ import TranscriptDialog from './TranscriptDialog'
 import { useWorkingEvidence } from 'context/WorkingEvidence'
 import DownloadDialog from './DownloadDialog'
 import useToast from 'hooks/useToast'
+import CancelTranscriptionDialog from './CancelTranscriptionDialog'
 
 interface Props {
   transcriptionSegments: RegionInterface[]
@@ -22,12 +23,22 @@ interface Props {
   onChangeSegment: (id: string, value: string) => void
   onSave: () => Promise<void>
   lock: boolean
+  progress: number
 }
 
 const TranscriptionTab = (props: Props): ReactElement => {
-  const { onChangeSegment, onSave, transcriptionSegments, lock, resetRegions } =
-    props
+  const {
+    onChangeSegment,
+    onSave,
+    transcriptionSegments,
+    lock,
+    resetRegions,
+    progress
+  } = props
   const [openTranscriptDialog, setOpenTranscriptDialog] = useState(false)
+  const [openCancelTranscriptDialog, setOpenCancelTranscriptDialog] =
+    useState(false)
+  const [onMouseOver, setOnMouseOver] = useState(false)
   const { formatMessage } = useIntl()
   const { actions: workingEvidenceActions } = useWorkingEvidence()
   const toast = useToast()
@@ -87,6 +98,14 @@ const TranscriptionTab = (props: Props): ReactElement => {
         }}
         onClose={() => setOpenTranscriptDialog(false)}
       />
+      <CancelTranscriptionDialog
+        onAccept={async () => {
+          await workingEvidenceActions?.cancelFullTranscription()
+          setOpenCancelTranscriptDialog(false)
+        }}
+        onClose={() => setOpenCancelTranscriptDialog(false)}
+        open={openCancelTranscriptDialog}
+      />
       <Typography
         variant="subtitle"
         className="uppercase text-secondary"
@@ -99,29 +118,57 @@ const TranscriptionTab = (props: Props): ReactElement => {
           {formatMessage(transcriptionTabMessages.eventTranscriptionSubtitle)}
         </Typography>
         <div className="flex gap-2 items-center">
+          <div className="flex gap-2 items-center">
+            {lock && (
+              <Typography
+                variant="caption"
+                className="text-secondary-gray"
+              >{`Transcribiendo ${progress}%`}</Typography>
+            )}
+            <Tooltip
+              content={
+                lock
+                  ? formatMessage(transcriptionTabMessages.cancelTranscription)
+                  : formatMessage(transcriptionTabMessages.transcriptAllAudio)
+              }
+              floatProps={{ offset: 10, arrow: true }}
+              classNames={{
+                panel:
+                  'bg-secondary text-white py-1 px-2 rounded-md text-sm whitespace-nowrap',
+                arrow: 'absolute bg-white w-2 h-2 rounded-full bg-secondary'
+              }}
+              placement="top"
+            >
+              <button
+                className="text-secondary-gray hover:enabled:text-secondary border shadow-md p-2 rounded-md"
+                onClick={() => {
+                  if (lock) setOpenCancelTranscriptDialog(true)
+                  else setOpenTranscriptDialog(true)
+                }}
+                onMouseEnter={() => {
+                  if (lock) setOnMouseOver(true)
+                }}
+                onMouseLeave={() => {
+                  if (lock) setOnMouseOver(false)
+                }}
+              >
+                {lock ? (
+                  onMouseOver ? (
+                    <XCircleIcon className="w-5 h-5" />
+                  ) : (
+                    <span className="animate-spin w-5 h-5 border-[3px] border-secondary-gray border-b-transparent rounded-[50%] block box-border" />
+                  )
+                ) : (
+                  <DocumentTextIcon className="w-5 h-5" />
+                )}
+              </button>
+            </Tooltip>
+          </div>
           <DownloadDialog
             onExport={(document) =>
               workingEvidenceActions?.exportTranscription(document)
             }
           />
-          <Tooltip
-            content={formatMessage(transcriptionTabMessages.transcriptAllAudio)}
-            floatProps={{ offset: 10, arrow: true }}
-            classNames={{
-              panel:
-                'bg-secondary text-white py-1 px-2 rounded-md text-sm whitespace-nowrap',
-              arrow: 'absolute bg-white w-2 h-2 rounded-full bg-secondary'
-            }}
-            placement="top"
-          >
-            <button
-              className="text-secondary-gray hover:enabled:text-secondary border shadow-md p-2 rounded-md"
-              onClick={() => setOpenTranscriptDialog(true)}
-              disabled={lock}
-            >
-              <DocumentTextIcon className="w-5 h-5" />
-            </button>
-          </Tooltip>
           <Button
             color="primary"
             variant="contained"

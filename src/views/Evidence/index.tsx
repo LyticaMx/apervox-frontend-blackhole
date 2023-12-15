@@ -93,8 +93,8 @@ const Evidence = (): ReactElement => {
     setTranscriptionRegions,
     updateTranscription,
     lock: transcriptionLock,
-    forceLock: forceTranscriptionLock
-    // progress
+    forceLock: forceTranscriptionLock,
+    progress: transcriptionProgress
   } = useTranscription(workingEvidence.id ?? '', canWork)
   useCommentsRoom(workingEvidence.id ?? '', canWork)
 
@@ -457,6 +457,7 @@ const Evidence = (): ReactElement => {
             transcriptionSegments={transcriptionRegions}
             onChangeSegment={handleChangeSegment}
             lock={transcriptionLock}
+            progress={transcriptionProgress}
           />
         ),
         name: 'Transcripción'
@@ -493,7 +494,8 @@ const Evidence = (): ReactElement => {
     location.state.type,
     workingEvidence.id,
     transcriptionRegions,
-    transcriptionLock
+    transcriptionLock,
+    transcriptionProgress
   ])
 
   if (!canWork) return <WaitToWork />
@@ -596,6 +598,7 @@ const Evidence = (): ReactElement => {
                 showWave
                 showTimeline
                 showZoom
+                lockEvents={transcriptionLock}
                 wsRef={(ws) => {
                   $wsRef.current = ws
                 }}

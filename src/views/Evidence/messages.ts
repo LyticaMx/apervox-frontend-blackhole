@@ -156,6 +156,15 @@ export const transcriptionTabMessages = defineMessages({
     id: 'views.Evidence.TranscriptionTab.deleteRegionQuestion',
     defaultMessage: '¿Se eliminará el segmento y su transcripción, está seguro?'
   },
+  cancelTranscription: {
+    id: 'views.Evidence.TranscriptionTab.cancelTranscription',
+    defaultMessage: 'Cancelar transcripción automática'
+  },
+  cancelTranscriptionQuestion: {
+    id: 'views.Evidence.TranscriptionTab.cancelTranscriptionQuestion',
+    defaultMessage:
+      '¿Está seguro que desea cancelar la transcripción automática?'
+  },
   makeFullTranscription: {
     id: 'views.Evidence.TranscriptionTab.makeFullTranscription',
     defaultMessage: 'Transcribir todo el audio'
