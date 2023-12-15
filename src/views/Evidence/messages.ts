@@ -173,6 +173,15 @@ export const transcriptionTabMessages = defineMessages({
     id: 'views.Evidence.TranscriptionTab.allTranscriptionRegionsWillBeDeleted',
     defaultMessage:
       '¿Deseas transcribir todo el audio?, esto eliminará todas las regiones transcritas anteriormente y generará nuevas.'
+  },
+  foundAnEmptyRegion: {
+    id: 'views.Evidence.TranscriptionTab.foundAnEmptyRegion',
+    defaultMessage: 'Se encontró una región vacía'
+  },
+  willBeTranscripted: {
+    id: 'views.Evidence.TranscriptionTab.willBeTranscripted',
+    defaultMessage:
+      'La región será transcrita de manera automática, ¿desea continuar?'
   }
 })
 

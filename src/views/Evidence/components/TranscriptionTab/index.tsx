@@ -16,6 +16,7 @@ import { useWorkingEvidence } from 'context/WorkingEvidence'
 import DownloadDialog from './DownloadDialog'
 import useToast from 'hooks/useToast'
 import CancelTranscriptionDialog from './CancelTranscriptionDialog'
+import EmptyRegionDialog from './EmptyRegionDialog'
 
 interface Props {
   transcriptionSegments: RegionInterface[]
@@ -35,6 +36,7 @@ const TranscriptionTab = (props: Props): ReactElement => {
     resetRegions,
     progress
   } = props
+  const [aRegionIsEmpty, setARegionIsEmpty] = useState(false)
   const [openTranscriptDialog, setOpenTranscriptDialog] = useState(false)
   const [openCancelTranscriptDialog, setOpenCancelTranscriptDialog] =
     useState(false)
@@ -90,7 +92,6 @@ const TranscriptionTab = (props: Props): ReactElement => {
       <TranscriptDialog
         open={openTranscriptDialog}
         onAccept={async () => {
-          // TODO: bloquear todas las acciones de la tab hasta recibir evento del socket
           resetRegions()
           await workingEvidenceActions?.createFullTranscription()
           toast.info(formatMessage(transcriptionTabMessages.waitingToStartTask))
@@ -105,6 +106,11 @@ const TranscriptionTab = (props: Props): ReactElement => {
         }}
         onClose={() => setOpenCancelTranscriptDialog(false)}
         open={openCancelTranscriptDialog}
+      />
+      <EmptyRegionDialog
+        onAccept={onSave}
+        onClose={() => setARegionIsEmpty(false)}
+        open={aRegionIsEmpty}
       />
       <Typography
         variant="subtitle"
@@ -172,7 +178,20 @@ const TranscriptionTab = (props: Props): ReactElement => {
           <Button
             color="primary"
             variant="contained"
-            onClick={onSave}
+            onClick={() => {
+              if (
+                transcriptionSegments.some((segment) => {
+                  return (
+                    segment.data &&
+                    (segment.data.text === '' || segment.data.dialog === '')
+                  )
+                })
+              ) {
+                setARegionIsEmpty(true)
+                return
+              }
+              onSave()
+            }}
             disabled={lock}
           >
             {formatMessage(transcriptionTabMessages.saveTranscription)}

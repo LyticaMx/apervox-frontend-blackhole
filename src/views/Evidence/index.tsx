@@ -132,8 +132,9 @@ const Evidence = (): ReactElement => {
         isTracked: data.follow
       }
 
-      if (data['label-manual']) updateBody.customLabel = data.label
-      else updateBody.label = data.label
+      if (data['label-manual']) {
+        if (data.label !== '') updateBody.customLabel = data.label
+      } else updateBody.label = data.label
 
       const saved =
         (await workingEvidence.actions?.classifyEvidence(updateBody)) ?? false
@@ -162,6 +163,8 @@ const Evidence = (): ReactElement => {
           endTime: region.end,
           id: !region.id.startsWith('wavesurfer') ? region.id : undefined
         }))
+
+      if (sendRegions.length === 0) return
 
       const updatedRegions =
         (await workingEvidence.actions?.updateRegions(sendRegions)) ?? false
