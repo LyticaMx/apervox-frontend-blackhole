@@ -1763,3 +1763,21 @@ export const createMetadataDialogMessages = defineMessages({
       'Selecciona formularios ya existente o crear formularios vacios.'
   }
 })
+
+export const unlockEvidencesMessages = defineMessages({
+  title: {
+    id: 'views.technique.evidences.unlock.title',
+    defaultMessage:
+      'Liberar {selected, plural, one{la evidencia seleccionada} other{las # evidencias seleccionadas}}'
+  },
+  message: {
+    id: 'views.technique.evidences.unlock.message',
+    defaultMessage:
+      '¿Estás seguro que deseas continuar con la liberación? La siguiente acción podría causar pérdida del trabajo en progreso y no es reversible, asegurate que {selected,plural,one{sea la evidencia correcta} other{sean las evidencias correctas}}'
+  },
+  passwordConfirm: {
+    id: 'views.technique.evidences.unlock.passwordConfirm',
+    defaultMessage:
+      'Ingresa tu contraseña para validar la liberación de {selected, plural, one{la evidencia seleccionada} other{de las # evidencias seleccionadas}}'
+  }
+})
