@@ -28,10 +28,25 @@ const UnlockEvidencesConfirmationDialog = (props: Props): ReactElement => {
 
       if (deleted) {
         onConfirm()
-        toast.success('')
+        toast.success(
+          formatMessage(unlockEvidencesMessages.success, {
+            selected: ids.length
+          })
+        )
+        return
       }
+      toast.danger(
+        formatMessage(unlockEvidencesMessages.failed, {
+          selected: ids.length
+        })
+      )
     } catch {
       resolve(false)
+      toast.danger(
+        formatMessage(unlockEvidencesMessages.failed, {
+          selected: ids.length
+        })
+      )
     }
   }
 

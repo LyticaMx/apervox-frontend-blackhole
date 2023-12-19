@@ -184,10 +184,12 @@ const EvidenceList = ({ onSelectItem }: Props): ReactElement => {
               onChange={async () => {
                 const updated = await evidencesActions?.toggleFollow(id)
                 if (updated) {
-                  toast.success('Seguimiento actualizado correctamente')
+                  toast.success(
+                    formatMessage(evidenceListMessages.followUpdateSuccess)
+                  )
                 } else {
                   toast.danger(
-                    'No se pudo actualizar el seguimiento de la evidencia'
+                    formatMessage(evidenceListMessages.followUpdateError)
                   )
                 }
               }}
@@ -342,7 +344,7 @@ const EvidenceList = ({ onSelectItem }: Props): ReactElement => {
           {
             Icon: LockOpenIcon,
             name: 'releaseEvidences',
-            tooltip: 'Liberar evidencias',
+            tooltip: formatMessage(evidenceListMessages.releaseEvidences),
             disabled: ability.cannot(ACTION.UPDATE, SUBJECT.CALL_EVIDENCES),
             action: async (evidences) =>
               await new Promise<boolean>((resolve) => {

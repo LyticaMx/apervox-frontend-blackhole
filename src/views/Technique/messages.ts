@@ -105,6 +105,18 @@ export const evidenceListMessages = defineMessages({
   withoutFollow: {
     id: 'views.techniques.EvidenceList.withoutFollow',
     defaultMessage: 'Sin seguimiento'
+  },
+  releaseEvidences: {
+    id: 'views.techniques.EvidenceList.releaseEvidences',
+    defaultMessage: 'Liberar evidencias'
+  },
+  followUpdateSuccess: {
+    id: 'views.techniques.EvidenceList.followUpdateSuccess',
+    defaultMessage: 'Seguimiento actualizado correctamente'
+  },
+  followUpdateError: {
+    id: 'views.techniques.EvidenceList.followUpdateError',
+    defaultMessage: 'No se pudo actualizar el seguimiento de la evidencia'
   }
 })
 
@@ -1779,5 +1791,15 @@ export const unlockEvidencesMessages = defineMessages({
     id: 'views.technique.evidences.unlock.passwordConfirm',
     defaultMessage:
       'Ingresa tu contraseña para validar la liberación de {selected, plural, one{la evidencia seleccionada} other{de las # evidencias seleccionadas}}'
+  },
+  success: {
+    id: 'views.technique.evidences.unlock.success',
+    defaultMessage:
+      '{selected,plural,one{Evidencia liberada} other{Evidencias liberadas}} correctamente'
+  },
+  failed: {
+    id: 'views.technique.evidences.unlock.failed',
+    defaultMessage:
+      'Ocurió un problema al liberar {selected,plural,one{la evidencia} other{las evidencias}}'
   }
 })
