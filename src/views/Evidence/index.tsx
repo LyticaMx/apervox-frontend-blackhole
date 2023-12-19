@@ -92,8 +92,9 @@ const Evidence = (): ReactElement => {
     handleChangeSegment,
     setTranscriptionRegions,
     updateTranscription,
-    lock: transcriptionLock
-    // progress
+    lock: transcriptionLock,
+    forceLock: forceTranscriptionLock,
+    progress: transcriptionProgress
   } = useTranscription(workingEvidence.id ?? '', canWork)
   useCommentsRoom(workingEvidence.id ?? '', canWork)
 
@@ -131,8 +132,9 @@ const Evidence = (): ReactElement => {
         isTracked: data.follow
       }
 
-      if (data['label-manual']) updateBody.customLabel = data.label
-      else updateBody.label = data.label
+      if (data['label-manual']) {
+        if (data.label !== '') updateBody.customLabel = data.label
+      } else updateBody.label = data.label
 
       const saved =
         (await workingEvidence.actions?.classifyEvidence(updateBody)) ?? false
@@ -161,6 +163,8 @@ const Evidence = (): ReactElement => {
           endTime: region.end,
           id: !region.id.startsWith('wavesurfer') ? region.id : undefined
         }))
+
+      if (sendRegions.length === 0) return
 
       const updatedRegions =
         (await workingEvidence.actions?.updateRegions(sendRegions)) ?? false
@@ -230,7 +234,7 @@ const Evidence = (): ReactElement => {
             })
           )
         : commonRegions,
-    [currentTab, commonRegions]
+    [currentTab, commonRegions, transcriptionRegions]
   )
 
   useEffect(() => {
@@ -448,10 +452,15 @@ const Evidence = (): ReactElement => {
         id: 'transcription',
         component: (
           <TranscriptionTab
+            resetRegions={() => {
+              forceTranscriptionLock()
+              setTranscriptionRegions([])
+            }}
             onSave={updateTranscription}
             transcriptionSegments={transcriptionRegions}
             onChangeSegment={handleChangeSegment}
             lock={transcriptionLock}
+            progress={transcriptionProgress}
           />
         ),
         name: 'Transcripción'
@@ -488,7 +497,8 @@ const Evidence = (): ReactElement => {
     location.state.type,
     workingEvidence.id,
     transcriptionRegions,
-    transcriptionLock
+    transcriptionLock,
+    transcriptionProgress
   ])
 
   if (!canWork) return <WaitToWork />
@@ -591,6 +601,7 @@ const Evidence = (): ReactElement => {
                 showWave
                 showTimeline
                 showZoom
+                lockEvents={transcriptionLock}
                 wsRef={(ws) => {
                   $wsRef.current = ws
                 }}

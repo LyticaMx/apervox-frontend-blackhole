@@ -1209,7 +1209,7 @@
   "views.techniques.TechniqueForm.name": "Nombre de la técnica",
   "views.techniques.TechniqueForm.namePlaceholder": "Ej. T.I.000/2022-0",
   "views.techniques.TechniqueForm.notification": "Notificación de caducidad",
-  "views.techniques.TechniqueForm.notificationTime": "Configura el tiempo de antelación en días u horas",
+  "views.techniques.TechniqueForm.notificationTime": "Configura el tiempo de antelación en días y horas",
   "views.techniques.TechniqueForm.shift": "Turno",
   "views.techniques.TechniqueForm.shiftPlaceholder": "Ej. Matutino",
   "views.techniques.TechniqueForm.startDate": "Fecha de inicio",

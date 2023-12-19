@@ -12,7 +12,6 @@ import { Field } from 'types/form'
 import { useFormatMessage, useGlobalMessage } from 'hooks/useIntl'
 
 import Form from 'components/Form'
-import TextField from 'components/Form/Textfield'
 
 import { techniqueFormMessages, techniqueUpdateMessages } from '../messages'
 import { Turn } from 'types/technique'
@@ -28,7 +27,6 @@ import StaticTargetDialog from './StaticTargetsDialog'
 import { useIntl } from 'react-intl'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
-type AdvanceTimeType = 'days' | 'hours'
 type PriorityType = 'urgent' | 'high' | 'medium' | 'low'
 
 export interface FormValues {
@@ -39,9 +37,9 @@ export interface FormValues {
   groups: any[]
   shift: string
   court: string
-  advanceTimeType: AdvanceTimeType
+  notificationDays: string
+  notificationHours: string
   priority: PriorityType
-  advanceTime: string
 }
 
 interface Props {
@@ -129,11 +127,14 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
       }
     },
     {
-      name: 'advanceTimeType',
-      type: 'radio',
+      name: 'notificationDays',
+      type: 'select',
       options: {
         label: getMessage('days'),
-        value: 'days',
+        clearable: false,
+        items: Array.from(Array(31), (_, idx) => ({ day: idx.toString() })),
+        textField: 'day',
+        valueField: 'day',
         disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TECHNIQUES)
       },
       breakpoints: {
@@ -142,66 +143,19 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
       section: 'notification'
     },
     {
-      name: 'advanceTimeType',
-      type: 'radio',
+      name: 'notificationHours',
+      type: 'select',
       options: {
         label: getMessage('hours'),
-        value: 'hours',
+        clearable: false,
+        items: Array.from(Array(24), (_, idx) => ({ hour: idx.toString() })),
+        valueField: 'hour',
+        textField: 'hour',
         disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TECHNIQUES)
       },
       breakpoints: {
         xs: 6
       },
-      section: 'notification'
-    },
-    {
-      name: 'advanceTime',
-      type: 'custom',
-      children: ({ name, setFieldValue, values, errors, touched }) => (
-        <TextField
-          value={values.advanceTimeType === 'days' ? values[name] : ''}
-          disabled={
-            values.advanceTimeType !== 'days' ||
-            ability.cannot(ACTION.UPDATE, SUBJECT.TECHNIQUES)
-          }
-          placeholder={getMessage('daysPlaceholder')}
-          onChange={(e) => setFieldValue(name, e.target.value)}
-          error={Boolean(
-            errors[name] && touched[name] && values.advanceTimeType === 'days'
-          )}
-          helperText={
-            errors[name] && touched[name] && values.advanceTimeType === 'days'
-              ? errors[name]
-              : ''
-          }
-        />
-      ),
-      breakpoints: { xs: 6 },
-      section: 'notification'
-    },
-    {
-      name: 'advanceTime',
-      type: 'custom',
-      children: ({ name, setFieldValue, values, errors, touched }) => (
-        <TextField
-          value={values.advanceTimeType === 'hours' ? values[name] : ''}
-          disabled={
-            values.advanceTimeType !== 'hours' ||
-            ability.cannot(ACTION.UPDATE, SUBJECT.TECHNIQUES)
-          }
-          placeholder={getMessage('hoursPlaceholder')}
-          onChange={(e) => setFieldValue(name, e.target.value)}
-          error={Boolean(
-            errors[name] && touched[name] && values.advanceTimeType === 'hours'
-          )}
-          helperText={
-            errors[name] && touched[name] && values.advanceTimeType === 'hours'
-              ? errors[name]
-              : ''
-          }
-        />
-      ),
-      breakpoints: { xs: 6 },
       section: 'notification'
     },
     {
@@ -334,11 +288,7 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
 
   const validationSchema = yup.object({
     name: yup.string().required(getMessage('required')),
-    endDate: yup.mixed().required(getMessage('required')),
-    advanceTime: yup
-      .number()
-      .typeError(getMessage('mustBeNumber'))
-      .min(1, getMessage('minValue', { value: 1 }))
+    endDate: yup.mixed().required(getMessage('required'))
   })
 
   const handleFormSubmit = async (values: FormValues): Promise<void> => {
@@ -404,8 +354,8 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
         priority: values.priority as Priority,
         shift: values.shift as Turn,
         reportEvidenceEvery: values.court,
-        notificationTime: parseInt(values.advanceTime),
-        notificationTimeUnit: values.advanceTimeType,
+        notificationTime: 0,
+        notificationTimeUnit: 'days',
         groups: values.groups.map((item) => item.value)
       },
       staticDateTargets
@@ -437,8 +387,8 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
             label: item.name,
             value: item.id
           })) ?? [],
-        advanceTimeType: technique?.notificationTimeUnit ?? 'days',
-        advanceTime: technique?.notificationTime?.toString() ?? '',
+        notificationDays: technique?.notificationDays ?? '0',
+        notificationHours: technique?.notificationHours ?? '0',
         priority: technique?.priority ?? 'medium'
       },
       validationSchema,

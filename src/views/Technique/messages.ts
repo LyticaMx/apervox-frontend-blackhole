@@ -105,6 +105,18 @@ export const evidenceListMessages = defineMessages({
   withoutFollow: {
     id: 'views.techniques.EvidenceList.withoutFollow',
     defaultMessage: 'Sin seguimiento'
+  },
+  releaseEvidences: {
+    id: 'views.techniques.EvidenceList.releaseEvidences',
+    defaultMessage: 'Liberar evidencias'
+  },
+  followUpdateSuccess: {
+    id: 'views.techniques.EvidenceList.followUpdateSuccess',
+    defaultMessage: 'Seguimiento actualizado correctamente'
+  },
+  followUpdateError: {
+    id: 'views.techniques.EvidenceList.followUpdateError',
+    defaultMessage: 'No se pudo actualizar el seguimiento de la evidencia'
   }
 })
 
@@ -1761,5 +1773,33 @@ export const createMetadataDialogMessages = defineMessages({
     id: 'views.techniques.createMetadataDialog.message',
     defaultMessage:
       'Selecciona formularios ya existente o crear formularios vacios.'
+  }
+})
+
+export const unlockEvidencesMessages = defineMessages({
+  title: {
+    id: 'views.technique.evidences.unlock.title',
+    defaultMessage:
+      'Liberar {selected, plural, one{la evidencia seleccionada} other{las # evidencias seleccionadas}}'
+  },
+  message: {
+    id: 'views.technique.evidences.unlock.message',
+    defaultMessage:
+      '¿Estás seguro que deseas continuar con la liberación? La siguiente acción podría causar pérdida del trabajo en progreso y no es reversible, asegurate que {selected,plural,one{sea la evidencia correcta} other{sean las evidencias correctas}}'
+  },
+  passwordConfirm: {
+    id: 'views.technique.evidences.unlock.passwordConfirm',
+    defaultMessage:
+      'Ingresa tu contraseña para validar la liberación de {selected, plural, one{la evidencia seleccionada} other{de las # evidencias seleccionadas}}'
+  },
+  success: {
+    id: 'views.technique.evidences.unlock.success',
+    defaultMessage:
+      '{selected,plural,one{Evidencia liberada} other{Evidencias liberadas}} correctamente'
+  },
+  failed: {
+    id: 'views.technique.evidences.unlock.failed',
+    defaultMessage:
+      'Ocurió un problema al liberar {selected,plural,one{la evidencia} other{las evidencias}}'
   }
 })

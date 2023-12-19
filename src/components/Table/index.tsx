@@ -465,7 +465,7 @@ const Table = <DataType,>({
         currentPage={
           manualPagination
             ? manualPagination.currentPage
-            : table.getState().pagination.pageIndex
+            : table.getState().pagination.pageIndex + 1
         }
         pageSize={pageSize}
         totalCount={
