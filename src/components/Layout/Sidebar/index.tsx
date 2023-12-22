@@ -4,7 +4,6 @@ import { pathRoute, routes } from 'router/routes'
 import Item from './components/Item'
 import { SignalIcon, UserCircleIcon } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
-import { useSidebar } from 'context/Sidebar'
 import Tooltip from 'components/Tooltip'
 import { useIntl } from 'react-intl'
 import { sidebarMessages } from 'globalMessages'
@@ -13,8 +12,6 @@ import Popover from 'components/Popover'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 const Sidebar = (): ReactElement => {
-  const { pathname } = useLocation()
-  const { open } = useSidebar()
   const { formatMessage } = useIntl()
   const history = useHistory()
   const location = useLocation()
@@ -56,12 +53,7 @@ const Sidebar = (): ReactElement => {
               )
           )
           .map((route) => (
-            <Item
-              key={route.id}
-              route={route}
-              pathname={pathname}
-              expanded={open}
-            />
+            <Item key={route.id} route={route} />
           ))}
       </nav>
 
@@ -78,7 +70,8 @@ const Sidebar = (): ReactElement => {
               className="p-1.5 text-gray-700 focus:outline-nones transition-colors duration-200 rounded-lg hover:enabled:bg-gray-100 enabled:text-red-500 disabled:text-slate-300 disabled:cursor-not-allowed"
               disabled={
                 location.pathname === pathRoute.monitoring.base ||
-                location.pathname === pathRoute.monitoring.history
+                location.pathname === pathRoute.monitoring.history ||
+                location.pathname === pathRoute.monitoring.evidence
               }
             >
               <SignalIcon className="w-6 h-6" />
