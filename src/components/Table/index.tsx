@@ -467,11 +467,19 @@ const Table = <DataType,>({
             ? manualPagination.currentPage
             : table.getState().pagination.pageIndex + 1
         }
-        pageSize={pageSize}
+        pageSize={manualLimit ? pageSize : table.getState().pagination.pageSize}
         totalCount={
           manualPagination ? manualPagination.totalRecords : data.length
         }
-        manualLimit={manualLimit}
+        manualLimit={
+          manualLimit ?? {
+            options: [10, 25, 50],
+            onChangeLimit: (_, limit) => {
+              table.setPageSize(limit)
+              table.setPageIndex(0)
+            }
+          }
+        }
       />
     </div>
   )
