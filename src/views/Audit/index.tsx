@@ -179,13 +179,6 @@ const Audit = (): ReactElement => {
   ])
 
   useEffect(() => {
-    if (selectedTarget?.type === 'user' && selectedTarget.id === selectedUser) {
-      setSelectedTarget(null)
-      specificUserActions?.setUserId()
-
-      return
-    }
-
     if (selectedUser) {
       specificUserActions?.setUserId(selectedUser)
       setSelectedTarget({
