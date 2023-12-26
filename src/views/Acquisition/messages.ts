@@ -264,7 +264,7 @@ export const quarantineDialogMessages = defineMessages({
   success: {
     id: 'views.acquisition.QuarantineDialog.success',
     defaultMessage:
-      'Línea {status,select,free{liberada de} other{enviar a}} cuarentena correctamente'
+      'Línea {status,select,free{liberada de} other{enviada a}} cuarentena correctamente'
   }
 })
 
@@ -282,7 +282,7 @@ export const maintenanceDialogMessages = defineMessages({
   success: {
     id: 'views.acquisition.MaintenanceDialog.success',
     defaultMessage:
-      'Línea {status,select,free{liberada de} other{enviar a}} mantenimiento correctamente'
+      'Línea {status,select,free{liberada de} other{enviada a}} mantenimiento correctamente'
   }
 })
 
