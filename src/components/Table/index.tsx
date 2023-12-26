@@ -69,6 +69,7 @@ interface Props<T> {
   withCheckbox?: boolean
   manualLimit?: PaginationLimit
   actionsForSelectedItems?: Array<ActionForSelectedItems<T>>
+  disableRowClickWhen?: (row: T) => boolean
   rowConfig?: {
     paddingSize?: 'xs' | 'sm' | 'md'
     className?: string
@@ -90,6 +91,7 @@ const Table = <DataType,>({
   enableSorting = true,
   manualLimit,
   actionsForSelectedItems,
+  disableRowClickWhen,
   rowConfig,
   tableRef
 }: Props<DataType>): ReactElement => {
@@ -403,17 +405,22 @@ const Table = <DataType,>({
                   )}
                   {virtualRows.map((virtualRow) => {
                     const row = rows[virtualRow.index]
+                    const isRowDisabled =
+                      disableRowClickWhen?.(row.original) ?? false
 
                     return (
                       <tr
                         key={row.id}
                         ref={virtualRow.measureRef}
                         className={clsx(
-                          onRowClicked && 'cursor-pointer hover:bg-slate-100'
+                          onRowClicked &&
+                            (!isRowDisabled
+                              ? 'cursor-pointer hover:bg-slate-100'
+                              : 'cursor-not-allowed')
                         )}
                         onClick={(event: any) => {
                           event.stopPropagation()
-                          if (onRowClicked) {
+                          if (onRowClicked && !isRowDisabled) {
                             onRowClicked(row.original, event)
                           }
                         }}
