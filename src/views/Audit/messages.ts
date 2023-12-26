@@ -38,11 +38,19 @@ export const messages = defineMessages({
   created: {
     id: 'views.Audit.UserDrawer.created',
     defaultMessage: 'Creado: {date}'
-  }
+  },
+  techniques: { id: 'views.Audit.techniques', defaultMessage: 'Técnicas' },
+  monitor: { id: 'views.Audit.monitor', defaultMessage: 'Monitor' },
+  settings: { id: 'views.Audit.settings', defaultMessage: 'Configuración' },
+  metadata: { id: 'views.Audit.metadata', defaultMessage: 'Info. Objetivos' }
 })
 
 export const auditableModules = defineMessages({
   me: { id: 'views.Audit.AuditableModules.me', defaultMessage: 'Mi cuenta' },
+  auth: {
+    id: 'views.Audit.AuditableModules.auth',
+    defaultMessage: 'Autenticación'
+  },
   techniques: {
     id: 'views.Audit.AuditableModules.techniques',
     defaultMessage: 'Técnicas'
