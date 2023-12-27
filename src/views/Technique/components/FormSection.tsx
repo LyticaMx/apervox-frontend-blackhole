@@ -1,6 +1,5 @@
 import { ReactElement, useEffect, useMemo } from 'react'
 import { useHistory } from 'react-router-dom'
-import { pathRoute } from 'router/routes'
 
 import { useTechnique } from 'context/Technique'
 import { useTabs } from 'hooks/useTabs'
@@ -14,10 +13,12 @@ import { TechniqueTabs } from 'types/technique'
 import { useWorkingEvidence } from 'context/WorkingEvidence'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 import WrongPermissions from 'components/WrongPermissions'
+import { pathRoute } from 'router/routes'
 
 const FormSection = (): ReactElement => {
   const history = useHistory()
-  const { target, showTargetForms, activeTab, actions } = useTechnique()
+  const { techniqueId, target, showTargetForms, activeTab, actions } =
+    useTechnique()
   const [active, setActive, Tab] = useTabs(activeTab)
   const { actions: workingActions } = useWorkingEvidence()
   const ability = useAbility()
@@ -65,10 +66,13 @@ const FormSection = (): ReactElement => {
               }
               workingActions?.setEvidence(evidence.id)
 
-              history.push(pathRoute.evidence, {
-                type: 'audio',
-                from: 'technique'
-              })
+              history.push(
+                `${pathRoute.techniques.many}/${techniqueId}/evidencia`,
+                {
+                  type: 'audio',
+                  from: 'technique'
+                }
+              )
             }}
           />
         ) : (

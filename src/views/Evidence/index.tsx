@@ -201,7 +201,7 @@ const Evidence = (): ReactElement => {
       if (!url) {
         if ((location.state.from ?? 'monitor') === 'monitor') {
           history.replace(pathRoute.monitoring.history)
-        } else history.replace(pathRoute.technique)
+        } else history.replace(`${pathRoute.techniques.many}/${techniqueId}`)
         return
       }
 
@@ -241,7 +241,7 @@ const Evidence = (): ReactElement => {
     if (!canWork) return
     if (!workingEvidence.id) {
       if (location.state.from === 'technique') {
-        history.push(pathRoute.technique)
+        history.push(`${pathRoute.techniques.many}/${techniqueId}`)
       } else history.push(pathRoute.monitoring.history)
       return
     }
@@ -548,7 +548,7 @@ const Evidence = (): ReactElement => {
               history.replace(
                 location.state.from === 'monitor'
                   ? pathRoute.monitoring.history
-                  : pathRoute.technique
+                  : `${pathRoute.techniques.many}/${techniqueId}`
               )
             }
           >

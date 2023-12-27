@@ -132,13 +132,13 @@ const useActions = (state: State, dispatch): Actions => {
       body.end_date = technique.expires_at
       body.priority = technique.priority
       body.groups = technique.groups
-      if (technique.notificationTime || !isNaN(technique.notificationTime)) {
-        body.notification_type = technique.notificationTimeUnit
-        body.notification_time = technique.notificationTime
+      body.notification_days = 0
+      body.notification_hours = 0
+      if (!isNaN(technique.notificationDays)) {
+        body.notification_days = technique.notificationDays
       }
-      if (technique.shift !== '') {
-        body.shift = technique.shift
-        body.shift_cutoff = technique.reportEvidenceEvery
+      if (!isNaN(technique.notificationHours)) {
+        body.notification_hours = technique.notificationHours
       }
 
       const response = await techniquesService.post({

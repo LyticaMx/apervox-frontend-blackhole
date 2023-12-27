@@ -9,6 +9,14 @@ export const createTargetDialogMessages = defineMessages({
     id: 'views.techniques.CreateTargetDialog.selectTargetType',
     defaultMessage:
       'Selecciona el tipo de objetivo que será agregado a la técnica y completa los datos del formulario.'
+  },
+  success: {
+    id: 'views.techniques.CreateTargetDialog.success',
+    defaultMessage: 'Objetivo creado correctamente'
+  },
+  failed: {
+    id: 'views.techniques.CreateTargetDialog.failed',
+    defaultMessage: 'El objetivo no pudo ser creado'
   }
 })
 
@@ -140,6 +148,16 @@ export const targetCardMessages = defineMessages({
   history: {
     id: 'views.techniques.TargetCard.history',
     defaultMessage: 'Historial'
+  },
+  deleteSuccess: {
+    id: 'views.techniques.TargetCard.delete.success',
+    defaultMessage:
+      '{quantity,plural,one{Objetivo eliminado}other{Objetivos eliminados}} correctamente'
+  },
+  deleteError: {
+    id: 'views.techniques.TargetCard.delete.Error',
+    defaultMessage:
+      'Ocurrió un error al intentar eliminar {quantity,plural,one{el objetivo}other{los objetivos}}'
   }
 })
 

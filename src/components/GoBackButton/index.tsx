@@ -19,13 +19,13 @@ const GoBackButton = (props: Props): ReactElement => {
       case 'string':
         return (
           <Link to={props.route} className="">
-            <ArrowUturnLeftIcon className="w-5 h-5 text-secondary-gray mr-3" />
+            <ArrowUturnLeftIcon className="w-5 h-5 text-secondary-gray" />
           </Link>
         )
       case 'function':
         return (
           <button onClick={props.route}>
-            <ArrowUturnLeftIcon className="w-5 h-5 text-secondary-gray mr-3" />
+            <ArrowUturnLeftIcon className="w-5 h-5 text-secondary-gray" />
           </button>
         )
 

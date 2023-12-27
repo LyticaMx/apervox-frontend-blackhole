@@ -238,7 +238,7 @@ const CallsTable = (): ReactElement => {
                 }
                 onClick={() => {
                   workingActions?.setEvidence(row.original.id)
-                  history.push(pathRoute.evidence, {
+                  history.push(pathRoute.monitoring.evidence, {
                     type: 'audio',
                     from: 'monitor'
                   })

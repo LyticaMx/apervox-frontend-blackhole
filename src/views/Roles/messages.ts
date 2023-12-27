@@ -127,6 +127,23 @@ export const rolesDrawerMessages = defineMessages({
   usersPlaceholder: {
     id: 'views.roles.drawer.usersPlaceholder',
     defaultMessage: 'Seleccionar usuarios'
+  },
+
+  updateSuccess: {
+    id: 'views.roles.drawer.updateSuccess',
+    defaultMessage: 'El rol de usuario ha sido actualizado correctamente.'
+  },
+  updateError: {
+    id: 'views.roles.drawer.updateError',
+    defaultMessage: 'No se pudo actualizar el rol de usuario.'
+  },
+  createSuccess: {
+    id: 'views.roles.drawer.createSuccess',
+    defaultMessage: 'El rol de usuario ha sido creado.'
+  },
+  createError: {
+    id: 'views.roles.drawer.createError',
+    defaultMessage: 'No se pudo crear el rol de usuario.'
   }
 })
 

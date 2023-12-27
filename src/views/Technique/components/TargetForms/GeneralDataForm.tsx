@@ -10,13 +10,15 @@ import { get } from 'lodash'
 import { useTargets } from 'context/Targets'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 import { phoneNumber } from 'utils/patterns'
+import { format } from 'date-fns'
+import useToast from 'hooks/useToast'
 
 interface FormValues {
   name: string
   phone: string
   overflowLine: any
   carrier: any
-  endDate: Date
+  endDate: Date | null
 }
 
 const GeneralDataForm = (): ReactElement => {
@@ -25,6 +27,10 @@ const GeneralDataForm = (): ReactElement => {
   const { target, techniqueId } = useTechnique()
   const { actions } = useTargets()
   const ability = useAbility()
+  const toast = useToast()
+
+  const minDate = new Date()
+  minDate.setDate(minDate.getDate() + 1)
 
   const fields: Array<Field<FormValues>> = [
     {
@@ -101,6 +107,7 @@ const GeneralDataForm = (): ReactElement => {
         label: getMessage('endDate'),
         placeholder: getMessage('endDatePlaceholder'),
         formatDisplay: 'dd-MM-yyyy',
+        minDate: format(minDate, 'yyyy-MM-dd'),
         disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
       },
       breakpoints: { xs: 4 }
@@ -137,7 +144,7 @@ const GeneralDataForm = (): ReactElement => {
         phone: target?.phone ?? '',
         overflowLine: getAsyncValue(target?.overflow_line, 'id', 'phone'),
         carrier: getAsyncValue(target?.carrier, 'id', 'name'),
-        endDate: new Date(target?.end_date ?? 0) ?? ''
+        endDate: target?.has_end_date ? new Date(target?.end_date ?? 0) : null
       },
       enableReinitialize: true,
       validationSchema,
@@ -150,15 +157,18 @@ const GeneralDataForm = (): ReactElement => {
             overflow_line_id: values.overflowLine.value ?? null,
             carrier_id: values.carrier.value ?? null,
             has_end_date: !!values.endDate,
-            end_date: values.endDate
-              ? (values.endDate as unknown as Date).toISOString()
-              : '',
+            end_date:
+              values.endDate &&
+              values.endDate !== new Date(target.end_date ?? 0)
+                ? values.endDate.toISOString()
+                : '',
             type: 'conventional'
           })
 
           if (res) {
             actions?.getData({ technique_id: techniqueId })
-          }
+            toast.success('Objetivo actualizado correctamente')
+          } else toast.danger('Error al actualizar el objetivo')
         }
       }
     }),

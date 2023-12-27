@@ -1,17 +1,15 @@
 import Table from 'components/Table'
 import Typography from 'components/Typography'
 import ViewFilter from 'components/ViewFilter'
-import GoBackButton from 'components/GoBackButton'
 import { generalMessages } from 'globalMessages'
 import useTableColumns from 'hooks/useTableColumns'
 import { format } from 'date-fns'
 import { ReactElement, useEffect } from 'react'
 import { useIntl } from 'react-intl'
-import { Link } from 'react-router-dom'
-import { pathRoute } from 'router/routes'
 import { auditableActions, messages } from './messages'
 import { useLoginAudits } from 'context/Audit'
 import { Audit } from 'context/Audit/types'
+import NavLinks from './components/NavLinks'
 
 const FailedLoginAttemps = (): ReactElement => {
   const { formatMessage } = useIntl()
@@ -61,7 +59,6 @@ const FailedLoginAttemps = (): ReactElement => {
 
   return (
     <div>
-      <GoBackButton route={pathRoute.audit.general} />
       <div className="flex items-center justify-between">
         <Typography
           variant="title"
@@ -97,27 +94,7 @@ const FailedLoginAttemps = (): ReactElement => {
           }
         />
       </div>
-      <div className="flex gap-4">
-        <Link to={pathRoute.audit.failedLoginAttemps}>
-          <Typography
-            variant="subtitle"
-            style="semibold"
-            className="uppercase text-secondary text-base"
-          >
-            {formatMessage(messages.loginFailedAttemps)}
-          </Typography>
-        </Link>
-
-        <Link to={pathRoute.audit.blockedUsers}>
-          <Typography
-            variant="subtitle"
-            style="semibold"
-            className="uppercase text-secondary text-base"
-          >
-            {formatMessage(messages.blockedUsers)}
-          </Typography>
-        </Link>
-      </div>
+      <NavLinks canGoBack />
       <div className="mt-2">
         <Table
           columns={columns}

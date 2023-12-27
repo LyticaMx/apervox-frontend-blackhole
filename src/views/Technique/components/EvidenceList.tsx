@@ -340,6 +340,7 @@ const EvidenceList = ({ onSelectItem }: Props): ReactElement => {
           totalRecords: pagination.totalRecords,
           onChange: (page) => evidencesActions?.getData({ page: page + 1 })
         }}
+        disableRowClickWhen={(row) => row.workingBy !== ''}
         actionsForSelectedItems={[
           {
             Icon: LockOpenIcon,

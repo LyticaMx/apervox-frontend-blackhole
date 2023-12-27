@@ -115,16 +115,20 @@ export const useActions = (state: State, dispatch): Actions => {
   }
   const update = async (payload: updatePayload): Promise<boolean> => {
     try {
+      const body: Record<string, any> = {
+        alias: payload.alias,
+        phone: payload.phone,
+        overflow_line_id: payload.overflow_line_id,
+        carrier_id: payload.carrier_id
+      }
+      if (payload.end_date && payload.end_date !== '') {
+        body.end_date = payload.end_date
+        body.has_end_date = true
+      }
+
       await resource.put({
         queryString: payload.id,
-        body: {
-          alias: payload.alias,
-          phone: payload.phone,
-          overflow_line_id: payload.overflow_line_id,
-          carrier_id: payload.carrier_id,
-          has_end_date: payload.has_end_date,
-          end_date: payload.end_date
-        }
+        body
       })
 
       return true

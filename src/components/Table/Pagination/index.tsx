@@ -32,7 +32,7 @@ interface Props {
   currentPage: number
   pageSize: number
   className?: ClassNames
-  manualLimit?: PaginationLimit
+  manualLimit: PaginationLimit
 }
 
 const Pagination = ({
@@ -42,10 +42,7 @@ const Pagination = ({
   currentPage,
   pageSize,
   className,
-  manualLimit = {
-    options: [10, 25, 50],
-    onChangeLimit: (current, limit) => {}
-  }
+  manualLimit
 }: Props): ReactElement | null => {
   const { formatMessage } = useIntl()
   const paginationRange = usePagination({
