@@ -47,8 +47,8 @@ const TechniqueList = (): ReactElement => {
                 id: item.id,
                 groups: item.groups ?? [],
                 name: item.name,
-                notificationTime: 0,
-                notificationTimeUnit: 'days',
+                notificationDays: '0',
+                notificationHours: '0',
                 priority: item.priority,
                 status: item.status
               })

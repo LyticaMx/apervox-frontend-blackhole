@@ -347,6 +347,8 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
       expiration = expiresAt.toISOString()
     }
 
+    console.log(values)
+
     const updated = await techniqueActions?.update(
       {
         name: values.name,
@@ -354,8 +356,8 @@ const TechniqueUpdateForm = ({ formikRef }: Props): ReactElement => {
         priority: values.priority as Priority,
         shift: values.shift as Turn,
         reportEvidenceEvery: values.court,
-        notificationTime: 0,
-        notificationTimeUnit: 'days',
+        notificationDays: values.notificationDays,
+        notificationHours: values.notificationHours,
         groups: values.groups.map((item) => item.value)
       },
       staticDateTargets

@@ -35,8 +35,8 @@ export interface TechniqueCreator {
   starts_at: string
   expires_at: string
   groups: string[]
-  notificationTimeUnit: 'days' | 'hours'
-  notificationTime: number
+  notificationDays: number
+  notificationHours: number
   shift: string
   reportEvidenceEvery: string
   priority: string
