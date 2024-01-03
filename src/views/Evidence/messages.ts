@@ -212,6 +212,10 @@ export const transcriptionSocketMessages = defineMessages({
     defaultMessage:
       'Se inicia la tarea de {type,select,Transcription{transcripción}Segmentation{segmentación}other{acción}}'
   },
+  cancelled: {
+    id: 'views.Evidence.toast.cancelled',
+    defaultMessage: 'Se ha cancelado la tarea de transcripción'
+  },
   endedTask: {
     id: 'views.evidence.toast.endedTask',
     defaultMessage:
