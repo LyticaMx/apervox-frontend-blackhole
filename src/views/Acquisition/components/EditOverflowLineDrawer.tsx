@@ -60,7 +60,7 @@ const EditOverflowLineDrawer = ({
           {formatMessage(generalMessages.createdOn, {
             date: format(
               new Date(overflowLine?.created_at ?? 0),
-              'dd/MM/yyyy - hh:mm'
+              'dd/MM/yyyy - HH:mm'
             )
           })}
           <span className="ml-2">{overflowLine?.created_by ?? ''}</span>

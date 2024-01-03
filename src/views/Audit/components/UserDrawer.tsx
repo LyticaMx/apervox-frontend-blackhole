@@ -34,7 +34,7 @@ const UserDrawer = (props: Props): ReactElement => {
                 {formatMessage(messages.created, {
                   date: (
                     <span className="font-normal">
-                      {format(user.createdOn, 'dd/MM/yyyy - hh:mm')}
+                      {format(user.createdOn, 'dd/MM/yyyy - HH:mm')}
                     </span>
                   )
                 })}

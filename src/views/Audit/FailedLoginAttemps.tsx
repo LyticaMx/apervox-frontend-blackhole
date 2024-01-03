@@ -49,7 +49,7 @@ const FailedLoginAttemps = (): ReactElement => {
       id: 'hour',
       accessorKey: 'createdAt',
       header: formatMessage(generalMessages.hour),
-      cell: ({ getValue }) => format(new Date(getValue<string>()), 'hh:mm')
+      cell: ({ getValue }) => format(new Date(getValue<string>()), 'HH:mm')
     }
   ])
 

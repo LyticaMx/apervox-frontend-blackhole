@@ -31,7 +31,7 @@ const EditWorkGroupDrawer = ({ actualTab }: Props): ReactElement | null => {
           {formatMessage(generalMessages.createdOn, {
             date: format(
               new Date(workGroup.created_at ?? ''),
-              'dd/MM/yyyy - hh:mm'
+              'dd/MM/yyyy - HH:mm'
             )
           })}
 
@@ -41,7 +41,7 @@ const EditWorkGroupDrawer = ({ actualTab }: Props): ReactElement | null => {
         {workGroup.updated_at && (
           <Typography variant="caption">
             {formatMessage(generalMessages.updatedAt, {
-              date: format(new Date(workGroup.updated_at), 'dd/MM/yyyy - hh:mm')
+              date: format(new Date(workGroup.updated_at), 'dd/MM/yyyy - HH:mm')
             })}
 
             <span className="ml-2">{workGroup.updated_by}</span>

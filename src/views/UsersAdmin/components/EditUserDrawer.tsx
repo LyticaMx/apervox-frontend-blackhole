@@ -61,7 +61,7 @@ const EditUserDrawer = ({ user, open, onClose }: Props): ReactElement => {
 
         <span className="text-sm mb-4 text-gray-400">
           {formatMessage(generalMessages.createdOn, {
-            date: format(new Date(user.createdOn ?? ''), 'dd/MM/yyyy - hh:mm')
+            date: format(new Date(user.createdOn ?? ''), 'dd/MM/yyyy - HH:mm')
           })}
 
           <span className="ml-2">{user.createdBy}</span>

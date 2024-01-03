@@ -94,7 +94,7 @@ const SpecificMovementsHistory = (props: Props): ReactElement | null => {
       {
         accessorKey: 'createdAt',
         header: formatMessage(generalMessages.hour),
-        cell: ({ getValue }) => format(new Date(getValue<string>()), 'hh:mm')
+        cell: ({ getValue }) => format(new Date(getValue<string>()), 'HH:mm')
       }
     ],
     [specificFilter?.type]

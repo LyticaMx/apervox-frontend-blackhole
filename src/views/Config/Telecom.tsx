@@ -67,7 +67,7 @@ const Telecom = (): ReactElement => {
       accessorKey: 'createdAt',
       cell: ({ getValue }) => (
         <span className="text-secondary-gray">
-          {format(new Date(getValue<string>()), 'dd/MM/yyyy - hh:mm')}
+          {format(new Date(getValue<string>()), 'dd/MM/yyyy - HH:mm')}
         </span>
       )
     }
