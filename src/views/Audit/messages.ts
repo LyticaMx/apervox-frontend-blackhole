@@ -134,6 +134,10 @@ export const auditableActions = defineMessages({
     id: 'views.Audit.AuditableActions.logged',
     defaultMessage: 'Inició sesión'
   },
+  bloqued: {
+    id: 'views.Audit.AuditableActions.bloqued',
+    defaultMessage: 'El usuario fue bloqueado'
+  },
   logout: {
     id: 'views.Audit.AuditableActions.logout',
     defaultMessage: 'Cerró sesión'
