@@ -399,6 +399,42 @@ export const mediaMessages = defineMessages({
   actualDeviceData: {
     id: 'views.Config.Media.actualDeviceData',
     defaultMessage: 'Datos actuales del equipo seleccionado.'
+  },
+  createdMedia: {
+    id: 'views.Config.Media.createdMedia',
+    defaultMessage: 'Medio creado correctamente'
+  },
+  updatedMedia: {
+    id: 'views.Config.Media.updatedMedia',
+    defaultMessage: 'Medio actualizado correctamente'
+  },
+  deletedMedia: {
+    id: 'views.Config.Media.deletedMedia',
+    defaultMessage: 'Medio eliminado correctamente'
+  },
+  createdDevice: {
+    id: 'views.Config.Media.createdDevice',
+    defaultMessage: 'Equipo creado correctamente'
+  },
+  updatedDevice: {
+    id: 'views.Config.Media.updatedDevice',
+    defaultMessage: 'Equipo actualizado correctamente'
+  },
+  deletedDevice: {
+    id: 'views.Config.Media.deletedDevice',
+    defaultMessage: 'Equipo eliminado correctamente'
+  },
+  createdCarrier: {
+    id: 'views.Config.Media.createdCarrier',
+    defaultMessage: 'Compañía creada correctamente'
+  },
+  updatedCarrier: {
+    id: 'views.Config.Media.updatedCarrier',
+    defaultMessage: 'Compañía actualizada correctamente'
+  },
+  deletedCarrier: {
+    id: 'views.Config.Media.deletedCarrier',
+    defaultMessage: 'Compañía eliminada correctamente'
   }
 })
 

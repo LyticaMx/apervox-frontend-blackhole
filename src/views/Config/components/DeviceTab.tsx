@@ -15,6 +15,7 @@ import { get } from 'lodash'
 import { formatTotal } from 'utils/formatTotal'
 import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
+import useToast from 'hooks/useToast'
 
 const DeviceTab = (): ReactElement => {
   const { data, total, dateFilter, searchFilter, actions } = useDevices()
@@ -24,6 +25,7 @@ const DeviceTab = (): ReactElement => {
   const [openDelete, setOpenDelete] = useState(false)
   const [deleteIds, setDeleteIds] = useState<string[]>([])
   const ability = useAbility()
+  const toast = useToast()
 
   useEffect(() => {
     actions?.getData({}, true)
@@ -45,6 +47,7 @@ const DeviceTab = (): ReactElement => {
 
       setDeleteIds([])
       setOpenDelete(false)
+      toast.success(formatMessage(mediaMessages.deletedDevice))
       await actions?.getData({ page: 1 }, true)
     } catch {}
   }
@@ -56,6 +59,7 @@ const DeviceTab = (): ReactElement => {
       name: data.name
     })
     if (res) {
+      toast.success(formatMessage(mediaMessages.updatedDevice))
       await actions?.getData()
       drawerActions?.handleCloseDrawer()
     }
@@ -68,6 +72,7 @@ const DeviceTab = (): ReactElement => {
     })
 
     if (res) {
+      toast.success(formatMessage(mediaMessages.createdDevice))
       await actions?.getData({}, true)
       drawerActions?.handleCloseDrawer()
     }
