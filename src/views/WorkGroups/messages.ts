@@ -183,14 +183,14 @@ export const workGroupsFormMessages = defineMessages({
 })
 
 export const workGroupsUsersListMessages = defineMessages({
-  deletedUsersSuccess: {
-    id: 'views.workGroups.workGroupsForm.deletedUsersSuccess',
+  unlinkedUsersSuccess: {
+    id: 'views.workGroups.workGroupsForm.unlinkedUsersSuccess',
     defaultMessage:
-      '{total, plural, one{Usuario eliminado} other{Usuarios eliminados}} correctamente'
+      '{total, plural, one{Usuario desvinculado} other{Usuarios desvinculados}} correctamente'
   },
-  deletedTechniquesSuccess: {
-    id: 'views.workGroups.workGroupsForm.deletedTechniquesSuccess',
+  unlinkedTechniquesSuccess: {
+    id: 'views.workGroups.workGroupsForm.unlinkedTechniquesSuccess',
     defaultMessage:
-      '{total, plural, one{Técnica eliminada} other{Técnicas eliminadas}} correctamente'
+      '{total, plural, one{Técnica desvinculada} other{Técnicas desvinculadas}} correctamente'
   }
 })
