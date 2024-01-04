@@ -18,7 +18,7 @@ import useToast from 'hooks/useToast'
 import { format } from 'date-fns'
 import { TechniqueTabs } from 'types/technique'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
-import { onlyLetters } from 'utils/patterns'
+import { CURPPattern, RFCPattern, onlyLetters } from 'utils/patterns'
 import { formMessages } from 'globalMessages'
 
 interface FormValues extends AddressFormValues {
@@ -198,7 +198,19 @@ const PersonalDataForm = (): ReactElement => {
       name: yup
         .string()
         .required(getMessage('required'))
-        .matches(onlyLetters, formatMessage(formMessages.onlyLetters))
+        .matches(onlyLetters, formatMessage(formMessages.onlyLetters)),
+      age: yup
+        .number()
+        .typeError(getMessage('mustBeNumber'))
+        .integer(getMessage('mustBeInteger')),
+      curp: yup.string().matches(CURPPattern, {
+        excludeEmptyString: true,
+        message: getMessage('invalidCURP')
+      }),
+      rfc: yup.string().matches(RFCPattern, {
+        excludeEmptyString: true,
+        message: getMessage('invalidRFC')
+      })
     })
     .concat(addressValidationSchema)
 
