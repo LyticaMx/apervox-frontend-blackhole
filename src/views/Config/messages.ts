@@ -181,6 +181,19 @@ export const labelsAdministrationMessages = defineMessages({
     id: 'views.Config.LabelsAdministration.secondDeleteStep',
     defaultMessage:
       'Ingresa tu contraseña para validar la eliminación del(los) rótulo(s) seleccionado(s).'
+  },
+  successfullyCreated: {
+    id: 'views.Config.LabelsAdministration.successfullyCreated',
+    defaultMessage: 'Rótulo creado correctamente'
+  },
+  successfullyUpdated: {
+    id: 'views.Config.LabelsAdministration.successfullyUpdated',
+    defaultMessage: 'Rótulo actualizado correctamente'
+  },
+  successfullyDeleted: {
+    id: 'views.Config.LabelsAdministration.successfullyDeleted',
+    defaultMessage:
+      '{total, plural, one{Rótulo eliminado} other{Rótulos eliminados}} correctamente'
   }
 })
 
