@@ -136,6 +136,9 @@ export const getActionTitle = (
 ): ReactNode => {
   if (moduleName === 'auth') {
     if (action === 'logged') return formatter(auditableActions.logged)
+    else if (action === 'logging_attemp') {
+      return formatter(auditableActions.logging_attemp)
+    } else if (action === 'bloqued') return formatter(auditableActions.bloqued)
     else if (action === 'logout') return formatter(auditableActions.logout)
   }
 

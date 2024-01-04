@@ -8,7 +8,7 @@ import { transcriptionSocketMessages } from '../messages'
 
 interface TranscriptionStatus {
   task: 'Transcription' | 'Segmentation' | 'IDLE'
-  status: 'PENDING' | 'STARTED' | 'SUCCESS' | 'FAILURE' | 'IDLE'
+  status: 'PENDING' | 'STARTED' | 'SUCCESS' | 'FAILURE' | 'IDLE' | 'REVOKED'
 }
 
 interface TranscriptionProgress {
@@ -146,6 +146,14 @@ export const useTranscription = (
           })
         )
         setLock(false)
+        return
+      }
+      if (status === 'REVOKED') {
+        toast.info(formatMessage(transcriptionSocketMessages.cancelled))
+        setLock(false)
+        setTimeout(() => {
+          setProgress(0)
+        }, 500)
         return
       }
       if (status !== 'IDLE') {

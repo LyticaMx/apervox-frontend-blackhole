@@ -1,7 +1,7 @@
 import { ReactElement, useEffect, useRef, useState } from 'react'
 import { format } from 'date-fns'
 import { useIntl } from 'react-intl'
-import { NoSymbolIcon, RectangleGroupIcon } from '@heroicons/react/24/outline'
+import { NoSymbolIcon } from '@heroicons/react/24/outline'
 
 import Table from 'components/Table'
 import Tooltip from 'components/Tooltip'
@@ -54,7 +54,7 @@ const Verification = (): ReactElement => {
         header: formatMessage(tableMessages.date),
         accessorKey: 'created_at',
         cell: ({ getValue }) =>
-          format(new Date(getValue<string>() ?? ''), 'dd/MM/yyyy hh:mm')
+          format(new Date(getValue<string>() ?? ''), 'dd/MM/yyyy HH:mm')
       },
       {
         header: formatMessage(generalMessages.actions),
@@ -91,19 +91,6 @@ const Verification = (): ReactElement => {
                   }}
                   color="primary"
                 />
-              </Tooltip>
-
-              <Tooltip
-                content={formatMessage(generalMessages.history)}
-                floatProps={{ offset: 10, arrow: true }}
-                classNames={{
-                  panel:
-                    'bg-secondary text-white py-1 px-2 rounded-md text-sm whitespace-nowrap',
-                  arrow: 'absolute bg-white w-2 h-2 rounded-full bg-secondary'
-                }}
-                placement="top"
-              >
-                <RectangleGroupIcon className="h-5 w-5 mx-1 ml-2 text-muted hover:text-primary cursor-pointer" />
               </Tooltip>
             </div>
           )

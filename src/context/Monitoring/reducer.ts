@@ -11,6 +11,8 @@ export const reducer = (
       return { ...state, data: action.payload }
     case Types.SET_TOTAL:
       return { ...state, total: action.payload }
+    case Types.SET_TOTAL_HANGED:
+      return { ...state, totalHanged: action.payload }
     case Types.SET_FILTERS:
       return {
         ...state,

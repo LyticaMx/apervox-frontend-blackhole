@@ -56,7 +56,7 @@ const EditVerificationLineDrawer = ({
           {formatMessage(generalMessages.createdOn, {
             date: format(
               new Date(verificationLine?.created_at ?? 0),
-              'dd/MM/yyyy - hh:mm'
+              'dd/MM/yyyy - HH:mm'
             )
           })}
           <span className="ml-2">{verificationLine?.created_by ?? ''}</span>

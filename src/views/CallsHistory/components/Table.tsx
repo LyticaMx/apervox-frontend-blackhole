@@ -55,7 +55,7 @@ const CallsTable = (): ReactElement => {
         id: 'time',
         accessorKey: 'date',
         header: getMessage('time'),
-        cell: ({ getValue }) => format(new Date(getValue<string>()), 'hh:mm')
+        cell: ({ getValue }) => format(new Date(getValue<string>()), 'HH:mm')
       },
       {
         accessorKey: 'carrier',

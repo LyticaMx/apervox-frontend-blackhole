@@ -121,7 +121,9 @@ export const useActions = (state: LiveCallState, dispatch): LiveCallActions => {
 
   const getAllData = async (): Promise<void> => {
     try {
-      const response = await getLiveCalls({ urlParams: { limit: -1 } })
+      const response = await getLiveCalls({
+        urlParams: { limit: -1, by: 'call_start_date', order: 'desc' }
+      })
       let totalLive = 0
       let totalHanged = 0
       const calls = (response.data as any[]).map<LiveCall>((datum) => {

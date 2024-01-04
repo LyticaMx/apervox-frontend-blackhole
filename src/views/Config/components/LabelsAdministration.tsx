@@ -281,7 +281,7 @@ const LabelsAdministration = (): ReactElement => {
                     {item.name}
                   </Typography>
                   <Typography className="text-secondary leading-4">
-                    {format(new Date(item.created_at), 'dd/MM/yyyy - hh:mm:ss')}
+                    {format(new Date(item.created_at), 'dd/MM/yyyy - HH:mm:ss')}
                   </Typography>
                 </div>
               </div>
