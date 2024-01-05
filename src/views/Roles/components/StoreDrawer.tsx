@@ -93,7 +93,7 @@ const StoreDrawer = ({ open, role, onClose }: Props): ReactElement => {
   const formatDate = (date?: string): string => {
     if (!date) return ''
 
-    return format(parseISO(date), 'dd/MM/yyyy - hh:ss:mm')
+    return format(parseISO(date), 'dd/MM/yyyy - HH:mm')
   }
 
   const setForm = async (): Promise<void> => {
