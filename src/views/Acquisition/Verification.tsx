@@ -54,7 +54,7 @@ const Verification = (): ReactElement => {
         header: formatMessage(tableMessages.date),
         accessorKey: 'created_at',
         cell: ({ getValue }) =>
-          format(new Date(getValue<string>() ?? ''), 'dd/MM/yyyy HH:mm')
+          format(new Date(getValue<string>() ?? ''), 'dd/MM/yyyy - HH:mm')
       },
       {
         header: formatMessage(generalMessages.actions),
