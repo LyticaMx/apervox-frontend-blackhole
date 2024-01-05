@@ -1,6 +1,6 @@
 import { CustomFieldFunctionProps } from 'types/form'
 import { FormValues } from '.'
-import { ReactElement } from 'react'
+import { ChangeEvent, ReactElement, useRef } from 'react'
 import Preview from './Preview'
 import { PlusCircleIcon } from '@heroicons/react/24/outline'
 import { useTechnique } from 'context/Technique'
@@ -14,8 +14,19 @@ const Biometrics = (props: Props): ReactElement | null => {
   const { name, values, setFieldValue, onSyncDelete } = props
   const { target } = useTechnique()
   const ability = useAbility()
+  const formRef = useRef<HTMLFormElement>(null)
 
   if (!target?.id) return null
+
+  const uploadFile = (e: ChangeEvent<HTMLInputElement>): void => {
+    const files = e.currentTarget.files
+    if (!files || files.length === 0) return
+    setFieldValue(name, {
+      ...values[name],
+      toLoad: values[name].toLoad.concat([files[0]])
+    })
+    formRef.current?.reset()
+  }
 
   return (
     <div>
@@ -57,19 +68,15 @@ const Biometrics = (props: Props): ReactElement | null => {
           <PlusCircleIcon className="w-7 h-7" />
         </label>
       </div>
-      <input
-        id={name}
-        className="hidden"
-        type="file"
-        accept={name === 'voiceprints' ? 'audio/*' : 'image/*'}
-        disabled={ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)}
-        onChange={(e) =>
-          setFieldValue(name, {
-            ...values[name],
-            toLoad: values[name].toLoad.concat([e.currentTarget.files?.[0]])
-          })
-        }
-      />
+      <form className="hidden" ref={formRef}>
+        <input
+          id={name}
+          type="file"
+          accept={name === 'voiceprints' ? 'audio/*' : 'image/*'}
+          disabled={ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)}
+          onChange={uploadFile}
+        />
+      </form>
     </div>
   )
 }
