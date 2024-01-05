@@ -31,8 +31,12 @@ const Preview = (props: PreviewProps): ReactElement => {
 
   if (type === 'audio') {
     return (
-      <div className="border border-secondary-gray p-1 rounded-md">
+      <div className="border border-secondary-gray p-1 rounded-md relative">
         <BsSoundwave className="w-10 h-10" />
+        <XMarkIcon
+          className="w-4 h-4 absolute top-0 right-0 cursor-pointer text-white mix-blend-difference"
+          onClick={remove}
+        />
       </div>
     )
   }

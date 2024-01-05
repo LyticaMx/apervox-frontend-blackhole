@@ -101,6 +101,10 @@ export const formMessages = defineMessages({
     id: 'global.form.mustBeNumber',
     defaultMessage: 'Debe ser un valor númerico'
   },
+  mustBeInteger: {
+    id: 'global.form.mustBeInteger',
+    defaultMessage: 'Debe ser un número entero'
+  },
   minLength: {
     id: 'global.form.minLength',
     defaultMessage: 'El campo debe tener al menos {length} caracteres'
@@ -156,6 +160,14 @@ export const formMessages = defineMessages({
   invalidZipCode: {
     id: 'global.form.invalidZipCode',
     defaultMessage: 'Código postal no valido'
+  },
+  invalidCURP: {
+    id: 'global.form.invalidCURP',
+    defaultMessage: 'CURP no valido'
+  },
+  invalidRFC: {
+    id: 'global.form.invalidRFC',
+    defaultMessage: 'RFC no valido'
   },
   invalidURL: {
     id: 'global.form.invalidURL',

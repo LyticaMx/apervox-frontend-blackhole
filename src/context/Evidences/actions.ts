@@ -68,7 +68,6 @@ export const useActions = (state: EvidenceState, dispatch): EvidenceActions => {
   ): Promise<void> => {
     try {
       if (!technique) return
-      console.log({ params })
       const urlParams = Params.Builder(params, 'call_start_date')
         .pagination(pagination)
         .searchFilters(searchFilter)
