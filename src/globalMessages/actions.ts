@@ -171,5 +171,9 @@ export const actionsMessages = defineMessages({
   selectAll: {
     id: 'global.actions.selectAll',
     defaultMessage: 'Seleccionar todo'
+  },
+  unlink: {
+    id: 'global.actions.unlink',
+    defaultMessage: 'Desvincular'
   }
 })

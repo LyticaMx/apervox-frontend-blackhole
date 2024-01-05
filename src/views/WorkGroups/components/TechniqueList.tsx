@@ -3,7 +3,7 @@ import { ReactElement } from 'react'
 import { format, formatDistanceToNow } from 'date-fns'
 import { ColumnDef } from '@tanstack/react-table'
 
-import { TrashIcon } from '@heroicons/react/24/outline'
+import { BiUnlink } from 'react-icons/bi'
 
 import Table from 'components/Table'
 import Tooltip from 'components/Tooltip'
@@ -112,7 +112,7 @@ const TechniqueList = (): ReactElement => {
         return (
           <div className="flex items-center justify-center">
             <Tooltip
-              content={getMessage('delete')}
+              content={getMessage('unlink')}
               floatProps={{ offset: 10, arrow: true }}
               classNames={{
                 panel:
@@ -133,7 +133,7 @@ const TechniqueList = (): ReactElement => {
                     await techniquesActions?.getWorkGroups()
                     launchToast({
                       title: formatMessage(
-                        workGroupsUsersListMessages.deletedTechniquesSuccess,
+                        workGroupsUsersListMessages.unlinkedTechniquesSuccess,
                         {
                           total: 1
                         }
@@ -147,7 +147,7 @@ const TechniqueList = (): ReactElement => {
                 }
                 className="text-muted hover:text-primary"
               >
-                <TrashIcon className="h-5 w-5 mx-1" />
+                <BiUnlink className="h-5 w-5 mx-1" />
               </IconButton>
             </Tooltip>
           </div>
@@ -185,7 +185,7 @@ const TechniqueList = (): ReactElement => {
       actionsForSelectedItems={[
         {
           name: 'Eliminar',
-          tooltip: getMessage('delete'),
+          tooltip: getMessage('unlink'),
           action: async (items) => {
             const deleted =
               await techniquesActions?.deleteTechniquesOfWorkGroup?.(
@@ -196,7 +196,7 @@ const TechniqueList = (): ReactElement => {
               await techniquesActions?.getWorkGroupTechniques()
               launchToast({
                 title: formatMessage(
-                  workGroupsUsersListMessages.deletedTechniquesSuccess,
+                  workGroupsUsersListMessages.unlinkedTechniquesSuccess,
                   {
                     total: items.length
                   }
@@ -206,7 +206,7 @@ const TechniqueList = (): ReactElement => {
             }
             return true
           },
-          Icon: TrashIcon
+          Icon: BiUnlink
         }
       ]}
     />

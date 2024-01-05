@@ -84,7 +84,7 @@ const TechniqueList = (): ReactElement => {
         pageSize={pagination.limit}
         totalCount={pagination.totalRecords}
         manualLimit={{
-          options: pagination.limitOptions ?? [15],
+          options: pagination.limitOptions ?? [15, 25, 50, 100],
           onChangeLimit: (page, limit) =>
             actionsTechniques?.get({ page: page + 1, limit })
         }}

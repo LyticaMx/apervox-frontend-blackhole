@@ -14,6 +14,7 @@ import { useAcquisitionMediums } from 'context/AcquisitionMediums'
 import { formatTotal } from 'utils/formatTotal'
 import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
+import useToast from 'hooks/useToast'
 
 interface FormValues {
   id?: string
@@ -29,6 +30,7 @@ const MediaTab = (): ReactElement => {
   const [deleteIds, setDeleteIds] = useState<string[]>([])
   const { actions: auditActions } = useModuleAudits()
   const ability = useAbility()
+  const toast = useToast()
 
   useEffect(() => {
     actions?.getData({}, true)
@@ -52,6 +54,7 @@ const MediaTab = (): ReactElement => {
 
       setDeleteIds([])
       setOpenDeleteMedia(false)
+      toast.success(formatMessage(mediaMessages.deletedMedia))
       await actions?.getData({ page: 1 }, true)
     } catch {}
   }
@@ -63,6 +66,7 @@ const MediaTab = (): ReactElement => {
     })
 
     if (res) {
+      toast.success(formatMessage(mediaMessages.updatedMedia))
       await actions?.getData()
       drawerActions?.handleCloseDrawer()
     }
@@ -74,6 +78,7 @@ const MediaTab = (): ReactElement => {
     })
 
     if (res) {
+      toast.success(formatMessage(mediaMessages.createdMedia))
       await actions?.getData({}, true)
       drawerActions?.handleCloseDrawer()
     }
