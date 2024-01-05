@@ -18,7 +18,12 @@ import useToast from 'hooks/useToast'
 import { format } from 'date-fns'
 import { TechniqueTabs } from 'types/technique'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
-import { CURPPattern, RFCPattern, onlyLetters } from 'utils/patterns'
+import {
+  CURPPattern,
+  RFCPattern,
+  onlyLetters,
+  phoneNumber
+} from 'utils/patterns'
 import { formMessages } from 'globalMessages'
 
 interface FormValues extends AddressFormValues {
@@ -90,7 +95,7 @@ const PersonalDataForm = (): ReactElement => {
     },
     {
       type: 'text',
-      name: 'phone',
+      name: 'targetNumber',
       options: {
         id: 'personal-data-phone',
         label: getMessage('targetPhone'),
@@ -203,6 +208,10 @@ const PersonalDataForm = (): ReactElement => {
         .number()
         .typeError(getMessage('mustBeNumber'))
         .integer(getMessage('mustBeInteger')),
+      targetNumber: yup.string().matches(phoneNumber, {
+        excludeEmptyString: true,
+        message: getMessage('invalidPhoneNumber')
+      }),
       curp: yup.string().matches(CURPPattern, {
         excludeEmptyString: true,
         message: getMessage('invalidCURP')
@@ -233,6 +242,9 @@ const PersonalDataForm = (): ReactElement => {
     }
 
     try {
+      for (const key in body) {
+        if (body[key] === '') body[key] = null
+      }
       await actions.update(body)
       await actions.updateAddress({
         country: values.country,
