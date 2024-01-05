@@ -6,7 +6,7 @@ import useTableColumns from 'hooks/useTableColumns'
 import { format } from 'date-fns'
 import { ReactElement, useEffect } from 'react'
 import { useIntl } from 'react-intl'
-import { blockedUsersMessages, messages } from './messages'
+import { auditableActions, blockedUsersMessages, messages } from './messages'
 // import UserDrawer from './components/UserDrawer'
 // import { useDrawer } from 'context/Drawer'
 import { Audit } from 'context/Audit/types'
@@ -27,7 +27,13 @@ const BlockedUsers = (): ReactElement => {
   const columns = useTableColumns<Audit>(() => [
     {
       accessorKey: 'action',
-      header: formatMessage(generalMessages.description)
+      header: formatMessage(generalMessages.description),
+      cell: ({ getValue }) => {
+        const action = getValue<string>()
+        return auditableActions[action]
+          ? formatMessage(auditableActions[action])
+          : action
+      }
     },
     {
       accessorKey: 'name',
