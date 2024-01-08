@@ -1076,7 +1076,7 @@ export const physicalDescriptionFormMessages = defineMessages({
   },
   curly: {
     id: 'views.techniques.PhysicalDescriptionForm.hairType.curly',
-    defaultMessage: 'Ondulado'
+    defaultMessage: 'Rizado'
   },
   kinky: {
     id: 'views.techniques.PhysicalDescriptionForm.hairType.kinky',
