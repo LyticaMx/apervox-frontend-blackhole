@@ -56,7 +56,7 @@ const EditOverflowLineDrawer = ({
         <Typography variant="body2" className="leading-tight mb-4">
           {formatMessage(editMessages.subtitle)}
         </Typography>
-        <span className="text-sm mb-4 text-gray-400">
+        <span className="text-sm mb-4 text-gray-400 font-medium">
           {formatMessage(generalMessages.createdOn, {
             date: format(
               new Date(overflowLine?.created_at ?? 0),

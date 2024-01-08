@@ -175,14 +175,14 @@ const StoreDrawer = ({ open, role, onClose }: Props): ReactElement => {
 
           {role && (
             <>
-              <p className="text-xs text-muted">
+              <p className="text-xs text-gray-400">
                 <span className="font-medium mr-1.5">
                   {getGlobalMessage('created', 'generalMessages')}:
                 </span>{' '}
                 {formatDate(role?.created_at)}{' '}
                 <span className="ml-1">{role.created_by}</span>
               </p>
-              <p className="text-xs text-muted mb-2">
+              <p className="text-xs text-gray-400">
                 <span className="font-medium mr-1.5">
                   {getGlobalMessage('updated', 'generalMessages')}:
                 </span>{' '}
