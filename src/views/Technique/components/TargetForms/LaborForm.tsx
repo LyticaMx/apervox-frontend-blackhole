@@ -108,12 +108,11 @@ const LaborForm = (): ReactElement => {
       email: yup
         .string()
         .trim()
-        .email(formatMessage(formMessages.invalidEmail))
-        .required(formatMessage(formMessages.required)),
-      phone: yup
-        .string()
-        .required(formatMessage(formMessages.required))
-        .matches(phoneNumber, formatMessage(formMessages.invalidPhoneNumber))
+        .email(formatMessage(formMessages.invalidEmail)),
+      phone: yup.string().matches(phoneNumber, {
+        excludeEmptyString: true,
+        message: formatMessage(formMessages.invalidPhoneNumber)
+      })
     })
     .concat(addressValidationSchema)
 
@@ -154,21 +153,26 @@ const LaborForm = (): ReactElement => {
   const updateData = async (values: FormValues[]): Promise<void> => {
     try {
       const response = await actions.update(
-        values.map((form) => ({
-          id: form.id,
-          organization: form.name,
-          position: form.job,
-          email: form.email,
-          phone: form.phone,
-          address: {
-            country: form.country,
-            state: form.state,
-            city: form.city,
-            zip: form.zipCode,
-            address_line_1: form.line1,
-            address_line_2: form.line2
+        values.map((form) => {
+          for (const key in form) {
+            if (form[key] === '') form[key] = null
           }
-        }))
+          return {
+            id: form.id,
+            organization: form.name,
+            position: form.job,
+            email: form.email,
+            phone: form.phone,
+            address: {
+              country: form.country,
+              state: form.state,
+              city: form.city,
+              zip: form.zipCode,
+              address_line_1: form.line1,
+              address_line_2: form.line2
+            }
+          }
+        })
       )
 
       setInitialData(
