@@ -94,7 +94,8 @@ const Evidence = (): ReactElement => {
     updateTranscription,
     lock: transcriptionLock,
     forceLock: forceTranscriptionLock,
-    progress: transcriptionProgress
+    progress: transcriptionProgress,
+    canCancelTranscription
   } = useTranscription(workingEvidence.id ?? '', canWork)
   useCommentsRoom(workingEvidence.id ?? '', canWork)
 
@@ -452,15 +453,13 @@ const Evidence = (): ReactElement => {
         id: 'transcription',
         component: (
           <TranscriptionTab
-            resetRegions={() => {
-              forceTranscriptionLock()
-              setTranscriptionRegions([])
-            }}
+            lockRegions={forceTranscriptionLock}
             onSave={updateTranscription}
             transcriptionSegments={transcriptionRegions}
             onChangeSegment={handleChangeSegment}
             lock={transcriptionLock}
             progress={transcriptionProgress}
+            canCancel={canCancelTranscription}
           />
         ),
         name: 'Transcripción'
@@ -498,7 +497,8 @@ const Evidence = (): ReactElement => {
     workingEvidence.id,
     transcriptionRegions,
     transcriptionLock,
-    transcriptionProgress
+    transcriptionProgress,
+    canCancelTranscription
   ])
 
   if (!canWork) return <WaitToWork />

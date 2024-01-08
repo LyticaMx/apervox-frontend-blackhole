@@ -20,11 +20,12 @@ import EmptyRegionDialog from './EmptyRegionDialog'
 
 interface Props {
   transcriptionSegments: RegionInterface[]
-  resetRegions: () => void
+  lockRegions: () => void
   onChangeSegment: (id: string, value: string) => void
   onSave: () => Promise<void>
   lock: boolean
   progress: number
+  canCancel: boolean
 }
 
 const TranscriptionTab = (props: Props): ReactElement => {
@@ -33,7 +34,8 @@ const TranscriptionTab = (props: Props): ReactElement => {
     onSave,
     transcriptionSegments,
     lock,
-    resetRegions,
+    canCancel,
+    lockRegions,
     progress
   } = props
   const [aRegionIsEmpty, setARegionIsEmpty] = useState(false)
@@ -92,7 +94,7 @@ const TranscriptionTab = (props: Props): ReactElement => {
       <TranscriptDialog
         open={openTranscriptDialog}
         onAccept={async () => {
-          resetRegions()
+          lockRegions()
           await workingEvidenceActions?.createFullTranscription()
           toast.info(formatMessage(transcriptionTabMessages.waitingToStartTask))
           setOpenTranscriptDialog(false)
@@ -147,6 +149,7 @@ const TranscriptionTab = (props: Props): ReactElement => {
             >
               <button
                 className="text-secondary-gray hover:enabled:text-secondary border shadow-md p-2 rounded-md"
+                disabled={lock && !canCancel}
                 onClick={() => {
                   if (lock) setOpenCancelTranscriptDialog(true)
                   else setOpenTranscriptDialog(true)

@@ -32,6 +32,7 @@ interface TranscriptionCRUD {
   forceLock: () => void
   lock: boolean
   progress: number
+  canCancelTranscription: boolean
 }
 
 export const useTranscription = (
@@ -44,6 +45,7 @@ export const useTranscription = (
     RegionInterface[]
   >([])
   const [lock, setLock] = useState(false)
+  const [canCancelTranscription, setCanCancelTranscription] = useState(false)
   const [progress, setProgress] = useState(0)
   const { formatMessage } = useIntl()
   const toast = useToast()
@@ -146,11 +148,13 @@ export const useTranscription = (
           })
         )
         setLock(false)
+        setCanCancelTranscription(false)
         return
       }
       if (status === 'REVOKED') {
         toast.info(formatMessage(transcriptionSocketMessages.cancelled))
         setLock(false)
+        setCanCancelTranscription(false)
         setTimeout(() => {
           setProgress(0)
         }, 500)
@@ -159,7 +163,10 @@ export const useTranscription = (
       if (status !== 'IDLE') {
         setLock(true)
         if (status === 'PENDING') {
-          if (task === 'Segmentation') setTranscriptionRegions([])
+          if (task === 'Segmentation') {
+            setTranscriptionRegions([])
+            setCanCancelTranscription(true)
+          }
           toast.info(
             formatMessage(transcriptionSocketMessages.addedPendingTask, {
               type: task
@@ -175,8 +182,12 @@ export const useTranscription = (
           toast.success(
             formatMessage(transcriptionSocketMessages.endedTask, { type: task })
           )
+          if (task === 'Segmentation') {
+            setTranscriptionRegions([])
+          }
           if (task === 'Transcription') {
             setLock(false)
+            setCanCancelTranscription(false)
             setTimeout(() => {
               setProgress(0)
             }, 500)
@@ -232,6 +243,7 @@ export const useTranscription = (
     updateTranscription,
     setTranscriptionRegions,
     lock,
+    canCancelTranscription,
     forceLock: () => setLock(true),
     progress
   }
