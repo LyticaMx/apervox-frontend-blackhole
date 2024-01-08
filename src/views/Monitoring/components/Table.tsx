@@ -241,7 +241,7 @@ const CallsTable = (): ReactElement => {
 
   const playAudio = (data: LiveCall): void => {
     try {
-      if (data.endedAt) {
+      if (Boolean(data.endedAt) || data.status === 'ended') {
         rtcActions?.playEvidence(data.id, data.target)
       } else {
         rtcActions?.joinRoom(data.id, data.target)
