@@ -3,13 +3,14 @@ import Form from 'components/Form'
 import Typography from 'components/Typography'
 import { FormikConfig, FormikContextType } from 'formik'
 import { actionsMessages, formMessages } from 'globalMessages'
-import { ReactElement, useMemo, useRef } from 'react'
+import { ReactElement, useEffect, useMemo, useRef, useState } from 'react'
 import { useIntl } from 'react-intl'
 import { Field } from 'types/form'
 import { letterheadAdministrationMessages } from '../messages'
 import * as yup from 'yup'
 import clsx from 'clsx'
 import { simpleText } from 'utils/patterns'
+import { useAuth } from 'context/Auth'
 
 interface FormValues {
   documentType: 'pdf' | 'excel' | 'word' | 'csv'
@@ -19,6 +20,7 @@ interface FormValues {
 }
 
 interface Props {
+  id?: string
   onAccept: (data: FormValues) => Promise<void>
   subtitle: string
   initialValues?: FormValues
@@ -35,9 +37,13 @@ const LetterheadDrawer = (props: Props): ReactElement => {
       organizationName: '',
       file: null
     },
-    fileName
+    fileName,
+    id
   } = props
   const { formatMessage } = useIntl()
+  const {
+    auth: { token }
+  } = useAuth()
   const formikRef = useRef<FormikContextType<FormValues>>()
 
   const validationSchema = yup.object({
@@ -117,6 +123,21 @@ const LetterheadDrawer = (props: Props): ReactElement => {
         name: 'file',
         type: 'custom',
         children: ({ values, errors, touched, setFieldValue }) => {
+          const [url, setUrl] = useState<string | null>(null)
+          useEffect(() => {
+            if (values.file) {
+              const url = URL.createObjectURL(values.file)
+
+              setUrl(url)
+
+              return () => {
+                setUrl(null)
+                URL.revokeObjectURL(url)
+              }
+            }
+            setUrl(null)
+          }, [values.file])
+
           return (
             <div>
               <label
@@ -128,9 +149,14 @@ const LetterheadDrawer = (props: Props): ReactElement => {
                 )}
                 htmlFor="file"
               >
-                {!!values.file || !!fileName ? (
+                {!!values.file || id ? (
                   <span className="bloc text-primary">
-                    {values.file?.name ?? fileName}
+                    <img
+                      src={
+                        url ??
+                        `${process.env.REACT_APP_MAIN_BACKEND_URL}letterheads/${id}/thumbnail?token=${token}`
+                      }
+                    />
                   </span>
                 ) : (
                   <span className="text-secondary-gray block">
