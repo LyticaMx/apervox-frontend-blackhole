@@ -1,4 +1,9 @@
-import { InputHTMLAttributes, ReactElement, useCallback } from 'react'
+import {
+  InputHTMLAttributes,
+  KeyboardEvent,
+  ReactElement,
+  useCallback
+} from 'react'
 import clsx from 'clsx'
 
 import Label from 'components/Label'
@@ -18,6 +23,7 @@ export interface Props {
   onChange?: (element: React.ChangeEvent<HTMLInputElement>) => any
   onBlur?: (element: any) => any
   onKeyDown?: (element: any) => any
+  onKeyUp?: (event: KeyboardEvent<HTMLInputElement>) => any
   error?: boolean
   outlined?: boolean
   helperText?: string
