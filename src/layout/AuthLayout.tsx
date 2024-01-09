@@ -1,13 +1,20 @@
-import { ReactElement } from 'react'
+import { ReactElement, useEffect } from 'react'
 
 import Loader from 'components/Loader'
 import backgroundImage from 'assets/Images/auth3.jpeg'
+import { useRTCPlayer } from 'context/RTCPlayer'
 
 interface Props {
   children: ReactElement
 }
 
 const AuthLayout = ({ children }: Props): ReactElement => {
+  const { actions } = useRTCPlayer()
+
+  useEffect(() => {
+    actions?.hidePlayer()
+  }, [])
+
   return (
     <div className="relative flex min-h-full justify-center md:px-12 lg:px-0 h-screen">
       <div className="relative z-10 flex flex-1 flex-col bg-white py-10 px-4 shadow-2xl sm:justify-center md:flex-none md:px-28">
