@@ -267,6 +267,7 @@ const LetterheadAdministration = (): ReactElement => {
                           file: null
                         }}
                         fileName={item.image}
+                        id={item.id}
                       />
                     )
                   })

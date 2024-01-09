@@ -1110,7 +1110,7 @@
   "views.techniques.PhysicalDescriptionForm.hairLength.short": "Corto",
   "views.techniques.PhysicalDescriptionForm.hairLengthPlaceholder": "Ej. Corto",
   "views.techniques.PhysicalDescriptionForm.hairType": "Tipo de cabello",
-  "views.techniques.PhysicalDescriptionForm.hairType.curly": "Ondulado",
+  "views.techniques.PhysicalDescriptionForm.hairType.curly": "Rizado",
   "views.techniques.PhysicalDescriptionForm.hairType.kinky": "Afro",
   "views.techniques.PhysicalDescriptionForm.hairType.straight": "Liso",
   "views.techniques.PhysicalDescriptionForm.hairType.wavy": "Ondulado",

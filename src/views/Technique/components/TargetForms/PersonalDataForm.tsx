@@ -1,5 +1,5 @@
-import { ReactElement, useEffect, useMemo, useState } from 'react'
-import { FormikConfig } from 'formik'
+import { ReactElement, useEffect, useMemo, useRef, useState } from 'react'
+import { FormikConfig, FormikContextType } from 'formik'
 import * as yup from 'yup'
 import Form from 'components/Form'
 import { Field, Section } from 'types/form'
@@ -18,6 +18,7 @@ import useToast from 'hooks/useToast'
 import { format } from 'date-fns'
 import { TechniqueTabs } from 'types/technique'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
+
 import {
   CURPPattern,
   RFCPattern,
@@ -69,6 +70,7 @@ const PersonalDataForm = (): ReactElement => {
   const actions = useTargetMeta(target?.id ?? '', 'personal-data')
   const { launchToast } = useToast()
   const ability = useAbility()
+  const formikRef = useRef<FormikContextType<FormValues>>()
 
   const fields: Array<Field<FormValues>> = [
     {
@@ -159,7 +161,14 @@ const PersonalDataForm = (): ReactElement => {
         id: 'personal-data-curp',
         label: 'CURP',
         placeholder: getMessage('curpPlaceholder'),
-        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS),
+        onKeyUp: (ev) => {
+          if (!formikRef.current) return
+          formikRef.current.setFieldValue(
+            'curp',
+            formikRef.current.values.curp.toUpperCase()
+          )
+        }
       },
       breakpoints: { xs: 3 }
     },
@@ -170,7 +179,14 @@ const PersonalDataForm = (): ReactElement => {
         id: 'personal-data-rfc',
         label: 'RFC',
         placeholder: getMessage('rfcPlaceholder'),
-        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS),
+        onKeyUp: (ev) => {
+          if (!formikRef.current) return
+          formikRef.current.setFieldValue(
+            'rfc',
+            formikRef.current.values.rfc.toUpperCase()
+          )
+        }
       },
       breakpoints: { xs: 3 }
     },
@@ -326,6 +342,7 @@ const PersonalDataForm = (): ReactElement => {
         <Form
           formikConfig={formikConfig}
           fields={fields}
+          formikRef={formikRef}
           submitButtonPosition="right"
           submitButtonLabel={getGlobalMessage('save', 'actionsMessages')}
           submitButtonProps={{

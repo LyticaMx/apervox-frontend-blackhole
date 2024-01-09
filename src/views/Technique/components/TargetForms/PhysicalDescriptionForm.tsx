@@ -53,139 +53,143 @@ const PhysicalDescriptionForm = (): ReactElement => {
   const { launchToast } = useToast()
   const ability = useAbility()
 
-  const fields: Array<Field<FormValues>> = [
-    {
-      type: 'text',
-      name: 'height',
-      options: {
-        id: 'physical-description-height',
-        label: getMessage('height'),
-        placeholder: getMessage('heightPlaceholder'),
-        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
+  const fields = useMemo<Array<Field<FormValues>>>(
+    () => [
+      {
+        type: 'text',
+        name: 'height',
+        options: {
+          id: 'physical-description-height',
+          label: getMessage('height'),
+          placeholder: getMessage('heightPlaceholder'),
+          disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
+        },
+        breakpoints: { xs: 3 }
       },
-      breakpoints: { xs: 3 }
-    },
-    {
-      type: 'text',
-      name: 'weight',
-      options: {
-        id: 'physical-description-weight',
-        label: getMessage('weight'),
-        placeholder: getMessage('weightPlaceholder'),
-        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
+      {
+        type: 'text',
+        name: 'weight',
+        options: {
+          id: 'physical-description-weight',
+          label: getMessage('weight'),
+          placeholder: getMessage('weightPlaceholder'),
+          disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
+        },
+        breakpoints: { xs: 3 }
       },
-      breakpoints: { xs: 3 }
-    },
-    {
-      type: 'select',
-      name: 'bodyType',
-      options: {
-        label: getMessage('bodyType'),
-        clearable: false,
-        placeholder: getMessage('bodyTypePlaceholder'),
-        items: bodyTypes,
-        textField: 'text',
-        valueField: 'value',
-        optionsContainerClassname: '!w-full',
-        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
+      {
+        type: 'select',
+        name: 'bodyType',
+        options: {
+          label: getMessage('bodyType'),
+          clearable: false,
+          placeholder: getMessage('bodyTypePlaceholder'),
+          items: bodyTypes,
+          textField: 'text',
+          valueField: 'value',
+          optionsContainerClassname: '!w-full',
+          disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
+        },
+        breakpoints: { xs: 3 }
       },
-      breakpoints: { xs: 3 }
-    },
-    {
-      type: 'text',
-      name: 'otherBody',
-      options: {
-        id: 'physical-description-other-body',
-        label: getMessage('otherBody'),
-        placeholder: getMessage('otherBodyPlaceholder'),
-        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
+      {
+        type: 'text',
+        name: 'otherBody',
+        options: {
+          id: 'physical-description-other-body',
+          label: getMessage('otherBody'),
+          placeholder: getMessage('otherBodyPlaceholder'),
+          disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
+        },
+        breakpoints: { xs: 3 },
+        renderIf: {
+          bodyType: 'other'
+        }
       },
-      breakpoints: { xs: 3 },
-      renderIf: {
-        bodyType: 'other'
+      {
+        type: 'select',
+        name: 'skinColor',
+        options: {
+          label: getMessage('skinColor'),
+          clearable: false,
+          placeholder: getMessage('skinColorPlaceholder'),
+          items: skinTypes,
+          textField: 'text',
+          valueField: 'value',
+          optionsContainerClassname: '!w-full',
+          disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
+        },
+        breakpoints: { xs: 3 }
+      },
+      {
+        type: 'select',
+        name: 'hairLength',
+        options: {
+          label: getMessage('hairLength'),
+          clearable: false,
+          placeholder: getMessage('hairLengthPlaceholder'),
+          items: hairLength,
+          textField: 'text',
+          valueField: 'value',
+          optionsContainerClassname: '!w-full',
+          disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
+        },
+        breakpoints: { xs: 3 }
+      },
+      {
+        type: 'select',
+        name: 'hairType',
+        options: {
+          label: getMessage('hairType'),
+          clearable: false,
+          placeholder: getMessage('hairTypePlaceholder'),
+          items: hairTypes,
+          textField: 'text',
+          valueField: 'value',
+          optionsContainerClassname: '!w-full',
+          disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
+        },
+        breakpoints: { xs: 3 },
+        renderIf: {
+          '!hairLength': 'bald'
+        }
+      },
+      {
+        type: 'select',
+        name: 'hairColor',
+        options: {
+          label: getMessage('hairColor'),
+          clearable: false,
+          placeholder: getMessage('hairColorPlaceholder'),
+          items: hairColor,
+          textField: 'text',
+          valueField: 'value',
+          optionsContainerClassname: '!w-full',
+          disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
+        },
+        breakpoints: { xs: 3 },
+        renderIf: {
+          '!hairLength': 'bald'
+        }
+      },
+      {
+        type: 'text',
+        name: 'otherHairColor',
+        options: {
+          id: 'other-hair-color',
+          label: getMessage('otherHairColor'),
+          placeholder: getMessage('otherHairColorPlaceholder'),
+          disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
+        },
+        breakpoints: { xs: 3 },
+        renderIf: {
+          hairColor: 'other',
+          '!hairLength': 'bald'
+        }
       }
-    },
-    {
-      type: 'select',
-      name: 'skinColor',
-      options: {
-        label: getMessage('skinColor'),
-        clearable: false,
-        placeholder: getMessage('skinColorPlaceholder'),
-        items: skinTypes,
-        textField: 'text',
-        valueField: 'value',
-        optionsContainerClassname: '!w-full',
-        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
-      },
-      breakpoints: { xs: 3 }
-    },
-    {
-      type: 'select',
-      name: 'hairLength',
-      options: {
-        label: getMessage('hairLength'),
-        clearable: false,
-        placeholder: getMessage('hairLengthPlaceholder'),
-        items: hairLength,
-        textField: 'text',
-        valueField: 'value',
-        optionsContainerClassname: '!w-full',
-        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
-      },
-      breakpoints: { xs: 3 }
-    },
-    {
-      type: 'select',
-      name: 'hairType',
-      options: {
-        label: getMessage('hairType'),
-        clearable: false,
-        placeholder: getMessage('hairTypePlaceholder'),
-        items: hairTypes,
-        textField: 'text',
-        valueField: 'value',
-        optionsContainerClassname: '!w-full',
-        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
-      },
-      breakpoints: { xs: 3 },
-      renderIf: {
-        '!hairLength': 'bald'
-      }
-    },
-    {
-      type: 'select',
-      name: 'hairColor',
-      options: {
-        label: getMessage('hairColor'),
-        clearable: false,
-        placeholder: getMessage('hairColorPlaceholder'),
-        items: hairColor,
-        textField: 'text',
-        valueField: 'value',
-        optionsContainerClassname: '!w-full',
-        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
-      },
-      breakpoints: { xs: 3 },
-      renderIf: {
-        '!hairLength': 'bald'
-      }
-    },
-    {
-      type: 'text',
-      name: 'otherHairColor',
-      options: {
-        id: 'other-hair-color',
-        label: getMessage('otherHairColor'),
-        placeholder: getMessage('otherHairColorPlaceholder'),
-        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
-      },
-      breakpoints: { xs: 3 },
-      renderIf: {
-        hairColor: 'other'
-      }
-    }
-  ]
+    ],
+    []
+  )
 
   const validationSchema = yup.object({
     height: yup
@@ -206,6 +210,16 @@ const PhysicalDescriptionForm = (): ReactElement => {
     skinColor: yup.string().required(getMessage('required')),
     hairType: yup.string().required(getMessage('required')),
     hairColor: yup.string().required(getMessage('required')),
+    otherHairColor: yup
+      .string()
+      .when('hairColor', (value, field) =>
+        value === 'other'
+          ? yup
+              .string()
+              .required(getMessage('required'))
+              .matches(onlyLetters, formatMessage(formMessages.onlyLetters))
+          : field
+      ),
     otherBody: yup
       .string()
       .when('bodyType', (value, field) =>
@@ -221,16 +235,21 @@ const PhysicalDescriptionForm = (): ReactElement => {
   const getData = async (): Promise<void> => {
     try {
       const response = await actions.get()
+
       setInitialValues({
-        bodyType: response.data.body_type ?? '',
-        hairColor: response.data.hair_color ?? '',
+        bodyType: response.data.other_body
+          ? 'other'
+          : response.data.body_type ?? '',
+        hairColor: response.data.other_color
+          ? 'other'
+          : response.data.hair_color ?? '',
         hairLength: response.data.hair_length ?? '',
         hairType: response.data.hair_type ?? '',
         height: response.data.height ?? '',
-        otherBody: response.data.other_body ?? '',
-        otherHairColor: response.data.other_color ?? '',
         skinColor: response.data.skin ?? '',
-        weight: response.data.weight ?? ''
+        weight: response.data.weight ?? '',
+        otherBody: response.data.other_body ?? '',
+        otherHairColor: response.data.other_color ?? ''
       })
     } catch {
       techniqueActions?.setActiveTab(TechniqueTabs.GENERAL_DATA)
@@ -262,25 +281,12 @@ const PhysicalDescriptionForm = (): ReactElement => {
     } catch {}
   }
 
-  const formikConfig = useMemo<FormikConfig<FormValues>>(
-    () => ({
-      initialValues: {
-        height: initialValues.height,
-        weight: initialValues.weight,
-        bodyType: initialValues.bodyType,
-        otherBody: initialValues.otherBody,
-        skinColor: initialValues.skinColor,
-        hairType: initialValues.hairType,
-        hairLength: initialValues.hairLength,
-        hairColor: initialValues.hairColor,
-        otherHairColor: initialValues.otherHairColor
-      },
-      validationSchema,
-      onSubmit: handleSubmit,
-      enableReinitialize: true
-    }),
-    [initialValues]
-  )
+  const formikConfig: FormikConfig<FormValues> = {
+    initialValues,
+    validationSchema,
+    onSubmit: handleSubmit,
+    enableReinitialize: true
+  }
 
   useEffect(() => {
     if (!target?.id) return

@@ -142,7 +142,7 @@ const Form = <DataType extends FormikValues = FormikValues>(
                 .map((field, index) => {
                   if (field.renderIf) {
                     if (
-                      !Object.keys(field.renderIf).some((key) => {
+                      !Object.keys(field.renderIf).every((key) => {
                         if (key.startsWith('!')) {
                           const formikKey = key.substring(1)
                           return (
@@ -152,8 +152,11 @@ const Form = <DataType extends FormikValues = FormikValues>(
                         return formik.values[key] === field.renderIf?.[key]
                       })
                     ) {
-                      if (formik.values[field.name] !== '') {
-                        // Reset para cuando se vuelvan a renderizar aparezca su valor original
+                      // Reset para cuando se vuelvan a renderizar aparezca su valor original
+                      if (
+                        formik.values[field.name] !==
+                        formik.initialValues[field.name]
+                      ) {
                         formik.setFieldValue(
                           field.name,
                           formik.initialValues[field.name] ?? ''

@@ -59,7 +59,7 @@ const EditUserDrawer = ({ user, open, onClose }: Props): ReactElement => {
           {getMessage('title')}
         </Typography>
 
-        <span className="text-sm mb-4 text-gray-400">
+        <span className="text-sm mb-4 text-gray-400 font-medium">
           {formatMessage(generalMessages.createdOn, {
             date: format(new Date(user.createdOn ?? ''), 'dd/MM/yyyy - HH:mm')
           })}
