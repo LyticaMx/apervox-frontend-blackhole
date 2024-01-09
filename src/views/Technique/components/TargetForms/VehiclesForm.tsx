@@ -78,7 +78,7 @@ const VehiclesForm = (): ReactElement => {
     { value: 'coupe', text: formatMessage(vehiclesFormMessages.coupe) },
     { value: 'sedan', text: formatMessage(vehiclesFormMessages.sedan) },
     { value: 'hatchback', text: formatMessage(vehiclesFormMessages.hatchback) },
-    { value: 'sport', text: formatMessage(vehiclesFormMessages.sport) },
+    { value: 'sports', text: formatMessage(vehiclesFormMessages.sport) },
     {
       value: 'convertible',
       text: formatMessage(vehiclesFormMessages.convertible)
