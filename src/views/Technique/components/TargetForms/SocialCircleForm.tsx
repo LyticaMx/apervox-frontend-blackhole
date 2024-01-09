@@ -108,7 +108,7 @@ const SocialCircleForm = (): ReactElement => {
           line2: item.address?.address_line_2 ?? ''
         }))
       )
-    } catch {
+    } catch (e) {
       techniqueActions?.setActiveTab(TechniqueTabs.GENERAL_DATA)
     }
   }
@@ -171,7 +171,7 @@ const SocialCircleForm = (): ReactElement => {
   }
 
   useEffect(() => {
-    if (!target?.id) getData()
+    if (target?.id) getData()
   }, [target?.id])
 
   return (

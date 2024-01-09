@@ -369,7 +369,7 @@ const VehiclesForm = (): ReactElement => {
   }
 
   useEffect(() => {
-    if (!target?.id) getData()
+    if (target?.id) getData()
   }, [target?.id])
 
   return (
