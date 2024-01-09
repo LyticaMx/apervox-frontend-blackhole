@@ -183,7 +183,8 @@ const PhysicalDescriptionForm = (): ReactElement => {
         },
         breakpoints: { xs: 3 },
         renderIf: {
-          hairColor: 'other'
+          hairColor: 'other',
+          '!hairLength': 'bald'
         }
       }
     ],
