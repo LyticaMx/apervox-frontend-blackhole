@@ -3,10 +3,11 @@ import Navbar from 'components/Layout/Navbar'
 import Sidebar from 'components/Layout/Sidebar'
 import Loader from 'components/Loader'
 import { useAuth } from 'context/Auth'
+import { useRTCPlayer } from 'context/RTCPlayer'
 import { useSettings } from 'context/Settings'
 import { apiMessages } from 'globalMessages'
 import useToast from 'hooks/useToast'
-import { ReactElement } from 'react'
+import { ReactElement, useEffect } from 'react'
 import { useIdleTimer } from 'react-idle-timer'
 import { useIntl } from 'react-intl'
 import { Layout } from 'types/layout'
@@ -14,6 +15,7 @@ import { Layout } from 'types/layout'
 const EvidenceLayout = ({ children }: Layout): ReactElement => {
   const intl = useIntl()
   const { actions, auth } = useAuth()
+  const { actions: playerActions } = useRTCPlayer()
   const toast = useToast()
   const { settings } = useSettings()
 
@@ -27,6 +29,10 @@ const EvidenceLayout = ({ children }: Layout): ReactElement => {
     onIdle,
     startManually: auth.profile.closeByInactivity
   })
+
+  useEffect(() => {
+    playerActions?.hidePlayer()
+  }, [])
 
   return (
     <>
