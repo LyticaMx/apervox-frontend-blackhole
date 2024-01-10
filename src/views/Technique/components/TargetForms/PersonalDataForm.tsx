@@ -15,7 +15,6 @@ import { useIntl } from 'react-intl'
 import useTargetMeta from 'hooks/useTargetMeta'
 import { useTechnique } from 'context/Technique'
 import useToast from 'hooks/useToast'
-import { format } from 'date-fns'
 import { TechniqueTabs } from 'types/technique'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
@@ -248,13 +247,13 @@ const PersonalDataForm = (): ReactElement => {
       age: values.age,
       country: values.birthCountry,
       state: values.birthState,
-      town: values.birthCity
+      town: values.birthCity,
+      curp: values.curp,
+      rfc: values.rfc
     }
 
-    if (values.curp) body.curp = values.curp
-    if (values.rfc) body.rfc = values.rfc
     if (values.birthdate) {
-      body.birthday = format(new Date(values.birthdate), 'yyyy-MM-dd')
+      body.birthday = new Date(values.birthdate).toISOString()
     }
 
     try {
@@ -308,7 +307,7 @@ const PersonalDataForm = (): ReactElement => {
         name: response.data.full_name ?? '',
         targetNumber: response.data.phone_number ?? '',
         gender: response.data.gender ?? '',
-        birthdate: response.data.birthdate ?? '',
+        birthdate: response.data.birthday ?? '',
         age: response.data.age ?? '',
         curp: response.data.curp ?? '',
         rfc: response.data.rfc ?? '',
