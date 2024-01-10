@@ -138,6 +138,7 @@ export const useTranscription = (
       const { status, task } = transcriptionStatus
       if (task === 'IDLE') {
         setLock(false)
+        setCanCancelTranscription(false)
         return
       }
       if (status === 'FAILURE') {
@@ -162,10 +163,8 @@ export const useTranscription = (
       }
       if (status !== 'IDLE') {
         setLock(true)
+        setCanCancelTranscription(true)
         if (status === 'PENDING') {
-          if (task === 'Segmentation') {
-            setCanCancelTranscription(true)
-          }
           toast.info(
             formatMessage(transcriptionSocketMessages.addedPendingTask, {
               type: task
