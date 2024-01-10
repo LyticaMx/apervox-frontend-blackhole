@@ -11,7 +11,7 @@ const useRTC = (
       `${process.env.REACT_APP_WEBRTC_SOCKET_URL}${fileName}`
     )
 
-    let config: RTCConfiguration | undefined
+    const config: RTCConfiguration = {}
     if (process.env.REACT_APP_WEBRTC_ICE_SERVER_URL) {
       const iceServer: RTCIceServer = {
         urls: process.env.REACT_APP_WEBRTC_ICE_SERVER_URL
@@ -20,6 +20,7 @@ const useRTC = (
         iceServer.username = process.env.REACT_APP_WEBRTC_ICE_SERVER_USER
         iceServer.credential = process.env.REACT_APP_WEBRTC_ICE_SERVER_PASSWORD
       }
+      config.iceServers = [iceServer]
     }
 
     const pc = new RTCPeerConnection(config)
