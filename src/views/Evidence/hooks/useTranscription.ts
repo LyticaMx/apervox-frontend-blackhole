@@ -164,7 +164,6 @@ export const useTranscription = (
         setLock(true)
         if (status === 'PENDING') {
           if (task === 'Segmentation') {
-            setTranscriptionRegions([])
             setCanCancelTranscription(true)
           }
           toast.info(
