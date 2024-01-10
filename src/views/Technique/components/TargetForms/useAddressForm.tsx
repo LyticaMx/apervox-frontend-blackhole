@@ -97,14 +97,15 @@ export const useAddressForm = <T,>(section?: string): AddressForm<T> => {
       .required(formatMessage(formMessages.required))
       .matches(simpleText, formatMessage(formMessages.invalidSimpleText)),
     state: yup.string().when('country', {
-      is: (val) => State.getStatesOfCountry(val ?? '').length > 0,
+      is: (country) => State.getStatesOfCountry(country ?? '').length > 0,
       then: (schema) =>
         schema
           .required(formatMessage(formMessages.required))
           .matches(simpleText, formatMessage(formMessages.invalidSimpleText))
     }),
-    city: yup.string().when('country', {
-      is: (val) => (City.getCitiesOfCountry(val ?? '')?.length ?? 0) > 0,
+    city: yup.string().when(['country', 'state'], {
+      is: (country, state) =>
+        (City.getCitiesOfState(country ?? '', state ?? '')?.length ?? 0) > 0,
       then: (schema) =>
         schema
           .required(formatMessage(formMessages.required))
