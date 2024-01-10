@@ -247,11 +247,11 @@ const PersonalDataForm = (): ReactElement => {
       age: values.age,
       country: values.birthCountry,
       state: values.birthState,
-      town: values.birthCity
+      town: values.birthCity,
+      curp: values.curp,
+      rfc: values.rfc
     }
 
-    if (values.curp) body.curp = values.curp
-    if (values.rfc) body.rfc = values.rfc
     if (values.birthdate) {
       body.birthday = new Date(values.birthdate).toISOString()
     }
