@@ -226,10 +226,10 @@ export const useActions = (state: LiveCallState, dispatch): LiveCallActions => {
 
   const hangUp = async (id: string): Promise<boolean> => {
     try {
-      await hangUpService({
+      const response = await hangUpService({
         queryString: `${id}/hangup`
       })
-      return true
+      return response.data.success
     } catch {
       return false
     }
