@@ -257,8 +257,11 @@ const PersonalDataForm = (): ReactElement => {
     }
 
     try {
+      const excludedKeys = ['state', 'city']
       for (const key in body) {
-        if (body[key] === '') body[key] = null
+        if (!excludedKeys.includes(key) && body[key] === '') {
+          body[key] = null
+        }
       }
       await actions.update(body)
       await actions.updateAddress({
