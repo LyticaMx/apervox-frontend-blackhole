@@ -276,7 +276,19 @@ const VehiclesForm = (): ReactElement => {
     year: yup
       .string()
       .required(formatMessage(formMessages.required))
-      .matches(/^\d{4}$/, formatMessage(vehiclesFormMessages.invalidYear)),
+      .matches(/^\d{4}$/, formatMessage(vehiclesFormMessages.invalidYear))
+      .test(
+        'minValue',
+        formatMessage(formMessages.minValue, { value: 1771 }),
+        (val) => parseInt(val ?? '0', 10) >= 1771
+      )
+      .test(
+        'maxValue',
+        formatMessage(formMessages.maxValue, {
+          value: new Date().getFullYear() + 1
+        }),
+        (val) => parseInt(val ?? '0', 10) <= new Date().getFullYear() + 1
+      ),
     type: yup.string().required(formatMessage(formMessages.required)),
     other_type: yup
       .string()
