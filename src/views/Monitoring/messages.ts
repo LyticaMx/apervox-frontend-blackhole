@@ -29,6 +29,10 @@ export const hangUpMessages = defineMessages({
   success: {
     id: 'views.monitoring.hangUp.success',
     defaultMessage: 'Llamada colgada correctamente'
+  },
+  failure: {
+    id: 'views.monitoring.hangUp.failure',
+    defaultMessage: 'La llamada no se pudo colgar'
   }
 })
 

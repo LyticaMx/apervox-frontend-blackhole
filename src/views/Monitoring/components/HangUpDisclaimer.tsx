@@ -30,6 +30,11 @@ const HangUpDisclaimer = (props: Props): ReactElement => {
           title: getMessage('success'),
           type: 'Success'
         })
+      } else {
+        launchToast({
+          title: getMessage('failure'),
+          type: 'Danger'
+        })
       }
     } catch {
       props.resolve(false)

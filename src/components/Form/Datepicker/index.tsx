@@ -128,19 +128,22 @@ const Datepicker = ({
 
   const inputValue = useMemo(() => {
     if (!selectedDate) return ''
-
     return format(selectedDate, formatDisplay)
   }, [selectedDate, formatDisplay])
 
   useEffect(() => {
     if (typeof value === 'string') {
       const parsed = parseISO(value)
-      if (isValid(parsed)) setSelectedDate(parsed)
-      else setSelectedDate(undefined)
+      if (isValid(parsed)) {
+        setSelectedDate(parsed)
+        setDatepickerHeaderDate(parsed)
+      } else setSelectedDate(undefined)
     } else if (value instanceof Date) {
       setSelectedDate(value)
+      setDatepickerHeaderDate(value)
     } else {
       setSelectedDate(undefined)
+      setDatepickerHeaderDate(new Date())
     }
   }, [value])
 

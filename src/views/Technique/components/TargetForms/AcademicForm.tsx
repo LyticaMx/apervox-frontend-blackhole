@@ -16,7 +16,7 @@ import { TechniqueTabs } from 'types/technique'
 import useToast from 'hooks/useToast'
 import DeleteFormConfirmation from './DeleteFormConfirmation'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
-import { onlyLetters } from 'utils/patterns'
+import { onlyLetters, phoneNumber } from 'utils/patterns'
 
 interface FormValues extends AddressFormValues {
   id?: string
@@ -113,7 +113,10 @@ const AcademicForm = (): ReactElement => {
         .trim()
         .email(formatMessage(formMessages.invalidEmail))
         .required(formatMessage(formMessages.required)),
-      phone: yup.string().required(formatMessage(formMessages.required))
+      phone: yup
+        .string()
+        .required(formatMessage(formMessages.required))
+        .matches(phoneNumber, formatMessage(formMessages.invalidPhoneNumber))
     })
     .concat(addressValidationSchema)
 

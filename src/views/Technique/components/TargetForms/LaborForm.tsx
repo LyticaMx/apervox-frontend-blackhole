@@ -154,8 +154,11 @@ const LaborForm = (): ReactElement => {
     try {
       const response = await actions.update(
         values.map((form) => {
+          const excludedKeys = ['state', 'city']
           for (const key in form) {
-            if (form[key] === '') form[key] = null
+            if (!excludedKeys.includes(key) && form[key] === '') {
+              form[key] = null
+            }
           }
           return {
             id: form.id,
