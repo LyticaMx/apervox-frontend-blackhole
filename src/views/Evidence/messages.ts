@@ -127,6 +127,10 @@ export const locationInformationMessages = defineMessages({
 })
 
 export const transcriptionTabMessages = defineMessages({
+  waitingToStartTask: {
+    id: 'views.Evidence.TranscriptionTab.waitingToStartTask',
+    defaultMessage: 'Esperando para iniciar tarea'
+  },
   transcriptAllAudio: {
     id: 'views.Evidence.TranscriptionTab.transcriptAllAudio',
     defaultMessage: 'Transcribir todo el audio'
@@ -152,6 +156,15 @@ export const transcriptionTabMessages = defineMessages({
     id: 'views.Evidence.TranscriptionTab.deleteRegionQuestion',
     defaultMessage: '¿Se eliminará el segmento y su transcripción, está seguro?'
   },
+  cancelTranscription: {
+    id: 'views.Evidence.TranscriptionTab.cancelTranscription',
+    defaultMessage: 'Cancelar transcripción automática'
+  },
+  cancelTranscriptionQuestion: {
+    id: 'views.Evidence.TranscriptionTab.cancelTranscriptionQuestion',
+    defaultMessage:
+      '¿Está seguro que desea cancelar la transcripción automática?'
+  },
   makeFullTranscription: {
     id: 'views.Evidence.TranscriptionTab.makeFullTranscription',
     defaultMessage: 'Transcribir todo el audio'
@@ -160,6 +173,15 @@ export const transcriptionTabMessages = defineMessages({
     id: 'views.Evidence.TranscriptionTab.allTranscriptionRegionsWillBeDeleted',
     defaultMessage:
       '¿Deseas transcribir todo el audio?, esto eliminará todas las regiones transcritas anteriormente y generará nuevas.'
+  },
+  foundAnEmptyRegion: {
+    id: 'views.Evidence.TranscriptionTab.foundAnEmptyRegion',
+    defaultMessage: 'Se encontró una región vacía'
+  },
+  willBeTranscripted: {
+    id: 'views.Evidence.TranscriptionTab.willBeTranscripted',
+    defaultMessage:
+      'La región será transcrita de manera automática, ¿desea continuar?'
   }
 })
 
@@ -171,5 +193,32 @@ export const deleteRegionDialog = defineMessages({
   deleteRegionDialogQuestion: {
     id: 'views.Evidence.TranscriptionTab.deleteRegionDialogQuestion',
     defaultMessage: '¿Se eliminará la región, está seguro?'
+  }
+})
+
+export const transcriptionSocketMessages = defineMessages({
+  anErrorOcurred: {
+    id: 'views.Evidence.toast.anErrorOcurred',
+    defaultMessage:
+      'Ocurrió un problema al realizar la {type,select,Transcription{transcripción}Segmentation{segmentación}other{acción}}'
+  },
+  addedPendingTask: {
+    id: 'views.Evidence.toast.addedPendingTask',
+    defaultMessage:
+      'Se ha agregado la petición a la cola de {type,select,Transcription{transcripción}Segmentation{segmentación}other{acción}}'
+  },
+  startedTask: {
+    id: 'views.Evidence.toast.startedTask',
+    defaultMessage:
+      'Se inicia la tarea de {type,select,Transcription{transcripción}Segmentation{segmentación}other{acción}}'
+  },
+  cancelled: {
+    id: 'views.Evidence.toast.cancelled',
+    defaultMessage: 'Se ha cancelado la tarea de transcripción'
+  },
+  endedTask: {
+    id: 'views.evidence.toast.endedTask',
+    defaultMessage:
+      'La {type,select,Transcription{transcripción}Segmentation{segmentación}other{acción}} ha finalizado correctamente'
   }
 })

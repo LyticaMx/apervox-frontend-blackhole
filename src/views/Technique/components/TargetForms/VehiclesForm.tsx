@@ -78,7 +78,7 @@ const VehiclesForm = (): ReactElement => {
     { value: 'coupe', text: formatMessage(vehiclesFormMessages.coupe) },
     { value: 'sedan', text: formatMessage(vehiclesFormMessages.sedan) },
     { value: 'hatchback', text: formatMessage(vehiclesFormMessages.hatchback) },
-    { value: 'sport', text: formatMessage(vehiclesFormMessages.sport) },
+    { value: 'sports', text: formatMessage(vehiclesFormMessages.sport) },
     {
       value: 'convertible',
       text: formatMessage(vehiclesFormMessages.convertible)
@@ -276,7 +276,19 @@ const VehiclesForm = (): ReactElement => {
     year: yup
       .string()
       .required(formatMessage(formMessages.required))
-      .matches(/^\d{4}$/, formatMessage(vehiclesFormMessages.invalidYear)),
+      .matches(/^\d{4}$/, formatMessage(vehiclesFormMessages.invalidYear))
+      .test(
+        'minValue',
+        formatMessage(formMessages.minValue, { value: 1771 }),
+        (val) => parseInt(val ?? '0', 10) >= 1771
+      )
+      .test(
+        'maxValue',
+        formatMessage(formMessages.maxValue, {
+          value: new Date().getFullYear() + 1
+        }),
+        (val) => parseInt(val ?? '0', 10) <= new Date().getFullYear() + 1
+      ),
     type: yup.string().required(formatMessage(formMessages.required)),
     other_type: yup
       .string()
@@ -369,7 +381,7 @@ const VehiclesForm = (): ReactElement => {
   }
 
   useEffect(() => {
-    if (!target?.id) getData()
+    if (target?.id) getData()
   }, [target?.id])
 
   return (

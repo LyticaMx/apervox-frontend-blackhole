@@ -118,6 +118,8 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
             status: item.status,
             created_at: item.created_at,
             registered_by: item.created_by,
+            updated_at: item.updated_at,
+            updated_by: item.updated_by,
             users: item.users,
             total_users: item.users.length,
             techniques: item.techniques,

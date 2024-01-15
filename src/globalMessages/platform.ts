@@ -63,6 +63,10 @@ export const platformMessages = defineMessages({
     id: 'global.platform.completedStatus',
     defaultMessage: 'Concluido'
   },
+  concludedStatus: {
+    id: 'global.platform.concludedStatus',
+    defaultMessage: 'Concluido'
+  },
   currentStatus: {
     id: 'global.platform.currentStatus',
     defaultMessage: 'Vigente'

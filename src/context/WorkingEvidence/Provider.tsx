@@ -192,6 +192,15 @@ const WorkingEvidenceProvider = (props: Props): ReactElement => {
     } catch {}
   }
 
+  const cancelFullTranscription = async (): Promise<void> => {
+    try {
+      if (!workingEvidence.id) return
+      await evidenceService.delete({
+        queryString: `${workingEvidence.id}/transcriptions`
+      })
+    } catch {}
+  }
+
   const updateTranscriptionSegments = async (
     segments: TranscriptionSegment[]
   ): Promise<TranscriptionSegment[]> => {
@@ -310,6 +319,7 @@ const WorkingEvidenceProvider = (props: Props): ReactElement => {
     classifyEvidence,
     getTranscriptionSegments,
     createFullTranscription,
+    cancelFullTranscription,
     updateTranscriptionSegments,
     deleteTranscriptionSegment,
     getRegions,

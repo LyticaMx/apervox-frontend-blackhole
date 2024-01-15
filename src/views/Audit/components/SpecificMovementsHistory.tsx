@@ -94,7 +94,7 @@ const SpecificMovementsHistory = (props: Props): ReactElement | null => {
       {
         accessorKey: 'createdAt',
         header: formatMessage(generalMessages.hour),
-        cell: ({ getValue }) => format(new Date(getValue<string>()), 'hh:mm')
+        cell: ({ getValue }) => format(new Date(getValue<string>()), 'HH:mm')
       }
     ],
     [specificFilter?.type]
@@ -125,31 +125,26 @@ const SpecificMovementsHistory = (props: Props): ReactElement | null => {
       default:
         return null
     }
-  }, [specificFilter?.type])
+  }, [specificFilter?.type, specificFilter?.id])
 
-  const auditedData = useMemo(() => {
-    if (!specificFilter) return null
-    switch (specificFilter.type) {
-      case 'user':
-        return {
+  const auditedData =
+    specificFilter?.type === 'user'
+      ? {
           rows: userAudits.data,
           pagination: userAudits.pagination,
           dateFilter: userAudits.dateFilter,
           searchFilter: userAudits.searchFilter,
           total: userAudits.total
         }
-      case 'group':
-        return {
+      : specificFilter?.type === 'group'
+      ? {
           rows: modelAudits.data,
           pagination: modelAudits.pagination,
           dateFilter: modelAudits.dateFilter,
           searchFilter: modelAudits.searchFilter,
           total: modelAudits.total
         }
-      default:
-        return null
-    }
-  }, [specificFilter?.type, userAudits, modelAudits])
+      : null
 
   useEffect(() => {
     if (!specificFilter || !getAudits) return

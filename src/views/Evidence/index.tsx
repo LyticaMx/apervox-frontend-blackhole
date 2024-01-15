@@ -92,8 +92,10 @@ const Evidence = (): ReactElement => {
     handleChangeSegment,
     setTranscriptionRegions,
     updateTranscription,
-    lock: transcriptionLock
-    // progress
+    lock: transcriptionLock,
+    forceLock: forceTranscriptionLock,
+    progress: transcriptionProgress,
+    canCancelTranscription
   } = useTranscription(workingEvidence.id ?? '', canWork)
   useCommentsRoom(workingEvidence.id ?? '', canWork)
 
@@ -131,8 +133,9 @@ const Evidence = (): ReactElement => {
         isTracked: data.follow
       }
 
-      if (data['label-manual']) updateBody.customLabel = data.label
-      else updateBody.label = data.label
+      if (data['label-manual']) {
+        if (data.label !== '') updateBody.customLabel = data.label
+      } else updateBody.label = data.label
 
       const saved =
         (await workingEvidence.actions?.classifyEvidence(updateBody)) ?? false
@@ -161,6 +164,8 @@ const Evidence = (): ReactElement => {
           endTime: region.end,
           id: !region.id.startsWith('wavesurfer') ? region.id : undefined
         }))
+
+      if (sendRegions.length === 0) return
 
       const updatedRegions =
         (await workingEvidence.actions?.updateRegions(sendRegions)) ?? false
@@ -197,7 +202,7 @@ const Evidence = (): ReactElement => {
       if (!url) {
         if ((location.state.from ?? 'monitor') === 'monitor') {
           history.replace(pathRoute.monitoring.history)
-        } else history.replace(pathRoute.technique)
+        } else history.replace(`${pathRoute.techniques.many}/${techniqueId}`)
         return
       }
 
@@ -230,14 +235,14 @@ const Evidence = (): ReactElement => {
             })
           )
         : commonRegions,
-    [currentTab, commonRegions]
+    [currentTab, commonRegions, transcriptionRegions]
   )
 
   useEffect(() => {
     if (!canWork) return
     if (!workingEvidence.id) {
       if (location.state.from === 'technique') {
-        history.push(pathRoute.technique)
+        history.push(`${pathRoute.techniques.many}/${techniqueId}`)
       } else history.push(pathRoute.monitoring.history)
       return
     }
@@ -448,10 +453,13 @@ const Evidence = (): ReactElement => {
         id: 'transcription',
         component: (
           <TranscriptionTab
+            lockRegions={forceTranscriptionLock}
             onSave={updateTranscription}
             transcriptionSegments={transcriptionRegions}
             onChangeSegment={handleChangeSegment}
             lock={transcriptionLock}
+            progress={transcriptionProgress}
+            canCancel={canCancelTranscription}
           />
         ),
         name: 'Transcripción'
@@ -488,7 +496,9 @@ const Evidence = (): ReactElement => {
     location.state.type,
     workingEvidence.id,
     transcriptionRegions,
-    transcriptionLock
+    transcriptionLock,
+    transcriptionProgress,
+    canCancelTranscription
   ])
 
   if (!canWork) return <WaitToWork />
@@ -538,7 +548,7 @@ const Evidence = (): ReactElement => {
               history.replace(
                 location.state.from === 'monitor'
                   ? pathRoute.monitoring.history
-                  : pathRoute.technique
+                  : `${pathRoute.techniques.many}/${techniqueId}`
               )
             }
           >
@@ -591,6 +601,7 @@ const Evidence = (): ReactElement => {
                 showWave
                 showTimeline
                 showZoom
+                lockEvents={transcriptionLock}
                 wsRef={(ws) => {
                   $wsRef.current = ws
                 }}

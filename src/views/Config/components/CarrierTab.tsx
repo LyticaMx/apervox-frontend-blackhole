@@ -13,6 +13,7 @@ import { useCarriers } from 'context/Carriers'
 import { formatTotal } from 'utils/formatTotal'
 import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
+import useToast from 'hooks/useToast'
 
 interface FormValues {
   id?: string
@@ -27,6 +28,7 @@ const CarrierTab = (): ReactElement => {
   const [openDeleteCarrier, setOpenDeleteCarrier] = useState(false)
   const [deleteIds, setDeleteIds] = useState<string[]>([])
   const ability = useAbility()
+  const toast = useToast()
 
   useEffect(() => {
     actions?.getData({}, true)
@@ -48,6 +50,7 @@ const CarrierTab = (): ReactElement => {
 
       setDeleteIds([])
       setOpenDeleteCarrier(false)
+      toast.success(formatMessage(mediaMessages.deletedCarrier))
       await actions?.getData({ page: 1 }, true)
     } catch {}
   }
@@ -58,6 +61,7 @@ const CarrierTab = (): ReactElement => {
     })
 
     if (res) {
+      toast.success(formatMessage(mediaMessages.updatedCarrier))
       await actions?.getData()
       drawerActions?.handleCloseDrawer()
     }
@@ -69,6 +73,7 @@ const CarrierTab = (): ReactElement => {
     })
 
     if (res) {
+      toast.success(formatMessage(mediaMessages.createdCarrier))
       await actions?.getData({}, true)
       drawerActions?.handleCloseDrawer()
     }

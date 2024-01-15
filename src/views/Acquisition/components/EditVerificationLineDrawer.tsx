@@ -52,11 +52,11 @@ const EditVerificationLineDrawer = ({
         <Typography variant="title" style="bold" className="uppercase">
           {formatMessage(editVerificationLineMessages.title)}
         </Typography>
-        <span className="text-sm mb-4 text-gray-400">
+        <span className="text-sm mb-4 text-gray-400 font-medium">
           {formatMessage(generalMessages.createdOn, {
             date: format(
               new Date(verificationLine?.created_at ?? 0),
-              'dd/MM/yyyy - hh:mm'
+              'dd/MM/yyyy - HH:mm'
             )
           })}
           <span className="ml-2">{verificationLine?.created_by ?? ''}</span>

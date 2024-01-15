@@ -5,6 +5,7 @@ import { Field } from 'types/form'
 import { useAddressMessages } from 'views/Technique/messages'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 import { simpleText, zipCode } from 'utils/patterns'
+import { State, City } from 'country-state-city'
 
 export interface AddressFormValues {
   country: string
@@ -95,14 +96,21 @@ export const useAddressForm = <T,>(section?: string): AddressForm<T> => {
       .string()
       .required(formatMessage(formMessages.required))
       .matches(simpleText, formatMessage(formMessages.invalidSimpleText)),
-    state: yup
-      .string()
-      .required(formatMessage(formMessages.required))
-      .matches(simpleText, formatMessage(formMessages.invalidSimpleText)),
-    city: yup
-      .string()
-      .required(formatMessage(formMessages.required))
-      .matches(simpleText, formatMessage(formMessages.invalidSimpleText)),
+    state: yup.string().when('country', {
+      is: (country) => State.getStatesOfCountry(country ?? '').length > 0,
+      then: (schema) =>
+        schema
+          .required(formatMessage(formMessages.required))
+          .matches(simpleText, formatMessage(formMessages.invalidSimpleText))
+    }),
+    city: yup.string().when(['country', 'state'], {
+      is: (country, state) =>
+        (City.getCitiesOfState(country ?? '', state ?? '')?.length ?? 0) > 0,
+      then: (schema) =>
+        schema
+          .required(formatMessage(formMessages.required))
+          .matches(simpleText, formatMessage(formMessages.invalidSimpleText))
+    }),
     zipCode: yup
       .string()
       .required(formatMessage(formMessages.required))

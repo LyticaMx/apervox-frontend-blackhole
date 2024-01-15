@@ -196,7 +196,7 @@ const SocialMediaForm = (): ReactElement => {
   }
 
   useEffect(() => {
-    if (!target?.id) getData()
+    if (target?.id) getData()
   }, [target?.id])
 
   return (

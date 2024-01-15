@@ -49,7 +49,7 @@ export const useActions = (state: EvidenceState, dispatch): EvidenceActions => {
 
   const getEvidence = useApi({ endpoint: 'call-evidences', method: 'get' })
 
-  const _updateFollow = useApi({ endpoint: 'call-evidences', method: 'put' })
+  const _updateEvidence = useApi({ endpoint: 'call-evidences', method: 'put' })
   const exportEvidencesByTarget = useDownloadFile({
     endpoint: 'exports/targets',
     method: 'get'
@@ -169,6 +169,20 @@ export const useActions = (state: EvidenceState, dispatch): EvidenceActions => {
     } catch {}
   }
 
+  const releaseEvidences = async (ids: string[]): Promise<boolean> => {
+    try {
+      // Hacerlo secuencial o revisar batch updates
+      await Promise.all(
+        ids.map(
+          async (id) => await _updateEvidence({ queryString: `${id}/release` })
+        )
+      )
+      return true
+    } catch {
+      return false
+    }
+  }
+
   const updateEvidence = async (id: string): Promise<void> => {
     const release = await lock()
     try {
@@ -179,29 +193,23 @@ export const useActions = (state: EvidenceState, dispatch): EvidenceActions => {
       try {
         const response = await getEvidence({ queryString: id })
         dispatch(
-          actions.setData(
-            data.map((ev) =>
-              ev.id === id
-                ? {
-                    id: response.data.id,
-                    evidenceNumber: response.data.evidence_number,
-                    targetPhone: response.data.target_phone,
-                    sourceNumber: response.data.source_number,
-                    callStartDate: response.data.call_start_date,
-                    callEndDate: response.data.call_end_date,
-                    duration: response.data.duration,
-                    carrier: response.data.carrier,
-                    technique: response.data.technique?.name ?? '',
-                    auditedBy: response.data.audited_by?.username ?? '',
-                    isTracked: response.data.is_tracked,
-                    trackedBy: response.data.tracked_by?.username ?? '',
-                    workingBy: response.data.working_by?.username ?? '',
-                    relevance: response.data.relevance,
-                    hasTranscription: response.data.hasTranscription
-                  }
-                : ev
-            )
-          )
+          actions.updateOne({
+            id: response.data.id,
+            evidenceNumber: response.data.evidence_number,
+            targetPhone: response.data.target_phone,
+            sourceNumber: response.data.source_number,
+            callStartDate: response.data.call_start_date,
+            callEndDate: response.data.call_end_date,
+            duration: response.data.duration,
+            carrier: response.data.carrier,
+            technique: response.data.technique?.name ?? '',
+            auditedBy: response.data.audited_by?.username ?? '',
+            isTracked: response.data.is_tracked,
+            trackedBy: response.data.tracked_by?.username ?? '',
+            workingBy: response.data.working_by?.username ?? '',
+            relevance: response.data.relevance,
+            hasTranscription: response.data.hasTranscription
+          })
         )
       } catch {}
     } finally {
@@ -225,7 +233,7 @@ export const useActions = (state: EvidenceState, dispatch): EvidenceActions => {
 
   const toggleFollow = async (id: string): Promise<boolean> => {
     try {
-      await _updateFollow({ queryString: `${id}/tracking` })
+      await _updateEvidence({ queryString: `${id}/tracking` })
 
       return true
     } catch {
@@ -277,5 +285,12 @@ export const useActions = (state: EvidenceState, dispatch): EvidenceActions => {
     }
   }
 
-  return { getData, updateEvidence, updateFollow, toggleFollow, exportTable }
+  return {
+    getData,
+    updateEvidence,
+    updateFollow,
+    toggleFollow,
+    exportTable,
+    releaseEvidences
+  }
 }

@@ -207,7 +207,7 @@ const AccountBankForm = (): ReactElement => {
         response.data.map((item) => ({
           id: item.id,
           bankname: item.institution ?? '',
-          accountNumber: item.institution_number ?? '',
+          accountNumber: item.account_number ?? '',
           balance: item.balance ?? '',
           type: item.type ?? '',
           otherType: item.other_type ?? '',
@@ -246,7 +246,7 @@ const AccountBankForm = (): ReactElement => {
         response.data.map((item) => ({
           id: item.id,
           bankname: item.institution ?? '',
-          accountNumber: item.institution_number ?? '',
+          accountNumber: item.account_number ?? '',
           balance: item.balance ?? '',
           type: item.type ?? '',
           otherType: item.other_type ?? '',

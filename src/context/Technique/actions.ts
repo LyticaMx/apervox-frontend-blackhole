@@ -22,8 +22,9 @@ const useActions = (state: State, dispatch): Actions => {
           id: response.data.id,
           attentionTurn: response.data.shift ?? '',
           attentionTime: response.data.shift_cutoff ?? '',
-          notificationTime: response.data.notification_time ?? 0,
-          notificationTimeUnit: response.data.notification_type ?? 'days',
+          notificationDays: response.data.notification_days?.toString() ?? '0',
+          notificationHours:
+            response.data.notification_hours?.toString() ?? '0',
           created_at: response.data.created_at,
           expires_at: response.data.end_date,
           name: response.data.name,
@@ -121,16 +122,13 @@ const useActions = (state: State, dispatch): Actions => {
       body.priority = newTechnique.priority
       body.groups = newTechnique.groups
       body.static_end_date_targets = staticDateTargets
-      if (
-        newTechnique.notificationTime ||
-        !isNaN(newTechnique.notificationTime)
-      ) {
-        body.notification_type = newTechnique.notificationTimeUnit
-        body.notification_time = newTechnique.notificationTime
+      body.notification_days = 0
+      body.notification_hours = 0
+      if (!isNaN(+newTechnique.notificationDays)) {
+        body.notification_days = newTechnique.notificationDays
       }
-      if (newTechnique.shift) {
-        body.shift = newTechnique.shift
-        body.shift_cutoff = newTechnique.reportEvidenceEvery
+      if (!isNaN(+newTechnique.notificationHours)) {
+        body.notification_hours = newTechnique.notificationHours
       }
 
       await techniqueService.put({

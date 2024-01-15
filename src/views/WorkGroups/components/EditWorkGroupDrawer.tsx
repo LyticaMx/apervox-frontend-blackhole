@@ -27,11 +27,14 @@ const EditWorkGroupDrawer = ({ actualTab }: Props): ReactElement | null => {
       <p className="text-sm leading-tight mb-4">{getMessage('subtitle')}</p>
 
       <div className="mb-4">
-        <Typography variant="caption">
+        <Typography
+          variant="caption"
+          className="text-sm mb-4 text-gray-400 font-medium"
+        >
           {formatMessage(generalMessages.createdOn, {
             date: format(
               new Date(workGroup.created_at ?? ''),
-              'dd/MM/yyyy - hh:mm'
+              'dd/MM/yyyy - HH:mm'
             )
           })}
 
@@ -39,9 +42,12 @@ const EditWorkGroupDrawer = ({ actualTab }: Props): ReactElement | null => {
         </Typography>
 
         {workGroup.updated_at && (
-          <Typography variant="caption">
+          <Typography
+            variant="caption"
+            className="text-sm mb-4 text-gray-400 font-medium"
+          >
             {formatMessage(generalMessages.updatedAt, {
-              date: format(new Date(workGroup.updated_at), 'dd/MM/yyyy - hh:mm')
+              date: format(new Date(workGroup.updated_at), 'dd/MM/yyyy - HH:mm')
             })}
 
             <span className="ml-2">{workGroup.updated_by}</span>

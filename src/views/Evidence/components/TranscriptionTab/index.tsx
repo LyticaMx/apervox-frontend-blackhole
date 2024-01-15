@@ -1,4 +1,4 @@
-import { DocumentTextIcon } from '@heroicons/react/24/outline'
+import { DocumentTextIcon, XCircleIcon } from '@heroicons/react/24/outline'
 import Button from 'components/Button'
 import Table from 'components/Table'
 import Typography from 'components/Typography'
@@ -14,19 +14,38 @@ import Tooltip from 'components/Tooltip'
 import TranscriptDialog from './TranscriptDialog'
 import { useWorkingEvidence } from 'context/WorkingEvidence'
 import DownloadDialog from './DownloadDialog'
+import useToast from 'hooks/useToast'
+import CancelTranscriptionDialog from './CancelTranscriptionDialog'
+import EmptyRegionDialog from './EmptyRegionDialog'
 
 interface Props {
   transcriptionSegments: RegionInterface[]
+  lockRegions: () => void
   onChangeSegment: (id: string, value: string) => void
   onSave: () => Promise<void>
   lock: boolean
+  progress: number
+  canCancel: boolean
 }
 
 const TranscriptionTab = (props: Props): ReactElement => {
-  const { onChangeSegment, onSave, transcriptionSegments, lock } = props
+  const {
+    onChangeSegment,
+    onSave,
+    transcriptionSegments,
+    lock,
+    canCancel,
+    lockRegions,
+    progress
+  } = props
+  const [aRegionIsEmpty, setARegionIsEmpty] = useState(false)
   const [openTranscriptDialog, setOpenTranscriptDialog] = useState(false)
+  const [openCancelTranscriptDialog, setOpenCancelTranscriptDialog] =
+    useState(false)
+  const [onMouseOver, setOnMouseOver] = useState(false)
   const { formatMessage } = useIntl()
   const { actions: workingEvidenceActions } = useWorkingEvidence()
+  const toast = useToast()
   const handleSegmentChange = (
     event: ChangeEvent<HTMLTextAreaElement>
   ): void => {
@@ -74,12 +93,26 @@ const TranscriptionTab = (props: Props): ReactElement => {
     <div>
       <TranscriptDialog
         open={openTranscriptDialog}
-        onAccept={() => {
-          // TODO: bloquear todas las acciones de la tab hasta recibir evento del socket
-          workingEvidenceActions?.createFullTranscription()
+        onAccept={async () => {
+          lockRegions()
+          await workingEvidenceActions?.createFullTranscription()
+          toast.info(formatMessage(transcriptionTabMessages.waitingToStartTask))
           setOpenTranscriptDialog(false)
         }}
         onClose={() => setOpenTranscriptDialog(false)}
+      />
+      <CancelTranscriptionDialog
+        onAccept={async () => {
+          await workingEvidenceActions?.cancelFullTranscription()
+          setOpenCancelTranscriptDialog(false)
+        }}
+        onClose={() => setOpenCancelTranscriptDialog(false)}
+        open={openCancelTranscriptDialog}
+      />
+      <EmptyRegionDialog
+        onAccept={onSave}
+        onClose={() => setARegionIsEmpty(false)}
+        open={aRegionIsEmpty}
       />
       <Typography
         variant="subtitle"
@@ -93,33 +126,75 @@ const TranscriptionTab = (props: Props): ReactElement => {
           {formatMessage(transcriptionTabMessages.eventTranscriptionSubtitle)}
         </Typography>
         <div className="flex gap-2 items-center">
+          <div className="flex gap-2 items-center">
+            {lock && (
+              <Typography
+                variant="caption"
+                className="text-secondary-gray"
+              >{`Transcribiendo ${progress}%`}</Typography>
+            )}
+            <Tooltip
+              content={
+                lock
+                  ? formatMessage(transcriptionTabMessages.cancelTranscription)
+                  : formatMessage(transcriptionTabMessages.transcriptAllAudio)
+              }
+              floatProps={{ offset: 10, arrow: true }}
+              classNames={{
+                panel:
+                  'bg-secondary text-white py-1 px-2 rounded-md text-sm whitespace-nowrap',
+                arrow: 'absolute bg-white w-2 h-2 rounded-full bg-secondary'
+              }}
+              placement="top"
+            >
+              <button
+                className="text-secondary-gray hover:enabled:text-secondary border shadow-md p-2 rounded-md"
+                disabled={lock && !canCancel}
+                onClick={() => {
+                  if (lock) setOpenCancelTranscriptDialog(true)
+                  else setOpenTranscriptDialog(true)
+                }}
+                onMouseEnter={() => {
+                  if (lock) setOnMouseOver(true)
+                }}
+                onMouseLeave={() => {
+                  if (lock) setOnMouseOver(false)
+                }}
+              >
+                {lock ? (
+                  onMouseOver ? (
+                    <XCircleIcon className="w-5 h-5" />
+                  ) : (
+                    <span className="animate-spin w-5 h-5 border-[3px] border-secondary-gray border-b-transparent rounded-[50%] block box-border" />
+                  )
+                ) : (
+                  <DocumentTextIcon className="w-5 h-5" />
+                )}
+              </button>
+            </Tooltip>
+          </div>
           <DownloadDialog
             onExport={(document) =>
               workingEvidenceActions?.exportTranscription(document)
             }
           />
-          <Tooltip
-            content={formatMessage(transcriptionTabMessages.transcriptAllAudio)}
-            floatProps={{ offset: 10, arrow: true }}
-            classNames={{
-              panel:
-                'bg-secondary text-white py-1 px-2 rounded-md text-sm whitespace-nowrap',
-              arrow: 'absolute bg-white w-2 h-2 rounded-full bg-secondary'
-            }}
-            placement="top"
-          >
-            <button
-              className="text-secondary-gray hover:enabled:text-secondary border shadow-md p-2 rounded-md"
-              onClick={() => setOpenTranscriptDialog(true)}
-              disabled={lock}
-            >
-              <DocumentTextIcon className="w-5 h-5" />
-            </button>
-          </Tooltip>
           <Button
             color="primary"
             variant="contained"
-            onClick={onSave}
+            onClick={() => {
+              if (
+                transcriptionSegments.some((segment) => {
+                  return (
+                    segment.data &&
+                    (segment.data.text === '' || segment.data.dialog === '')
+                  )
+                })
+              ) {
+                setARegionIsEmpty(true)
+                return
+              }
+              onSave()
+            }}
             disabled={lock}
           >
             {formatMessage(transcriptionTabMessages.saveTranscription)}

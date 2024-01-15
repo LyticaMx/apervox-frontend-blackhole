@@ -218,7 +218,7 @@ const BiometricForm = (): ReactElement => {
           submitButtonProps={{
             color: 'indigo',
             variant: 'contained',
-            disabled: ability.can(ACTION.UPDATE, SUBJECT.TARGETS)
+            disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
           }}
           withSections={{
             sections

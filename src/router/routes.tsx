@@ -102,15 +102,18 @@ export const pathRoute = {
   users: '/usuarios',
   monitoring: {
     base: '/monitoreo',
-    history: '/monitoreo/historial'
+    history: '/monitoreo/historial',
+    evidence: '/monitoreo/historial/evidencia'
   },
   acquisition: {
     acquisitionMedium: '/medios-adquisicion',
-    verificationLine: '/lineas-de-verificacion'
+    verificationLine: '/medios-adquisicion/lineas-de-verificacion'
   },
-  evidence: '/evidencia',
-  techniques: '/tecnicas',
-  technique: '/tecnica',
+  techniques: {
+    many: '/tecnicas',
+    one: '/tecnicas/:id',
+    evidence: '/tecnicas/:id/evidencia'
+  },
   demo: {
     chart: '/demo-charts',
     form: '/demo-form',
@@ -311,7 +314,20 @@ export const routes: Route[] = [
   },
   {
     id: 'evidence',
-    path: pathRoute.evidence,
+    path: pathRoute.techniques.evidence,
+    scopes: [
+      { action: ACTION.READ, subject: SUBJECT.CALL_EVIDENCES },
+      { action: ACTION.UPDATE, subject: SUBJECT.CALL_EVIDENCES }
+    ],
+    modules: [],
+    component: Evidence,
+    layout: EvidenceLayout,
+    private: false,
+    sidebar: false
+  },
+  {
+    id: 'evidence',
+    path: pathRoute.monitoring.evidence,
     scopes: [
       { action: ACTION.READ, subject: SUBJECT.CALL_EVIDENCES },
       { action: ACTION.UPDATE, subject: SUBJECT.CALL_EVIDENCES }
@@ -324,7 +340,7 @@ export const routes: Route[] = [
   },
   {
     id: 'techniques',
-    path: pathRoute.techniques,
+    path: pathRoute.techniques.many,
     icon: FolderOpenIcon,
     i18Key: 'techniques',
     modules: [],
@@ -336,7 +352,7 @@ export const routes: Route[] = [
   },
   {
     id: 'technique',
-    path: pathRoute.technique,
+    path: pathRoute.techniques.one,
     icon: FolderOpenIcon,
     i18Key: 'techniques',
     modules: [],

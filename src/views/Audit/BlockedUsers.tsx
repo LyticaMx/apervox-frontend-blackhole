@@ -1,19 +1,17 @@
 import Table from 'components/Table'
 import Typography from 'components/Typography'
 import ViewFilter from 'components/ViewFilter'
-import GoBackButton from 'components/GoBackButton'
 import { generalMessages } from 'globalMessages'
 import useTableColumns from 'hooks/useTableColumns'
 import { format } from 'date-fns'
 import { ReactElement, useEffect } from 'react'
 import { useIntl } from 'react-intl'
-import { Link } from 'react-router-dom'
-import { pathRoute } from 'router/routes'
-import { blockedUsersMessages, messages } from './messages'
+import { auditableActions, blockedUsersMessages, messages } from './messages'
 // import UserDrawer from './components/UserDrawer'
 // import { useDrawer } from 'context/Drawer'
 import { Audit } from 'context/Audit/types'
 import { useBlockedUserAudits } from 'context/Audit'
+import NavLinks from './components/NavLinks'
 
 const BlockedUsers = (): ReactElement => {
   const { formatMessage } = useIntl()
@@ -29,7 +27,13 @@ const BlockedUsers = (): ReactElement => {
   const columns = useTableColumns<Audit>(() => [
     {
       accessorKey: 'action',
-      header: formatMessage(generalMessages.description)
+      header: formatMessage(generalMessages.description),
+      cell: ({ getValue }) => {
+        const action = getValue<string>()
+        return auditableActions[action]
+          ? formatMessage(auditableActions[action])
+          : action
+      }
     },
     {
       accessorKey: 'name',
@@ -43,7 +47,7 @@ const BlockedUsers = (): ReactElement => {
     {
       accessorKey: 'createdAt',
       header: formatMessage(generalMessages.hour),
-      cell: ({ getValue }) => format(new Date(getValue<string>()), 'hh:mm')
+      cell: ({ getValue }) => format(new Date(getValue<string>()), 'HH:mm')
     }
   ])
 
@@ -53,7 +57,6 @@ const BlockedUsers = (): ReactElement => {
 
   return (
     <div>
-      <GoBackButton route={pathRoute.audit.general} />
       <div className="flex items-center justify-between">
         <Typography
           variant="title"
@@ -88,27 +91,7 @@ const BlockedUsers = (): ReactElement => {
           }
         />
       </div>
-      <div className="flex gap-4">
-        <Link to={pathRoute.audit.failedLoginAttemps}>
-          <Typography
-            variant="subtitle"
-            style="semibold"
-            className="uppercase text-secondary text-base"
-          >
-            {formatMessage(messages.loginFailedAttemps)}
-          </Typography>
-        </Link>
-
-        <Link to={pathRoute.audit.blockedUsers}>
-          <Typography
-            variant="subtitle"
-            style="semibold"
-            className="uppercase text-secondary text-base"
-          >
-            {formatMessage(messages.blockedUsers)}
-          </Typography>
-        </Link>
-      </div>
+      <NavLinks canGoBack />
       <div className="mt-2">
         <Table
           columns={columns}

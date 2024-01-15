@@ -107,7 +107,13 @@ const WaveSurfer = (props: WsProps): ReactElement => {
         id="timeline"
         className={clsx({ hidden: !props.showWave || !props.showTimeline })}
       />
-      <div id="form" className={clsx({ hidden: !props.showWave })} />
+      <div
+        id="form"
+        className={clsx({
+          hidden: !props.showWave,
+          'pointer-events-none': props.lockEvents
+        })}
+      />
       <div className="bg-secondary p-4 flex gap-10">
         <div className="flex-1 space-y-2">
           <RangeControl />

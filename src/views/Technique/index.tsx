@@ -17,7 +17,7 @@ const Techniques = (): ReactElement => {
   const getTechniqueInfo = async (): Promise<void> => {
     const exist = await techniqueActions?.get()
 
-    if (!exist) history.replace(pathRoute.techniques)
+    if (!exist) history.replace(pathRoute.techniques.many)
   }
 
   useEffect(() => {

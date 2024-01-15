@@ -38,7 +38,7 @@ export const useLockEvidence = (
     const busyListener = (): void => {
       if (from === 'monitor') {
         history.replace(pathRoute.monitoring.history)
-      } else history.replace(pathRoute.technique)
+      } else history.replace(`${pathRoute.techniques.many}/${techniqueId}`)
     }
     const workingListener = (evidence: WorkingEvidence): void => {
       if (evidence.id === id) {

@@ -15,21 +15,22 @@ const EvidenceSocketProvider = (props: Props): ReactElement => {
   const [socket, setSocket] = useState<Socket | null>(null)
 
   useEffect(() => {
-    if (isLogguedIn) {
-      const socket = io(`${process.env.REACT_APP_MAIN_SOCKET_URL}/evidences`)
+    if (!isLogguedIn) return
+    const socket = io(`${process.env.REACT_APP_MAIN_SOCKET_URL}/evidences`, {
+      transports: ['websocket']
+    })
 
-      socket.on('connect', () => {
-        console.log('Client connected to evidences namespace')
+    socket.on('connect', () => {
+      console.log('Client connected to evidences namespace')
 
-        socket.emit('validate_token', { token })
-      })
+      socket.emit('validate_token', { token })
+    })
 
-      socket.on('disconnect', (reason) => {
-        console.log(`Client disconnected ${reason}`)
-      })
+    socket.on('disconnect', (reason) => {
+      console.log(`Client disconnected ${reason}`)
+    })
 
-      setSocket(socket)
-    }
+    setSocket(socket)
 
     return () => {
       if (socket) {

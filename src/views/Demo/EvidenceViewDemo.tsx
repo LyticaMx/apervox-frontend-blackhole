@@ -9,7 +9,7 @@ const EvidenceViewDemo = (): ReactElement => {
         <Link
           key={evidenceType}
           to={{
-            pathname: pathRoute.evidence,
+            pathname: pathRoute.techniques.many,
             state: {
               type: evidenceType
             }
