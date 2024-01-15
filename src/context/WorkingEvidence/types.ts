@@ -60,6 +60,7 @@ export interface WorkingEvidenceActions {
   updateRegions: (regions: Region[]) => Promise<Region[]>
   deleteRegion: (id: string) => Promise<boolean>
   createFullTranscription: () => Promise<void>
+  cancelFullTranscription: () => Promise<void>
   exportTranscription: (document: DocumentType) => Promise<void>
 }
 

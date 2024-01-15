@@ -45,23 +45,26 @@ const LiveCallSocketProvider = (props: Props): ReactElement => {
   }
 
   useEffect(() => {
-    if (ability.cannot(ACTION.READ, SUBJECT.CALL_EVIDENCES)) return
+    if (ability.cannot(ACTION.READ, SUBJECT.CALL_EVIDENCES) || !isLogguedIn) {
+      return
+    }
     const callErrorListener = (error: any): void => {
       console.error(error)
     }
 
-    if (isLogguedIn) {
-      const socket = io(`${process.env.REACT_APP_MAIN_SOCKET_URL}/monitor`)
-      socket.on('error', callErrorListener)
-      socket.emit('validate_token', { token })
-      getLiveCalls()
-      setSocket(socket)
-    }
+    const socket = io(`${process.env.REACT_APP_MAIN_SOCKET_URL}/monitor`, {
+      transports: ['websocket']
+    })
+    socket.on('error', callErrorListener)
+    socket.emit('validate_token', { token })
+    getLiveCalls()
+    setSocket(socket)
 
     return () => {
       if (socket) {
         socket.off('error', callErrorListener)
         socket.disconnect()
+        setSocket(null)
       }
     }
   }, [isLogguedIn, ability.rules])

@@ -8,6 +8,8 @@ import Pagination from 'components/Table/Pagination'
 import { useTechnique } from 'context/Technique'
 import { useTechniques } from 'context/Techniques'
 import { useGlobalMessage } from 'hooks/useIntl'
+import { useHistory } from 'react-router-dom'
+import { pathRoute } from 'router/routes'
 
 export enum Priority {
   LOW = 'low',
@@ -26,6 +28,7 @@ export const colorByPriority = {
 const TechniqueList = (): ReactElement => {
   const { technique, actions } = useTechnique()
   const { data, pagination, actions: actionsTechniques } = useTechniques()
+  const history = useHistory()
   const getMessage = useGlobalMessage()
   useEffect(() => {
     actionsTechniques?.get()
@@ -39,17 +42,18 @@ const TechniqueList = (): ReactElement => {
       <Scroller>
         {data?.map((item) => (
           <button
-            onClick={() =>
+            onClick={() => {
               actions?.setTechnique({
                 id: item.id,
                 groups: item.groups ?? [],
                 name: item.name,
-                notificationTime: 0,
-                notificationTimeUnit: 'days',
+                notificationDays: '0',
+                notificationHours: '0',
                 priority: item.priority,
                 status: item.status
               })
-            }
+              history.push(`${pathRoute.techniques.many}/${item.id}`)
+            }}
             className={clsx(
               'inline-flex rounded-md items-center font-semibold px-3 py-1 text-sm w-full',
               {
@@ -80,7 +84,7 @@ const TechniqueList = (): ReactElement => {
         pageSize={pagination.limit}
         totalCount={pagination.totalRecords}
         manualLimit={{
-          options: pagination.limitOptions ?? [15],
+          options: pagination.limitOptions ?? [15, 25, 50, 100],
           onChangeLimit: (page, limit) =>
             actionsTechniques?.get({ page: page + 1, limit })
         }}

@@ -9,6 +9,14 @@ export const createTargetDialogMessages = defineMessages({
     id: 'views.techniques.CreateTargetDialog.selectTargetType',
     defaultMessage:
       'Selecciona el tipo de objetivo que será agregado a la técnica y completa los datos del formulario.'
+  },
+  success: {
+    id: 'views.techniques.CreateTargetDialog.success',
+    defaultMessage: 'Objetivo creado correctamente'
+  },
+  failed: {
+    id: 'views.techniques.CreateTargetDialog.failed',
+    defaultMessage: 'El objetivo no pudo ser creado'
   }
 })
 
@@ -105,6 +113,18 @@ export const evidenceListMessages = defineMessages({
   withoutFollow: {
     id: 'views.techniques.EvidenceList.withoutFollow',
     defaultMessage: 'Sin seguimiento'
+  },
+  releaseEvidences: {
+    id: 'views.techniques.EvidenceList.releaseEvidences',
+    defaultMessage: 'Liberar evidencias'
+  },
+  followUpdateSuccess: {
+    id: 'views.techniques.EvidenceList.followUpdateSuccess',
+    defaultMessage: 'Seguimiento actualizado correctamente'
+  },
+  followUpdateError: {
+    id: 'views.techniques.EvidenceList.followUpdateError',
+    defaultMessage: 'No se pudo actualizar el seguimiento de la evidencia'
   }
 })
 
@@ -128,6 +148,16 @@ export const targetCardMessages = defineMessages({
   history: {
     id: 'views.techniques.TargetCard.history',
     defaultMessage: 'Historial'
+  },
+  deleteSuccess: {
+    id: 'views.techniques.TargetCard.delete.success',
+    defaultMessage:
+      '{quantity,plural,one{Objetivo eliminado}other{Objetivos eliminados}} correctamente'
+  },
+  deleteError: {
+    id: 'views.techniques.TargetCard.delete.Error',
+    defaultMessage:
+      'Ocurrió un error al intentar eliminar {quantity,plural,one{el objetivo}other{los objetivos}}'
   }
 })
 
@@ -1046,7 +1076,7 @@ export const physicalDescriptionFormMessages = defineMessages({
   },
   curly: {
     id: 'views.techniques.PhysicalDescriptionForm.hairType.curly',
-    defaultMessage: 'Ondulado'
+    defaultMessage: 'Rizado'
   },
   kinky: {
     id: 'views.techniques.PhysicalDescriptionForm.hairType.kinky',
@@ -1761,5 +1791,33 @@ export const createMetadataDialogMessages = defineMessages({
     id: 'views.techniques.createMetadataDialog.message',
     defaultMessage:
       'Selecciona formularios ya existente o crear formularios vacios.'
+  }
+})
+
+export const unlockEvidencesMessages = defineMessages({
+  title: {
+    id: 'views.technique.evidences.unlock.title',
+    defaultMessage:
+      'Liberar {selected, plural, one{la evidencia seleccionada} other{las # evidencias seleccionadas}}'
+  },
+  message: {
+    id: 'views.technique.evidences.unlock.message',
+    defaultMessage:
+      '¿Estás seguro que deseas continuar con la liberación? La siguiente acción podría causar pérdida del trabajo en progreso y no es reversible, asegurate que {selected,plural,one{sea la evidencia correcta} other{sean las evidencias correctas}}'
+  },
+  passwordConfirm: {
+    id: 'views.technique.evidences.unlock.passwordConfirm',
+    defaultMessage:
+      'Ingresa tu contraseña para validar la liberación de {selected, plural, one{la evidencia seleccionada} other{de las # evidencias seleccionadas}}'
+  },
+  success: {
+    id: 'views.technique.evidences.unlock.success',
+    defaultMessage:
+      '{selected,plural,one{Evidencia liberada} other{Evidencias liberadas}} correctamente'
+  },
+  failed: {
+    id: 'views.technique.evidences.unlock.failed',
+    defaultMessage:
+      'Ocurió un problema al liberar {selected,plural,one{la evidencia} other{las evidencias}}'
   }
 })

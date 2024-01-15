@@ -1,5 +1,5 @@
-import { ReactElement, useEffect, useMemo, useState } from 'react'
-import { FormikConfig } from 'formik'
+import { ReactElement, useEffect, useMemo, useRef, useState } from 'react'
+import { FormikConfig, FormikContextType } from 'formik'
 import * as yup from 'yup'
 import Form from 'components/Form'
 import { Field, Section } from 'types/form'
@@ -15,10 +15,15 @@ import { useIntl } from 'react-intl'
 import useTargetMeta from 'hooks/useTargetMeta'
 import { useTechnique } from 'context/Technique'
 import useToast from 'hooks/useToast'
-import { format } from 'date-fns'
 import { TechniqueTabs } from 'types/technique'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
-import { onlyLetters } from 'utils/patterns'
+
+import {
+  CURPPattern,
+  RFCPattern,
+  onlyLetters,
+  phoneNumber
+} from 'utils/patterns'
 import { formMessages } from 'globalMessages'
 
 interface FormValues extends AddressFormValues {
@@ -64,6 +69,7 @@ const PersonalDataForm = (): ReactElement => {
   const actions = useTargetMeta(target?.id ?? '', 'personal-data')
   const { launchToast } = useToast()
   const ability = useAbility()
+  const formikRef = useRef<FormikContextType<FormValues>>()
 
   const fields: Array<Field<FormValues>> = [
     {
@@ -90,7 +96,7 @@ const PersonalDataForm = (): ReactElement => {
     },
     {
       type: 'text',
-      name: 'phone',
+      name: 'targetNumber',
       options: {
         id: 'personal-data-phone',
         label: getMessage('targetPhone'),
@@ -154,7 +160,14 @@ const PersonalDataForm = (): ReactElement => {
         id: 'personal-data-curp',
         label: 'CURP',
         placeholder: getMessage('curpPlaceholder'),
-        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS),
+        onKeyUp: (ev) => {
+          if (!formikRef.current) return
+          formikRef.current.setFieldValue(
+            'curp',
+            formikRef.current.values.curp.toUpperCase()
+          )
+        }
       },
       breakpoints: { xs: 3 }
     },
@@ -165,7 +178,14 @@ const PersonalDataForm = (): ReactElement => {
         id: 'personal-data-rfc',
         label: 'RFC',
         placeholder: getMessage('rfcPlaceholder'),
-        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)
+        disabled: ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS),
+        onKeyUp: (ev) => {
+          if (!formikRef.current) return
+          formikRef.current.setFieldValue(
+            'rfc',
+            formikRef.current.values.rfc.toUpperCase()
+          )
+        }
       },
       breakpoints: { xs: 3 }
     },
@@ -198,7 +218,23 @@ const PersonalDataForm = (): ReactElement => {
       name: yup
         .string()
         .required(getMessage('required'))
-        .matches(onlyLetters, formatMessage(formMessages.onlyLetters))
+        .matches(onlyLetters, formatMessage(formMessages.onlyLetters)),
+      age: yup
+        .number()
+        .typeError(getMessage('mustBeNumber'))
+        .integer(getMessage('mustBeInteger')),
+      targetNumber: yup.string().matches(phoneNumber, {
+        excludeEmptyString: true,
+        message: getMessage('invalidPhoneNumber')
+      }),
+      curp: yup.string().matches(CURPPattern, {
+        excludeEmptyString: true,
+        message: getMessage('invalidCURP')
+      }),
+      rfc: yup.string().matches(RFCPattern, {
+        excludeEmptyString: true,
+        message: getMessage('invalidRFC')
+      })
     })
     .concat(addressValidationSchema)
 
@@ -211,16 +247,22 @@ const PersonalDataForm = (): ReactElement => {
       age: values.age,
       country: values.birthCountry,
       state: values.birthState,
-      town: values.birthCity
+      town: values.birthCity,
+      curp: values.curp,
+      rfc: values.rfc
     }
 
-    if (values.curp) body.curp = values.curp
-    if (values.rfc) body.rfc = values.rfc
     if (values.birthdate) {
-      body.birthday = format(new Date(values.birthdate), 'yyyy-MM-dd')
+      body.birthday = new Date(values.birthdate).toISOString()
     }
 
     try {
+      const excludedKeys = ['state', 'city']
+      for (const key in body) {
+        if (!excludedKeys.includes(key) && body[key] === '') {
+          body[key] = null
+        }
+      }
       await actions.update(body)
       await actions.updateAddress({
         country: values.country,
@@ -268,7 +310,7 @@ const PersonalDataForm = (): ReactElement => {
         name: response.data.full_name ?? '',
         targetNumber: response.data.phone_number ?? '',
         gender: response.data.gender ?? '',
-        birthdate: response.data.birthdate ?? '',
+        birthdate: response.data.birthday ?? '',
         age: response.data.age ?? '',
         curp: response.data.curp ?? '',
         rfc: response.data.rfc ?? '',
@@ -302,6 +344,7 @@ const PersonalDataForm = (): ReactElement => {
         <Form
           formikConfig={formikConfig}
           fields={fields}
+          formikRef={formikRef}
           submitButtonPosition="right"
           submitButtonLabel={getGlobalMessage('save', 'actionsMessages')}
           submitButtonProps={{

@@ -20,6 +20,7 @@ import SelectPaginate from 'components/Form/SelectPaginate'
 import { omit } from 'lodash'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 import { onlyLettersAndNumbers } from 'utils/patterns'
+import useToast from 'hooks/useToast'
 
 interface Props {
   open: boolean
@@ -38,6 +39,7 @@ const StoreDrawer = ({ open, role, onClose }: Props): ReactElement => {
   const [roleUsers, setRoleUsers] = useState<any[]>([])
   const { actions } = useRoles()
   const ability = useAbility()
+  const toast = useToast()
   const isEdit = Boolean(role)
 
   const validationSchema = yup.object({
@@ -61,7 +63,7 @@ const StoreDrawer = ({ open, role, onClose }: Props): ReactElement => {
       }))
 
       if (role) {
-        await actions?.update({
+        const updated = await actions?.update({
           id: role.id,
           name: values.name,
           users: {
@@ -72,12 +74,16 @@ const StoreDrawer = ({ open, role, onClose }: Props): ReactElement => {
           },
           scopes
         })
+        if (updated) toast.success(getMessage('updateSuccess'))
+        else toast.danger(getMessage('updateError'))
       } else {
-        await actions?.create({
+        const created = await actions?.create({
           name: values.name,
           users,
           scopes
         })
+        if (created) toast.success(getMessage('createSuccess'))
+        else toast.danger(getMessage('createError'))
       }
       await actions?.getData()
       if (onClose) onClose()
@@ -87,7 +93,7 @@ const StoreDrawer = ({ open, role, onClose }: Props): ReactElement => {
   const formatDate = (date?: string): string => {
     if (!date) return ''
 
-    return format(parseISO(date), 'dd/MM/yyyy - hh:ss:mm')
+    return format(parseISO(date), 'dd/MM/yyyy - HH:mm')
   }
 
   const setForm = async (): Promise<void> => {
@@ -169,14 +175,14 @@ const StoreDrawer = ({ open, role, onClose }: Props): ReactElement => {
 
           {role && (
             <>
-              <p className="text-xs text-muted">
+              <p className="text-xs text-gray-400">
                 <span className="font-medium mr-1.5">
                   {getGlobalMessage('created', 'generalMessages')}:
                 </span>{' '}
                 {formatDate(role?.created_at)}{' '}
                 <span className="ml-1">{role.created_by}</span>
               </p>
-              <p className="text-xs text-muted mb-2">
+              <p className="text-xs text-gray-400">
                 <span className="font-medium mr-1.5">
                   {getGlobalMessage('updated', 'generalMessages')}:
                 </span>{' '}

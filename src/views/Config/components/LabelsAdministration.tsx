@@ -22,6 +22,7 @@ import { useLabels } from 'context/Labels'
 import { Label } from 'types/label'
 import { StaticFilter } from 'components/FilterByField'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
+import useToast from 'hooks/useToast'
 
 type SelectedLabels = Record<string, boolean>
 
@@ -33,6 +34,7 @@ const LabelsAdministration = (): ReactElement => {
   const [selected, setSelected] = useState<SelectedLabels>({})
   const [openDeleteDrawer, setOpenDeleteDrawer] = useState<boolean>(false)
   const ability = useAbility()
+  const toast = useToast()
 
   useEffect(() => {
     actions?.getData()
@@ -98,12 +100,24 @@ const LabelsAdministration = (): ReactElement => {
 
   const handleDelete = async (): Promise<void> => {
     try {
-      if (label) await actions?.delete(label.id)
-      if (totalSelected) await actions?.deleteAll(Object.keys(selected))
+      let deleted = false
+      if (label) {
+        deleted = (await actions?.delete(label.id)) ?? false
+      }
+      if (totalSelected) {
+        deleted = (await actions?.deleteAll(Object.keys(selected))) ?? false
+      }
+
+      if (!deleted) return
 
       setSelected({})
       setLabel(undefined)
       setOpenDeleteDrawer(false)
+      toast.success(
+        formatMessage(labelsAdministrationMessages.successfullyDeleted, {
+          total: label ? 1 : Object.keys(selected).length
+        })
+      )
       await actions?.getData()
     } catch {}
   }
@@ -117,6 +131,9 @@ const LabelsAdministration = (): ReactElement => {
     })
 
     if (res) {
+      toast.success(
+        formatMessage(labelsAdministrationMessages.successfullyUpdated)
+      )
       await actions?.getData()
       aDrawer?.handleCloseDrawer()
     }
@@ -130,6 +147,9 @@ const LabelsAdministration = (): ReactElement => {
     })
 
     if (res) {
+      toast.success(
+        formatMessage(labelsAdministrationMessages.successfullyCreated)
+      )
       await actions?.getData()
       aDrawer?.handleCloseDrawer()
     }
@@ -281,7 +301,7 @@ const LabelsAdministration = (): ReactElement => {
                     {item.name}
                   </Typography>
                   <Typography className="text-secondary leading-4">
-                    {format(new Date(item.created_at), 'dd/MM/yyyy - hh:mm:ss')}
+                    {format(new Date(item.created_at), 'dd/MM/yyyy - HH:mm:ss')}
                   </Typography>
                 </div>
               </div>

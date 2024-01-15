@@ -32,6 +32,7 @@ export interface WsProps {
   showWave?: boolean
   showZoom?: boolean
   showEqualizer?: boolean
+  lockEvents?: boolean
   CustomRegion?: React.ComponentType<WsRegionProps>
 }
 

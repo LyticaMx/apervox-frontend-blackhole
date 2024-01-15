@@ -97,7 +97,7 @@ const CallsTable = (): ReactElement => {
         accessorKey: 'date',
         id: 'time',
         header: getMessage('time'),
-        cell: ({ row }) => format(new Date(row.original.date), 'hh:mm')
+        cell: ({ row }) => format(new Date(row.original.date), 'HH:mm')
       },
       {
         accessorKey: 'carrier',
@@ -239,6 +239,16 @@ const CallsTable = (): ReactElement => {
     [ability.rules]
   )
 
+  const playAudio = (data: LiveCall): void => {
+    try {
+      if (Boolean(data.endedAt) || data.status === 'ended') {
+        rtcActions?.playEvidence(data.id, data.target)
+      } else {
+        rtcActions?.joinRoom(data.id, data.target)
+      }
+    } catch {}
+  }
+
   return (
     <>
       <HangUpDisclaimer
@@ -255,16 +265,7 @@ const CallsTable = (): ReactElement => {
         columns={columns}
         data={data}
         className="overflow-x-auto shadow rounded-lg"
-        onRowClicked={(row) => {
-          if (row.endedAt) {
-            rtcActions?.playEvidence(row.id, row.target)
-          } else {
-            rtcActions?.joinRoom(
-              'F_20230927140606_ORIGEN_7777777770_DESTINO_8888888800.wav',
-              row.target
-            )
-          }
-        }}
+        onRowClicked={playAudio}
       />
     </>
   )

@@ -29,6 +29,14 @@ export const reducer = (
         ...state,
         pagination: { ...state.pagination, ...action.payload }
       }
+    case Types.UPDATE_ONE:
+      return {
+        ...state,
+        data: state.data.map((ev) =>
+          ev.id === action.payload.id ? action.payload : ev
+        )
+      }
+
     default:
       return state
   }

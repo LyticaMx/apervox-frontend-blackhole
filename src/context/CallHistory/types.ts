@@ -20,7 +20,7 @@ export interface Call {
   relevance: string
   priority: string
   type: string
-  workedBy: string
+  workedBy?: string
   label?: Label
   otherLabel?: string
   transcription: boolean

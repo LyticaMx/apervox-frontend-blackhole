@@ -25,6 +25,7 @@ import MetadataDialog from './MetadataDialog'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 import { useSpecificModelAudits } from 'context/Audit'
 import { TechniqueTabs } from 'types/technique'
+import useToast from 'hooks/useToast'
 
 interface Props {
   data: Target
@@ -41,6 +42,7 @@ const TargetCard = ({ data, isChecked, onCheck }: Props): ReactElement => {
   const { formatMessage } = useIntl()
   const getGlobalMessage = useGlobalMessage()
   const ability = useAbility()
+  const toast = useToast()
 
   const selected = useMemo(() => target?.id === data.id, [target, data])
 
@@ -55,7 +57,15 @@ const TargetCard = ({ data, isChecked, onCheck }: Props): ReactElement => {
     const res = await actions?.delete(data.id)
 
     if (res) {
+      await actions?.getData({ page: 1 })
       handleCloseDeleteDialog()
+      toast.success(
+        formatMessage(targetCardMessages.deleteSuccess, { quantity: 1 })
+      )
+    } else {
+      toast.danger(
+        formatMessage(targetCardMessages.deleteError, { quantity: 1 })
+      )
     }
   }
 
@@ -131,7 +141,9 @@ const TargetCard = ({ data, isChecked, onCheck }: Props): ReactElement => {
           <Typography variant="body2" style="semibold">
             {`${formatMessage(targetCardMessages.finalization)}:`}
             <span className="font-normal ml-1">
-              {format(new Date(data.end_date ?? 0), 'dd/MM/yyyy')}
+              {data.has_end_date
+                ? format(new Date(data.end_date ?? 0), 'dd/MM/yyyy')
+                : 'n/a'}
             </span>
           </Typography>
         </div>

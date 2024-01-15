@@ -1,8 +1,8 @@
-import { ReactElement, useEffect } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { format } from 'date-fns'
 import { useIntl } from 'react-intl'
 import clsx from 'clsx'
-import { StarIcon } from '@heroicons/react/24/outline'
+import { LockOpenIcon, StarIcon } from '@heroicons/react/24/outline'
 
 import { useGlobalMessage } from 'hooks/useIntl'
 import useTableColumns from 'hooks/useTableColumns'
@@ -23,9 +23,16 @@ import {
   WorkingEvidence
 } from 'types/evidence'
 import useToast from 'hooks/useToast'
+import UnlockEvidencesConfirmationDialog from './UnlockEvidencesConfirmationDialog'
+import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 
 interface Props {
   onSelectItem?: (rowSelected: Evidence) => void
+}
+
+interface SynchroUnlockEvidences {
+  ids: string[]
+  resolve: ((value: boolean | PromiseLike<boolean>) => void) | null
 }
 
 const classifications = {
@@ -40,7 +47,10 @@ const EvidenceList = ({ onSelectItem }: Props): ReactElement => {
   const getGlobalMessage = useGlobalMessage()
   const { target, techniqueId } = useTechnique()
   const { data, pagination, actions: evidencesActions } = useEvidences()
+  const [unlockEvidences, setUnlockEvidences] =
+    useState<SynchroUnlockEvidences>({ ids: [], resolve: null })
   const socket = useEvidenceSocket()
+  const ability = useAbility()
   const toast = useToast()
 
   useEffect(() => {
@@ -174,10 +184,12 @@ const EvidenceList = ({ onSelectItem }: Props): ReactElement => {
               onChange={async () => {
                 const updated = await evidencesActions?.toggleFollow(id)
                 if (updated) {
-                  toast.success('Seguimiento actualizado correctamente')
+                  toast.success(
+                    formatMessage(evidenceListMessages.followUpdateSuccess)
+                  )
                 } else {
                   toast.danger(
-                    'No se pudo actualizar el seguimiento de la evidencia'
+                    formatMessage(evidenceListMessages.followUpdateError)
                   )
                 }
               }}
@@ -191,11 +203,11 @@ const EvidenceList = ({ onSelectItem }: Props): ReactElement => {
     },
     {
       accessorKey: 'obtained_from',
-      header: formatMessage(evidenceListMessages.obtainedFrom).toUpperCase()
+      header: formatMessage(evidenceListMessages.obtainedFrom).toUpperCase(),
+      enableSorting: false
     },
     {
       id: 'label',
-
       header: formatMessage(evidenceListMessages.tag).toUpperCase(),
       cell: ({ row }) => {
         const { label, otherLabel } = row.original
@@ -213,7 +225,9 @@ const EvidenceList = ({ onSelectItem }: Props): ReactElement => {
             <p className="pr-1 py-0.5 text-sm"> {label?.name ?? otherLabel}</p>
           </div>
         )
-      }
+      },
+      // TODO: Revisar porque no funciona, desactivado temporalmente
+      enableSorting: false
     },
     {
       accessorKey: 'relevance',
@@ -295,28 +309,56 @@ const EvidenceList = ({ onSelectItem }: Props): ReactElement => {
   ])
 
   return (
-    <Table
-      columns={columns}
-      data={data}
-      className="overflow-x-auto shadow rounded-lg"
-      manualSorting={{
-        onSortingChange: (sort) => evidencesActions?.getData({ sort }),
-        sorting: pagination.sort
-      }}
-      withCheckbox
-      manualLimit={{
-        options: [15, 25, 50, 100],
-        onChangeLimit: (page, limit) =>
-          evidencesActions?.getData({ page: page + 1, limit })
-      }}
-      pageSize={pagination.limit}
-      manualPagination={{
-        currentPage: pagination.page,
-        totalRecords: pagination.totalRecords,
-        onChange: (page) => evidencesActions?.getData({ page: page + 1 })
-      }}
-      onRowClicked={onSelectItem}
-    />
+    <>
+      <UnlockEvidencesConfirmationDialog
+        ids={unlockEvidences.ids}
+        resolve={unlockEvidences.resolve ?? (() => {})}
+        onConfirm={() => setUnlockEvidences({ ids: [], resolve: null })}
+        onClose={() => {
+          if (unlockEvidences.resolve) unlockEvidences.resolve(false)
+          setUnlockEvidences({ ids: [], resolve: null })
+        }}
+      />
+
+      <Table
+        columns={columns}
+        data={data}
+        className="overflow-x-auto shadow rounded-lg"
+        manualSorting={{
+          onSortingChange: (sort) => evidencesActions?.getData({ sort }),
+          sorting: pagination.sort
+        }}
+        withCheckbox
+        manualLimit={{
+          options: [15, 25, 50, 100],
+          onChangeLimit: (page, limit) =>
+            evidencesActions?.getData({ page: page + 1, limit })
+        }}
+        pageSize={pagination.limit}
+        manualPagination={{
+          currentPage: pagination.page,
+          totalRecords: pagination.totalRecords,
+          onChange: (page) => evidencesActions?.getData({ page: page + 1 })
+        }}
+        disableRowClickWhen={(row) => row.workingBy !== ''}
+        actionsForSelectedItems={[
+          {
+            Icon: LockOpenIcon,
+            name: 'releaseEvidences',
+            tooltip: formatMessage(evidenceListMessages.releaseEvidences),
+            disabled: ability.cannot(ACTION.UPDATE, SUBJECT.CALL_EVIDENCES),
+            action: async (evidences) =>
+              await new Promise<boolean>((resolve) => {
+                setUnlockEvidences({
+                  ids: evidences.map((evidence) => evidence.id),
+                  resolve
+                })
+              })
+          }
+        ]}
+        onRowClicked={onSelectItem}
+      />
+    </>
   )
 }
 

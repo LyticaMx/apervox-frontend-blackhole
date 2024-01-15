@@ -1,6 +1,7 @@
 import {
   DocumentTextIcon,
   EyeIcon,
+  LockClosedIcon,
   PhoneIcon
 } from '@heroicons/react/24/outline'
 import Table from 'components/Table'
@@ -54,7 +55,7 @@ const CallsTable = (): ReactElement => {
         id: 'time',
         accessorKey: 'date',
         header: getMessage('time'),
-        cell: ({ getValue }) => format(new Date(getValue<string>()), 'hh:mm')
+        cell: ({ getValue }) => format(new Date(getValue<string>()), 'HH:mm')
       },
       {
         accessorKey: 'carrier',
@@ -231,16 +232,23 @@ const CallsTable = (): ReactElement => {
               </IconButton>
               */}
               <IconButton
-                disabled={ability.cannot(ACTION.UPDATE, SUBJECT.CALL_EVIDENCES)}
+                disabled={
+                  ability.cannot(ACTION.UPDATE, SUBJECT.CALL_EVIDENCES) ||
+                  Boolean(row.original.workedBy)
+                }
                 onClick={() => {
                   workingActions?.setEvidence(row.original.id)
-                  history.push(pathRoute.evidence, {
+                  history.push(pathRoute.monitoring.evidence, {
                     type: 'audio',
                     from: 'monitor'
                   })
                 }}
               >
-                <EyeIcon className="w-4 h-4 text-muted" />
+                {row.original.workedBy ? (
+                  <LockClosedIcon className="w-4 h-4 text-muted" />
+                ) : (
+                  <EyeIcon className="w-4 h-4 text-muted" />
+                )}
               </IconButton>
             </div>
           ) : (

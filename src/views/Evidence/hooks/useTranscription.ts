@@ -1,11 +1,14 @@
 import { RegionInterface } from 'components/WaveSurferContext/types'
 import { useEvidenceSocket } from 'context/EvidenceSocket'
 import { useWorkingEvidence } from 'context/WorkingEvidence'
+import useToast from 'hooks/useToast'
 import { useEffect, useState } from 'react'
+import { useIntl } from 'react-intl'
+import { transcriptionSocketMessages } from '../messages'
 
-interface TaskStatus {
-  task: 'Transcription' | 'Segmentation'
-  status: 'PENDING' | 'STARTED' | 'SUCCESS' | 'FAILURE'
+interface TranscriptionStatus {
+  task: 'Transcription' | 'Segmentation' | 'IDLE'
+  status: 'PENDING' | 'STARTED' | 'SUCCESS' | 'FAILURE' | 'IDLE' | 'REVOKED'
 }
 
 interface TranscriptionProgress {
@@ -26,8 +29,10 @@ interface TranscriptionCRUD {
     React.SetStateAction<RegionInterface[]>
   >
   updateTranscription: () => Promise<void>
+  forceLock: () => void
   lock: boolean
   progress: number
+  canCancelTranscription: boolean
 }
 
 export const useTranscription = (
@@ -40,7 +45,10 @@ export const useTranscription = (
     RegionInterface[]
   >([])
   const [lock, setLock] = useState(false)
+  const [canCancelTranscription, setCanCancelTranscription] = useState(false)
   const [progress, setProgress] = useState(0)
+  const { formatMessage } = useIntl()
+  const toast = useToast()
 
   const getTranscription = async (): Promise<void> => {
     try {
@@ -109,22 +117,81 @@ export const useTranscription = (
   useEffect(() => {
     if (!canWork) return
 
+    setProgress(0)
     getTranscription()
   }, [canWork])
 
   // Se puede dividir en 2 para manejar los eventos
   useEffect(() => {
     if (!socket || !canWork) return
-    socket.send('enter_transcription_room', {})
+    socket.emit('enter_transcription_room', {})
   }, [socket, canWork])
 
   useEffect(() => {
     if (!socket) return
-    const transcriptionStatusHandler = (status?: TaskStatus): void => {
-      /* eslint-disable-next-line */
-      console.log({ taskStatus: status })
-      if (status) setLock(true)
-      else setLock(false)
+    const transcriptionStatusHandler = (
+      transcriptionStatus: TranscriptionStatus = {
+        status: 'STARTED',
+        task: 'Transcription'
+      }
+    ): void => {
+      const { status, task } = transcriptionStatus
+      if (task === 'IDLE') {
+        setLock(false)
+        setCanCancelTranscription(false)
+        return
+      }
+      if (status === 'FAILURE') {
+        // TODO: Revisar si termina las tareas al momento de fallar la transcripción
+        toast.danger(
+          formatMessage(transcriptionSocketMessages.anErrorOcurred, {
+            type: task
+          })
+        )
+        setLock(false)
+        setCanCancelTranscription(false)
+        return
+      }
+      if (status === 'REVOKED') {
+        toast.info(formatMessage(transcriptionSocketMessages.cancelled))
+        setLock(false)
+        setCanCancelTranscription(false)
+        setTimeout(() => {
+          setProgress(0)
+        }, 500)
+        return
+      }
+      if (status !== 'IDLE') {
+        setLock(true)
+        setCanCancelTranscription(true)
+        if (status === 'PENDING') {
+          toast.info(
+            formatMessage(transcriptionSocketMessages.addedPendingTask, {
+              type: task
+            })
+          )
+        } else if (status === 'STARTED') {
+          toast.info(
+            formatMessage(transcriptionSocketMessages.startedTask, {
+              type: task
+            })
+          )
+        } else if (status === 'SUCCESS') {
+          toast.success(
+            formatMessage(transcriptionSocketMessages.endedTask, { type: task })
+          )
+          if (task === 'Segmentation') {
+            setTranscriptionRegions([])
+          }
+          if (task === 'Transcription') {
+            setLock(false)
+            setCanCancelTranscription(false)
+            setTimeout(() => {
+              setProgress(0)
+            }, 500)
+          }
+        }
+      }
     }
     const transcriptionProgressHandler = (
       progress: TranscriptionProgress
@@ -132,15 +199,32 @@ export const useTranscription = (
       /* eslint-disable-next-line */
       console.log({ progress })
       setProgress(+((progress.completed / progress.total) * 100).toFixed(2))
-      setTranscriptionRegions((regions) => [
-        ...regions,
-        {
-          id: progress.segment.id,
-          start: progress.segment.start_time,
-          end: progress.segment.end_time,
-          data: { text: progress.segment.content }
-        }
-      ])
+      if (
+        transcriptionRegions.some((region) => region.id === progress.segment.id)
+      ) {
+        setTranscriptionRegions((regions) =>
+          regions.map((region) =>
+            region.id === progress.segment.id
+              ? {
+                  id: progress.segment.id,
+                  start: progress.segment.start_time,
+                  end: progress.segment.end_time,
+                  data: { text: progress.segment.content }
+                }
+              : region
+          )
+        )
+      } else {
+        setTranscriptionRegions((regions) => [
+          ...regions,
+          {
+            id: progress.segment.id,
+            start: progress.segment.start_time,
+            end: progress.segment.end_time,
+            data: { text: progress.segment.content }
+          }
+        ])
+      }
     }
 
     socket.on('transcription_status', transcriptionStatusHandler)
@@ -157,6 +241,8 @@ export const useTranscription = (
     updateTranscription,
     setTranscriptionRegions,
     lock,
+    canCancelTranscription,
+    forceLock: () => setLock(true),
     progress
   }
 }

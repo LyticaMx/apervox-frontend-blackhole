@@ -7,8 +7,6 @@ import { generalMessages } from 'globalMessages'
 import useTableColumns from 'hooks/useTableColumns'
 import { ReactElement, useCallback, useEffect, useState } from 'react'
 import { useIntl } from 'react-intl'
-import { Link } from 'react-router-dom'
-import { pathRoute } from 'router/routes'
 import AuditDrawer from './components/AuditDrawer'
 import SpecificMovementsHistory from './components/SpecificMovementsHistory'
 import {
@@ -21,6 +19,7 @@ import { useModuleAudits, useSpecificUserAudits } from 'context/Audit'
 import { Audit as AuditInterface } from 'context/Audit/types'
 import useUserDrawer from './hooks/useUserDrawer'
 import { getActionChangeMessage, getActionTitle } from './utils'
+import NavLinks from './components/NavLinks'
 
 type TargetTypes = 'user' | 'group' | 'rol' | 'line' | 'ti' | null
 
@@ -94,17 +93,23 @@ const Audit = (): ReactElement => {
       accessorKey: 'username',
       id: 'user',
       header: formatMessage(generalMessages.user),
-      cell: ({ getValue, row }) => (
-        <button
-          className="text-primary hover:underline"
-          onClick={async (e) => {
-            e.stopPropagation()
-            openDrawer(row.original.userId)
-          }}
-        >
-          {getValue<string>()}
-        </button>
-      )
+      cell: ({ getValue, row }) => {
+        if (row.original.moduleName === 'auth') {
+          return <span className="text-primary">{row.original.name}</span>
+        }
+
+        return (
+          <button
+            className="text-primary hover:underline"
+            onClick={async (e) => {
+              e.stopPropagation()
+              openDrawer(row.original.userId)
+            }}
+          >
+            {getValue<string>()}
+          </button>
+        )
+      }
     },
     {
       accessorKey: 'action',
@@ -132,16 +137,8 @@ const Audit = (): ReactElement => {
         columnFilters: {
           options: [
             {
-              name: formatMessage(generalMessages.statistics),
-              value: 'statistics'
-            },
-            {
               name: formatMessage(messages.rolesAndPermissions),
               value: 'roles'
-            },
-            {
-              name: formatMessage(messages.usersControl),
-              value: 'users'
             },
             {
               name: formatMessage(messages.workgroups),
@@ -149,11 +146,25 @@ const Audit = (): ReactElement => {
             },
             {
               name: formatMessage(messages.acquisitionMedium),
-              value: 'media'
-            }
+              value: 'adquisition'
+            },
+            {
+              name: formatMessage(messages.usersControl),
+              value: 'users'
+            },
+            {
+              name: formatMessage(messages.techniques),
+              value: 'techniques'
+            },
+            { name: formatMessage(messages.monitor), value: 'monitor' },
+            { name: formatMessage(messages.settings), value: 'settings' },
+            { name: formatMessage(messages.metadata), value: 'metadata' }
           ],
-          onChange: () => {},
-          optionsName: formatMessage(messages.auditedModule)
+          onChange: async (values) => {
+            await auditActions?.getData({ module: values })
+          },
+          optionsName: formatMessage(messages.auditedModule),
+          multiple: true
         }
       },
       cell: ({ getValue }) => {
@@ -174,18 +185,11 @@ const Audit = (): ReactElement => {
       accessorKey: 'createdAt',
       id: 'hour',
       header: formatMessage(generalMessages.hour),
-      cell: ({ getValue }) => format(new Date(getValue<string>()), 'hh:mm')
+      cell: ({ getValue }) => format(new Date(getValue<string>()), 'HH:mm')
     }
   ])
 
   useEffect(() => {
-    if (selectedTarget?.type === 'user' && selectedTarget.id === selectedUser) {
-      setSelectedTarget(null)
-      specificUserActions?.setUserId()
-
-      return
-    }
-
     if (selectedUser) {
       specificUserActions?.setUserId(selectedUser)
       setSelectedTarget({
@@ -233,27 +237,7 @@ const Audit = (): ReactElement => {
           // download={(type) => console.log(type)}
         />
       </div>
-      <div className="flex gap-4">
-        <Link to={pathRoute.audit.failedLoginAttemps}>
-          <Typography
-            variant="subtitle"
-            style="semibold"
-            className="uppercase text-secondary text-base"
-          >
-            {formatMessage(messages.loginFailedAttemps)}
-          </Typography>
-        </Link>
-
-        <Link to={pathRoute.audit.blockedUsers}>
-          <Typography
-            variant="subtitle"
-            style="semibold"
-            className="uppercase text-secondary text-base"
-          >
-            {formatMessage(messages.blockedUsers)}
-          </Typography>
-        </Link>
-      </div>
+      <NavLinks />
       <div className="mt-2">
         <Table
           columns={columns}

@@ -5,8 +5,6 @@ import { ColumnDef } from '@tanstack/react-table'
 
 import { TrashIcon } from '@heroicons/react/24/outline'
 
-import { pathRoute } from 'router/routes'
-
 import { useTechniques } from 'context/Techniques'
 import { useTechnique } from 'context/Technique'
 
@@ -32,6 +30,7 @@ import { techniquesDeleteDialogMessages, techniquesMessages } from '../messages'
 import { useLanguage } from 'context/Language'
 import { useIntl } from 'react-intl'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
+import { pathRoute } from 'router/routes'
 
 interface SynchroDeleteIds {
   ids: string[]
@@ -68,12 +67,12 @@ const TechniqueList = (): ReactElement => {
       id: item.id,
       groups: item.groups ?? [],
       name: item.name,
-      notificationTime: 0,
-      notificationTimeUnit: 'days',
+      notificationDays: '0',
+      notificationHours: '0',
       priority: item.priority,
       status: item.status
     })
-    history.push(pathRoute.technique)
+    history.push(`${pathRoute.techniques.many}/${item.id}`)
   }
   const normalModeColumns: NonEmptyArray<ColumnDef<Technique>> = [
     {

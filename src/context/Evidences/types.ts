@@ -71,6 +71,7 @@ export interface EvidenceActions {
   updateEvidence: (id: string) => Promise<void>
   updateFollow: (id: string, status: boolean) => void
   toggleFollow: (id: string) => Promise<boolean>
+  releaseEvidences: (ids: string[]) => Promise<boolean>
   exportTable: (document: DocumentType, quantity: RowsQuantity) => Promise<void>
 }
 

@@ -11,7 +11,11 @@ import Pagination from 'components/Table/Pagination'
 import { actionsMessages } from 'globalMessages'
 
 import TargetCard from './TargetCard'
-import { targetListMessages } from '../messages'
+import {
+  createTargetDialogMessages,
+  targetCardMessages,
+  targetListMessages
+} from '../messages'
 import { useTechnique } from 'context/Technique'
 import { useTargets } from 'context/Targets'
 import IndeterminateCheckbox from 'components/Table/IndeterminateCheckbox'
@@ -23,6 +27,7 @@ import { Target } from 'types/target'
 import { ModuleAuditsTypes, useModuleAudits } from 'context/Audit'
 import { ACTION, SUBJECT, useAbility } from 'context/Ability'
 import HistoryDrawer from './HistoryDrawer'
+import useToast from 'hooks/useToast'
 
 const TargetList = (): ReactElement => {
   let timer
@@ -36,6 +41,7 @@ const TargetList = (): ReactElement => {
   const { formatMessage } = useIntl()
   const { actions: auditActions } = useModuleAudits()
   const ability = useAbility()
+  const toast = useToast()
 
   useEffect(() => {
     targetsActions?.getData({ page: 1, technique_id: techniqueId }, true)
@@ -90,16 +96,29 @@ const TargetList = (): ReactElement => {
       const res = await targetsActions?.create(newTarget)
 
       if (res) {
+        toast.success(formatMessage(createTargetDialogMessages.success))
         setOpenTargetForm(false)
+        await targetsActions?.getData({ page: 1 })
+        return
       }
+      toast.danger(formatMessage(createTargetDialogMessages.failed))
     }
   }
   const handleDelete = async (): Promise<void> => {
     const res = await targetsActions?.deleteMany(targetsChecked)
 
     if (res) {
-      await targetsActions?.getData()
+      await targetsActions?.getData({ page: 1 })
       setOpenDeleteDialog(false)
+      formatMessage(targetCardMessages.deleteError, {
+        quantity: targetsChecked.length
+      })
+    } else {
+      toast.danger(
+        formatMessage(targetCardMessages.deleteError, {
+          quantity: targetsChecked.length
+        })
+      )
     }
   }
 

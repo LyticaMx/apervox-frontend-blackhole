@@ -31,8 +31,10 @@ const CreateTechniqueDrawer = ({ open, onClose }: Props): ReactElement => {
           seconds: 59,
           milliseconds: 999
         }).toISOString() ?? '',
-      notificationTime: parseInt(values.advanceTime),
-      notificationTimeUnit: values.advanceTimeType,
+      // notificationTime: parseInt(values.advanceTime),
+      // notificationTimeUnit: values.advanceTimeType,
+      notificationDays: +values.notificationDays,
+      notificationHours: +values.notificationHours,
       groups: values.groups.map((group) => group.value),
       priority: values.priority,
       shift: values.shift,

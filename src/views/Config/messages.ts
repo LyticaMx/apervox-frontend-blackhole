@@ -181,6 +181,19 @@ export const labelsAdministrationMessages = defineMessages({
     id: 'views.Config.LabelsAdministration.secondDeleteStep',
     defaultMessage:
       'Ingresa tu contraseña para validar la eliminación del(los) rótulo(s) seleccionado(s).'
+  },
+  successfullyCreated: {
+    id: 'views.Config.LabelsAdministration.successfullyCreated',
+    defaultMessage: 'Rótulo creado correctamente'
+  },
+  successfullyUpdated: {
+    id: 'views.Config.LabelsAdministration.successfullyUpdated',
+    defaultMessage: 'Rótulo actualizado correctamente'
+  },
+  successfullyDeleted: {
+    id: 'views.Config.LabelsAdministration.successfullyDeleted',
+    defaultMessage:
+      '{total, plural, one{Rótulo eliminado} other{Rótulos eliminados}} correctamente'
   }
 })
 
@@ -399,6 +412,42 @@ export const mediaMessages = defineMessages({
   actualDeviceData: {
     id: 'views.Config.Media.actualDeviceData',
     defaultMessage: 'Datos actuales del equipo seleccionado.'
+  },
+  createdMedia: {
+    id: 'views.Config.Media.createdMedia',
+    defaultMessage: 'Medio creado correctamente'
+  },
+  updatedMedia: {
+    id: 'views.Config.Media.updatedMedia',
+    defaultMessage: 'Medio actualizado correctamente'
+  },
+  deletedMedia: {
+    id: 'views.Config.Media.deletedMedia',
+    defaultMessage: 'Medio eliminado correctamente'
+  },
+  createdDevice: {
+    id: 'views.Config.Media.createdDevice',
+    defaultMessage: 'Equipo creado correctamente'
+  },
+  updatedDevice: {
+    id: 'views.Config.Media.updatedDevice',
+    defaultMessage: 'Equipo actualizado correctamente'
+  },
+  deletedDevice: {
+    id: 'views.Config.Media.deletedDevice',
+    defaultMessage: 'Equipo eliminado correctamente'
+  },
+  createdCarrier: {
+    id: 'views.Config.Media.createdCarrier',
+    defaultMessage: 'Compañía creada correctamente'
+  },
+  updatedCarrier: {
+    id: 'views.Config.Media.updatedCarrier',
+    defaultMessage: 'Compañía actualizada correctamente'
+  },
+  deletedCarrier: {
+    id: 'views.Config.Media.deletedCarrier',
+    defaultMessage: 'Compañía eliminada correctamente'
   }
 })
 

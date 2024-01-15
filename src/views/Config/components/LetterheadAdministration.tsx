@@ -267,6 +267,7 @@ const LetterheadAdministration = (): ReactElement => {
                           file: null
                         }}
                         fileName={item.image}
+                        id={item.id}
                       />
                     )
                   })
@@ -278,7 +279,7 @@ const LetterheadAdministration = (): ReactElement => {
                 <Typography className="text-secondary">
                   {format(
                     new Date(item.created_at ?? 0),
-                    'dd/MM/yyyy - hh:mm:ss'
+                    'dd/MM/yyyy - HH:mm:ss'
                   )}
                 </Typography>
               </div>

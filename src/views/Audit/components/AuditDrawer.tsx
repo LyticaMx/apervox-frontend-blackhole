@@ -30,7 +30,7 @@ const AuditDrawer = (props: Props): ReactElement => {
         </Typography>
         {date && (
           <Typography variant="caption" className="text-primary">
-            {format(new Date(date), 'dd/MM/yyyy hh:mm')}
+            {format(new Date(date), 'dd/MM/yyyy HH:mm')}
           </Typography>
         )}
       </div>

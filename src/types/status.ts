@@ -4,6 +4,7 @@ export enum Status {
   LOCKED = 'locked',
   TO_COMPLETE = 'toComplete',
   COMPLETED = 'completed',
+  CONCLUDED = 'concluded',
   CURRENT = 'current'
 }
 
@@ -13,5 +14,6 @@ export const colorByStatus = {
   [Status.LOCKED]: 'gray-500',
   [Status.CURRENT]: 'green-500',
   [Status.COMPLETED]: 'purple-500',
+  [Status.CONCLUDED]: 'purple-500',
   [Status.TO_COMPLETE]: 'orange-500'
 }

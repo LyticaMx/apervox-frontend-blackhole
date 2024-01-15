@@ -23,7 +23,7 @@ export const useActions = (
   state: AuditContextState,
   dispatch
 ): AuditActions => {
-  const { pagination, dateFilter, searchFilter /* staticFilter */ } = state
+  const { pagination, dateFilter, searchFilter, staticFilter } = state
 
   const getAudits = useApi({
     endpoint: 'audits',
@@ -43,16 +43,7 @@ export const useActions = (
         .sort(pagination.sort, orderByMapper)
         .dates(dateFilter)
         // TODO Añadir filtros estaticos
-        .putStaticFilter('module', [
-          'roles',
-          'groups',
-          'adquisition',
-          'users',
-          'techniques',
-          'monitor',
-          'settings',
-          'metadata'
-        ])
+        .putStaticFilter('module', params?.module ?? staticFilter?.module)
         .build()
 
       const [response, total] = await Promise.all([

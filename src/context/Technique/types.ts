@@ -14,8 +14,10 @@ export interface InnerTechnique {
   name: string
   description?: string
   groups: TechniqueGroup[]
-  notificationTimeUnit: 'days' | 'hours'
-  notificationTime: number
+  notificationTimeUnit?: 'days' | 'hours'
+  notificationTime?: number
+  notificationDays: string
+  notificationHours: string
   shift?: string
   reportEvidenceEvery?: string
   targets?: any[]

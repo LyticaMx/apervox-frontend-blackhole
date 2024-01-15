@@ -1,5 +1,5 @@
 import { ReactElement } from 'react'
-import { TrashIcon } from '@heroicons/react/24/outline'
+import { BiUnlink } from 'react-icons/bi'
 import { useFormatMessage } from 'hooks/useIntl'
 import useTableColumns from 'hooks/useTableColumns'
 import { WorkGroupUser } from 'types/workgroup'
@@ -59,7 +59,7 @@ const AssociatedUserList = (): ReactElement => {
           return (
             <div className="flex items-center justify-center">
               <Tooltip
-                content={getMessage('delete')}
+                content={getMessage('unlink')}
                 floatProps={{ offset: 10, arrow: true }}
                 classNames={{
                   panel:
@@ -76,7 +76,7 @@ const AssociatedUserList = (): ReactElement => {
                       await actions?.getWorkGroupUsers({ page: 1 })
                       await actions?.getWorkGroups()
                       launchToast({
-                        title: getMessage('deletedUsersSuccess', {
+                        title: getMessage('unlinkedUsersSuccess', {
                           total: 1
                         }),
                         type: 'Success'
@@ -84,13 +84,13 @@ const AssociatedUserList = (): ReactElement => {
                       return true
                     }
                   }}
-                  className="text-muted enabled:hover:text-primary mx-1"
+                  className="text-muted enabled:hover:text-primary mx-1 flex self-center"
                   disabled={
                     table.getIsSomeRowsSelected() ||
                     table.getIsAllRowsSelected()
                   }
                 >
-                  <TrashIcon className="h-5 w-5" />
+                  <BiUnlink className="h-5 w-5" />
                 </button>
               </Tooltip>
             </div>
@@ -125,7 +125,7 @@ const AssociatedUserList = (): ReactElement => {
       }}
       actionsForSelectedItems={[
         {
-          name: 'Eliminar',
+          name: 'unlink',
           action: async (items) => {
             const deleted = await actions?.deleteUsersOfWorkGroup(
               items.map((datum) => datum.id)
@@ -134,7 +134,7 @@ const AssociatedUserList = (): ReactElement => {
               await actions?.getWorkGroupUsers({ page: 1 })
               await actions?.getWorkGroups()
               launchToast({
-                title: getMessage('deletedUsersSuccess', {
+                title: getMessage('unlinkedUsersSuccess', {
                   total: items.length
                 }),
                 type: 'Success'
@@ -142,7 +142,8 @@ const AssociatedUserList = (): ReactElement => {
               return true
             }
           },
-          Icon: TrashIcon
+          Icon: BiUnlink,
+          tooltip: getMessage('unlink')
         }
       ]}
     />

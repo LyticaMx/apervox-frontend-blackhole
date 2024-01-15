@@ -133,4 +133,14 @@ export const getActionTitle = (
   moduleName: string,
   action: string,
   name: string = ''
-): ReactNode => titles[action]?.(formatter, moduleName, name) ?? ''
+): ReactNode => {
+  if (moduleName === 'auth') {
+    if (action === 'logged') return formatter(auditableActions.logged)
+    else if (action === 'logging_attemp') {
+      return formatter(auditableActions.logging_attemp)
+    } else if (action === 'bloqued') return formatter(auditableActions.bloqued)
+    else if (action === 'logout') return formatter(auditableActions.logout)
+  }
+
+  return titles[action]?.(formatter, moduleName, name) ?? ''
+}

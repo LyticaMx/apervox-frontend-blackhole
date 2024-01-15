@@ -116,12 +116,14 @@ const AccordionForm = <T extends Object>({
     setErrors(newErrors)
   }
 
-  const handleValidateAll = (): boolean => {
+  const handleValidateAll = async (): Promise<boolean> => {
     let isValid = true
     const errors = {}
 
-    formikRefs.current.forEach((value) => {
-      value?.setTouched(
+    const forms = [...(formikRefs.current.values() ?? [])]
+    for (let i = 0; i < forms.length; i++) {
+      const form = forms[i]
+      form?.setTouched(
         fields.reduce<any>((prev, field) => {
           if (field.name === 'city-selector') {
             prev.country = true
@@ -131,17 +133,13 @@ const AccordionForm = <T extends Object>({
           return prev
         }, {})
       )
+      const formErrors = (await form?.validateForm()) ?? {}
+      const valid = Object.keys(formErrors).length === 0
 
-      value?.validateForm()
-    })
+      errors[i] = !valid
 
-    valuesRef.current.forEach((form, index) => {
-      errors[index] = !form.isValid
-
-      if (!form.isValid) {
-        isValid = false
-      }
-    })
+      if (isValid) isValid = isValid && valid
+    }
 
     setErrors(errors)
 
@@ -290,8 +288,8 @@ const AccordionForm = <T extends Object>({
           color="primary"
           className="my-2 float-right"
           disabled={ability.cannot(ACTION.UPDATE, SUBJECT.TARGETS)}
-          onClick={() => {
-            const isValid = handleValidateAll()
+          onClick={async () => {
+            const isValid = await handleValidateAll()
 
             if (isValid) {
               onSubmit?.(valuesRef.current.map((item) => item.data) as T[])

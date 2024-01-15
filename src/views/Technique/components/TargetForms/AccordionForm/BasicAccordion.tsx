@@ -57,7 +57,7 @@ const BasicAccordion = ({
         ref={contentElement}
         className={clsx(
           'bg-white overflow-hidden transition-all duration-200',
-          !isOpened ? 'max-h-0' : 'max-h-[600px]'
+          !isOpened ? 'max-h-0' : 'max-h-fit'
         )}
       >
         {children}
