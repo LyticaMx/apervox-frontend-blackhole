@@ -1,9 +1,8 @@
-import { ReactElement } from 'react'
+import { LazyExoticComponent, ReactElement, lazy } from 'react'
+import { ACTION, SUBJECT } from 'context/Ability'
 
 import {
-  // PhoneIcon,
   UserGroupIcon,
-  // Cog6ToothIcon,
   BeakerIcon,
   IdentificationIcon,
   UsersIcon,
@@ -15,45 +14,13 @@ import { WifiIcon } from '@heroicons/react/24/solid'
 import { AuditIcon } from 'assets/SVG'
 
 import SignIn from 'views/Auth/SignIn'
-import RestorePassword from 'views/Auth/RestorePassword'
-import Audit from 'views/Audit'
 import Presentation from 'views/Presentation'
-import Roles from 'views/Roles'
-import UserAccount from 'views/Auth/UserAccount'
-import FailedLoginAttemps from 'views/Audit/FailedLoginAttemps'
-import BlockedUsers from 'views/Audit/BlockedUsers'
-import UsersAdmin from 'views/UsersAdmin'
-import GeneralConfig from 'views/Config'
-import Monitoring from 'views/Monitoring'
-import Media from 'views/Config/Media'
-import Telecom from 'views/Config/Telecom'
-import CallsHistory from 'views/CallsHistory'
-import Acquisition from 'views/Acquisition'
-import WorkGroups from 'views/WorkGroups'
-import Evidence from 'views/Evidence'
-import Techniques from 'views/Techniques'
-import Technique from 'views/Technique'
 
 import BaseLayout from 'layout/BaseLayout'
 import EvidenceLayout from 'layout/EvidenceLayout'
 import FullScreenLayout from 'layout/FullScreenLayout'
 import { Layout } from 'types/layout'
 import { sidebarMessages } from 'globalMessages'
-
-/* DEV */
-import DemoSystem from 'views/Demo/System'
-import DemoCharts from 'views/Demo/Chart'
-import DemoForm from 'views/Demo/Form'
-import DemoAutoForm from 'views/Demo/AutoForm'
-import DemoWavesurfer from 'views/Demo/Wavesurfer'
-import DemoCommon from 'views/Demo/Common'
-import ImageEditor from 'views/Demo/ImageEditor'
-import DemoEfra from 'views/Demo/efra'
-import VideoPlayer from 'views/Demo/VideoPlayer'
-import RichTextEditor from 'views/Demo/RichTextEditor'
-import EvidenceViewDemo from 'views/Demo/EvidenceViewDemo'
-import Verification from 'views/Acquisition/Verification'
-import { ACTION, SUBJECT } from 'context/Ability'
 
 interface Ability {
   action: ACTION
@@ -68,10 +35,11 @@ export interface Route {
   modules: Route[]
   icon?: any
   scopes: Ability[] // permissions for access to route => "admin, superadmin..."
-  component: () => ReactElement
+  component: (() => ReactElement) | LazyExoticComponent<any>
   layout: ({ children }: Layout) => ReactElement
   private?: boolean
   sidebar?: boolean
+  fallbackWithBg?: boolean
 }
 
 export const pathRoute = {
@@ -143,22 +111,24 @@ export const routes: Route[] = [
     modules: [],
     scopes: [],
     component: SignIn,
-    layout: FullScreenLayout
+    layout: FullScreenLayout,
+    fallbackWithBg: true
   },
   {
     id: 'restore-password',
     path: pathRoute.auth.restorePassword,
     modules: [],
     scopes: [],
-    component: RestorePassword,
-    layout: FullScreenLayout
+    component: lazy(async () => await import('views/Auth/RestorePassword')),
+    layout: FullScreenLayout,
+    fallbackWithBg: true
   },
   {
     id: 'mi-cuenta',
     path: pathRoute.auth.userAccount,
     modules: [],
     scopes: [{ action: ACTION.READ, subject: SUBJECT.ME }],
-    component: UserAccount,
+    component: lazy(async () => await import('views/Auth/UserAccount')),
     layout: BaseLayout,
     private: true
   },
@@ -169,7 +139,7 @@ export const routes: Route[] = [
     i18Key: 'users',
     modules: [],
     scopes: [{ action: ACTION.READ, subject: SUBJECT.USERS }],
-    component: UsersAdmin,
+    component: lazy(async () => await import('views/UsersAdmin')),
     layout: BaseLayout,
     private: true,
     sidebar: true
@@ -181,7 +151,7 @@ export const routes: Route[] = [
     i18Key: 'workGroups',
     modules: [],
     scopes: [{ action: ACTION.READ, subject: SUBJECT.GROUPS }],
-    component: WorkGroups,
+    component: lazy(async () => await import('views/WorkGroups')),
     layout: BaseLayout,
     private: true,
     sidebar: true
@@ -193,7 +163,7 @@ export const routes: Route[] = [
     i18Key: 'roles',
     modules: [],
     scopes: [{ action: ACTION.READ, subject: SUBJECT.ROLES }],
-    component: Roles,
+    component: lazy(async () => await import('views/Roles')),
     layout: BaseLayout,
     private: true,
     sidebar: true
@@ -205,7 +175,7 @@ export const routes: Route[] = [
     modules: [
       {
         id: 'config-media',
-        component: Media,
+        component: lazy(async () => await import('views/Config/Media')),
         layout: BaseLayout,
         modules: [],
         scopes: [
@@ -218,7 +188,7 @@ export const routes: Route[] = [
       },
       {
         id: 'config-telecom',
-        component: Telecom,
+        component: lazy(async () => await import('views/Config/Telecom')),
         layout: BaseLayout,
         modules: [],
         scopes: [],
@@ -228,7 +198,7 @@ export const routes: Route[] = [
     ],
     scopes: [],
     layout: BaseLayout,
-    component: GeneralConfig,
+    component: lazy(async () => await import('views/Config')),
     private: true,
     sidebar: false
   },
@@ -239,7 +209,7 @@ export const routes: Route[] = [
     i18Key: 'monitoring',
     modules: [],
     scopes: [{ action: ACTION.READ, subject: SUBJECT.CALL_EVIDENCES }],
-    component: CallsHistory,
+    component: lazy(async () => await import('views/CallsHistory')),
     layout: BaseLayout,
     private: true,
     sidebar: false
@@ -251,7 +221,7 @@ export const routes: Route[] = [
     i18Key: 'monitoring',
     modules: [],
     scopes: [{ action: ACTION.READ, subject: SUBJECT.CALL_EVIDENCES }],
-    component: Monitoring,
+    component: lazy(async () => await import('views/Monitoring')),
     layout: BaseLayout,
     private: true,
     sidebar: true
@@ -264,7 +234,9 @@ export const routes: Route[] = [
     modules: [
       {
         id: 'verification-line',
-        component: Verification,
+        component: lazy(
+          async () => await import('views/Acquisition/Verification')
+        ),
         layout: BaseLayout,
         modules: [],
         scopes: [
@@ -276,7 +248,7 @@ export const routes: Route[] = [
       }
     ],
     scopes: [{ action: ACTION.READ, subject: SUBJECT.OVERFLOW_LINES }],
-    component: Acquisition,
+    component: lazy(async () => await import('views/Acquisition')),
     layout: BaseLayout,
     private: true,
     sidebar: true
@@ -289,7 +261,9 @@ export const routes: Route[] = [
     modules: [
       {
         id: 'audit-failed-login-attemps',
-        component: FailedLoginAttemps,
+        component: lazy(
+          async () => await import('views/Audit/FailedLoginAttemps')
+        ),
         layout: BaseLayout,
         modules: [],
         scopes: [{ action: ACTION.READ, subject: SUBJECT.AUDITS }],
@@ -298,7 +272,7 @@ export const routes: Route[] = [
       },
       {
         id: 'audit-blocked-users',
-        component: BlockedUsers,
+        component: lazy(async () => await import('views/Audit/BlockedUsers')),
         layout: BaseLayout,
         modules: [],
         scopes: [{ action: ACTION.READ, subject: SUBJECT.AUDITS }],
@@ -307,33 +281,34 @@ export const routes: Route[] = [
       }
     ],
     scopes: [{ action: ACTION.READ, subject: SUBJECT.AUDITS }],
-    component: Audit,
+    component: lazy(async () => await import('views/Audit')),
     layout: BaseLayout,
     private: true,
     sidebar: true
   },
   {
-    id: 'evidence',
+    id: 'technique-evidence',
     path: pathRoute.techniques.evidence,
     scopes: [
       { action: ACTION.READ, subject: SUBJECT.CALL_EVIDENCES },
       { action: ACTION.UPDATE, subject: SUBJECT.CALL_EVIDENCES }
     ],
     modules: [],
-    component: Evidence,
+    // TODO: Confirmar si es buena opcion cargarla async
+    component: lazy(async () => await import('views/Evidence')),
     layout: EvidenceLayout,
     private: false,
     sidebar: false
   },
   {
-    id: 'evidence',
+    id: 'monitoring-evidence',
     path: pathRoute.monitoring.evidence,
     scopes: [
       { action: ACTION.READ, subject: SUBJECT.CALL_EVIDENCES },
       { action: ACTION.UPDATE, subject: SUBJECT.CALL_EVIDENCES }
     ],
     modules: [],
-    component: Evidence,
+    component: lazy(async () => await import('views/Evidence')),
     layout: EvidenceLayout,
     private: false,
     sidebar: false
@@ -345,7 +320,7 @@ export const routes: Route[] = [
     i18Key: 'techniques',
     modules: [],
     scopes: [{ action: ACTION.READ, subject: SUBJECT.TECHNIQUES }],
-    component: Techniques,
+    component: lazy(async () => await import('views/Techniques')),
     layout: BaseLayout,
     private: true,
     sidebar: true
@@ -357,7 +332,7 @@ export const routes: Route[] = [
     i18Key: 'techniques',
     modules: [],
     scopes: [{ action: ACTION.READ, subject: SUBJECT.TECHNIQUES }],
-    component: Technique,
+    component: lazy(async () => await import('views/Technique')),
     layout: BaseLayout,
     private: true,
     sidebar: false
@@ -376,7 +351,7 @@ export const routes: Route[] = [
         path: pathRoute.demo.chart,
         modules: [],
         scopes: [],
-        component: DemoCharts,
+        component: lazy(async () => await import('views/Demo/Chart')),
         layout: BaseLayout,
         private: true,
         sidebar: true
@@ -387,7 +362,7 @@ export const routes: Route[] = [
         path: pathRoute.demo.form,
         modules: [],
         scopes: [],
-        component: DemoForm,
+        component: lazy(async () => await import('views/Demo/Form')),
         layout: BaseLayout,
         private: true,
         sidebar: true
@@ -398,7 +373,7 @@ export const routes: Route[] = [
         path: pathRoute.demo.autoform,
         modules: [],
         scopes: [],
-        component: DemoAutoForm,
+        component: lazy(async () => await import('views/Demo/AutoForm')),
         layout: BaseLayout,
         private: true,
         sidebar: true
@@ -409,7 +384,7 @@ export const routes: Route[] = [
         path: pathRoute.demo.wavesurfer,
         modules: [],
         scopes: [],
-        component: DemoWavesurfer,
+        component: lazy(async () => await import('views/Demo/Wavesurfer')),
         layout: BaseLayout,
         private: true,
         sidebar: true
@@ -420,7 +395,7 @@ export const routes: Route[] = [
         path: pathRoute.demo.common,
         modules: [],
         scopes: [],
-        component: DemoCommon,
+        component: lazy(async () => await import('views/Demo/Common')),
         layout: BaseLayout,
         private: true,
         sidebar: true
@@ -432,7 +407,7 @@ export const routes: Route[] = [
         path: pathRoute.demo.imageEditor,
         modules: [],
         scopes: [],
-        component: ImageEditor,
+        component: lazy(async () => await import('views/Demo/ImageEditor')),
         layout: BaseLayout,
         private: true,
         sidebar: true
@@ -444,7 +419,7 @@ export const routes: Route[] = [
         path: '/demo/efra',
         modules: [],
         scopes: [],
-        component: DemoEfra,
+        component: lazy(async () => await import('views/Demo/efra')),
         layout: FullScreenLayout
       },
       {
@@ -453,7 +428,7 @@ export const routes: Route[] = [
         path: pathRoute.demo.videoPlayer,
         modules: [],
         scopes: [],
-        component: VideoPlayer,
+        component: lazy(async () => await import('views/Demo/VideoPlayer')),
         layout: BaseLayout,
         private: true,
         sidebar: true
@@ -464,7 +439,7 @@ export const routes: Route[] = [
         path: pathRoute.demo.textEditor,
         modules: [],
         scopes: [],
-        component: RichTextEditor,
+        component: lazy(async () => await import('views/Demo/RichTextEditor')),
         layout: BaseLayout,
         private: false,
         sidebar: true
@@ -474,14 +449,16 @@ export const routes: Route[] = [
         path: pathRoute.demo.evidenceView,
         modules: [],
         scopes: [],
-        component: EvidenceViewDemo,
+        component: lazy(
+          async () => await import('views/Demo/EvidenceViewDemo')
+        ),
         layout: BaseLayout,
         private: false,
         sidebar: true
       }
     ],
     scopes: [],
-    component: DemoSystem,
+    component: lazy(async () => await import('views/Demo/System')),
     layout: BaseLayout,
     private: false,
     sidebar: false

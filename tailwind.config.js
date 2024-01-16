@@ -79,7 +79,7 @@ module.exports = {
         '2xl': '40rem'
       },
       backgroundImage: {
-        blackhole: "url('./assets/Images/bg_bh.png')"
+        blackhole: "url('./assets/Images/bg_bh.jpg')"
       },
       keyframes: {
         fadeIn: {
