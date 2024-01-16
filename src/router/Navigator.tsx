@@ -1,4 +1,4 @@
-import { ReactElement, useEffect } from 'react'
+import { ReactElement, Suspense, useEffect } from 'react'
 import { Switch, Redirect, Route } from 'react-router-dom'
 
 import { useAuth } from 'context/Auth'
@@ -8,6 +8,7 @@ import { useSocket } from 'hooks/useSocket'
 import { getItem } from 'utils/persistentStorage'
 import { useAbility } from 'context/Ability'
 import { RTCPlayer } from 'components/RTCPlayer'
+import Fallback from 'components/Fallback'
 
 const Navigator = (): ReactElement => {
   const { auth, actions: authActions } = useAuth()
@@ -48,7 +49,11 @@ const Navigator = (): ReactElement => {
                   <Redirect to={pathRoute.auth.signIn} />
                 ) : (
                   <route.layout>
-                    <route.component />
+                    <Suspense
+                      fallback={<Fallback withBg={route.fallbackWithBg} />}
+                    >
+                      <route.component />
+                    </Suspense>
                   </route.layout>
                 )}
               </Route>,
@@ -64,7 +69,13 @@ const Navigator = (): ReactElement => {
                         <Redirect to={pathRoute.auth.signIn} />
                       ) : (
                         <subRoute.layout>
-                          <subRoute.component />
+                          <Suspense
+                            fallback={
+                              <Fallback withBg={route.fallbackWithBg} />
+                            }
+                          >
+                            <subRoute.component />
+                          </Suspense>
                         </subRoute.layout>
                       )}
                     </Route>
@@ -86,7 +97,11 @@ const Navigator = (): ReactElement => {
                   <Redirect to={pathRoute.auth.signIn} />
                 ) : (
                   <route.layout>
-                    <route.component />
+                    <Suspense
+                      fallback={<Fallback withBg={route.fallbackWithBg} />}
+                    >
+                      <route.component />
+                    </Suspense>
                   </route.layout>
                 )}
               </Route>
