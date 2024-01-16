@@ -1,6 +1,7 @@
 import { ReactNode } from 'react'
 import { differenceParser } from 'utils/differenceParser'
 import { mapper } from 'utils/objectMapper'
+import { rolesHistoryMessages } from '../messages'
 
 const roleTemplate = {
   name: 'name',
@@ -25,7 +26,7 @@ export const getRoleChanges = (
       return <div>{differenceParser(formatter, data)}</div>
     }
     case 'updated': {
-      if (!newData) return ''
+      if (!newData || !oldData) return ''
 
       const mappedNew = mapper({ data: newData, template: roleTemplate })
       const mappedOld = mapper({ data: oldData, template: roleTemplate })
@@ -33,7 +34,9 @@ export const getRoleChanges = (
       return <div>{differenceParser(formatter, mappedNew, mappedOld)}</div>
     }
     case 'exported':
-      return 'exported'
+      return formatter(rolesHistoryMessages.exported)
+    case 'view':
+      return formatter(rolesHistoryMessages.view)
     default:
       return ''
   }

@@ -32,7 +32,7 @@ export const getTargetChanges = (
       return <div>{differenceParser(formatter, data)}</div>
     }
     case 'updated': {
-      if (!newData) return ''
+      if (!newData || !oldData) return ''
 
       const mappedNew = mapper({ data: newData, template: targetsTemplate })
       const mappedOld = mapper({ data: oldData, template: targetsTemplate })

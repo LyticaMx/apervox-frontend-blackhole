@@ -1,6 +1,7 @@
 import { ReactNode } from 'react'
 import { differenceParser } from 'utils/differenceParser'
 import { mapper } from 'utils/objectMapper'
+import { workGroupsHistoryDrawerMessages } from '../messages'
 
 interface TechniqueStatusI18Key {
   i18Key: string
@@ -69,7 +70,7 @@ export const getGroupChanges = (
       return <div>{differenceParser(formatter, data)}</div>
     }
     case 'updated': {
-      if (!newData) return ''
+      if (!newData || !oldData) return ''
 
       const mappedNew = mapper({ data: newData, template: groupTemplate })
       const mappedOld = mapper({ data: oldData, template: groupTemplate })
@@ -77,7 +78,9 @@ export const getGroupChanges = (
       return <div>{differenceParser(formatter, mappedNew, mappedOld)}</div>
     }
     case 'exported':
-      return 'exported'
+      return formatter(workGroupsHistoryDrawerMessages.exported)
+    case 'view':
+      return formatter(workGroupsHistoryDrawerMessages.view)
     default:
       return ''
   }
