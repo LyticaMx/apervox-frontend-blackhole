@@ -51,7 +51,7 @@ const useRTC = (
       }
 
       pc.onicecandidate = (event) => {
-        if (event.candidate === null) {
+        if (event.candidate) {
           socket.send(
             JSON.stringify({
               type: pc.localDescription?.type,
