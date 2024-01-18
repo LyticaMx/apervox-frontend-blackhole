@@ -1,4 +1,5 @@
 import ContextDrawer from 'components/Drawer/ContextDrawer'
+import { ErrorBoundary } from 'components/ErrorBoundary'
 import Navbar from 'components/Layout/Navbar'
 import Sidebar from 'components/Layout/Sidebar'
 import Loader from 'components/Loader'
@@ -35,7 +36,7 @@ const EvidenceLayout = ({ children }: Layout): ReactElement => {
   }, [])
 
   return (
-    <>
+    <ErrorBoundary>
       <Navbar />
       <Sidebar />
       <div className="absolute inset-0 ml-14 mt-11 flex flex-col flex-1 overflow-y-auto">
@@ -52,7 +53,7 @@ const EvidenceLayout = ({ children }: Layout): ReactElement => {
 
       <ContextDrawer />
       <Loader />
-    </>
+    </ErrorBoundary>
   )
 }
 

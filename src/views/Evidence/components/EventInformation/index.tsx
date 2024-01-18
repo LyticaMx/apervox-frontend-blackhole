@@ -5,7 +5,13 @@ import Typography from 'components/Typography'
 import { useLanguage } from 'context/Language'
 import { FormikConfig, FormikContextType } from 'formik'
 import { formMessages, generalMessages, platformMessages } from 'globalMessages'
-import { MutableRefObject, ReactElement, useMemo } from 'react'
+import {
+  MutableRefObject,
+  ReactElement,
+  useEffect,
+  useMemo,
+  useState
+} from 'react'
 import { useIntl } from 'react-intl'
 import { Field, Section } from 'types/form'
 import { eventInformationMessages } from '../../messages'
@@ -14,12 +20,19 @@ import * as yup from 'yup'
 import { format } from 'date-fns'
 import { secondsToString } from 'utils/timeToString'
 import { WorkingEvidence } from 'context/WorkingEvidence/types'
+import useApi from 'hooks/useApi'
 
 export interface FormValues {
   label: string
   'label-manual': boolean
   classification: 0 | 1 | 2 | 3
   follow: boolean
+}
+
+interface Label {
+  id: string
+  color: string
+  value: string
 }
 
 interface Props {
@@ -40,8 +53,32 @@ const classifications = {
 
 const EventInformation = (props: Props): ReactElement => {
   const { formikRef, onSubmit, evidenceData } = props
+  const getLabelsService = useApi({ method: 'get', endpoint: 'labels' })
+  const [labels, setLabels] = useState<Label[]>([])
   const { formatMessage } = useIntl()
   const { localeI18n } = useLanguage()
+
+  const getLabels = async (): Promise<void> => {
+    try {
+      const response = await getLabelsService({
+        urlParams: {
+          label_type: 'audio', // TODO: cambiar dependiendo del tipo de evidencia
+          limit: -1
+        }
+      })
+      setLabels(
+        (response.data as any[]).map<Label>((label) => ({
+          id: label.id,
+          color: label.color,
+          value: label.name
+        }))
+      )
+    } catch {}
+  }
+
+  useEffect(() => {
+    getLabels()
+  }, [])
 
   const validationSchema = yup.object({
     classification: yup
@@ -74,14 +111,7 @@ const EventInformation = (props: Props): ReactElement => {
           valueField: 'id',
           decoratorField: 'decorator',
           addOption: true,
-          items: [
-            {
-              color: 'red',
-              value: 'BCC',
-              id: '3'
-            },
-            { color: 'blue', value: 'BSC', id: '4' }
-          ].map((item) => ({
+          items: labels.map((item) => ({
             ...item,
             decorator: (
               <div
@@ -112,7 +142,7 @@ const EventInformation = (props: Props): ReactElement => {
         section: 'follow'
       }
     ],
-    [localeI18n]
+    [localeI18n, labels]
   )
 
   const sections = useMemo<Section[]>(

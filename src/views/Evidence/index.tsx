@@ -48,6 +48,7 @@ import { CommentsProvider } from './context'
 import { CommonRegion } from './components/CommonRegion'
 import { DeleteRegionDialog } from './components/DeleteDialog'
 import { useTranscription } from './hooks/useTranscription'
+import { secondsToString } from 'utils/timeToString'
 
 interface EvidenceLocation {
   type: 'audio' | 'video' | 'image' | 'doc'
@@ -97,7 +98,7 @@ const Evidence = (): ReactElement => {
     progress: transcriptionProgress,
     canCancelTranscription
   } = useTranscription(workingEvidence.id ?? '', canWork)
-  useCommentsRoom(workingEvidence.id ?? '', canWork)
+  const { newMessage } = useCommentsRoom(workingEvidence.id ?? '', canWork)
 
   const saveSynopsis = async (): Promise<void> => {
     try {
@@ -172,12 +173,20 @@ const Evidence = (): ReactElement => {
 
       if (updatedRegions) {
         setCommonRegions(
-          updatedRegions.map<RegionInterface>((region) => ({
-            id: region.id ?? '',
-            start: region.startTime,
-            end: region.endTime,
-            data: { name: region.tag }
-          }))
+          updatedRegions.map<RegionInterface>((region) => {
+            newMessage(
+              `${secondsToString(region.startTime)} - ${secondsToString(
+                region.endTime
+              )}: ${region.tag}`
+            )
+
+            return {
+              id: region.id ?? '',
+              start: region.startTime,
+              end: region.endTime,
+              data: { name: region.tag }
+            }
+          })
         )
 
         launchToast({

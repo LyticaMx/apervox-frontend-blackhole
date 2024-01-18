@@ -159,6 +159,14 @@ export const workGroupsHistoryDrawerMessages = defineMessages({
   deleted: {
     id: 'views.workGroups.historyDrawer.deleted',
     defaultMessage: 'Eliminación'
+  },
+  view: {
+    id: 'views.workGroups.history.view',
+    defaultMessage: 'Visualización'
+  },
+  exported: {
+    id: 'views.workGroups.history.exported',
+    defaultMessage: 'Exportación'
   }
 })
 

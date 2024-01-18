@@ -247,5 +247,13 @@ export const rolesHistoryMessages = defineMessages({
   deleted: {
     id: 'views.roles.history.deleted',
     defaultMessage: 'Eliminación'
+  },
+  view: {
+    id: 'views.roles.history.view',
+    defaultMessage: 'Visualización'
+  },
+  exported: {
+    id: 'views.roles.history.exported',
+    defaultMessage: 'Exportación'
   }
 })
