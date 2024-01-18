@@ -48,6 +48,7 @@ import { CommentsProvider } from './context'
 import { CommonRegion } from './components/CommonRegion'
 import { DeleteRegionDialog } from './components/DeleteDialog'
 import { useTranscription } from './hooks/useTranscription'
+import { secondsToString } from 'utils/timeToString'
 
 interface EvidenceLocation {
   type: 'audio' | 'video' | 'image' | 'doc'
@@ -173,7 +174,11 @@ const Evidence = (): ReactElement => {
       if (updatedRegions) {
         setCommonRegions(
           updatedRegions.map<RegionInterface>((region) => {
-            newMessage(`${region.startTime} - ${region.endTime}: ${region.tag}`)
+            newMessage(
+              `${secondsToString(region.startTime)} - ${secondsToString(
+                region.endTime
+              )}: ${region.tag}`
+            )
 
             return {
               id: region.id ?? '',
