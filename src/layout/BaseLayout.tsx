@@ -14,6 +14,7 @@ import useToast from 'hooks/useToast'
 import { Aside } from 'components/Layout/Aside'
 import { DEFAULT_DRAWER_WIDTH, useDrawer } from 'context/Drawer'
 import { useSettings } from 'context/Settings'
+import { ErrorBoundary } from 'components/ErrorBoundary'
 
 const BaseLayout = ({ children }: Layout): ReactElement => {
   const intl = useIntl()
@@ -34,7 +35,7 @@ const BaseLayout = ({ children }: Layout): ReactElement => {
   })
 
   return (
-    <>
+    <ErrorBoundary>
       <Navbar />
       <Sidebar />
       <div className="absolute inset-0 ml-14 mt-11 flex flex-1 overflow-y-auto overflow-x-hidden bg-background">
@@ -56,7 +57,7 @@ const BaseLayout = ({ children }: Layout): ReactElement => {
 
       <ContextDrawer />
       <Loader />
-    </>
+    </ErrorBoundary>
   )
 }
 

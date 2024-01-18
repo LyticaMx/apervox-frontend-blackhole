@@ -7,7 +7,7 @@ import IconButton from 'components/Button/IconButton'
 import Typography from 'components/Typography'
 import { format } from 'date-fns'
 import { platformMessages } from 'globalMessages'
-import { ReactElement, useRef, useState } from 'react'
+import { ReactElement, useEffect, useRef, useState } from 'react'
 import { useIntl } from 'react-intl'
 
 interface Props {
@@ -36,8 +36,12 @@ const Comment = (props: Props): ReactElement => {
     onSave
   } = props
   const { formatMessage } = useIntl()
-  const [comment, setComment] = useState(message)
+  const [comment, setComment] = useState('')
   const areaRef = useRef<HTMLTextAreaElement>(null)
+
+  useEffect(() => {
+    setComment(message)
+  }, [message])
 
   const autoRezise = (): void => {
     if (!areaRef.current) return
