@@ -17,7 +17,7 @@ const orderByMapper = {
 }
 
 export const useActions = (state: State, dispatch): Actions => {
-  const { pagination, dateFilter, searchFilter } = state
+  const { pagination, dateFilter, searchFilter, staticFilter } = state
   const resource = useService('labels')
   const { actions: auditActions } = useModuleAudits()
 
@@ -27,7 +27,10 @@ export const useActions = (state: State, dispatch): Actions => {
         .paginateAndSeach({ ...pagination, ...searchFilter })
         .sort(pagination.sort, orderByMapper)
         .dates(dateFilter)
-        .putStaticFilter('label_type', params?.label_type)
+        .putStaticFilter(
+          'label_type',
+          params?.label_type ?? staticFilter.label_type
+        )
         .build()
 
       const response: ResponseData = await resource.get({ urlParams })
@@ -62,6 +65,9 @@ export const useActions = (state: State, dispatch): Actions => {
           date: {
             start_time: urlParams.start_time,
             end_time: urlParams.end_time
+          },
+          static: {
+            label_type: params?.label_type ?? staticFilter.label_type
           }
         })
       )

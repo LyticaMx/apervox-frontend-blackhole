@@ -43,7 +43,7 @@ export const useActions = (
       const urlParams = Params.Builder(params)
         .pagination(pagination)
         .sort(pagination.sort, orderByMapper)
-        .putStaticFilter('status', staticFilter?.status)
+        .putStaticFilter('status', params?.status ?? staticFilter?.status)
         .build()
 
       const response = await getLineHistory({

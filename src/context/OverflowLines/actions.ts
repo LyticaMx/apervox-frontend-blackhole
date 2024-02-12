@@ -41,7 +41,10 @@ export const useActions = (state: State, dispatch): Actions => {
           medium_name: 'medium.name'
         })
         .dates(dateFilter)
-        .putStaticFilter('line_status', params?.line_status)
+        .putStaticFilter(
+          'line_status',
+          params?.line_status ?? staticFilter.line_status
+        )
         .build()
 
       const [response] = await Promise.all([
