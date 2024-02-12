@@ -22,7 +22,12 @@ import { pathRoute } from 'router/routes'
 const CallsTable = (): ReactElement => {
   const getMessage = useFormatMessage(tableMessages)
   const getGlobalMessage = useGlobalMessage()
-  const { data, pagination, actions: historyActions } = useCallHistory()
+  const {
+    data,
+    pagination,
+    actions: historyActions,
+    staticFilter
+  } = useCallHistory()
   const { actions: workingActions } = useWorkingEvidence()
   const ability = useAbility()
   const history = useHistory()
@@ -79,7 +84,8 @@ const CallsTable = (): ReactElement => {
               { name: getMessage('unclassified'), value: 'unclassified' }
             ],
             onChange: (relevance) => historyActions?.getData({ relevance }),
-            multiple: true
+            multiple: true,
+            selected: staticFilter.relevance
           }
         }
       },
@@ -128,7 +134,8 @@ const CallsTable = (): ReactElement => {
               }
             ],
             onChange: (priority) => historyActions?.getData({ priority }),
-            multiple: true
+            multiple: true,
+            selected: staticFilter.priority
           }
         }
       },
@@ -161,7 +168,8 @@ const CallsTable = (): ReactElement => {
               { name: getMessage('trash'), value: 'trash' }
             ],
             onChange: (type) => historyActions?.getData({ type }),
-            multiple: true
+            multiple: true,
+            selected: staticFilter.type
           }
         }
       },
@@ -216,7 +224,8 @@ const CallsTable = (): ReactElement => {
               { name: getMessage('both'), value: 'both' }
             ],
             onChange: (hasTranscription) =>
-              historyActions?.getData({ hasTranscription })
+              historyActions?.getData({ hasTranscription }),
+            selected: staticFilter.hasTranscription?.[0]
           }
         }
       },
@@ -257,7 +266,7 @@ const CallsTable = (): ReactElement => {
         enableSorting: false
       }
     ],
-    [ability.rules]
+    [ability.rules, historyActions?.getData]
   )
 
   return (
