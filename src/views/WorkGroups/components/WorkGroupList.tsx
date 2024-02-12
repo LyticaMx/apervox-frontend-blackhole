@@ -37,7 +37,8 @@ const WorkGroupList = ({
 }: Props): ReactElement => {
   const getMessage = useFormatMessage(workGroupListMessages)
   const { launchToast } = useToast()
-  const { workGroups, actions, workGroupsPagination } = useWorkGroups()
+  const { workGroups, actions, workGroupsPagination, staticFilter } =
+    useWorkGroups()
   const ability = useAbility()
 
   const columns = useTableColumns<WorkGroup>(
@@ -65,6 +66,7 @@ const WorkGroupList = ({
         header: getMessage('users'),
         meta: {
           columnFilters: {
+            selected: staticFilter.hasUsers?.[0],
             options: [
               {
                 name: getMessage('hasUsers'),
@@ -125,6 +127,7 @@ const WorkGroupList = ({
         enableSorting: false,
         meta: {
           columnFilters: {
+            selected: staticFilter.hasTechniques?.[0],
             options: [
               {
                 name: getMessage('hasTechniques'),
@@ -151,6 +154,7 @@ const WorkGroupList = ({
         },
         meta: {
           columnFilters: {
+            selected: staticFilter.status?.[0],
             options: [
               {
                 name: getMessage('enabled'),
