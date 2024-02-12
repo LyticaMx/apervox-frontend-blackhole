@@ -6,6 +6,7 @@ import { OnChangeTableFilter, TableFilterOption } from 'types/table'
 
 interface Props {
   optionsTitle?: string
+  selected?: string | string[]
   options?: ReadOnlyNonEmptyArray<TableFilterOption>
   apiBackend?: string
   onChange: OnChangeTableFilter
@@ -19,6 +20,7 @@ const ColumnFilter = (props: Props): ReactElement => {
         {...props}
         options={props.options}
         multipleSelection={props.multiple}
+        selected={props.selected}
       />
     ) // si lo envio sólo con el spread operator tira error
   }

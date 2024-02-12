@@ -23,6 +23,7 @@ declare module '@tanstack/table-core' {
       onChange: OnChangeTableFilter
       apiBackend?: string
       multiple?: boolean
+      selected?: string | string[]
     }
   }
 }

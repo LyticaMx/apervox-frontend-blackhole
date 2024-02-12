@@ -42,7 +42,7 @@ const UserList = ({
   onResetPasswordUser
 }: Props): ReactElement => {
   const getMessage = useFormatMessage(userListMessages)
-  const { listOfUsers, usersPagination, actions } = useUsers()
+  const { listOfUsers, usersPagination, staticFilter, actions } = useUsers()
   const { auth } = useAuth()
   const ability = useAbility()
 
@@ -119,6 +119,7 @@ const UserList = ({
             onChange: async (values) => {
               await actions?.getUsers({ sessions: values })
             },
+            selected: staticFilter.sessions?.[0],
             options: [
               {
                 name: getMessage('logguedIn'),
@@ -156,6 +157,7 @@ const UserList = ({
         },
         meta: {
           columnFilters: {
+            selected: staticFilter.status?.[0],
             onChange: async (values) =>
               await actions?.getUsers({ status: values }),
             options: [

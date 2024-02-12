@@ -56,22 +56,24 @@ export const useActions = (
     getTotal?: boolean
   ): Promise<void> => {
     try {
+      const sessionsFilter = params?.sessions ?? staticFilter.sessions
+      const statusFilter = params?.status ?? staticFilter.status
       const urlParams = Params.Builder(params)
         .paginateAndSeach({ ...usersPagination, ...searchFilter })
         .sort(usersPagination.sort, orderByMapper)
         .putStaticFilter(
           'sessions',
-          (params?.sessions ?? staticFilter.sessions)?.[0] === 'logged'
+          sessionsFilter?.[0] === 'logged'
             ? true
-            : params?.sessions?.[0] === 'not logged'
+            : sessionsFilter?.[0] === 'not logged'
             ? false
             : undefined
         )
         .putStaticFilter(
           'status',
-          (params?.status ?? staticFilter.status)?.[0] === 'enabled'
+          statusFilter?.[0] === 'enabled'
             ? true
-            : params?.status?.[0] === 'disabled'
+            : statusFilter?.[0] === 'disabled'
             ? false
             : undefined
         )
