@@ -15,59 +15,62 @@ const LineHistory = (): ReactElement => {
   const { data, pagination, actions, line } = useLineHistory()
   const getMessage = useFormatMessage(lineHistoryMessages)
 
-  const columns = useTableColumns<LineEvent>(() => [
-    {
-      accessorKey: 'technique',
-      header: getMessage('technique')
-    },
-    {
-      accessorKey: 'techniqueStatus',
-      header: getMessage('status'),
-      meta: {
-        columnFilters: {
-          onChange: () => {},
-          options: [
-            { name: getMessage('active'), value: 'active' },
-            { name: getMessage('concluding'), value: 'concluding' },
-            { name: getMessage('concluded'), value: 'concluded' }
-          ],
-          multiple: true
+  const columns = useTableColumns<LineEvent>(
+    () => [
+      {
+        accessorKey: 'technique',
+        header: getMessage('technique')
+      },
+      {
+        accessorKey: 'techniqueStatus',
+        header: getMessage('status'),
+        meta: {
+          columnFilters: {
+            onChange: () => {},
+            options: [
+              { name: getMessage('active'), value: 'active' },
+              { name: getMessage('concluding'), value: 'concluding' },
+              { name: getMessage('concluded'), value: 'concluded' }
+            ],
+            multiple: true
+          }
+        },
+        cell: ({ getValue }) => getMessage(getValue<string>())
+      },
+      {
+        accessorKey: 'techniqueStartDate',
+        header: getMessage('techniqueStartDate'),
+        cell: ({ getValue }) => {
+          const date = getValue<string>()
+          if (date === '') return ''
+          return format(new Date(date), 'dd/MM/yyyy - HH:mm')
         }
       },
-      cell: ({ getValue }) => getMessage(getValue<string>())
-    },
-    {
-      accessorKey: 'techniqueStartDate',
-      header: getMessage('techniqueStartDate'),
-      cell: ({ getValue }) => {
-        const date = getValue<string>()
-        if (date === '') return ''
-        return format(new Date(date), 'dd/MM/yyyy - HH:mm')
+      {
+        accessorKey: 'techniqueEndDate',
+        header: getMessage('techniqueEndDate'),
+        cell: ({ getValue }) => {
+          const date = getValue<string>()
+          if (date === '') return ''
+          return format(new Date(date), 'dd/MM/yyyy - HH:mm')
+        }
+      },
+      {
+        accessorKey: 'endDate',
+        header: getMessage('targetEndDate'),
+        cell: ({ getValue }) => {
+          const date = getValue<string>()
+          if (date === '') return ''
+          return format(new Date(date), 'dd/MM/yyyy - HH:mm')
+        }
+      },
+      {
+        accessorKey: 'target',
+        header: getMessage('target')
       }
-    },
-    {
-      accessorKey: 'techniqueEndDate',
-      header: getMessage('techniqueEndDate'),
-      cell: ({ getValue }) => {
-        const date = getValue<string>()
-        if (date === '') return ''
-        return format(new Date(date), 'dd/MM/yyyy - HH:mm')
-      }
-    },
-    {
-      accessorKey: 'endDate',
-      header: getMessage('targetEndDate'),
-      cell: ({ getValue }) => {
-        const date = getValue<string>()
-        if (date === '') return ''
-        return format(new Date(date), 'dd/MM/yyyy - HH:mm')
-      }
-    },
-    {
-      accessorKey: 'target',
-      header: getMessage('target')
-    }
-  ])
+    ],
+    [actions?.getData]
+  )
 
   const handleClose = (): void => {
     actions?.setLine()

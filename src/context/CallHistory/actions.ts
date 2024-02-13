@@ -54,19 +54,24 @@ export const useActions = (state: CallState, dispatch): CallActions => {
     getTotalRows?: boolean
   ): Promise<void> => {
     try {
+      const hasTranscriptionFilter =
+        params?.hasTranscription ?? staticFilter.hasTranscription
       const urlParams = Params.Builder(params, 'call_start_date')
         .pagination(pagination)
         .searchFilters(searchFilter)
         .sort(pagination.sort, orderByMapper)
         .dates(dateFilter)
-        .putStaticFilter('priority', params?.priority)
-        .putStaticFilter('relevance', params?.relevance)
-        .putStaticFilter('type', params?.type)
+        .putStaticFilter('priority', params?.priority ?? staticFilter.priority)
+        .putStaticFilter(
+          'relevance',
+          params?.relevance ?? staticFilter.relevance
+        )
+        .putStaticFilter('type', params?.type ?? staticFilter.type)
         .putStaticFilter(
           'has_transcription',
-          params?.hasTranscription?.[0] === 'withTranscription'
+          hasTranscriptionFilter?.[0] === 'withTranscription'
             ? true
-            : params?.hasTranscription?.[0] === 'withoutTranscription'
+            : hasTranscriptionFilter?.[0] === 'withoutTranscription'
             ? false
             : undefined
         )

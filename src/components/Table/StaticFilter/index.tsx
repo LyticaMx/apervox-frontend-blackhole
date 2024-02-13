@@ -1,6 +1,7 @@
 import { Float } from '@headlessui-float/react'
 import { Popover } from '@headlessui/react'
 import { AdjustmentsVerticalIcon } from '@heroicons/react/24/outline'
+import clsx from 'clsx'
 import Form from 'components/Form'
 import TextField from 'components/Form/Textfield'
 import Grid from 'components/Grid'
@@ -17,6 +18,7 @@ import { normalizeString } from 'utils/normalizeString'
 
 interface Props {
   optionsTitle?: string
+  selected?: string | string[]
   options: ReadOnlyNonEmptyArray<TableFilterOption>
   onChange: OnChangeTableFilter
   multipleSelection?: boolean
@@ -76,8 +78,7 @@ const StaticFilter = (props: Props): ReactElement => {
   const formikConfig: FormikConfig<FormValues> = {
     // se utilizan los últimos valores de los formularios como valores iniciales
     initialValues: {
-      filters:
-        formikRef.current?.values.filters ?? (props.multipleSelection ? [] : '')
+      filters: props.selected ?? (props.multipleSelection ? [] : '')
     },
     onSubmit: async (values) => {
       if (typeof values.filters === 'string') {
@@ -109,7 +110,12 @@ const StaticFilter = (props: Props): ReactElement => {
             setOpenFilter((old) => !old)
           }}
         >
-          <button className="text-gray-300 hover:text-primary">
+          <button
+            className={clsx(
+              'hover:text-primary',
+              props.selected ? 'text-primary' : 'text-gray-300'
+            )}
+          >
             <AdjustmentsVerticalIcon className="w-4 h-4" />
           </button>
         </Popover.Button>

@@ -385,6 +385,10 @@ const Table = <DataType,>({
                                   header.column.columnDef.meta.columnFilters
                                     .multiple
                                 }
+                                selected={
+                                  header.column.columnDef.meta.columnFilters
+                                    .selected
+                                }
                               />
                             ) : null}
                           </div>

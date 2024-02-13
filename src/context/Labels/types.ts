@@ -21,6 +21,7 @@ export interface State {
   pagination: LabelsPagination
   dateFilter: DateFilter
   searchFilter: SearchFilter
+  staticFilter: StaticFilters
 }
 export type PayloadGet = LabelsPaginationParams &
   SearchParams &

@@ -23,7 +23,7 @@ const orderByMapper = {
 }
 
 export const useActions = (state: State, dispatch): Actions => {
-  const { pagination, dateFilter, searchFilter } = state
+  const { pagination, dateFilter, searchFilter, staticFilter } = state
   const resource = useService('roles')
   const { actions: auditActions } = useModuleAudits()
 
@@ -36,7 +36,7 @@ export const useActions = (state: State, dispatch): Actions => {
         .paginateAndSeach({ ...pagination, ...searchFilter })
         .sort(pagination.sort, orderByMapper)
         .dates(dateFilter)
-        .putStaticFilter('status', params?.status)
+        .putStaticFilter('status', params?.status ?? staticFilter.status)
         .build()
 
       const [response] = await Promise.all([

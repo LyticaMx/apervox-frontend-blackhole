@@ -49,10 +49,13 @@ const useActions = (state: State, dispatch): Actions => {
         .dates(dateFilter)
         .searchFilters(searchFilter)
         .sort(pagination.sort, orderByMapper)
-        .putStaticFilter('priority', params?.priority)
-        .putStaticFilter('status', params?.status)
-        .putStaticFilter('shift', params?.turn)
-        .putStaticFilter('has_targets', params?.withTargets)
+        .putStaticFilter('priority', params?.priority ?? staticFilter.priority)
+        .putStaticFilter('status', params?.status ?? staticFilter.status)
+        .putStaticFilter('shift', params?.turn ?? staticFilter.turn)
+        .putStaticFilter(
+          'has_targets',
+          params?.withTargets ?? staticFilter.withTargets
+        )
         .build()
 
       const [response, total] = await Promise.all([

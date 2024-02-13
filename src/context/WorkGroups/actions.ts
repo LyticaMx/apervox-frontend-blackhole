@@ -61,27 +61,31 @@ const useActions = (state: WorkgroupState, dispatch): WorkgroupActions => {
     getTotal?: boolean
   ): Promise<void> => {
     try {
+      const techniquesFilter =
+        params?.hasTechniques ?? staticFilter.hasTechniques
+      const usersFilter = params?.hasUsers ?? staticFilter.hasUsers
+      const statusFilter = params?.status ?? staticFilter.status
       const urlParams = Params.Builder(params)
         .paginateAndSeach({ ...searchFilter, ...workGroupsPagination })
         .sort(workGroupsPagination.sort, orderByMapper)
         .dates(dateFilter)
         .putManyStaticFilters({
           has_techniques:
-            (params?.hasTechniques ?? staticFilter.hasTechniques)?.[0] === 'yes'
+            techniquesFilter?.[0] === 'yes'
               ? true
-              : params?.hasTechniques?.[0] === 'no'
+              : techniquesFilter?.[0] === 'no'
               ? false
               : undefined,
           has_users:
-            (params?.hasUsers ?? staticFilter.hasUsers)?.[0] === 'yes'
+            usersFilter?.[0] === 'yes'
               ? true
-              : params?.hasUsers?.[0] === 'no'
+              : usersFilter?.[0] === 'no'
               ? false
               : undefined,
           status:
-            (params?.status ?? staticFilter.status)?.[0] === 'enabled'
+            statusFilter?.[0] === 'enabled'
               ? true
-              : params?.status?.[0] === 'disabled'
+              : statusFilter?.[0] === 'disabled'
               ? false
               : undefined
         })

@@ -48,7 +48,12 @@ const Audit = (): ReactElement => {
   const { actions } = useDrawer()
   const [selectedTarget, setSelectedTarget] = useState<Target | null>(null)
   const { openDrawer, selectedUser, clearUser } = useUserDrawer()
-  const { data, actions: auditActions, pagination } = useModuleAudits()
+  const {
+    data,
+    actions: auditActions,
+    pagination,
+    staticFilter
+  } = useModuleAudits()
   const { actions: specificUserActions } = useSpecificUserAudits()
 
   const handleOpenAction = useCallback(
@@ -164,7 +169,8 @@ const Audit = (): ReactElement => {
             await auditActions?.getData({ module: values })
           },
           optionsName: formatMessage(messages.auditedModule),
-          multiple: true
+          multiple: true,
+          selected: staticFilter.module
         }
       },
       cell: ({ getValue }) => {

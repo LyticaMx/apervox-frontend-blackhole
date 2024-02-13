@@ -11,7 +11,8 @@ export const initialState: State = {
     totalRecords: 0
   },
   searchFilter: {},
-  dateFilter: {}
+  dateFilter: {},
+  staticFilter: {}
 }
 
 export const LabelsContext: Context<ContextType> = createContext(initialState)

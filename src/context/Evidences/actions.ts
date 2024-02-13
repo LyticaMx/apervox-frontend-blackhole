@@ -68,17 +68,21 @@ export const useActions = (state: EvidenceState, dispatch): EvidenceActions => {
   ): Promise<void> => {
     try {
       if (!technique) return
+      const isTracked = params?.follow ?? staticFilter.follow
       const urlParams = Params.Builder(params, 'call_start_date')
         .pagination(pagination)
         .searchFilters(searchFilter)
         .sort(pagination.sort, orderByMapper)
         .dates(dateFilter)
-        .putStaticFilter('relevance', params?.relevance)
+        .putStaticFilter(
+          'relevance',
+          params?.relevance ?? staticFilter.relevance
+        )
         .putStaticFilter(
           'is_tracked',
-          params?.follow?.[0] === 'withFollow'
+          isTracked?.[0] === 'withFollow'
             ? true
-            : params?.follow?.[0] === 'withoutFollow'
+            : isTracked?.[0] === 'withoutFollow'
             ? false
             : undefined
         )

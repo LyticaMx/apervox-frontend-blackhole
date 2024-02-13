@@ -40,7 +40,12 @@ interface SynchroDeleteIds {
 const TechniqueList = (): ReactElement => {
   const history = useHistory()
   const { formatMessage } = useIntl()
-  const { data, pagination, actions: techniquesActions } = useTechniques()
+  const {
+    data,
+    pagination,
+    actions: techniquesActions,
+    staticFilter
+  } = useTechniques()
   const { actions } = useTechnique()
   const getMessage = useFormatMessage(generalMessages)
   const getDeleteMessage = useFormatMessage(techniquesDeleteDialogMessages)
@@ -124,7 +129,8 @@ const TechniqueList = (): ReactElement => {
             { name: getMessage('highPriority'), value: 'high' },
             { name: getMessage('urgentPriority'), value: 'urgent' }
           ],
-          onChange: (value) => techniquesActions?.get({ priority: value })
+          onChange: (value) => techniquesActions?.get({ priority: value }),
+          selected: staticFilter.priority
         }
       }
     },
@@ -144,7 +150,8 @@ const TechniqueList = (): ReactElement => {
             { name: getMessage('toCompleteStatus'), value: 'concluding' },
             { name: getMessage('completedStatus'), value: 'concluded' }
           ],
-          onChange: (value) => techniquesActions?.get({ status: value })
+          onChange: (value) => techniquesActions?.get({ status: value }),
+          selected: staticFilter.status
         }
       }
     },
@@ -164,7 +171,8 @@ const TechniqueList = (): ReactElement => {
             { name: getMessage('afternoon'), value: 'afternoon' },
             { name: getMessage('night'), value: 'night' }
           ],
-          onChange: (value) => techniquesActions?.get({ turn: value })
+          onChange: (value) => techniquesActions?.get({ turn: value }),
+          selected: staticFilter.turn
         }
       }
     },
@@ -190,7 +198,13 @@ const TechniqueList = (): ReactElement => {
             if (value[0] === 'withTargets') withTargets = true
             else if (value[0] === 'withoutTargets') withTargets = false
             techniquesActions?.get({ withTargets })
-          }
+          },
+          selected:
+            staticFilter.withTargets !== undefined
+              ? staticFilter.withTargets
+                ? 'withTargets'
+                : 'withoutTargets'
+              : undefined
         }
       }
     },
@@ -236,7 +250,7 @@ const TechniqueList = (): ReactElement => {
 
   const columns = useTableColumns<Technique>(
     () => normalModeColumns,
-    [ability.rules]
+    [ability.rules, techniquesActions?.get]
   )
 
   return (

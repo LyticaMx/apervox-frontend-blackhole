@@ -46,7 +46,12 @@ const EvidenceList = ({ onSelectItem }: Props): ReactElement => {
   const { formatMessage } = useIntl()
   const getGlobalMessage = useGlobalMessage()
   const { target, techniqueId } = useTechnique()
-  const { data, pagination, actions: evidencesActions } = useEvidences()
+  const {
+    data,
+    pagination,
+    actions: evidencesActions,
+    staticFilter
+  } = useEvidences()
   const [unlockEvidences, setUnlockEvidences] =
     useState<SynchroUnlockEvidences>({ ids: [], resolve: null })
   const socket = useEvidenceSocket()
@@ -83,230 +88,240 @@ const EvidenceList = ({ onSelectItem }: Props): ReactElement => {
     evidencesActions?.getData({ page: 1 }, !target?.id)
   }, [target?.id, techniqueId])
 
-  const columns = useTableColumns<Evidence>(() => [
-    {
-      accessorKey: 'evidenceNumber',
-      header: formatMessage(evidenceListMessages.eventNumber).toUpperCase()
-    },
-    {
-      accessorKey: 'targetPhone',
-      header: formatMessage(evidenceListMessages.targetNumber).toUpperCase()
-    },
-    {
-      accessorKey: 'sourceNumber',
-      header: formatMessage(evidenceListMessages.sourceNumber).toUpperCase()
-    },
-    {
-      accessorKey: 'callStartDate',
-      header: formatMessage(evidenceListMessages.startDateTime).toUpperCase(),
-      cell: ({ getValue }) =>
-        format(new Date(getValue<string>()), 'dd/MM/yyyy - HH:mm')
-    },
-    {
-      accessorKey: 'callEndDate',
-      header: formatMessage(evidenceListMessages.endDateTime).toUpperCase(),
-      cell: ({ getValue }) =>
-        format(new Date(getValue<string>()), 'dd/MM/yyyy - HH:mm')
-    },
-    {
-      accessorKey: 'duration',
-      header: getGlobalMessage('duration', 'generalMessages').toUpperCase(),
-      cell: ({ getValue }) => secondsToString(getValue<number>())
-    },
-    {
-      accessorKey: 'carrier',
-      header: formatMessage(evidenceListMessages.carrier).toUpperCase()
-    },
-    {
-      accessorKey: 'imei',
-      header: 'IMEI',
-      enableSorting: false
-    },
-    {
-      accessorKey: 'imsi',
-      header: 'IMSI',
-      enableSorting: false
-    },
-    {
-      accessorKey: 'code_cell_start',
-      header: formatMessage(evidenceListMessages.codeCellStart).toUpperCase(),
-      enableSorting: false
-    },
-    {
-      accessorKey: 'direction_cell_start',
-      header: formatMessage(
-        evidenceListMessages.directionCellStart
-      ).toUpperCase(),
-      enableSorting: false
-    },
-    {
-      accessorKey: 'region_cell_start',
-      header: formatMessage(
-        evidenceListMessages.townhallCellStart
-      ).toUpperCase(),
-      enableSorting: false
-    },
-    {
-      id: 'auditedBy',
-      header: formatMessage(evidenceListMessages.auditedBy).toUpperCase(),
-      cell: ({ row }) =>
-        row.original.workingBy ? row.original.workingBy : row.original.auditedBy
-    },
-    {
-      accessorKey: 'isTracked',
-      header: formatMessage(evidenceListMessages.followUp).toUpperCase(),
-      meta: {
-        columnFilters: {
-          options: [
-            {
-              name: formatMessage(evidenceListMessages.withFollow),
-              value: 'withFollow'
-            },
-            {
-              name: formatMessage(evidenceListMessages.withoutFollow),
-              value: 'withoutFollow'
-            },
-            { name: formatMessage(generalMessages.both), value: 'both' }
-          ],
-          onChange: (follow) => evidencesActions?.getData({ follow })
+  const columns = useTableColumns<Evidence>(
+    () => [
+      {
+        accessorKey: 'evidenceNumber',
+        header: formatMessage(evidenceListMessages.eventNumber).toUpperCase()
+      },
+      {
+        accessorKey: 'targetPhone',
+        header: formatMessage(evidenceListMessages.targetNumber).toUpperCase()
+      },
+      {
+        accessorKey: 'sourceNumber',
+        header: formatMessage(evidenceListMessages.sourceNumber).toUpperCase()
+      },
+      {
+        accessorKey: 'callStartDate',
+        header: formatMessage(evidenceListMessages.startDateTime).toUpperCase(),
+        cell: ({ getValue }) =>
+          format(new Date(getValue<string>()), 'dd/MM/yyyy - HH:mm')
+      },
+      {
+        accessorKey: 'callEndDate',
+        header: formatMessage(evidenceListMessages.endDateTime).toUpperCase(),
+        cell: ({ getValue }) =>
+          format(new Date(getValue<string>()), 'dd/MM/yyyy - HH:mm')
+      },
+      {
+        accessorKey: 'duration',
+        header: getGlobalMessage('duration', 'generalMessages').toUpperCase(),
+        cell: ({ getValue }) => secondsToString(getValue<number>())
+      },
+      {
+        accessorKey: 'carrier',
+        header: formatMessage(evidenceListMessages.carrier).toUpperCase()
+      },
+      {
+        accessorKey: 'imei',
+        header: 'IMEI',
+        enableSorting: false
+      },
+      {
+        accessorKey: 'imsi',
+        header: 'IMSI',
+        enableSorting: false
+      },
+      {
+        accessorKey: 'code_cell_start',
+        header: formatMessage(evidenceListMessages.codeCellStart).toUpperCase(),
+        enableSorting: false
+      },
+      {
+        accessorKey: 'direction_cell_start',
+        header: formatMessage(
+          evidenceListMessages.directionCellStart
+        ).toUpperCase(),
+        enableSorting: false
+      },
+      {
+        accessorKey: 'region_cell_start',
+        header: formatMessage(
+          evidenceListMessages.townhallCellStart
+        ).toUpperCase(),
+        enableSorting: false
+      },
+      {
+        id: 'auditedBy',
+        header: formatMessage(evidenceListMessages.auditedBy).toUpperCase(),
+        cell: ({ row }) =>
+          row.original.workingBy
+            ? row.original.workingBy
+            : row.original.auditedBy
+      },
+      {
+        accessorKey: 'isTracked',
+        header: formatMessage(evidenceListMessages.followUp).toUpperCase(),
+        meta: {
+          columnFilters: {
+            options: [
+              {
+                name: formatMessage(evidenceListMessages.withFollow),
+                value: 'withFollow'
+              },
+              {
+                name: formatMessage(evidenceListMessages.withoutFollow),
+                value: 'withoutFollow'
+              },
+              { name: formatMessage(generalMessages.both), value: 'both' }
+            ],
+            onChange: (follow) => evidencesActions?.getData({ follow }),
+            selected: staticFilter.follow?.[0]
+          }
+        },
+        cell: ({ getValue, row }) => {
+          const { trackedBy, id } = row.original
+
+          return (
+            <div className="flex items-center gap-1">
+              <Switch
+                color="primary"
+                value={getValue<boolean>()}
+                size="sm"
+                stopPropagation
+                onChange={async () => {
+                  const updated = await evidencesActions?.toggleFollow(id)
+                  if (updated) {
+                    toast.success(
+                      formatMessage(evidenceListMessages.followUpdateSuccess)
+                    )
+                  } else {
+                    toast.danger(
+                      formatMessage(evidenceListMessages.followUpdateError)
+                    )
+                  }
+                }}
+              />
+              <Label id={`switch-${id}`} labelClassname="mb-0">
+                {trackedBy}
+              </Label>
+            </div>
+          )
         }
       },
-      cell: ({ getValue, row }) => {
-        const { trackedBy, id } = row.original
+      {
+        accessorKey: 'obtained_from',
+        header: formatMessage(evidenceListMessages.obtainedFrom).toUpperCase(),
+        enableSorting: false
+      },
+      {
+        id: 'label',
+        header: formatMessage(evidenceListMessages.tag).toUpperCase(),
+        cell: ({ row }) => {
+          const { label, otherLabel } = row.original
+          if (!label && !otherLabel) return null
 
-        return (
-          <div className="flex items-center gap-1">
-            <Switch
-              color="primary"
-              value={getValue<boolean>()}
-              size="sm"
-              stopPropagation
-              onChange={async () => {
-                const updated = await evidencesActions?.toggleFollow(id)
-                if (updated) {
-                  toast.success(
-                    formatMessage(evidenceListMessages.followUpdateSuccess)
-                  )
-                } else {
-                  toast.danger(
-                    formatMessage(evidenceListMessages.followUpdateError)
-                  )
-                }
-              }}
-            />
-            <Label id={`switch-${id}`} labelClassname="mb-0">
-              {trackedBy}
-            </Label>
-          </div>
-        )
+          return (
+            <div className="flex items-center gap-2">
+              <div
+                className={clsx(
+                  'h-4 w-4 rounded-full',
+                  otherLabel ? 'bg-muted' : ''
+                )}
+                style={{ backgroundColor: label ? label.color : '' }}
+              />
+              <p className="pr-1 py-0.5 text-sm">
+                {' '}
+                {label?.name ?? otherLabel}
+              </p>
+            </div>
+          )
+        },
+        // TODO: Revisar porque no funciona, desactivado temporalmente
+        enableSorting: false
+      },
+      {
+        accessorKey: 'relevance',
+        header: formatMessage(evidenceListMessages.clasification).toUpperCase(),
+        cell: ({ getValue, row }) => {
+          const relevance = getValue<string>()
+
+          if (!relevance) return ''
+
+          const formatted = Object.assign({}, classifications[relevance]) ?? {
+            stars: 0,
+            label: platformMessages.unseen
+          }
+
+          if (row.original.workingBy !== '') {
+            formatted.label = platformMessages.workingOn
+          }
+
+          return (
+            <div className="flex items-center">
+              <StarIcon
+                className={clsx(
+                  'w-6 h-6',
+                  formatted.stars > 0 ? 'text-yellow-500' : 'text-slate-400'
+                )}
+              />
+              <StarIcon
+                className={clsx(
+                  'w-6 h-6',
+                  formatted.stars > 1 ? 'text-yellow-500' : 'text-slate-400'
+                )}
+              />
+              <StarIcon
+                className={clsx(
+                  'w-6 h-6 mr-2',
+                  formatted.stars > 2 ? 'text-yellow-500' : 'text-slate-400'
+                )}
+              />
+              {formatMessage(formatted.label ?? '')}
+            </div>
+          )
+        },
+        meta: {
+          columnFilters: {
+            options: [
+              {
+                name: formatMessage(platformMessages.relevant),
+                value: 'relevant'
+              },
+              {
+                name: formatMessage(platformMessages.irrelevant),
+                value: 'not_relevant'
+              },
+              {
+                name: formatMessage(platformMessages.discarded),
+                value: 'discarded'
+              },
+              {
+                name: formatMessage(platformMessages.unseen),
+                value: 'unclassified'
+              }
+            ],
+            onChange: (relevance) => evidencesActions?.getData({ relevance }),
+            multiple: true,
+            selected: staticFilter.relevance
+          }
+        }
+      },
+      {
+        accessorKey: 'type',
+        header: formatMessage(evidenceListMessages.type).toUpperCase(),
+        cell: ({ getValue }) => {
+          const types = ['Audio', 'Video', 'Imagen', 'Documento']
+          const type = types[getValue<number>()] ?? types[0]
+
+          return type
+        },
+        enableSorting: false
       }
-    },
-    {
-      accessorKey: 'obtained_from',
-      header: formatMessage(evidenceListMessages.obtainedFrom).toUpperCase(),
-      enableSorting: false
-    },
-    {
-      id: 'label',
-      header: formatMessage(evidenceListMessages.tag).toUpperCase(),
-      cell: ({ row }) => {
-        const { label, otherLabel } = row.original
-        if (!label && !otherLabel) return null
-
-        return (
-          <div className="flex items-center gap-2">
-            <div
-              className={clsx(
-                'h-4 w-4 rounded-full',
-                otherLabel ? 'bg-muted' : ''
-              )}
-              style={{ backgroundColor: label ? label.color : '' }}
-            />
-            <p className="pr-1 py-0.5 text-sm"> {label?.name ?? otherLabel}</p>
-          </div>
-        )
-      },
-      // TODO: Revisar porque no funciona, desactivado temporalmente
-      enableSorting: false
-    },
-    {
-      accessorKey: 'relevance',
-      header: formatMessage(evidenceListMessages.clasification).toUpperCase(),
-      cell: ({ getValue, row }) => {
-        const relevance = getValue<string>()
-
-        if (!relevance) return ''
-
-        const formatted = Object.assign({}, classifications[relevance]) ?? {
-          stars: 0,
-          label: platformMessages.unseen
-        }
-
-        if (row.original.workingBy !== '') {
-          formatted.label = platformMessages.workingOn
-        }
-
-        return (
-          <div className="flex items-center">
-            <StarIcon
-              className={clsx(
-                'w-6 h-6',
-                formatted.stars > 0 ? 'text-yellow-500' : 'text-slate-400'
-              )}
-            />
-            <StarIcon
-              className={clsx(
-                'w-6 h-6',
-                formatted.stars > 1 ? 'text-yellow-500' : 'text-slate-400'
-              )}
-            />
-            <StarIcon
-              className={clsx(
-                'w-6 h-6 mr-2',
-                formatted.stars > 2 ? 'text-yellow-500' : 'text-slate-400'
-              )}
-            />
-            {formatMessage(formatted.label ?? '')}
-          </div>
-        )
-      },
-      meta: {
-        columnFilters: {
-          options: [
-            {
-              name: formatMessage(platformMessages.relevant),
-              value: 'relevant'
-            },
-            {
-              name: formatMessage(platformMessages.irrelevant),
-              value: 'not_relevant'
-            },
-            {
-              name: formatMessage(platformMessages.discarded),
-              value: 'discarded'
-            },
-            {
-              name: formatMessage(platformMessages.unseen),
-              value: 'unclassified'
-            }
-          ],
-          onChange: (relevance) => evidencesActions?.getData({ relevance }),
-          multiple: true
-        }
-      }
-    },
-    {
-      accessorKey: 'type',
-      header: formatMessage(evidenceListMessages.type).toUpperCase(),
-      cell: ({ getValue }) => {
-        const types = ['Audio', 'Video', 'Imagen', 'Documento']
-        const type = types[getValue<number>()] ?? types[0]
-
-        return type
-      },
-      enableSorting: false
-    }
-  ])
+    ],
+    [evidencesActions?.getData]
+  )
 
   return (
     <>

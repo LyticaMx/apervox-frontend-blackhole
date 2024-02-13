@@ -31,7 +31,12 @@ interface UpdateLine {
 const DataTable = (): ReactElement => {
   const { formatMessage } = useIntl()
   const getMessage = useFormatMessage(tableMessages)
-  const { data, pagination, actions: overflowLineActions } = useOverflowLine()
+  const {
+    data,
+    pagination,
+    actions: overflowLineActions,
+    staticFilter
+  } = useOverflowLine()
   const { actions: lineHistoryActions } = useLineHistory()
   const { actions: auditActions } = useModuleAudits()
   const ability = useAbility()
@@ -115,6 +120,7 @@ const DataTable = (): ReactElement => {
         meta: {
           columnFilters: {
             multiple: true,
+            selected: staticFilter.line_status,
             options: [
               {
                 name: formatMessage(statusMessages.assigned),
@@ -200,7 +206,7 @@ const DataTable = (): ReactElement => {
         }
       }
     ],
-    [ability.rules]
+    [ability.rules, overflowLineActions?.get]
   )
 
   const handleQuarantineClose = (): void =>
