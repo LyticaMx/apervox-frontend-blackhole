@@ -93,6 +93,9 @@ export const useActions = (
           date: {
             start_time: urlParams.start_time,
             end_time: urlParams.end_time
+          },
+          static: {
+            module: params?.module ?? staticFilter.module
           }
         })
       )

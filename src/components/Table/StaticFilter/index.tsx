@@ -113,7 +113,13 @@ const StaticFilter = (props: Props): ReactElement => {
           <button
             className={clsx(
               'hover:text-primary',
-              props.selected ? 'text-primary' : 'text-gray-300'
+              props.multipleSelection
+                ? (props?.selected?.length ?? 0) > 0
+                  ? 'text-primary'
+                  : 'text-gray-300'
+                : props.selected
+                ? 'text-primary'
+                : 'text-gray-300'
             )}
           >
             <AdjustmentsVerticalIcon className="w-4 h-4" />

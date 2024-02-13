@@ -93,107 +93,113 @@ const Audit = (): ReactElement => {
     [actions?.handleOpenDrawer]
   )
 
-  const columns = useTableColumns<AuditInterface>(() => [
-    {
-      accessorKey: 'username',
-      id: 'user',
-      header: formatMessage(generalMessages.user),
-      cell: ({ getValue, row }) => {
-        if (row.original.moduleName === 'auth') {
-          return <span className="text-primary">{row.original.name}</span>
-        }
+  const columns = useTableColumns<AuditInterface>(
+    () => [
+      {
+        accessorKey: 'username',
+        id: 'user',
+        header: formatMessage(generalMessages.user),
+        cell: ({ getValue, row }) => {
+          if (row.original.moduleName === 'auth') {
+            return <span className="text-primary">{row.original.name}</span>
+          }
 
-        return (
-          <button
-            className="text-primary hover:underline"
-            onClick={async (e) => {
-              e.stopPropagation()
-              openDrawer(row.original.userId)
-            }}
-          >
-            {getValue<string>()}
-          </button>
-        )
-      }
-    },
-    {
-      accessorKey: 'action',
-      header: formatMessage(generalMessages.description),
-      cell: ({ row, getValue }) => {
-        const action = getValue<string>()
-
-        if (auditableActions[action]) {
-          return getActionTitle(
-            formatMessage,
-            row.original.specificModule ?? row.original.moduleName,
-            row.original.action,
-            row.original.name
+          return (
+            <button
+              className="text-primary hover:underline"
+              onClick={async (e) => {
+                e.stopPropagation()
+                openDrawer(row.original.userId)
+              }}
+            >
+              {getValue<string>()}
+            </button>
           )
         }
+      },
+      {
+        accessorKey: 'action',
+        header: formatMessage(generalMessages.description),
+        cell: ({ row, getValue }) => {
+          const action = getValue<string>()
 
-        return action
-      }
-    },
-    {
-      accessorKey: 'specificModule',
-      id: 'module',
-      header: formatMessage(messages.auditedModule),
-      meta: {
-        columnFilters: {
-          options: [
-            {
-              name: formatMessage(messages.rolesAndPermissions),
-              value: 'roles'
-            },
-            {
-              name: formatMessage(messages.workgroups),
-              value: 'groups'
-            },
-            {
-              name: formatMessage(messages.acquisitionMedium),
-              value: 'adquisition'
-            },
-            {
-              name: formatMessage(messages.usersControl),
-              value: 'users'
-            },
-            {
-              name: formatMessage(messages.techniques),
-              value: 'techniques'
-            },
-            { name: formatMessage(messages.monitor), value: 'monitor' },
-            { name: formatMessage(messages.settings), value: 'settings' },
-            { name: formatMessage(messages.metadata), value: 'metadata' }
-          ],
-          onChange: async (values) => {
-            await auditActions?.getData({ module: values })
-          },
-          optionsName: formatMessage(messages.auditedModule),
-          multiple: true,
-          selected: staticFilter.module
+          if (auditableActions[action]) {
+            return getActionTitle(
+              formatMessage,
+              row.original.specificModule ?? row.original.moduleName,
+              row.original.action,
+              row.original.name
+            )
+          }
+
+          return action
         }
       },
-      cell: ({ getValue }) => {
-        const name = getValue<string>()
+      {
+        accessorKey: 'specificModule',
+        id: 'module',
+        header: formatMessage(messages.auditedModule),
+        meta: {
+          columnFilters: {
+            options: [
+              {
+                name: formatMessage(messages.rolesAndPermissions),
+                value: 'roles'
+              },
+              {
+                name: formatMessage(messages.workgroups),
+                value: 'groups'
+              },
+              {
+                name: formatMessage(messages.acquisitionMedium),
+                value: 'adquisition'
+              },
+              {
+                name: formatMessage(messages.usersControl),
+                value: 'users'
+              },
+              {
+                name: formatMessage(messages.techniques),
+                value: 'techniques'
+              },
+              { name: formatMessage(messages.monitor), value: 'monitor' },
+              { name: formatMessage(messages.settings), value: 'settings' },
+              { name: formatMessage(messages.metadata), value: 'metadata' }
+            ],
+            onChange: async (values) => {
+              await auditActions?.getData({ module: values })
+            },
+            optionsName: formatMessage(messages.auditedModule),
+            multiple: true,
+            selected: staticFilter.module
+          }
+        },
+        cell: ({ getValue }) => {
+          const name = getValue<string>()
 
-        if (auditableModules[name]) return formatMessage(auditableModules[name])
+          if (auditableModules[name]) {
+            return formatMessage(auditableModules[name])
+          }
 
-        return name
+          return name
+        }
+      },
+      {
+        accessorKey: 'createdAt',
+        id: 'date',
+        header: formatMessage(generalMessages.date),
+        cell: ({ getValue }) =>
+          format(new Date(getValue<string>()), 'dd/MM/yyyy')
+      },
+      {
+        accessorKey: 'createdAt',
+        id: 'hour',
+        header: formatMessage(generalMessages.hour),
+        cell: ({ getValue }) => format(new Date(getValue<string>()), 'HH:mm')
       }
-    },
-    {
-      accessorKey: 'createdAt',
-      id: 'date',
-      header: formatMessage(generalMessages.date),
-      cell: ({ getValue }) => format(new Date(getValue<string>()), 'dd/MM/yyyy')
-    },
-    {
-      accessorKey: 'createdAt',
-      id: 'hour',
-      header: formatMessage(generalMessages.hour),
-      cell: ({ getValue }) => format(new Date(getValue<string>()), 'HH:mm')
-    }
-  ])
+    ],
+    [auditActions?.getData]
+  )
 
   useEffect(() => {
     if (selectedUser) {
