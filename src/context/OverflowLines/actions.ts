@@ -82,6 +82,9 @@ export const useActions = (state: State, dispatch): Actions => {
           date: {
             start_time: urlParams.start_time,
             end_time: urlParams.end_time
+          },
+          static: {
+            line_status: params?.line_status ?? staticFilter.line_status
           }
         })
       )
